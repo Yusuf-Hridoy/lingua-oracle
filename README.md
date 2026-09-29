@@ -225,3 +225,5 @@ under the pseudo-codes `SIGNAL_DANGER` / `SIGNAL_WARNING`.
   `LINGUA_CACHE_DIR`, `LINGUA_PDF_BACKEND`.
 * No real customer or product data is in this repo. Every fixture is synthetic;
   the only real text is the regulatory wording, pulled from the answer keys.
+* `data/sources/` is gitignored. Drop real SDS PDFs there to check them ad hoc
+  (`lingua check data/sources/x.pdf`) without any risk of committing them.
