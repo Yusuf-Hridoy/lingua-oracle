@@ -61,8 +61,9 @@ def build(
             keys.append(
                 AnswerKey(
                     regulation=REGULATION, language=lang, revision=REVISION,
-                    status=Status.PENDING_SOURCE, source_url=SOURCE_URL,
-                    retrieved_at=ts, entries=[],
+                    status=Status.PENDING_SOURCE,
+                    status_reason="no_source_edition",
+                    source_url=SOURCE_URL, retrieved_at=ts, entries=[],
                 )
             )
             issues = ParseIssues(source=f"{REGULATION}/{lang}")

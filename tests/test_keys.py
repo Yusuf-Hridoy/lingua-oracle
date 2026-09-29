@@ -350,3 +350,20 @@ def test_canada_design_note_exists():
     note = keys_root() / "ca_whmis" / "_design_note.md"
     assert note.exists(), "the WHMIS design note is referenced by the status reason"
     assert "class/category" in note.read_text(encoding="utf-8")
+
+
+def test_stats_reports_partial_rather_than_inferring_ok():
+    """A populated-but-incomplete key must not be reported as `ok`."""
+    import json
+
+    from typer.testing import CliRunner
+
+    from lingua_oracle.cli import app
+
+    result = CliRunner().invoke(app, ["keys", "stats", "--json"])
+    assert result.exit_code == 0
+    rows = {r["regulation"]: r for r in json.loads(result.output)}
+    assert rows["us_osha"]["status"] == "partial"
+    assert rows["us_osha"]["status_reasons"] == ["counts_not_reconciled"]
+    assert rows["jp_jis"]["status_reasons"] == ["wrong_source"]
+    assert rows["ca_whmis"]["status_reasons"] == ["needs_class_category_mapping"]

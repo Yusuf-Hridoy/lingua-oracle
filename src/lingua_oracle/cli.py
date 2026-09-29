@@ -255,10 +255,15 @@ def keys_stats(
         reg = registry.get(reg_id)
         langs = available_languages(reg_id)
         populated, pending_langs, total = [], [], 0
+        statuses: set[str] = set()
+        reasons: set[str] = set()
         for lang in langs:
             key = load_key(reg_id, lang)
             if key is None:
                 continue
+            statuses.add(str(key.status))
+            if key.status_reason:
+                reasons.add(key.status_reason)
             if key.entries:
                 populated.append(lang)
                 total += len(key.entries)
@@ -272,7 +277,15 @@ def keys_stats(
                 "languages_populated": populated,
                 "languages_pending": pending_langs,
                 "entries": total,
-                "status": "ok" if populated else "pending_source",
+                # Report what the keys actually say, rather than inferring "ok"
+                # from a non-empty file: a `partial` key is populated but
+                # knowingly incomplete.
+                "status": (
+                    "partial" if "partial" in statuses
+                    else "ok" if populated
+                    else "pending_source"
+                ),
+                "status_reasons": sorted(reasons),
             }
         )
 
@@ -296,6 +309,8 @@ def keys_stats(
             typer.echo(
                 f"{' ' * width}  pending: {', '.join(row['languages_pending'][:12])}"
             )
+        if row["status_reasons"]:
+            typer.echo(f"{' ' * width}  reason: {', '.join(row['status_reasons'])}")
 
 
 def main() -> None:
