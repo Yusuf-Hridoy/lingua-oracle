@@ -37,7 +37,8 @@ produces a compliance tool that lies.
    installs a session-wide socket guard that fails any test touching the network.
 3. **No AI/LLM calls.** Every verdict is deterministic.
 4. **No real customer or product data.** Fixtures are synthetic and generated from
-   the answer keys. `data/sources/` is gitignored as a drop folder for ad-hoc PDFs.
+   the answer keys. `data/sources/` is tracked, but it holds **official published
+   regulations only** — never a real SDS or product document.
 
 ## Architecture
 
