@@ -167,7 +167,7 @@ def keys_build(
             if reg_id == "eu_clp":
                 keys = eu_clp.build(langs, use_cache=not no_cache)
             elif reg_id == "us_osha":
-                keys = us_osha.build(
+                keys, reports = us_osha.build(
                     use_cache=not no_cache, from_file=file_arg, sources_root=root_arg
                 )
             elif reg_id == "un_ghs":

@@ -202,7 +202,9 @@ def test_csv_import_rejects_missing_columns(tmp_path, monkeypatch):
 def test_built_keys_are_populated(regulation, language, must_have):
     key = load_key(regulation, language)
     assert key is not None, f"{regulation}/{language} missing"
-    assert key.status is Status.OK
+    # OSHA is deliberately `partial`: Appendix C states no codes, so its key
+    # holds fewer than EU CLP and the counts are not reconciled.
+    assert key.status in (Status.OK, Status.PARTIAL)
     by_code = key.by_code()
     for code in must_have:
         assert code in by_code, f"{regulation}/{language} has no {code}"
@@ -280,3 +282,41 @@ def test_tier_b_does_not_borrow_for_eu_itself():
     resolved = resolve("eu_clp", "da")
     assert resolved.borrowed_codes == set()
     assert all(e.tier is Tier.A for e in resolved.entries.values())
+
+
+# -- US OSHA -----------------------------------------------------------------
+
+
+@pytest.mark.parametrize("code", ["H225", "H350", "H360", "H372", "P210", "P280"])
+def test_osha_key_has_required_codes(code):
+    """Appendix C states no codes, so these are only present if the mapping works."""
+    key = load_key("us_osha", "en")
+    assert key is not None
+    by_code = key.by_code()
+    assert code in by_code, f"OSHA key is missing {code}"
+    assert by_code[code].text.strip()
+    assert by_code[code].source_ref and "1910.1200" in by_code[code].source_ref
+
+
+def test_osha_key_has_both_families_and_is_marked_partial():
+    key = load_key("us_osha", "en")
+    codes = set(key.by_code())
+    h = {c for c in codes if c.startswith("H")}
+    p = {c for c in codes if c.startswith("P")}
+    assert len(h) >= 40, f"expected OSHA hazard codes, got {len(h)}"
+    assert len(p) >= 40, f"expected OSHA precautionary codes, got {len(p)}"
+    assert key.status is Status.PARTIAL
+    assert key.status_reason == "counts_not_reconciled"
+
+
+def test_osha_carries_no_euh_codes():
+    """EUH belongs to EU/UK CLP; C-12 depends on it being absent here."""
+    assert not any(c.startswith("EUH") for c in load_key("us_osha", "en").by_code())
+
+
+def test_osha_parse_issues_lists_codes_absent_from_osha():
+    from lingua_oracle.keys.store import keys_root
+
+    report = (keys_root() / "us_osha" / "_parse_issues.txt").read_text(encoding="utf-8")
+    assert "EU CLP codes with no OSHA statement" in report
+    assert "NOT" in report and "assumed to be gaps" in report

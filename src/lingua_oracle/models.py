@@ -28,6 +28,7 @@ class Tier(StrEnum):
 
 class Status(StrEnum):
     OK = "ok"
+    PARTIAL = "partial"
     PENDING_SOURCE = "pending_source"
 
 
@@ -82,6 +83,9 @@ class AnswerKey(BaseModel):
     language: str
     revision: str
     status: Status = Status.OK
+    # Why a key is not `ok`, in machine-readable form, e.g. "wrong_source" or
+    # "needs_class_category_mapping". Free text lives in _parse_issues.txt.
+    status_reason: str | None = None
     source_url: str | None = None
     retrieved_at: datetime | None = None
     entries: list[AnswerKeyEntry] = Field(default_factory=list)
