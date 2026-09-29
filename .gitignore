@@ -11,3 +11,6 @@ dist/
 build/
 *.egg-info/
 .DS_Store
+
+# Source documents dropped in for ad-hoc checking; never committed.
+data/sources/

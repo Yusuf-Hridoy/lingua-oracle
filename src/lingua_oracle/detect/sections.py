@@ -71,10 +71,19 @@ def detect_sections(doc: Document, language: str) -> list[SectionSpan]:
         matched: str | None = None
         # A short standalone line naming the label starts a label block. Label
         # artwork carries no numbered SDS headings, so without this it would be
-        # swallowed by whichever section preceded it.
-        if len(text) <= 60 and any(
-            re.search(rf"\b{m}\b", text, re.IGNORECASE) for m in rules.label_markers
-        ) and not numbered.match(text):
+        # swallowed by whichever section preceded it. The line has to read as a
+        # heading rather than prose: real sheets contain sentences such as
+        # "Labelling of Chemicals (GHS) and relevant regulations." which must
+        # not be mistaken for the start of label artwork.
+        if (
+            len(text) <= 60
+            and len(text.split()) <= 6
+            and not text.rstrip().endswith((".", ",", ";", ":"))
+            and not numbered.match(text)
+            and any(
+                re.search(rf"\b{m}\b", text, re.IGNORECASE) for m in rules.label_markers
+            )
+        ):
             matched = LABEL
         for name, patterns in rules.sections.items():
             if matched:

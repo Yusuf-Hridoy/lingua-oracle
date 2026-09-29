@@ -81,10 +81,14 @@ regulations:
     allowed_prefixes: [H, P]
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
     source_url: "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev10-2023"
+    # "Globally Harmonized System" on its own is not a signal: practically every
+    # GHS-aligned SDS in the world spells it out in its abbreviations glossary.
+    # These patterns require the document to name UN GHS as its governing text.
     detect_patterns:
-      - "GHS Rev\\.? ?10"
-      - "Globally Harmonized System"
-      - "Globally Harmonised System"
+      - "GHS Rev\\.? ?\\d"
+      - "UN Globally Harmoni[sz]ed System"
+      - "United Nations Globally Harmoni[sz]ed System"
+      - "According to.{0,20}Globally Harmoni[sz]ed System"
 
   au_whs:
     display_name: "Australia WHS (GHS Rev.7 + AUH)"
@@ -98,6 +102,7 @@ regulations:
     source_url: "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals"
     detect_patterns:
       - "Safe Work Australia"
+      - "Work Health and Safety Act"
       - "WHS Regulations"
       - "Work Health and Safety"
       - "AUH\\d{3}"

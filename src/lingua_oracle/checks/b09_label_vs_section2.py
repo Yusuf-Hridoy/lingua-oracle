@@ -19,6 +19,10 @@ def run(ctx: CheckContext) -> list[Finding]:
 
     section2 = {h.code for h in ctx.hits_in("2")}
     label = {h.code for h in ctx.hits_in(LABEL)}
+    # A block that names a label but lists no codes is boilerplate, not label
+    # artwork. Comparing against it would report every Section 2 code as missing.
+    if not label or not section2:
+        return []
     findings: list[Finding] = []
 
     for code in sorted(section2 - label):
