@@ -87,8 +87,20 @@ the A→B→C resolution and returns the `Borrowed` object the checks read from.
 committed. Check time only reads them.
 
 Current coverage: EU CLP 24 languages (5,757), UN GHS Rev.11 en/fr/es (737),
-UK GB CLP en (236), Australia en (236), US OSHA en (33). Canada, Japan and
-UN GHS ar/ru/zh are `pending_source`.
+UK GB CLP en (236), Australia en (236), US OSHA en (111, `partial`). Canada,
+Japan and UN GHS ar/ru/zh are `pending_source`.
+
+A key's `status` is `ok`, `partial` (built but knowingly incomplete) or
+`pending_source` (empty). `status_reason` carries a machine-readable why:
+`counts_not_reconciled` (OSHA), `needs_class_category_mapping` (Canada),
+`wrong_source` (Japan - the file on record is UN GHS Rev.9 Japanese, not JIS).
+
+**Builds are deterministic.** `save_key` preserves an entry's stored
+`retrieved_at` when its code, text and `source_ref` are unchanged, so rebuilding
+unchanged sources leaves the tree clean and any diff is a real change. Do not
+bypass it with `save_key(..., preserve=False)` outside tests, and do not add
+run-dependent text (timings, cache hits) to a parse report - `tests/
+test_determinism.py` re-saves every committed key and fails on a byte change.
 
 Sources that cannot be fetched programmatically live in
 `data/sources/<regulation>/` and are parsed with `lingua keys build <reg>
@@ -113,9 +125,13 @@ Two source facts that drive the design and are easy to re-discover the hard way:
   challenge. Annex III/IV render each code as a table containing **all 24
   languages**, so one fetch yields every translation.
 - **OSHA Appendix C contains no H/P code numbers at all** (verified against
-  osha.gov and the eCFR API). Statements are keyed to a code only where OSHA's
-  wording is identical to EU CLP's English; the rest are counted in
-  `us_osha.UNMAPPED`, never guessed.
+  osha.gov and the eCFR API). Codes are established against EU CLP English in
+  three stages - identical, identical once fill-ins are collapsed, then 0.97
+  similarity. Precautionary statements live in the C.4 tables one per `<p>` under
+  Prevention/Response/Storage/Disposal; paragraphs that are directions to the
+  labeller ("Chemical manufacturer, importer ... to specify") are not statements.
+  OSHA doubles its fill-in brackets (`<<...>>`), which is what the fill-in regex
+  must tolerate for H350/H360/H372 to resolve.
 - **Canada's HPR contains no code-keyed statements** - zero H/P codes in the full
   text - so `ca_whmis` stays pending by evidence, not by omission.
 - **The Japanese PDF cannot be read at all**: its font carries no ToUnicode CMap,

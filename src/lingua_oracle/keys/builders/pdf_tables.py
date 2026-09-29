@@ -305,9 +305,10 @@ def harvest(
     cache_file = cache_dir() / f"tables-{cache_key}.json"
     if cache_file.exists():
         blob = json.loads(cache_file.read_text(encoding="utf-8"))
-        cached_issues = ParseIssues(**blob["issues"])
-        cached_issues.notes.append("(loaded from parse cache)")
-        return blob["found"], cached_issues
+        # Deliberately no "loaded from cache" note: whether the cache was warm is
+        # an implementation detail, and recording it would make the written parse
+        # report differ between two builds of the same unchanged source.
+        return blob["found"], ParseIssues(**blob["issues"])
 
     found: dict[str, str] = {}
     doc = pymupdf.open(path)

@@ -114,14 +114,24 @@ produces "unverified", never a false accusation.
 | UN GHS Rev.11 | 3 (en, fr, es) | 737 | ok (tier A); ar/ru/zh `pending_source` |
 | UK GB CLP | 1 (en) | 236 | ok (tier A) |
 | Australia WHS | 1 (en) | 236 | ok (tier A) |
-| US OSHA HazCom | 1 (en) | 33 | ok (tier A), partial — see below |
-| Canada WHMIS | — | 0 | `pending_source` |
-| Japan JIS | — | 0 | `pending_source` |
+| US OSHA HazCom | 1 (en) | 111 | **partial** (tier A) — see below |
+| Canada WHMIS | — | 0 | `pending_source` / `needs_class_category_mapping` |
+| Japan JIS | — | 0 | `pending_source` / `wrong_source` |
 
 **No key is ever filled from memory.** Where a source could not be read, the key
-is empty and marked `pending_source`, with the reason recorded in
-`data/answer_keys/{regulation}/_parse_issues.txt`. Fill those with
-`lingua keys import-csv`.
+is empty and marked `pending_source`, with a machine-readable `status_reason` and
+the full explanation in `data/answer_keys/{regulation}/_parse_issues.txt`. Fill
+those with `lingua keys import-csv`.
+
+| `status` | Meaning |
+| --- | --- |
+| `ok` | Built from its official source and believed complete |
+| `partial` | Built from its official source, but the code set is knowingly incomplete (`status_reason` says why) |
+| `pending_source` | Nothing could be derived; the key is empty |
+
+Rebuilds are deterministic: an entry keeps its stored `retrieved_at` when its
+code, text and `source_ref` are unchanged, so re-running `lingua keys build`
+against unchanged sources leaves the working tree clean and any diff is real.
 
 ### Sources
 
@@ -147,21 +157,36 @@ with an empty statement, and codes seen twice with conflicting text.
 
 29 CFR 1910.1200 Appendix C contains **no H or P code numbers at all** — verified
 against osha.gov, the eCFR API and the local copy. It gives signal words and
-statement text organised by hazard class, but not the code each statement belongs
-to. So the builder takes signal words directly, and keys a statement to a code
-only where OSHA's own wording is identical, after normalisation, to EU CLP's
-English. That maps 31 of 78 statements; the remaining 40 are counted and reported
-rather than guessed.
+statement text organised by hazard class, but never says which code a statement
+belongs to.
+
+So codes are established by comparing OSHA's own wording against EU CLP's English,
+in three stages of decreasing strength: identical; identical once fill-ins are
+collapsed (OSHA prints `May cause cancer <<…>>` where CLP prints the full
+`<state route of exposure …>` instruction); then near-identical at 0.97
+similarity, which absorbs US spelling such as "vapor" and "poison center".
+
+That yields **53 H and 56 P codes** plus both signal words. Statements with no
+confident code are listed in `_parse_issues.txt` rather than guessed, as are the
+96 EU CLP codes OSHA has no statement for — those are **not** assumed to be gaps,
+since OSHA adopted an earlier GHS revision and some absences are genuine
+differences. The key is `partial` until those counts are reconciled.
 
 ### Why Canada is pending
 
-The Hazardous Products Regulations (SOR/2015-17) set out classification criteria
-and label rules but do not reproduce the statements against their codes: a scan of
-the full 165-page bilingual text finds **zero** H or P codes. Nothing can be
-derived without inventing the code-to-text mapping.
+The Hazardous Products Regulations (SOR/2015-17) state statements by **hazard
+class and category**, never against a code: a scan of the full 165-page bilingual
+text finds **zero** H or P codes. So WHMIS is not blocked on a missing source but
+on a missing mapping — `status_reason: needs_class_category_mapping`. The proposed
+design is written up in `data/answer_keys/ca_whmis/_design_note.md` (design only,
+nothing implemented).
 
 ### Why Japan is pending
 
+Two separate reasons, hence `status_reason: wrong_source`. First, the file on
+record is the Japanese edition of **UN GHS Rev.9, not JIS Z 7252/7253** — a
+different document at a different revision — so nothing may be taken from it for a
+JIS key, and nothing is. Second, it is unreadable anyway:
 `GHS_Rev9_ja_annex2-3.pdf` does not yield readable Japanese. PyMuPDF returns
 mojibake (0.6% Japanese characters, `㝃ᒓ᭩` where `附属書` is meant) and pdfplumber
 returns `(cid:NNNN)` placeholders only. The cause is in the file: its Japanese

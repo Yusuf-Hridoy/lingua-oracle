@@ -17,7 +17,47 @@ def key_path(regulation: str, language: str) -> Path:
     return keys_root() / regulation / f"{language}.json"
 
 
-def save_key(key: AnswerKey) -> Path:
+def _identity(entry: AnswerKeyEntry) -> tuple[str, str, str | None]:
+    """What makes an entry "the same entry" for timestamp purposes."""
+    return (entry.code, entry.text, entry.source_ref)
+
+
+def preserve_timestamps(key: AnswerKey) -> AnswerKey:
+    """Carry `retrieved_at` over from the stored key where nothing has changed.
+
+    A builder stamps the current time on every entry it produces, so rebuilding
+    an unchanged source would rewrite every timestamp and show a large diff that
+    means nothing. An entry keeps its stored timestamp when its code, text and
+    source_ref are all unchanged; a real change takes a fresh one. The key's own
+    `retrieved_at` is kept when no entry changed at all.
+    """
+    existing = load_key(key.regulation, key.language)
+    if existing is None:
+        return key
+
+    previous = {_identity(e): e.retrieved_at for e in existing.entries}
+    entries = []
+    changed = False
+    for entry in key.entries:
+        stamp = previous.get(_identity(entry))
+        if stamp is not None and stamp != entry.retrieved_at:
+            entry = entry.model_copy(update={"retrieved_at": stamp})
+        elif stamp is None:
+            changed = True
+        entries.append(entry)
+
+    if len(entries) != len(existing.entries):
+        changed = True
+    updated = key.model_copy(update={"entries": entries})
+    if not changed and existing.retrieved_at is not None:
+        updated = updated.model_copy(update={"retrieved_at": existing.retrieved_at})
+    return updated
+
+
+def save_key(key: AnswerKey, *, preserve: bool = True) -> Path:
+    """Write a key. By default an unchanged rebuild produces an identical file."""
+    if preserve:
+        key = preserve_timestamps(key)
     path = key_path(key.regulation, key.language)
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = key.model_dump(mode="json", exclude_none=False)
@@ -78,6 +118,7 @@ def empty_key(
 
 __all__ = [
     "AnswerKey",
+    "preserve_timestamps",
     "AnswerKeyEntry",
     "Status",
     "Tier",
