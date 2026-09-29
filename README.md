@@ -148,9 +148,12 @@ Official texts that could not be fetched programmatically are kept under
 | Canada | `ca-whmis/hpr_bilingual.pdf` | scanned, yields nothing — see below |
 | Japan | `japan/GHS_Rev9_ja_annex2-3.pdf` | unreadable — see below |
 
-`ghs-rev7/` is **not** redundant with `un-ghs/`: Australia adopts GHS Rev.7 while
-UN GHS is built from Rev.11, so the two hold different wording and both are
-needed. It holds the English edition only, since Australia's key is English.
+`ghs-rev7/` is **not** redundant with `un-ghs/`: UN GHS is built from Rev.11,
+while **both** Australia and Canada are defined against Rev.7 — the HPR states
+outright that *"GHS means the United Nations document entitled Globally Harmonized
+System of Classification and Labelling of Chemicals (GHS), Seventh Revised
+Edition"*. Rev.7 is therefore the reference text for Australian and Canadian
+wording, in English and French.
 
 Rows are located by the **code pattern in column 0**, not by header text, so one
 parser works across English, French and Spanish. Every build writes a
