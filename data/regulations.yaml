@@ -1,0 +1,118 @@
+# Regulation registry for Lingua Oracle.
+#
+# NOTE ON SIGNAL WORDS
+# Signal-word *text* is regulatory text and is never written here by hand.
+# It lives in the answer keys under the pseudo-codes SIGNAL_DANGER and
+# SIGNAL_WARNING (kind: signal), populated by the builders from official
+# sources. This file only records which signal-word slots a regulation uses.
+
+regulations:
+  eu_clp:
+    display_name: "EU CLP"
+    revision: "02008R1272-20260701"
+    authority: "Regulation (EC) No 1272/2008 (consolidated)"
+    official_languages: [bg, cs, da, de, el, en, es, et, fi, fr, ga, hr, hu, it, lt, lv, mt, nl, pl, pt, ro, sk, sl, sv]
+    required_languages: []
+    supplemental_prefixes: [EUH]
+    allowed_prefixes: [H, P, EUH]
+    signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
+    source_url: "http://publications.europa.eu/resource/celex/02008R1272-20260701"
+    detect_patterns:
+      - "Regulation \\(EC\\) No 1272/2008"
+      - "Forordning \\(EF\\) nr\\. 1272/2008"
+      - "Verordnung \\(EG\\) Nr\\. 1272/2008"
+      - "Règlement \\(CE\\) n° 1272/2008"
+      - "Reglamento \\(CE\\) n\\.? ?º? ?1272/2008"
+
+  uk_clp:
+    display_name: "UK GB CLP"
+    revision: "retained-1272-2008"
+    authority: "GB CLP Regulation (retained EU law)"
+    official_languages: [en]
+    required_languages: []
+    supplemental_prefixes: [EUH]
+    allowed_prefixes: [H, P, EUH]
+    signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
+    source_url: "https://www.legislation.gov.uk/eur/2008/1272/contents"
+    detect_patterns:
+      - "GB CLP"
+      - "Great Britain.{0,40}CLP"
+      - "retained.{0,30}1272/2008"
+
+  us_osha:
+    display_name: "US OSHA HazCom"
+    revision: "29-CFR-1910.1200-AppC"
+    authority: "29 CFR 1910.1200 Appendix C"
+    official_languages: [en]
+    required_languages: []
+    supplemental_prefixes: []
+    allowed_prefixes: [H, P]
+    signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
+    source_url: "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC"
+    detect_patterns:
+      - "29 CFR 1910\\.1200"
+      - "1910\\.1200"
+      - "OSHA Hazard Communication"
+      - "HazCom"
+
+  ca_whmis:
+    display_name: "Canada WHMIS"
+    revision: "SOR-2015-17"
+    authority: "Hazardous Products Regulations (SOR/2015-17)"
+    official_languages: [en, fr]
+    required_languages: [en, fr]
+    supplemental_prefixes: []
+    allowed_prefixes: [H, P]
+    signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
+    source_url: "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2015-17/FullText.html"
+    detect_patterns:
+      - "Hazardous Products Regulations"
+      - "SOR/2015-17"
+      - "WHMIS"
+      - "Règlement sur les produits dangereux"
+
+  un_ghs:
+    display_name: "UN GHS"
+    revision: "Rev.10"
+    authority: "UN GHS Rev.10, Annex 3"
+    official_languages: [ar, en, es, fr, ru, zh]
+    required_languages: []
+    supplemental_prefixes: []
+    allowed_prefixes: [H, P]
+    signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
+    source_url: "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev10-2023"
+    detect_patterns:
+      - "GHS Rev\\.? ?10"
+      - "Globally Harmonized System"
+      - "Globally Harmonised System"
+
+  au_whs:
+    display_name: "Australia WHS (GHS Rev.7 + AUH)"
+    revision: "GHS-Rev7-AU"
+    authority: "WHS Regulations; GHS Rev.7; Safe Work Australia AUH statements"
+    official_languages: [en]
+    required_languages: []
+    supplemental_prefixes: [AUH]
+    allowed_prefixes: [H, P, AUH]
+    signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
+    source_url: "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals"
+    detect_patterns:
+      - "Safe Work Australia"
+      - "WHS Regulations"
+      - "Work Health and Safety"
+      - "AUH\\d{3}"
+
+  jp_jis:
+    display_name: "Japan JIS Z 7252/7253"
+    revision: "JIS-Z-7253-2019"
+    authority: "JIS Z 7252 / JIS Z 7253 (paid standard)"
+    official_languages: [ja, en]
+    required_languages: []
+    supplemental_prefixes: []
+    allowed_prefixes: [H, P]
+    signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
+    source_url: null
+    source_note: "JIS is a paid standard; not scraped. Fill via `lingua keys import-csv`."
+    detect_patterns:
+      - "JIS Z 7253"
+      - "JIS Z 7252"
