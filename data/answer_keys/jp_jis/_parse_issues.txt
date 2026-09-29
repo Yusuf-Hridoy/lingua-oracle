@@ -1,0 +1,5 @@
+  parse issues for jp_jis (no usable source):
+    pages=0 tables=0 rows=0 used=0
+    status_reason: wrong_source
+    The file on record is the Japanese edition of UN GHS Rev.9, not JIS Z 7252/7253, so nothing may be taken from it for a JIS key. JIS itself is a paid standard and is deliberately not scraped. The file is unreadable regardless: its Japanese font carries no ToUnicode CMap, so no extractor can recover characters. OCR has not been run.
+    Nothing is extracted from data/sources/japan/GHS_Rev9_ja_annex2-3.pdf: it is UN GHS Rev.9 (Japanese), a different document from JIS Z 7252/7253, and its text cannot be read. Supply a JIS source, or fill the key with `lingua keys import-csv`.

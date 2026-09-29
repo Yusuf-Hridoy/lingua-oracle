@@ -3,7 +3,8 @@
   "language": "en",
   "revision": "JIS-Z-7253-2019",
   "status": "pending_source",
+  "status_reason": "wrong_source",
   "source_url": null,
-  "retrieved_at": "2026-09-29T12:09:16.003284Z",
+  "retrieved_at": "2026-09-29T12:22:41.261049Z",
   "entries": []
 }

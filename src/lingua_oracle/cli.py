@@ -179,15 +179,21 @@ def keys_build(
             elif reg_id == "ca_whmis":
                 keys, reports = ca_whmis.build(langs, from_file=file_arg, sources_root=root_arg)
             elif reg_id in pending.PENDING:
-                keys = pending.build(reg_id, langs)
-                typer.secho(f"  pending_source: {pending.reason(reg_id)}", fg=typer.colors.YELLOW)
+                keys, reports = pending.build(reg_id, langs)
+                typer.secho(
+                    f"  {pending.PENDING[reg_id].code}: {pending.reason(reg_id)}",
+                    fg=typer.colors.YELLOW,
+                )
             else:
                 typer.secho(f"  no builder for {reg_id}", fg=typer.colors.RED)
                 continue
         except SourceUnavailable as exc:
             typer.secho(f"  source unavailable: {exc}", fg=typer.colors.RED, err=True)
             typer.secho("  writing a pending_source key instead.", fg=typer.colors.YELLOW)
-            keys = pending.build(reg_id, langs) if reg_id in pending.PENDING else []
+            if reg_id in pending.PENDING:
+                keys, reports = pending.build(reg_id, langs)
+            else:
+                keys = []
 
         entries = []
         for key in keys:

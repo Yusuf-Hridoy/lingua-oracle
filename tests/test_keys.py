@@ -320,3 +320,14 @@ def test_osha_parse_issues_lists_codes_absent_from_osha():
     report = (keys_root() / "us_osha" / "_parse_issues.txt").read_text(encoding="utf-8")
     assert "EU CLP codes with no OSHA statement" in report
     assert "NOT" in report and "assumed to be gaps" in report
+
+
+def test_japan_reason_is_wrong_source_not_just_pending():
+    """The file on record is UN GHS Rev.9 Japanese, not JIS; nothing may be taken."""
+    for language in ("ja", "en"):
+        key = load_key("jp_jis", language)
+        if key is None:
+            continue
+        assert key.status is Status.PENDING_SOURCE
+        assert key.status_reason == "wrong_source"
+        assert key.entries == []
