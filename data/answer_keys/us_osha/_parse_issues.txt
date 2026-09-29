@@ -1,49 +1,50 @@
   parse issues for us_osha/en (appendix_c.html):
-    pages=0 tables=0 rows=196 used=111
+    pages=0 tables=100 rows=196 used=111
+    reference table: UN GHS Rev.7 Annex 3 (English) (224 codes)
     statements read from the source: 70 hazard, 126 precautionary
-    codes established: 53 H, 56 P, 2 signal word(s)
-    statements with no confident code (81); Appendix C states no codes, so these are left out rather than guessed:
-        H: Causes eye irritation (best 0.84)
-        H: Chemical under pressure: may explode if heated. (best 0.83)
-        H: Combustible liquid (best 0.49)
-        H: Explosive; fire, blast or projection (best 0.91)
-        H: Extremely flammable aerosol Pressurized container: may burst if heated (best 0.73)
-        H: Extremely flammable chemical under pressure. May explode if heated. (best 0.69)
-        H: Extremely flammable gas (best 0.70)
-        H: Extremely flammable gas May react explosively even in the absence of a (best 0.42)
-        H: Extremely flammable gas May react explosively even in the absence of a (best 0.53)
-        H: Flammable aerosol Pressurized container: may burst if heated. (best 0.80)
-        H: Flammable chemical under pressure. May explode if heated. (best 0.74)
-        H: Flammable gas (best 0.80)
-        H: May cause respiratory irritation; or (best 0.94)
-        H: May displace oxygen and cause rapid suffocation (best 0.48)
-        H: May form combustible dust concentrations in air [if small particles ar (best 0.24)
-        H: May intensify fire; oxidizer (best 0.96)
-        H: Self-heating; may catch fire (best 0.96)
-        P: Contaminated work clothing must not be allowed out of the workplace. (best 0.94)
-        P: Dispose of content/container to… … in accordance with local/regional/n (best 0.43)
-        P: Dispose of contents/container to … in accordance with local/regional/  (best 0.44)
-        P: Dispose of contents/container to … … in accordance with local/regional (best 0.43)
-        P: Dispose of contents/container to … … in accordance with local/regional (best 0.43)
-        P: Dispose of contents/container to … …in accordance with local/regional/ (best 0.43)
-        P: Dispose of contents/container to… … in accordance with local/regional/ (best 0.44)
-        P: Dispose of contents/container to… … in accordance with local/regional/ (best 0.44)
-        P: Dispose of contents/container to… …in accordance with local/regional/n (best 0.44)
-        P: Do not allow contact with air. - if emphasis of the hazard statement i (best 0.50)
-        P: Do not allow contact with water. - if emphasis of the hazard statement (best 0.51)
-        P: Do not breathe dusts or mists. - if inhalable particles of dusts or mi (best 0.41)
-        P: Do not subject to grinding/shock/friction/ … - if the explosive is mec (best 0.65)
-        P: Do not subject to grinding/shock/…/friction. -if the explosive is mech (best 0.63)
-        P: Ground and bond container and receiving equipment. - if electrostatica (best 0.55)
-        P: Ground and bond container and receiving equipment. - if the explosive  (best 0.66)
-        P: Ground and bond container and receiving equipment. - if the liquid is  (best 0.58)
-        P: Ground and bond container and receiving equipment. - if the solid is e (best 0.68)
-        P: Ground and bond container and receiving equipment. if the explosive is (best 0.67)
-        P: Handle and store contents under inert gas/ …. … Manufacturer, importer (best 0.46)
-        P: If inhaled: If breathing is difficult, remove person to fresh air and  (best 0.84)
-        P: If on skin: Brush off loose particles from skin and immerse in cool wa (best 0.82)
-        P: In case of fire: Evacuate area. Fight fire remotely due to the risk of (best 0.68)
-        … and 41 more
-    EU CLP codes with no OSHA statement (96). These are NOT assumed to be gaps: OSHA adopted an earlier GHS revision, so some are genuine differences and some are parse misses. Needs review:
-        H203, H207, H223, H251, H272, H300+H310, H300+H310+H330, H300+H330, H301+H311, H301+H311+H331, H301+H331, H302+H312, H302+H312+H332, H302+H332, H310+H330, H311+H331, H312+H332, H335, H400, H410, H411, H412, H413, H420, P101, P102, P103, P222, P223, P230, P231, P231+P232, P232, P235, P241, P242, P243, P250, P260, P261, P272, P273, P301, P302, P302+P352, P303, P303+P361+P353, P304, P305, P306, P308, P308+P311, P310, P311, P312, P313, P314, P315, P320, P332, P332+P313, P333, P333+P313, P334, P335, P336, P337, P338, P340, P342, P342+P311, P351, P352, P353, P360, P361, P362, P364, P370, P370+P380+P375[+P378], P371, P372, P375, P378, P380, P391, P402, P403+P233, P403+P235, P404, P406, P410+P412, P411, P412, P413, P502
+    codes established: 58 H, 51 P, 2 signal word(s)
+    statements with no exact match (84); Appendix C states no codes, and matching is exact after spelling and fill-in folding, so these are left out rather than guessed:
+        H: Chemical under pressure: may explode if heated.
+        H: Explosive; fire, blast or projection
+        H: Extremely flammable aerosol Pressurized container: may burst if heated
+        H: Extremely flammable chemical under pressure. May explode if heated.
+        H: Extremely flammable gas May react explosively even in the absence of a
+        H: Extremely flammable gas May react explosively even in the absence of a
+        H: Flammable aerosol Pressurized container: may burst if heated.
+        H: Flammable chemical under pressure. May explode if heated.
+        H: In contact with water releases flammable gases, which may ignite spont
+        H: May cause respiratory irritation; or
+        H: May displace oxygen and cause rapid suffocation
+        H: May form combustible dust concentrations in air [if small particles ar
+        P: Avoid heating under confinement or reduction of the desensitizing agen
+        P: Contaminated work clothing must not be allowed out of the workplace.
+        P: DO NOT fight fire whenfire reaches explosives.
+        P: Dispose of content/container to… … in accordance with local/regional/n
+        P: Dispose of contents/container to … in accordance with local/regional/ 
+        P: Dispose of contents/container to … … in accordance with local/regional
+        P: Dispose of contents/container to … … in accordance with local/regional
+        P: Dispose of contents/container to … …in accordance with local/regional/
+        P: Dispose of contents/container to… … in accordance with local/regional/
+        P: Dispose of contents/container to… … in accordance with local/regional/
+        P: Dispose of contents/container to… …in accordance with local/regional/n
+        P: Do not allow contact with air. - if emphasis of the hazard statement i
+        P: Do not allow contact with water. - if emphasis of the hazard statement
+        P: Do not breathe dusts or mists. - if inhalable particles of dusts or mi
+        P: Do not subject to grinding/shock/friction/ … - if the explosive is mec
+        P: Do not subject to grinding/shock/…/friction. -if the explosive is mech
+        P: Ground and bond container and receiving equipment. - if electrostatica
+        P: Ground and bond container and receiving equipment. - if the explosive 
+        P: Ground and bond container and receiving equipment. - if the liquid is 
+        P: Ground and bond container and receiving equipment. - if the solid is e
+        P: Ground and bond container and receiving equipment. if the explosive is
+        P: Handle and store contents under inert gas/ …. … Manufacturer, importer
+        P: If exposed or concerned: Get medical advice/attention.
+        P: If inhaled: If breathing is difficult, remove person to fresh air and 
+        P: If on skin: Brush off loose particles from skin and immerse in cool wa
+        P: If on skin: Brush off loose particles from skin. Immerse in cool water
+        P: If swallowed: Call a poison center/doctor/…/ if you feel unwell.
+        P: In case of fire: Evacuate area. Fight fire remotely due to the risk of
+        … and 44 more
+    GHS Rev.7 codes with no OSHA statement (115). These are NOT assumed to be gaps: OSHA's adoption is partial, so some are genuine differences and some are parse misses. Needs review:
+        H203, H207, H222, H223, H230, H231, H260, H300+H310, H300+H310+H330, H300+H330, H301+H311, H301+H311+H331, H301+H331, H302+H312, H302+H312+H332, H302+H332, H303, H303+H313, H303+H313+H333, H303+H333, H305, H310+H330, H311+H331, H312+H332, H313, H313+H333, H315+H320, H316, H333, H335, H400, H401, H402, H410, H411, H412, H413, H420, P101, P102, P103, P212, P222, P223, P230, P231, P231+P232, P232, P235, P241, P242, P243, P244, P250, P260, P261, P272, P273, P301, P301+P312, P302, P302+P352, P303, P303+P361+P353, P304, P304+P312, P305, P306, P308, P308+P311, P308+P313, P310, P311, P312, P313, P314, P315, P320, P332, P332+P313, P333, P333+P313, P334, P335, P336, P337, P338, P340, P342, P342+P311, P351, P352, P353, P360, P361, P362, P364, P370, P371, P372, P375, P378, P380, P391, P402, P403+P233, P403+P235, P404, P406, P410+P412, P411, P412, P413, P502, P503
     status=partial: the statements are OSHA's own, but the code set is smaller than EU CLP's and the counts are not reconciled.

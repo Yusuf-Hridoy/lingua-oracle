@@ -5,7 +5,7 @@
   "status": "partial",
   "status_reason": "counts_not_reconciled",
   "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-  "retrieved_at": "2026-09-29T12:21:46.070149Z",
+  "retrieved_at": "2026-09-29T12:49:30.448440Z",
   "entries": [
     {
       "regulation": "us_osha",
@@ -17,8 +17,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.97) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -31,8 +31,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -45,8 +45,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.97) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -59,8 +59,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -73,8 +73,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -87,8 +87,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.99) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -101,8 +101,36 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.99) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "us_osha",
+      "revision": "29-CFR-1910.1200-AppC",
+      "language": "en",
+      "code": "H220",
+      "kind": "hazard",
+      "text": "Extremely flammable gas",
+      "signal_word": "Danger",
+      "tier": "A",
+      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "us_osha",
+      "revision": "29-CFR-1910.1200-AppC",
+      "language": "en",
+      "code": "H221",
+      "kind": "hazard",
+      "text": "Flammable gas",
+      "signal_word": "Danger",
+      "tier": "A",
+      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -115,8 +143,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.99) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -129,8 +157,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.99) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -143,8 +171,22 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.98) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "us_osha",
+      "revision": "29-CFR-1910.1200-AppC",
+      "language": "en",
+      "code": "H227",
+      "kind": "hazard",
+      "text": "Combustible liquid",
+      "signal_word": "Warning",
+      "tier": "A",
+      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -157,8 +199,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -171,8 +213,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.98) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -185,8 +227,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -199,8 +241,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -213,8 +255,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -227,8 +269,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -241,8 +283,22 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "us_osha",
+      "revision": "29-CFR-1910.1200-AppC",
+      "language": "en",
+      "code": "H251",
+      "kind": "hazard",
+      "text": "Self-heating; may catch fire",
+      "signal_word": "Danger",
+      "tier": "A",
+      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -255,22 +311,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
-      "status": "ok"
-    },
-    {
-      "regulation": "us_osha",
-      "revision": "29-CFR-1910.1200-AppC",
-      "language": "en",
-      "code": "H260",
-      "kind": "hazard",
-      "text": "In contact with water releases flammable gases, which may ignite spontaneously",
-      "signal_word": "Danger",
-      "tier": "A",
-      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.99) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -283,8 +325,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.98) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -297,8 +339,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.97) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -311,8 +353,22 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.98) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "us_osha",
+      "revision": "29-CFR-1910.1200-AppC",
+      "language": "en",
+      "code": "H272",
+      "kind": "hazard",
+      "text": "May intensify fire; oxidizer",
+      "signal_word": "Danger",
+      "tier": "A",
+      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -325,8 +381,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -339,8 +395,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -353,8 +409,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -367,8 +423,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -381,8 +437,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -395,8 +451,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -409,8 +465,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -423,8 +479,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -437,8 +493,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -451,8 +507,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -465,8 +521,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -479,8 +535,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -493,8 +549,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -507,8 +563,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -521,8 +577,22 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "us_osha",
+      "revision": "29-CFR-1910.1200-AppC",
+      "language": "en",
+      "code": "H320",
+      "kind": "hazard",
+      "text": "Causes eye irritation",
+      "signal_word": "Warning",
+      "tier": "A",
+      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -535,8 +605,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -549,8 +619,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -563,8 +633,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -577,8 +647,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -591,8 +661,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -605,8 +675,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:05.473238Z",
       "status": "ok"
     },
     {
@@ -619,8 +689,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:05.473238Z",
       "status": "ok"
     },
     {
@@ -633,8 +703,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:05.473238Z",
       "status": "ok"
     },
     {
@@ -647,8 +717,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:05.473238Z",
       "status": "ok"
     },
     {
@@ -661,8 +731,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:30.448440Z",
       "status": "ok"
     },
     {
@@ -675,8 +745,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:30.448440Z",
       "status": "ok"
     },
     {
@@ -689,8 +759,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -703,8 +773,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:05.473238Z",
       "status": "ok"
     },
     {
@@ -717,8 +787,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:30.448440Z",
       "status": "ok"
     },
     {
@@ -731,8 +801,8 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:05.473238Z",
       "status": "ok"
     },
     {
@@ -745,8 +815,8 @@
       "signal_word": "Warning",
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:49:05.473238Z",
       "status": "ok"
     },
     {
@@ -759,8 +829,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -773,8 +843,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -783,12 +853,12 @@
       "language": "en",
       "code": "P210",
       "kind": "precautionary",
-      "text": "Keep away from heat, hot surfaces, sparks, open flames and other ignition sonrces. No smoking.",
+      "text": "Keep away from heat, hot surfaces, sparks, open flames and other ignition sources. No smoking.",
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.99) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -801,22 +871,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
-      "status": "ok"
-    },
-    {
-      "regulation": "us_osha",
-      "revision": "29-CFR-1910.1200-AppC",
-      "language": "en",
-      "code": "P212",
-      "kind": "precautionary",
-      "text": "Avoid heating under confinement or reduction of the desensitizing agent.",
-      "signal_word": null,
-      "tier": "A",
-      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.99) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -829,8 +885,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -843,8 +899,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -857,8 +913,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -871,22 +927,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
-      "status": "ok"
-    },
-    {
-      "regulation": "us_osha",
-      "revision": "29-CFR-1910.1200-AppC",
-      "language": "en",
-      "code": "P244",
-      "kind": "precautionary",
-      "text": "Keep valves and fittings freefrom oil and grease.",
-      "signal_word": null,
-      "tier": "A",
-      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.99) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -899,8 +941,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -913,8 +955,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -927,8 +969,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -941,8 +983,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -955,8 +997,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -969,8 +1011,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -979,12 +1021,12 @@
       "language": "en",
       "code": "P280",
       "kind": "precautionary",
-      "text": "Wear protective gloves/protective clothing/eye protection/face protection.",
+      "text": "Wear protective gloves/protective clothing/eye protection/face protection/hearing protection/ …",
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -997,8 +1039,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1011,8 +1053,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1025,8 +1067,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1039,22 +1081,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
-      "status": "ok"
-    },
-    {
-      "regulation": "us_osha",
-      "revision": "29-CFR-1910.1200-AppC",
-      "language": "en",
-      "code": "P301+P312",
-      "kind": "precautionary",
-      "text": "If swallowed: Call a poison center/doctor/…/ if you feel unwell.",
-      "signal_word": null,
-      "tier": "A",
-      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.98) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1067,8 +1095,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1081,22 +1109,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
-      "status": "ok"
-    },
-    {
-      "regulation": "us_osha",
-      "revision": "29-CFR-1910.1200-AppC",
-      "language": "en",
-      "code": "P302+P335+P334",
-      "kind": "precautionary",
-      "text": "If on skin: Brush off loose particles from skin. Immerse in cool water or wrap in wet bandages.",
-      "signal_word": null,
-      "tier": "A",
-      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording near-identical (similarity 0.99) to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1109,8 +1123,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1123,8 +1137,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1137,22 +1151,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
-      "status": "ok"
-    },
-    {
-      "regulation": "us_osha",
-      "revision": "29-CFR-1910.1200-AppC",
-      "language": "en",
-      "code": "P308+P313",
-      "kind": "precautionary",
-      "text": "If exposed or concerned: Get medical advice/attention.",
-      "signal_word": null,
-      "tier": "A",
-      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1165,8 +1165,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1179,8 +1179,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1193,8 +1193,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1207,8 +1207,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1221,8 +1221,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1235,8 +1235,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1249,8 +1249,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1263,8 +1263,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1277,8 +1277,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1291,8 +1291,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1305,8 +1305,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1319,8 +1319,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1333,8 +1333,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1347,8 +1347,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1361,8 +1361,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1375,8 +1375,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1389,8 +1389,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1403,8 +1403,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1417,8 +1417,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1431,8 +1431,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1445,8 +1445,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1459,8 +1459,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1473,8 +1473,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1487,8 +1487,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1501,8 +1501,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1515,8 +1515,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {
@@ -1529,8 +1529,8 @@
       "signal_word": null,
       "tier": "A",
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to EU CLP Annex III/IV English",
-      "retrieved_at": "2026-09-29T12:21:46.070149Z",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical once fill-ins collapsed to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-29T12:47:41.266598Z",
       "status": "ok"
     },
     {

@@ -6,18 +6,26 @@ at all**. It gives the statement text and the signal word, but never says which
 code a statement belongs to.
 
 So codes are not recalled; they are established by comparing OSHA's own wording
-with EU CLP's English text for each code, in three stages of decreasing strength:
+against a reference table, and the reference is **UN GHS Rev.7 English**, not
+EU CLP. OSHA's HazCom is aligned to a GHS revision, so GHS is the text it should
+agree with; EU CLP adds its own drafting and its own later revisions, which made
+it the wrong yardstick.
 
-1. **identical** after normalisation and case folding;
-2. **identical once fill-ins are collapsed** - OSHA prints "May cause cancer <…>"
-   where EU CLP prints the full "<state route of exposure …>" instruction, so the
-   fixed part of the statement is what is compared;
-3. **near-identical**, a similarity of at least 0.97, which absorbs US spelling
-   ("vapor", "poison center") and sentence case.
+The comparison is **exact**, in two stages, with no fuzzy fallback:
 
-Anything weaker is left out and listed in the parse report, together with every
-EU CLP code that OSHA has no statement for. Those are *not* assumed to be gaps:
-OSHA adopted an earlier GHS revision, so some absences are real differences.
+1. **identical** after normalisation, case folding and US/UK spelling folding
+   (`keys/builders/spelling.py` - an explicit reviewed table, not a blanket rule);
+2. **identical once fill-ins are collapsed** - OSHA prints "May cause cancer <<…>>"
+   where GHS prints the full "<state route of exposure …>" instruction, so only
+   the fixed part of the statement is compared.
+
+The previous 0.97-similarity stage is gone. A similarity score cannot tell a
+spelling difference from a substantive one, so it risked attaching a code to
+wording that does not actually say the same thing.
+
+Anything that does not match exactly is left out and listed in the parse report,
+together with every GHS code OSHA has no statement for. Those are *not* assumed
+to be gaps: OSHA adopted an earlier GHS revision, so some absences are real.
 
 The key is therefore marked `partial`: the statements it holds are OSHA's own,
 but the set is smaller than EU CLP's and the counts are not reconciled.
@@ -25,15 +33,18 @@ but the set is smaller than EU CLP's and the counts are not reconciled.
 
 from __future__ import annotations
 
-import difflib
 import re
 from pathlib import Path
 
 from lxml import html as LH
 
 from lingua_oracle.keys.builders.common import BROWSER_UA, SourceUnavailable, fetch, now
-from lingua_oracle.keys.builders.pdf_tables import ParseIssues
-from lingua_oracle.keys.store import load_key
+from lingua_oracle.keys.builders.pdf_tables import (
+    ParseIssues,
+    annex_page_range,
+    harvest,
+)
+from lingua_oracle.keys.builders.spelling import fold
 from lingua_oracle.match.normalize import normalize
 from lingua_oracle.models import (
     SIGNAL_DANGER,
@@ -54,13 +65,25 @@ DEFAULT_FILE = "us-osha/appendix_c.html"
 # Statements the source states but that could not be keyed to a code.
 UNMAPPED: dict[str, int] = {}
 
-SIMILARITY_FLOOR = 0.97
+#: GHS Rev.7 English is the reference; OSHA HazCom is aligned to a GHS revision.
+REFERENCE_FILE = "ghs-rev7/GHS_Rev7_en.pdf"
+REFERENCE_NAME = "UN GHS Rev.7 Annex 3 (English)"
 _PRECAUTIONARY_COLUMNS = {"prevention", "response", "storage", "disposal"}
 # Cells that are only fill-in scaffolding, not a statement.
 _SCAFFOLD_RE = re.compile(r"^[\s<>…(){}\[\].,;:]*$")
-# A fill-in, whether OSHA's bare "<…>" or CLP's full "<state route of exposure …>".
-# OSHA also doubles the brackets, "<<…>>", so one or more of each side is allowed.
-_FILLIN_RE = re.compile(r"(?:<+[^<>]*>+|\([^()]{0,90}\)|…)+")
+# A fill-in. The three sources write the same slot three different ways: OSHA uses
+# "<…>" and doubles it as "<<…>>", CLP uses "<state route of exposure …>", and GHS
+# Rev.7 uses parentheses, "(state route of exposure …)".
+#
+# Only *directive* parentheticals are collapsed - ones that open with an
+# instruction to the labeller. Collapsing every parenthetical would erase real
+# content such as EUH206's "(chlorine)" and make two different statements compare
+# equal, which is exactly the kind of false match this builder must not produce.
+_DIRECTIVE = r"(?:or\s+)?(?:state|specify|indicate|insert|list|name\s+of)\b"
+_FILLIN_RE = re.compile(
+    rf"(?:<+[^<>]*>+|\(\s*{_DIRECTIVE}[^()]{{0,240}}\)|…)+",
+    re.IGNORECASE,
+)
 
 # Paragraphs that are directions to the labeller rather than label text.
 _INSTRUCTION_RE = re.compile(
@@ -81,13 +104,28 @@ def _is_statement(text: str) -> bool:
 
 
 def _match_key(text: str) -> str:
-    return normalize(text).casefold().rstrip(".").strip()
+    return fold(normalize(text).casefold()).rstrip(".").strip()
+
+
+_SLOT = "\ufe64\ufe65"
 
 
 def _core_key(text: str) -> str:
-    """Comparison key with fill-ins collapsed, so only the fixed wording counts."""
-    collapsed = _FILLIN_RE.sub(" ﹤﹥ ", normalize(text).casefold())
-    return " ".join(collapsed.replace(".", " ").split())
+    """Comparison key with fill-ins collapsed, so only the fixed wording counts.
+
+    Runs of adjacent slots collapse to one. The sources differ purely in layout
+    here - OSHA writes "<…> <<…>>" with a space, GHS Rev.7 writes
+    "(state specific effect if known)(state route of exposure …)" with none - so
+    counting the slots would fail a match on formatting alone.
+    """
+    collapsed = _FILLIN_RE.sub(f" {_SLOT} ", fold(normalize(text).casefold()))
+    words = collapsed.replace(".", " ").split()
+    out: list[str] = []
+    for word in words:
+        if word == _SLOT and out and out[-1] == _SLOT:
+            continue
+        out.append(word)
+    return " ".join(out)
 
 
 def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str], set[str]]:
@@ -144,23 +182,18 @@ def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str], set[str]]:
     return hazard, precautionary, signals
 
 
-def _resolve_code(text: str, candidates: list[tuple[str, str, str]]) -> tuple[str | None, float, str]:
-    """Best code for `text`. Returns (code, score, how)."""
+def _resolve_code(
+    text: str, candidates: list[tuple[str, str, str]]
+) -> tuple[str | None, str]:
+    """The code whose reference wording is exactly this statement, or None."""
     exact, core = _match_key(text), _core_key(text)
-    for code, ckey, _core in candidates:
+    for code, ckey, _ccore in candidates:
         if exact == ckey:
-            return code, 1.0, "identical"
+            return code, "identical"
     for code, _ckey, ccore in candidates:
         if core and core == ccore:
-            return code, 1.0, "identical once fill-ins collapsed"
-    ranked = sorted(
-        ((difflib.SequenceMatcher(None, exact, ckey).ratio(), code)
-         for code, ckey, _c in candidates),
-        reverse=True,
-    )
-    if ranked and ranked[0][0] >= SIMILARITY_FLOOR:
-        return ranked[0][1], ranked[0][0], f"near-identical (similarity {ranked[0][0]:.2f})"
-    return None, (ranked[0][0] if ranked else 0.0), "no match"
+            return code, "identical once fill-ins collapsed"
+    return None, "no exact match"
 
 
 def build(use_cache: bool = True, *, from_file: str | None = None,
@@ -178,9 +211,15 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
             raise SourceUnavailable(f"OSHA Appendix C fetch failed: {exc}") from exc
 
     hazard, precautionary, signals = parse_appendix_c(raw)
-    eu = load_key("eu_clp", "en")
-    if eu is None:
-        raise SourceUnavailable("EU CLP English key is required to key OSHA statements")
+
+    reference_path = root / REFERENCE_FILE
+    if not reference_path.exists():
+        raise SourceUnavailable(
+            f"{REFERENCE_NAME} is required to key OSHA statements: {reference_path}"
+        )
+    first, last = annex_page_range(str(reference_path))
+    reference, ref_issues = harvest(str(reference_path), first_page=first, last_page=last)
+    reference = {c: t for c, t in reference.items() if c[:1] in "HP"}
 
     issues = ParseIssues(source=f"{REGULATION}/en ({origin})")
     issues.rows_seen = len(hazard) + len(precautionary)
@@ -193,14 +232,14 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
         ("P", sorted(precautionary), Kind.PRECAUTIONARY),
     ):
         candidates = [
-            (e.code, _match_key(e.text), _core_key(e.text))
-            for e in eu.entries
-            if e.code.startswith(prefix) and not e.code.startswith("EUH")
+            (code, _match_key(ref_text), _core_key(ref_text))
+            for code, ref_text in reference.items()
+            if code.startswith(prefix)
         ]
         for text in items:
-            code, score, how = _resolve_code(text, candidates)
+            code, how = _resolve_code(text, candidates)
             if code is None:
-                unmapped.append(f"{prefix}: {text[:70]} (best {score:.2f})")
+                unmapped.append(f"{prefix}: {text[:70]}")
                 continue
             if code in entries:
                 continue
@@ -210,7 +249,7 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
                 signal_word=hazard.get(text) if hazard.get(text) in ("Danger", "Warning") else None,
                 tier=Tier.A, source_url=SOURCE_URL,
                 source_ref=f"29 CFR 1910.1200 App. C; code established by wording {how} "
-                           f"to EU CLP Annex III/IV English",
+                           f"to {REFERENCE_NAME}",
                 retrieved_at=ts, status=Status.OK,
             )
 
@@ -228,11 +267,11 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
     p_count = sum(1 for c in entries if c.startswith("P"))
     UNMAPPED[REGULATION] = len(unmapped)
 
-    eu_h = {e.code for e in eu.entries if e.code.startswith("H") and not e.code.startswith("EUH")}
-    eu_p = {e.code for e in eu.entries if e.code.startswith("P")}
-    absent = sorted((eu_h - set(entries)) | (eu_p - set(entries)))
+    absent = sorted(set(reference) - set(entries))
 
     issues.rows_used = len(entries)
+    issues.tables_seen += ref_issues.tables_seen
+    issues.notes.append(f"reference table: {REFERENCE_NAME} ({len(reference)} codes)")
     issues.notes.append(
         f"statements read from the source: {len(hazard)} hazard, "
         f"{len(precautionary)} precautionary"
@@ -241,17 +280,18 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
                         f"{len(signals)} signal word(s)")
     if unmapped:
         issues.notes.append(
-            f"statements with no confident code ({len(unmapped)}); Appendix C states "
-            "no codes, so these are left out rather than guessed:"
+            f"statements with no exact match ({len(unmapped)}); Appendix C states no "
+            "codes, and matching is exact after spelling and fill-in folding, so "
+            "these are left out rather than guessed:"
         )
         issues.notes.extend(f"    {u}" for u in unmapped[:40])
         if len(unmapped) > 40:
             issues.notes.append(f"    … and {len(unmapped) - 40} more")
     if absent:
         issues.notes.append(
-            f"EU CLP codes with no OSHA statement ({len(absent)}). These are NOT "
-            "assumed to be gaps: OSHA adopted an earlier GHS revision, so some are "
-            "genuine differences and some are parse misses. Needs review:"
+            f"GHS Rev.7 codes with no OSHA statement ({len(absent)}). These are NOT "
+            "assumed to be gaps: OSHA's adoption is partial, so some are genuine "
+            "differences and some are parse misses. Needs review:"
         )
         issues.notes.append("    " + ", ".join(absent))
     issues.notes.append(

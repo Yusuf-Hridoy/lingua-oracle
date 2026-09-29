@@ -318,7 +318,7 @@ def test_osha_parse_issues_lists_codes_absent_from_osha():
     from lingua_oracle.keys.store import keys_root
 
     report = (keys_root() / "us_osha" / "_parse_issues.txt").read_text(encoding="utf-8")
-    assert "codes with no OSHA statement" in report
+    assert "GHS Rev.7 codes with no OSHA statement" in report
     assert "NOT" in report and "assumed to be gaps" in report
 
 
