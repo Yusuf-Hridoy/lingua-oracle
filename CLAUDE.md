@@ -85,10 +85,24 @@ the A→B→C resolution and returns the `Borrowed` object the checks read from.
 `data/answer_keys/{regulation}/{lang}.json`, built by `keys/builders/*.py` and
 committed. Check time only reads them.
 
-Current coverage: **EU CLP** 24 languages / 5,757 entries (tier A) and **US OSHA**
-33 entries. UK, UN GHS, Australia, Canada WHMIS and Japan are `pending_source` —
-the exact reason each source was unusable is recorded in
-`keys/builders/pending.py`. Fill via `lingua keys import-csv`.
+Current coverage: EU CLP 24 languages (5,757), UN GHS Rev.11 en/fr/es (737),
+UK GB CLP en (236), Australia en (236), US OSHA en (33). Canada, Japan and
+UN GHS ar/ru/zh are `pending_source`.
+
+Sources that cannot be fetched programmatically live in
+`data/sources/<regulation>/` and are parsed with `lingua keys build <reg>
+--from-file`. `keys/builders/pdf_tables.py` holds the shared parsers: rows are
+matched on the **code pattern in column 0**, not header text, so one parser
+serves English, French and Spanish. Four table shapes are handled - plain
+code/statement, CLP multilingual (`[code, "Language", class]` then a row per
+language), inline (`"AUH001 - Explosive when dry"`), and quoted prose in GB CLP's
+Annex II. Table detection costs ~0.5s a page, so results are cached under
+`LINGUA_CACHE_DIR` keyed on file size and mtime.
+
+Every build writes `data/answer_keys/<reg>/_parse_issues.txt` recording pages
+scanned, rows used, codes with an empty statement, and codes seen twice with
+conflicting text. **Read it after any builder change** - it is how a silent
+parsing regression becomes visible.
 
 Two source facts that drive the design and are easy to re-discover the hard way:
 
@@ -101,6 +115,13 @@ Two source facts that drive the design and are easy to re-discover the hard way:
   osha.gov and the eCFR API). Statements are keyed to a code only where OSHA's
   wording is identical to EU CLP's English; the rest are counted in
   `us_osha.UNMAPPED`, never guessed.
+- **Canada's HPR contains no code-keyed statements** - zero H/P codes in the full
+  text - so `ca_whmis` stays pending by evidence, not by omission.
+- **The Japanese PDF cannot be read at all**: its font carries no ToUnicode CMap,
+  so neither PyMuPDF nor pdfplumber can recover characters. Do not "fix" this with
+  a decoding heuristic; only OCR would work, and it needs the user's approval.
+- **GB CLP is retained law**: EU codes added after retention (EUH380/381/430/431/
+  440/441/450/451) are legitimately absent from `uk_clp`, not missing.
 
 Signal-word **text** never goes in `regulations.yaml` — it lives in the keys under
 the pseudo-codes `SIGNAL_DANGER` / `SIGNAL_WARNING`. Per-code signal words (for

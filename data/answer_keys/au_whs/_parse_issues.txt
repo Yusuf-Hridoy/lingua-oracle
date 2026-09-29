@@ -1,0 +1,5 @@
+  parse issues for au_whs/en:
+    pages=98 tables=131 rows=765 used=224
+    codes seen twice with different text (1): H314
+    GHS Rev.7 pages 275-373: 224 H/P codes
+    Safe Work Australia guidance: 12 AUH codes

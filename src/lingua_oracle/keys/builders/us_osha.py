@@ -87,11 +87,24 @@ def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str]]:
     return statements, signals
 
 
-def build(use_cache: bool = True) -> list[AnswerKey]:
-    try:
-        raw = fetch(SOURCE_URL, headers={"User-Agent": BROWSER_UA}, use_cache=use_cache)
-    except Exception as exc:  # noqa: BLE001
-        raise SourceUnavailable(f"OSHA Appendix C fetch failed: {exc}") from exc
+DEFAULT_FILE = "us-osha/appendix_c.html"
+
+
+def build(use_cache: bool = True, *, from_file: str | None = None,
+          sources_root=None) -> list[AnswerKey]:
+    from pathlib import Path
+
+    from lingua_oracle.registry import data_dir
+
+    root = Path(sources_root) if sources_root else (data_dir() / "sources")
+    local = Path(from_file) if from_file else root / DEFAULT_FILE
+    if local.exists():
+        raw = local.read_bytes()
+    else:
+        try:
+            raw = fetch(SOURCE_URL, headers={"User-Agent": BROWSER_UA}, use_cache=use_cache)
+        except Exception as exc:  # noqa: BLE001
+            raise SourceUnavailable(f"OSHA Appendix C fetch failed: {exc}") from exc
 
     statements, signals = parse_appendix_c(raw)
     eu_en = eu_clp.build(["en"], use_cache=use_cache, with_signal_words=False)[0]

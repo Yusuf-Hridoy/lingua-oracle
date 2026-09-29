@@ -111,44 +111,65 @@ produces "unverified", never a false accusation.
 | Regulation | Languages | Entries | Status |
 | --- | --- | --- | --- |
 | EU CLP | 24 | 5 757 | ok (tier A) |
+| UN GHS Rev.11 | 3 (en, fr, es) | 737 | ok (tier A); ar/ru/zh `pending_source` |
+| UK GB CLP | 1 (en) | 236 | ok (tier A) |
+| Australia WHS | 1 (en) | 236 | ok (tier A) |
 | US OSHA HazCom | 1 (en) | 33 | ok (tier A), partial — see below |
-| UK GB CLP | — | 0 | `pending_source` |
 | Canada WHMIS | — | 0 | `pending_source` |
-| UN GHS | — | 0 | `pending_source` |
-| Australia WHS | — | 0 | `pending_source` |
 | Japan JIS | — | 0 | `pending_source` |
 
-**No key is ever filled from memory.** Where a source could not be fetched, the
-key is empty and marked `pending_source`, with the reason recorded in
-`src/lingua_oracle/keys/builders/pending.py`. Fill them with
-`lingua keys import-csv` from a sourced glossary.
+**No key is ever filled from memory.** Where a source could not be read, the key
+is empty and marked `pending_source`, with the reason recorded in
+`data/answer_keys/{regulation}/_parse_issues.txt`. Fill those with
+`lingua keys import-csv`.
 
-### Sources actually used
+### Sources
 
-* **EU CLP** — the EU Publications Office **CELLAR** endpoint,
-  `http://publications.europa.eu/resource/celex/02008R1272-20260701`, requested
-  with `Accept: application/xhtml+xml` and `Accept-Language: <iso639-3>`.
-  EUR-Lex's own HTML views sit behind an AWS WAF challenge; CELLAR is the
-  sanctioned machine-readable route. Annex III and IV render each code as a
-  table containing all 24 languages, so one fetch yields every translation,
-  including EUH380/381/430/431/440/441/450/451 and all combined codes.
-* **US OSHA** — `https://www.osha.gov/.../1910.1200AppC`.
+Official texts that could not be fetched programmatically are kept under
+`data/sources/<regulation>/` and parsed with `--from-file`:
+
+| Regulation | Source | How it is read |
+| --- | --- | --- |
+| EU CLP | EU Publications Office **CELLAR** (network) | Annex III/IV multilingual tables — one fetch yields all 24 languages |
+| UN GHS | `un-ghs/GHS_Rev11_{en,fr,es}.pdf` | Annex 3 code/statement tables |
+| UK GB CLP | `uk-gb-clp/gb_clp_full.pdf` | Annex III multilingual (EN row) + Annex IV tables + Annex II prose |
+| Australia | `ghs-rev7/GHS_Rev7_en.pdf` + `australia/swa_classification_guidance.pdf` | GHS Rev.7 for H/P; SWA guidance for AUH |
+| US OSHA | `us-osha/appendix_c.html` | Signal words directly; statements by text identity with EU CLP |
+| Canada | `ca-whmis/hpr_bilingual.pdf` | scanned, yields nothing — see below |
+| Japan | `japan/GHS_Rev9_ja_annex2-3.pdf` | unreadable — see below |
+
+Rows are located by the **code pattern in column 0**, not by header text, so one
+parser works across English, French and Spanish. Every build writes a
+`_parse_issues.txt` next to the keys recording pages scanned, rows used, codes
+with an empty statement, and codes seen twice with conflicting text.
 
 ### Why OSHA is partial
 
 29 CFR 1910.1200 Appendix C contains **no H or P code numbers at all** — verified
-against both osha.gov and the eCFR API. It gives signal words and statement text
-organised by hazard class, but not the code each statement belongs to.
+against osha.gov, the eCFR API and the local copy. It gives signal words and
+statement text organised by hazard class, but not the code each statement belongs
+to. So the builder takes signal words directly, and keys a statement to a code
+only where OSHA's own wording is identical, after normalisation, to EU CLP's
+English. That maps 31 of 78 statements; the remaining 40 are counted and reported
+rather than guessed.
 
-So the builder takes only what the source states: signal words directly, and
-hazard statements keyed to a code **only where OSHA's own wording is identical,
-after normalisation, to EU CLP's English text for that code**. That maps 31 of
-78 statements. The remaining 40 are counted and reported rather than guessed,
-because assigning them a code would mean inventing the mapping.
+### Why Canada is pending
 
----
+The Hazardous Products Regulations (SOR/2015-17) set out classification criteria
+and label rules but do not reproduce the statements against their codes: a scan of
+the full 165-page bilingual text finds **zero** H or P codes. Nothing can be
+derived without inventing the code-to-text mapping.
 
-## Adding a regulation
+### Why Japan is pending
+
+`GHS_Rev9_ja_annex2-3.pdf` does not yield readable Japanese. PyMuPDF returns
+mojibake (0.6% Japanese characters, `㝃ᒓ᭩` where `附属書` is meant) and pdfplumber
+returns `(cid:NNNN)` placeholders only. The cause is in the file: its Japanese
+font (`MS-Mincho-90ms-RKSJ-H`) carries **no ToUnicode CMap**, so the PDF contains
+no glyph-to-character mapping to recover. No amount of text extraction can fix
+that; OCR would be required, and has not been run.
+
+## Adding a regulation## Adding a regulation
 
 1. Add an entry to `data/regulations.yaml`: `display_name`, `revision`,
    `official_languages`, `required_languages`, `allowed_prefixes`,
@@ -177,18 +198,18 @@ under the pseudo-codes `SIGNAL_DANGER` / `SIGNAL_WARNING`.
 
 ## Known limitations
 
-* **Four regulations have no answer key.** UK GB CLP (legislation.gov.uk serves
-  every view, including `data.xml` and `data.akn`, behind an AWS WAF JavaScript
-  challenge), UN GHS (unece.org returns 403 to programmatic clients), Australia
-  (safeworkaustralia.gov.au does not answer programmatic requests), and Canada
-  WHMIS (the HPR full text is reachable but contains no code-keyed statements).
-  Japan is `pending_source` by design, as JIS is a paid standard. Until these are
-  imported, documents under those regulations report *unverified*, not pass.
-* **Tier B currently borrows nothing**, because it needs a regulation's English
-  key to compare against EU CLP's, and the regulations that would benefit have no
-  key yet. The logic is implemented and unit-tested; it activates as soon as an
-  English key is imported.
+* **Canada and Japan have no answer key**, for the reasons above, as do Arabic,
+  Russian and Chinese UN GHS (no edition on file). Documents under those report
+  *unverified*, never pass or fail on wording.
 * **OSHA covers 31 codes**, for the reason above.
+* **The UK key has 19 codes whose English text appears twice with different
+  wording** in the retained text, most likely an original and an amended version.
+  The first reading is kept and every conflict is listed in
+  `data/answer_keys/uk_clp/_parse_issues.txt` for a human to settle.
+* **EUH211 and EUH212 are absent from the UK key** — they are not in Annex III's
+  tables nor stated as quoted prose in Annex II of the copy on file.
+* **UN GHS French is missing P317** (the source cell is empty) and reports one
+  conflicting reading for P332.
 * **C-13 finds nothing** until an older revision is archived at
   `data/answer_keys/{regulation}@{revision}/{lang}.json`. Only one revision is
   currently built.

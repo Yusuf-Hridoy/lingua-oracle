@@ -85,15 +85,24 @@ def test_per_code_signal_words_extracted():
     assert by_code["H319"].signal_word == "Warning"
 
 
-def test_pending_source_keys_are_empty_not_invented():
-    """A source we could not fetch must never be filled from memory."""
-    for regulation in ("uk_clp", "un_ghs", "au_whs", "ca_whmis", "jp_jis"):
-        for language in load_registry().get(regulation).official_languages:
-            key = load_key(regulation, language)
-            if key is None:
-                continue
-            assert key.status is Status.PENDING_SOURCE
-            assert key.entries == []
+# (regulation, language) pairs with no usable source on file. Canada's HPR
+# carries no code-keyed statements, the JIS PDF has no ToUnicode map so its text
+# cannot be read, and no Arabic/Russian/Chinese GHS edition was supplied.
+PENDING_PAIRS = [
+    ("ca_whmis", "en"), ("ca_whmis", "fr"),
+    ("jp_jis", "ja"), ("jp_jis", "en"),
+    ("un_ghs", "ar"), ("un_ghs", "ru"), ("un_ghs", "zh"),
+]
+
+
+@pytest.mark.parametrize(("regulation", "language"), PENDING_PAIRS)
+def test_pending_source_keys_are_empty_not_invented(regulation, language):
+    """A source we could not read must never be filled from memory."""
+    key = load_key(regulation, language)
+    if key is None:
+        return
+    assert key.status is Status.PENDING_SOURCE
+    assert key.entries == []
 
 
 def test_tier_b_borrows_when_english_matches(tmp_path, monkeypatch):
@@ -174,3 +183,100 @@ def test_csv_import_rejects_missing_columns(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="missing required column"):
         import_csv(bad, "jp_jis", "ja", Tier.C)
     registry_mod.load_registry.cache_clear()
+
+
+# -- keys built from the local official sources ----------------------------
+
+
+@pytest.mark.parametrize(
+    ("regulation", "language", "must_have"),
+    [
+        ("un_ghs", "en", ["H225", "P280", "P305+P351+P338"]),
+        ("un_ghs", "fr", ["H225", "P280"]),
+        ("un_ghs", "es", ["H225", "P280"]),
+        ("uk_clp", "en", ["H225", "EUH066", "P280"]),
+        ("au_whs", "en", ["H225", "AUH044", "AUH066"]),
+        ("us_osha", "en", ["SIGNAL_DANGER", "SIGNAL_WARNING"]),
+    ],
+)
+def test_built_keys_are_populated(regulation, language, must_have):
+    key = load_key(regulation, language)
+    assert key is not None, f"{regulation}/{language} missing"
+    assert key.status is Status.OK
+    by_code = key.by_code()
+    for code in must_have:
+        assert code in by_code, f"{regulation}/{language} has no {code}"
+        assert by_code[code].text.strip()
+
+
+def test_built_keys_carry_provenance():
+    """Every entry must be traceable to a source; nothing filled from memory."""
+    for regulation in ("un_ghs", "uk_clp", "au_whs"):
+        key = load_key(regulation, "en")
+        assert key is not None and key.entries
+        for entry in key.entries:
+            assert entry.source_url, f"{regulation} {entry.code} has no source_url"
+            assert entry.source_ref, f"{regulation} {entry.code} has no source_ref"
+            assert entry.retrieved_at is not None
+
+
+def test_australia_has_auh_and_uk_has_euh_but_not_swapped():
+    """C-12 depends on these families belonging to the right regulation."""
+    au = load_key("au_whs", "en").by_code()
+    uk = load_key("uk_clp", "en").by_code()
+    assert any(c.startswith("AUH") for c in au)
+    assert not any(c.startswith("EUH") for c in au)
+    assert any(c.startswith("EUH") for c in uk)
+    assert not any(c.startswith("AUH") for c in uk)
+
+
+def test_gb_clp_lacks_post_retention_eu_codes():
+    """GB CLP is retained law: EU codes added after retention must be absent."""
+    uk = load_key("uk_clp", "en").by_code()
+    for code in ("EUH380", "EUH381", "EUH430", "EUH450"):
+        assert code not in uk, f"{code} postdates GB retention and should not be present"
+
+
+def test_japan_stays_pending_source():
+    """The JIS PDF does not yield valid Japanese, so nothing may be recorded."""
+    for language in ("ja", "en"):
+        key = load_key("jp_jis", language)
+        if key is None:
+            continue
+        assert key.status is Status.PENDING_SOURCE
+        assert key.entries == []
+
+
+def test_canada_stays_pending_source():
+    """The HPR carries no code-keyed statements, so nothing may be derived."""
+    for language in ("en", "fr"):
+        key = load_key("ca_whmis", language)
+        if key is None:
+            continue
+        assert key.status is Status.PENDING_SOURCE
+        assert key.entries == []
+
+
+def test_tier_b_activates_against_the_real_keys():
+    """With UN GHS English on file, EU CLP translations become borrowable.
+
+    Tier B was dormant while only EU CLP had a key; this is the end-to-end check
+    that it now does real work, and that borrowed entries are marked tier B.
+    """
+    from lingua_oracle.keys.tierb import resolve
+
+    resolved = resolve("un_ghs", "de")
+    assert len(resolved.borrowed_codes) > 50
+    for code in list(resolved.borrowed_codes)[:20]:
+        entry = resolved.entries[code]
+        assert entry.tier is Tier.B
+        assert entry.regulation == "un_ghs"
+        assert "borrowed from EU CLP" in (entry.source_ref or "")
+
+
+def test_tier_b_does_not_borrow_for_eu_itself():
+    from lingua_oracle.keys.tierb import resolve
+
+    resolved = resolve("eu_clp", "da")
+    assert resolved.borrowed_codes == set()
+    assert all(e.tier is Tier.A for e in resolved.entries.values())

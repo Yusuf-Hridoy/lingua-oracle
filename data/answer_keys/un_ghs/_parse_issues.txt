@@ -1,0 +1,23 @@
+  parse issues for un_ghs/en (GHS_Rev11_en.pdf):
+    pages=124 tables=130 rows=1131 used=246
+    (loaded from parse cache)
+    annex pages 283-407
+  parse issues for un_ghs/fr (GHS_Rev11_fr.pdf):
+    pages=117 tables=207 rows=1132 used=245
+    codes with an empty statement (1): P317
+    codes seen twice with different text (1): P332
+    (loaded from parse cache)
+    annex pages 321-438
+  parse issues for un_ghs/es (GHS_Rev11_es.pdf):
+    pages=110 tables=105 rows=838 used=246
+    (loaded from parse cache)
+    annex pages 327-437
+  parse issues for un_ghs/ar:
+    pages=0 tables=0 rows=0 used=0
+    no source file on record; left pending_source
+  parse issues for un_ghs/ru:
+    pages=0 tables=0 rows=0 used=0
+    no source file on record; left pending_source
+  parse issues for un_ghs/zh:
+    pages=0 tables=0 rows=0 used=0
+    no source file on record; left pending_source

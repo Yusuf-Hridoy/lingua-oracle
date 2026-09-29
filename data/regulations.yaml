@@ -73,14 +73,14 @@ regulations:
 
   un_ghs:
     display_name: "UN GHS"
-    revision: "Rev.10"
-    authority: "UN GHS Rev.10, Annex 3"
+    revision: "Rev.11"
+    authority: "UN GHS Rev.11, Annex 3"
     official_languages: [ar, en, es, fr, ru, zh]
     required_languages: []
     supplemental_prefixes: []
     allowed_prefixes: [H, P]
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
-    source_url: "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev10-2023"
+    source_url: "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025"
     # "Globally Harmonized System" on its own is not a signal: practically every
     # GHS-aligned SDS in the world spells it out in its abbreviations glossary.
     # These patterns require the document to name UN GHS as its governing text.

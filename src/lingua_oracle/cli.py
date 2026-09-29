@@ -131,24 +131,53 @@ def serve(
 def keys_build(
     regulation: Annotated[str, typer.Argument(help="A regulation id, or 'all'.")],
     languages: Annotated[str | None, typer.Option("--languages", help="Comma-separated.")] = None,
+    from_file: Annotated[Path | None, typer.Option(
+        "--from-file", help="Local copy of the official source to parse.")] = None,
+    sources: Annotated[Path | None, typer.Option(
+        "--sources", help="Root of the source tree (default data/sources).")] = None,
     no_cache: Annotated[bool, typer.Option("--no-cache", help="Ignore the HTTP cache.")] = False,
 ) -> None:
-    """Build answer keys from official sources. This is the only networked command."""
-    from lingua_oracle.keys.builders import eu_clp, pending, us_osha
+    """Build answer keys from official sources.
+
+    Builders read local files under data/sources/ where one is present; only
+    EU CLP and the OSHA fallback reach the network.
+    """
+    from lingua_oracle.keys.builders import (
+        au_whs,
+        ca_whmis,
+        eu_clp,
+        pending,
+        uk_clp,
+        un_ghs,
+        us_osha,
+    )
     from lingua_oracle.keys.builders.common import SourceUnavailable, sanity_report
-    from lingua_oracle.keys.store import save_key
+    from lingua_oracle.keys.store import keys_root, save_key
     from lingua_oracle.registry import load_registry
 
     wanted = load_registry().ids() if regulation == "all" else [regulation]
     langs = [x.strip() for x in languages.split(",")] if languages else None
+    file_arg = str(from_file) if from_file else None
+    root_arg = sources
 
     for reg_id in wanted:
         typer.secho(f"\n=== {reg_id} ===", bold=True)
+        reports = []
         try:
             if reg_id == "eu_clp":
                 keys = eu_clp.build(langs, use_cache=not no_cache)
             elif reg_id == "us_osha":
-                keys = us_osha.build(use_cache=not no_cache)
+                keys = us_osha.build(
+                    use_cache=not no_cache, from_file=file_arg, sources_root=root_arg
+                )
+            elif reg_id == "un_ghs":
+                keys, reports = un_ghs.build(langs, from_file=file_arg, sources_root=root_arg)
+            elif reg_id == "uk_clp":
+                keys, reports = uk_clp.build(langs, from_file=file_arg, sources_root=root_arg)
+            elif reg_id == "au_whs":
+                keys, reports = au_whs.build(langs, from_file=file_arg, sources_root=root_arg)
+            elif reg_id == "ca_whmis":
+                keys, reports = ca_whmis.build(langs, from_file=file_arg, sources_root=root_arg)
             elif reg_id in pending.PENDING:
                 keys = pending.build(reg_id, langs)
                 typer.secho(f"  pending_source: {pending.reason(reg_id)}", fg=typer.colors.YELLOW)
@@ -165,6 +194,18 @@ def keys_build(
             save_key(key)
             entries.extend(key.entries)
         typer.echo(f"  wrote {len(keys)} key file(s), {len(entries)} entries")
+
+        if reports:
+            rendered = "\n".join(r.render() for r in reports)
+            typer.echo(rendered)
+            target = keys_root() / reg_id
+            target.mkdir(parents=True, exist_ok=True)
+            (target / "_parse_issues.txt").write_text(rendered + "\n", encoding="utf-8")
+            typer.secho(
+                f"  parse issues written to {target / '_parse_issues.txt'}",
+                fg=typer.colors.BLUE,
+            )
+
         if entries:
             typer.echo(sanity_report(reg_id, entries))
         if reg_id == "us_osha" and us_osha.UNMAPPED.get("us_osha"):

@@ -1,0 +1,4 @@
+  parse issues for ca_whmis (hpr_bilingual.pdf):
+    pages=0 tables=0 rows=0 used=0
+    distinct H/P codes found anywhere in the text: 0
+    The HPR states classification criteria and label rules but does not reproduce statements against their codes, so nothing can be derived without inventing the mapping. Left pending_source; fill with `lingua keys import-csv`.
