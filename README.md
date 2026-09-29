@@ -150,8 +150,7 @@ Official texts that could not be fetched programmatically are kept under
 
 `ghs-rev7/` is **not** redundant with `un-ghs/`: Australia adopts GHS Rev.7 while
 UN GHS is built from Rev.11, so the two hold different wording and both are
-needed. The one file nothing reads is `ghs-rev7/GHS_Rev7_fr.pdf` (7.3 MB) —
-Australia's key is English only.
+needed. It holds the English edition only, since Australia's key is English.
 
 Rows are located by the **code pattern in column 0**, not by header text, so one
 parser works across English, French and Spanish. Every build writes a
