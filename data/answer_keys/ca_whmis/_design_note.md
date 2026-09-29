@@ -1,91 +1,66 @@
-# Canada WHMIS — design note for a class/category → code mapping
+# Canada WHMIS — how the key is built
 
-**Status:** design only. Nothing here is implemented, and no entry has been
-written to the WHMIS key.
+**Status: implemented.** This note previously proposed a three-stage mapping from
+HPR hazard class/category to GHS codes. That design was unnecessary, and the
+reason is worth recording.
 
-## The problem
+## What the earlier design got wrong
 
-The Hazardous Products Regulations (SOR/2015-17) are fetchable and parse cleanly,
-but they are shaped differently from every other source this tool reads. A scan of
-the full 165-page bilingual text finds **zero** H or P codes. The HPR does not
-codify statements; it states them positionally, in Schedule tables keyed by
+The starting observation was right: the Hazardous Products Regulations
+(SOR/2015-17) contain **zero** H or P codes, and state statements positionally by
+hazard class and category. From that it looked as though a class/category →
+statement → code mapping had to be invented, with the French half inherited
+positionally from bilingual HPR rows because WHMIS French could not safely be
+matched against EU CLP French.
 
-    hazard class → category (or subcategory) → the statement to display
+What that missed is that the HPR says where its statements come from:
 
-in English and French side by side. Every other regulation this tool supports
-(EU CLP Annex III/IV, UN GHS Annex 3, GB CLP, GHS Rev.7) publishes a table whose
-first column *is* the code, which is why one parser serves all of them.
+> **"GHS** means the United Nations document entitled *Globally Harmonized System
+> of Classification and Labelling of Chemicals (GHS), Seventh Revised Edition."*
 
-So the missing thing is not the text — the HPR has it, in both official
-languages — but the code each statement belongs to.
+WHMIS statements therefore *are* GHS Rev.7 statements. The codes were never
+missing — they are in GHS Rev.7 Annex 3, a code-keyed table, in every UN language
+including French.
 
-## Why the OSHA trick does not transfer
+## What is actually done
 
-US OSHA has the same "no codes" shape, and there the code is established by
-comparing OSHA's English against EU CLP's English: identical wording means the
-same statement. That works because both are English.
+* **English** from `data/sources/ghs-rev7/GHS_Rev7_en.pdf`, Annex 3.
+* **French** from `data/sources/ghs-rev7/GHS_Rev7_fr.pdf`, Annex 3.
 
-It does not transfer to WHMIS for the French half. WHMIS French is a Canadian
-translation and is not expected to be identical to EU CLP's French, so text
-identity cannot establish the code. Matching French-to-French across two
-jurisdictions would be guessing, which is exactly what this tool must not do.
+Each language is read from its own edition. Nothing is translated, nothing is
+text-matched across languages, and no code is inferred from a position: the code
+is the one in the table the statement sits in. Tier A, with `source_ref` recording
+both the GHS row and the HPR definition that makes Rev.7 the right edition.
 
-## Proposed mapping
+Signal words come from the Rev.7 Annex 1 label-element tables — English directly,
+French by aligning tables on their H codes, which are identical across editions.
 
-Three stages, strongest first. Each stage records *how* a code was established, so
-a reviewer can weigh it.
+## The two gaps, and why they are gaps
 
-### 1. English by text identity (reuses existing machinery)
+**Chemicals under pressure.** For this class the HPR points not at Rev.7 but at
+Annex 3 of the **Eighth** revised edition, which is not on file. The affected
+codes are left out entirely, with `status_reason: needs_ghs_rev8_annex3`. Which
+codes those are is read from the hazard-class column of a GHS edition that names
+them, not from recall — they do not exist in Rev.7 at all, which is precisely why
+the HPR had to reach forward to Rev.8.
 
-Run the WHMIS English statements through the same comparison ladder
-`keys/builders/us_osha.py` already uses — identical, identical once fill-ins are
-collapsed, then near-identical at a high similarity floor — against EU CLP
-English. This should key most of the English side, because WHMIS English and GHS
-English are close.
+The HPR also states, in both languages, an additional statement for this class:
+*"Chemical under pressure: May explode if heated / Produit chimique sous pression :
+peut exploser sous l'effet de la chaleur"*. It is **not** recorded, because the
+HPR gives it no code and assigning one would be inference. It is quoted in
+`_parse_issues.txt` so it is not lost.
 
-Output: `{code: english_statement}`.
+To close this gap, supply GHS Rev.8 Annex 3 (English and French) under
+`data/sources/` and extend `GHS7_FILES` in the builder.
 
-### 2. French by position, not by text
+**Canada-only classes** — biohazardous infectious materials, and the physical and
+health hazards "not otherwise classified". The HPR defines these and sets
+classification criteria for them, but states no statement text, so there is
+nothing to record. They are listed in `_parse_issues.txt`.
 
-This is the part that needs the HPR's own structure. Within one Schedule row the
-English and French cells are the *same statement* in two languages. So once stage
-1 has keyed the English cell of a row, the French cell of that same row inherits
-the code — positionally, with no text comparison at all.
+## What must still not be done
 
-This requires the parser to keep row identity across the bilingual layout, which
-the current `harvest` does not (it flattens to `{code: text}`). A
-`harvest_bilingual_rows` returning `[(en_cell, fr_cell, class, category)]` would
-be the addition.
-
-Confidence here is as good as stage 1's, because the French code is inherited
-rather than inferred.
-
-### 3. Class/category cross-check (verification, not a source)
-
-The HPR row also gives hazard class and category. EU CLP Annex I and UN GHS
-Annex 1 both state which statement belongs to which class/category. Comparing
-them catches stage-1 mistakes: if the HPR places a statement under
-"Flammable liquids, category 2" and the code assigned in stage 1 belongs to
-category 3 in CLP, the mapping is wrong and should be rejected, not stored.
-
-Use this only to *reject*, never to assign — deriving a code from a class alone
-would be inference.
-
-## What must not be done
-
-- Do not translate. Neither direction, not even for a cross-check.
-- Do not match WHMIS French against EU CLP French to establish a code.
-- Do not fall back to "the statement that looks closest" without a similarity
-  floor and a recorded score.
-- Anything left unkeyed stays out of the key and goes in `_parse_issues.txt`.
-
-## Expected outcome
-
-Stage 1 should key the bulk of the English side; stage 2 gives French for free
-wherever stage 1 succeeded; stage 3 removes the mistakes. The result would be
-`status: partial` with `status_reason: counts_not_reconciled`, matching how OSHA
-is handled — not `ok`, because coverage would be incomplete and the HPR's own
-revision cycle differs from CLP's.
-
-Until this exists, `lingua keys import-csv` is the supported way to populate
-WHMIS from a sourced company glossary.
+- Do not translate, in either direction.
+- Do not match WHMIS French against another regulation's French to establish a code.
+- Do not fill the chemicals-under-pressure codes from Rev.7 or Rev.11; the HPR
+  names Rev.8 specifically, and the wording differs between revisions.

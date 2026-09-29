@@ -50,6 +50,23 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
             continue
 
         result = match(hit.text, entry.text)
+        if not result.matched:
+            # A regulation may require several languages in one document, and a
+            # phrase only has to be correct in the language it is written in.
+            for other_language, other in ctx.alternate_entries(hit.code):
+                other_result = match(hit.text, other.text)
+                if other_result.matched:
+                    result, entry = other_result, other
+                    findings.append(
+                        Finding(
+                            check_id=check_id, severity=Severity.INFO, section=section,
+                            page=hit.page, code=hit.code, expected=other.text,
+                            found=hit.text, tier=other.tier,
+                            message=f"{hit.code} is in '{other_language}', which "
+                                    f"{ctx.regulation.display_name} also requires.",
+                        )
+                    )
+                    break
         if result.kind in (MatchKind.EXACT, MatchKind.TEMPLATE) and result.matched:
             for value in result.fillins:
                 findings.append(

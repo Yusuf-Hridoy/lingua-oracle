@@ -115,7 +115,7 @@ produces "unverified", never a false accusation.
 | UK GB CLP | 1 (en) | 236 | ok (tier A) |
 | Australia WHS | 1 (en) | 236 | ok (tier A) |
 | US OSHA HazCom | 1 (en) | 111 | **partial** (tier A) — see below |
-| Canada WHMIS | — | 0 | `pending_source` / `needs_class_category_mapping` |
+| Canada WHMIS | 2 (en, fr) | see stats | **partial** (tier A) — `needs_ghs_rev8_annex3` |
 | Japan JIS | — | 0 | `pending_source` / `wrong_source` |
 
 **No key is ever filled from memory.** Where a source could not be read, the key
@@ -145,7 +145,7 @@ Official texts that could not be fetched programmatically are kept under
 | UK GB CLP | `uk-gb-clp/gb_clp_full.pdf` | Annex III multilingual (EN row) + Annex IV tables + Annex II prose |
 | Australia | `ghs-rev7/GHS_Rev7_en.pdf` + `australia/swa_classification_guidance.pdf` | GHS Rev.7 for H/P (Australia adopts Rev.7, not Rev.11); SWA guidance for AUH |
 | US OSHA | `us-osha/appendix_c.html` | Signal words directly; statements by text identity with EU CLP |
-| Canada | `ca-whmis/hpr_bilingual.pdf` | scanned, yields nothing — see below |
+| Canada | `ghs-rev7/GHS_Rev7_{en,fr}.pdf` | the HPR defines GHS as the Seventh Revised Edition, so both languages come from Rev.7 Annex 3 |
 | Japan | `japan/GHS_Rev9_ja_annex2-3.pdf` | unreadable — see below |
 
 `ghs-rev7/` is **not** redundant with `un-ghs/`: UN GHS is built from Rev.11,
@@ -168,25 +168,36 @@ statement text organised by hazard class, but never says which code a statement
 belongs to.
 
 So codes are established by comparing OSHA's own wording against EU CLP's English,
-in three stages of decreasing strength: identical; identical once fill-ins are
-collapsed (OSHA prints `May cause cancer <<…>>` where CLP prints the full
-`<state route of exposure …>` instruction); then near-identical at 0.97
-similarity, which absorbs US spelling such as "vapor" and "poison center".
+against **UN GHS Rev.7 English** — the revision OSHA's HazCom is aligned to, and
+the same table Australia uses. Matching is **exact**, in two stages: identical
+after normalisation, case folding and US/UK spelling folding
+(`keys/builders/spelling.py`, an explicit reviewed table rather than a blanket
+rule); then identical once fill-ins are collapsed, since the three sources write
+the same slot three different ways. There is no fuzzy fallback — a similarity
+score cannot tell a spelling difference from a substantive one.
 
-That yields **53 H and 56 P codes** plus both signal words. Statements with no
+That yields **58 H and 51 P codes** plus both signal words. Statements with no
 confident code are listed in `_parse_issues.txt` rather than guessed, as are the
-96 EU CLP codes OSHA has no statement for — those are **not** assumed to be gaps,
-since OSHA adopted an earlier GHS revision and some absences are genuine
-differences. The key is `partial` until those counts are reconciled.
+GHS Rev.7 codes OSHA has no statement for — those are **not** assumed to be gaps,
+since OSHA's adoption is partial and some absences are genuine differences. The
+key is `partial` until those counts are reconciled.
 
-### Why Canada is pending
+### Why Canada is partial
 
-The Hazardous Products Regulations (SOR/2015-17) state statements by **hazard
-class and category**, never against a code: a scan of the full 165-page bilingual
-text finds **zero** H or P codes. So WHMIS is not blocked on a missing source but
-on a missing mapping — `status_reason: needs_class_category_mapping`. The proposed
-design is written up in `data/answer_keys/ca_whmis/_design_note.md` (design only,
-nothing implemented).
+The Hazardous Products Regulations contain **zero** H or P codes, but they do not
+need to: they say where their statements come from — *"GHS means the United
+Nations document entitled Globally Harmonized System of Classification and
+Labelling of Chemicals (GHS), Seventh Revised Edition"*. WHMIS statements are
+therefore GHS Rev.7 statements, and each language is read from its own Rev.7
+edition. Nothing is translated or inferred across languages.
+
+The gap is **chemicals under pressure**, where the HPR points instead at Annex 3
+of the *Eighth* revised edition, which is not on file. Those codes are left out
+with `status_reason: needs_ghs_rev8_annex3` rather than filled from another
+revision. Canada-only classes (biohazardous infectious materials, and the physical
+and health hazards "not otherwise classified") carry no statement text in the HPR
+at all, so nothing is recorded for them. Both are detailed in
+`data/answer_keys/ca_whmis/_design_note.md`.
 
 ### Why Japan is pending
 

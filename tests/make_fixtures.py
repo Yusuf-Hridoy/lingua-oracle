@@ -63,11 +63,18 @@ class Sheet:
         if self.y < 60:
             self.canvas.showPage()
             self.y = TOP
-        self.canvas.setFont("Helvetica-Bold" if bold else "Helvetica", size)
-        # Keep lines inside the page; the extractor rejoins wrapped phrases.
-        for chunk in _wrap(text, 105):
-            self.canvas.drawString(LEFT, self.y, chunk)
-            self.y -= LINE
+        font = "Helvetica-Bold" if bold else "Helvetica"
+        # Keep a statement on one line, shrinking the type to fit, the way a real
+        # SDS fits text into a table cell. Wrapping a long statement would split
+        # it at a sentence boundary, and a continuation that starts a new sentence
+        # is indistinguishable from the next statement - so the fixture would
+        # embed an extraction limitation rather than test the checks.
+        usable = WIDTH - 2 * LEFT
+        while size > 4 and self.canvas.stringWidth(text, font, size) > usable:
+            size -= 1
+        self.canvas.setFont(font, size)
+        self.canvas.drawString(LEFT, self.y, text)
+        self.y -= LINE
 
     def blank(self, n: int = 1) -> None:
         self.y -= LINE * n
@@ -289,22 +296,26 @@ def build_all() -> dict[str, Path]:
 
 
 def _whmis_bilingual(path: Path) -> Path:
-    """A WHMIS sheet carrying both required languages, using EU CLP wording."""
-    en = texts("eu_clp", "en", EU_H + EU_P)
-    fr = texts("eu_clp", "fr", EU_H + EU_P)
+    """A WHMIS sheet carrying both required languages, in WHMIS's own wording.
+
+    WHMIS statements are GHS Rev.7 statements, which differ from EU CLP's, so the
+    text has to come from the WHMIS key or the sheet would fail its own check.
+    """
+    en = texts("ca_whmis", "en", EU_H + EU_P)
+    fr = texts("ca_whmis", "fr", EU_H + EU_P)
     sheet = Sheet(path)
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line("Hazardous Products Regulations (SOR/2015-17) - WHMIS", size=8)
     sheet.blank()
     sheet.line(HEADINGS["en"]["2"], bold=True, size=11)
-    sheet.line(f"Signal word: {signal_text('eu_clp','en')}")
+    sheet.line(f"Signal word: {signal_text('ca_whmis','en')}")
     for code in EU_H:
         sheet.line(f"{code} {en[code]}")
     for code in EU_P:
         sheet.line(f"{code} {en[code]}")
     sheet.blank()
     sheet.line(HEADINGS["fr"]["2"], bold=True, size=11)
-    sheet.line(f"Mention d'avertissement: {signal_text('eu_clp','fr')}")
+    sheet.line(f"Mention d'avertissement: {signal_text('ca_whmis','fr')}")
     for code in EU_H:
         sheet.line(f"{code} {fr[code]}")
     for code in EU_P:
@@ -323,13 +334,13 @@ def _whmis_bilingual(path: Path) -> Path:
 
 
 def _whmis_english_only(path: Path) -> Path:
-    en = texts("eu_clp", "en", EU_H + EU_P)
+    en = texts("ca_whmis", "en", EU_H + EU_P)
     sheet = Sheet(path)
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line("Hazardous Products Regulations (SOR/2015-17) - WHMIS", size=8)
     sheet.blank()
     sheet.line(HEADINGS["en"]["2"], bold=True, size=11)
-    sheet.line(f"Signal word: {signal_text('eu_clp','en')}")
+    sheet.line(f"Signal word: {signal_text('ca_whmis','en')}")
     for code in EU_H + EU_P:
         sheet.line(f"{code} {en[code]}")
     sheet.blank()

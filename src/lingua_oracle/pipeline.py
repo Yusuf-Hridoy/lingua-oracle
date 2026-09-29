@@ -52,6 +52,11 @@ def check_pdf(
         )
 
     reference = resolve(reg.id, lang)
+    alternates = {
+        other: resolve(reg.id, other)
+        for other in reg.required_languages
+        if other != lang
+    }
     ctx = CheckContext(
         document=document,
         regulation=reg,
@@ -59,6 +64,7 @@ def check_pdf(
         hits=hits,
         spans=spans,
         reference=reference,
+        alternates=alternates,
         compare_document=compare_doc,
         compare_hits=compare_hits or [],
         compare_language=compare_lang,

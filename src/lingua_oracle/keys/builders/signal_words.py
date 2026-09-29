@@ -15,6 +15,12 @@ counterpart by having the *same set of codes*, and the signal word is then read
 from the same cell position. Nothing is translated or guessed; the value comes
 from the document.
 
+A shared code set alone is not enough. The same codes appear in several tables,
+and pairing every combination drags misaligned cells into the vote - it left the
+French GHS Rev.7 reading at six votes against three pieces of noise, below the
+threshold, so "Danger" was dropped. Requiring the paired tables and rows to have
+the same shape removes the noise entirely: every vote is now unanimous.
+
 A word is only accepted on a two-thirds supermajority of aligned cells. Where the
 source itself is inconsistent - the Greek consolidated CLP uses two different
 words - the caller supplies a tie-break drawn from other official text.
@@ -119,14 +125,20 @@ def align_by_codes(english_path: str, translated_path: str) -> tuple[dict[str, s
     votes: dict[str, collections.Counter] = collections.defaultdict(collections.Counter)
     aligned = 0
     for codes in set(english) & set(translated):
-        aligned += 1
         for en_rows in english[codes]:
             for other_rows in translated[codes]:
+                # A shared code set is not enough: the same codes can appear in
+                # several tables, and pairing every combination drags misaligned
+                # cells into the vote. Require the same shape, table and row, so a
+                # cell is only compared with its true counterpart.
+                if len(en_rows) != len(other_rows):
+                    continue
+                aligned += 1
                 for ri, en_row in enumerate(en_rows):
-                    if ri >= len(other_rows):
+                    if len(en_row) != len(other_rows[ri]):
                         continue
                     for ci, en_value in enumerate(en_row):
-                        if en_value not in ENGLISH_WORDS or ci >= len(other_rows[ri]):
+                        if en_value not in ENGLISH_WORDS:
                             continue
                         value = other_rows[ri][ci]
                         if value:
@@ -135,7 +147,7 @@ def align_by_codes(english_path: str, translated_path: str) -> tuple[dict[str, s
               if (chosen := _accept(counter)) is not None}
     detail = {
         "tables_aligned": aligned,
-        "votes": {k: dict(v.most_common(4)) for k, v in votes.items()},
+        "votes": {k: dict(v.most_common()) for k, v in votes.items()},
         "rejected": sorted(set(votes) - set(result)),
     }
     return result, detail

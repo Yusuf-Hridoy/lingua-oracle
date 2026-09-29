@@ -1,5 +1,8 @@
-  parse issues for ca_whmis (hpr_bilingual.pdf):
-    pages=0 tables=0 rows=0 used=0
-    distinct H/P codes found anywhere in the text: 0
-    status_reason: needs_class_category_mapping
-    The HPR states statements by hazard class and category, never against a code, so nothing can be derived without a class/category -> statement -> GHS code mapping. See data/answer_keys/ca_whmis/_design_note.md. Until then, fill with `lingua keys import-csv`.
+  parse issues for ca_whmis (GHS Rev.7 per HPR definition):
+    pages=0 tables=228 rows=2065 used=448
+    HPR: "GHS means the United Nations document entitled Globally Harmonized System of Classification and Labelling of Chemicals (GHS), Seventh Revised Edition." Statements are therefore read from GHS Rev.7 Annex 3.
+    chemicals under pressure -> the HPR points at Annex 3 of the EIGHTH revised edition, which is not on file. Left out, reason 'needs GHS Rev.8 Annex 3': H282, H283, H284
+        The HPR additionally states, in both languages, the hazard statement "Chemical under pressure: May explode if heated / Produit chimique sous pression : peut exploser sous l'effet de la chaleur". It is not recorded here because the HPR gives it no code.
+    en: 226 entries from GHS_Rev7_en.pdf; signal words ['Danger', 'Warning']
+    fr: 226 entries from GHS_Rev7_fr.pdf; signal words ['Attention', 'Danger']
+    Canada-only classes are not represented: the HPR defines them and sets classification criteria but states no statement text for them, so nothing can be recorded. Affected: Biohazardous Infectious Materials; Physical Hazards Not Otherwise Classified; Health Hazards Not Otherwise Classified

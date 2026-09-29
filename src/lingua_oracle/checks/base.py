@@ -24,6 +24,10 @@ class CheckContext:
     hits: list[CodeHit]
     spans: list[SectionSpan]
     reference: Borrowed
+    #: References for the regulation's *other* required languages. A regulation
+    #: that mandates two languages in one document (WHMIS: English and French)
+    #: has both texts on the same sheet, and either is correct where it appears.
+    alternates: dict[str, Borrowed] = field(default_factory=dict)
     compare_document: Document | None = None
     compare_hits: list[CodeHit] = field(default_factory=list)
     compare_language: str | None = None
@@ -32,6 +36,15 @@ class CheckContext:
     # -- convenience ------------------------------------------------------
     def entry(self, code: str) -> AnswerKeyEntry | None:
         return self.reference.entries.get(code)
+
+    def alternate_entries(self, code: str) -> list[tuple[str, AnswerKeyEntry]]:
+        """The same code's text in the regulation's other required languages."""
+        out = []
+        for language, reference in self.alternates.items():
+            entry = reference.entries.get(code)
+            if entry is not None:
+                out.append((language, entry))
+        return out
 
     def tier_for(self, code: str) -> Tier:
         entry = self.entry(code)

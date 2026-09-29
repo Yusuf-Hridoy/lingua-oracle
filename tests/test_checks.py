@@ -106,12 +106,31 @@ def test_sections_are_found():
 
 
 def test_tier_c_findings_are_unverified_not_failures():
-    """WHMIS has no answer key, so nothing may be reported as a wording failure."""
-    report = check_pdf(pdf("clean_whmis_enfr"), "ca_whmis")
-    assert report.summary.fail == 0
+    """A regulation with no answer key may never produce a wording failure.
+
+    Checked against jp_jis, whose key is empty because the source on file is the
+    wrong document. Every code therefore falls to tier C, and tier C carries no
+    wording verdict at all.
+    """
+    report = check_pdf(pdf("clean_eu_da"), "jp_jis")
+    wording = {"A-01", "A-02", "A-03", "A-04"}
+    failures = [
+        f for f in report.findings
+        if f.severity is Severity.FAIL and not f.unverified and f.check_id in wording
+    ]
+    assert failures == [], [f"{f.check_id} {f.code}" for f in failures]
     assert report.summary.unverified > 0
     assert all(f.tier is None or f.tier.value == "C"
                for f in report.findings if f.unverified)
+
+
+def test_bilingual_document_accepts_either_required_language():
+    """WHMIS requires English and French together; both halves are correct."""
+    report = check_pdf(pdf("clean_whmis_enfr"), "ca_whmis")
+    assert report.summary.fail == 0
+    # the half not in the detected document language is reported as info
+    assert any(f.severity is Severity.INFO and "also requires" in f.message
+               for f in report.findings)
 
 
 def test_coverage_is_reported():

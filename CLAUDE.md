@@ -125,15 +125,30 @@ Two source facts that drive the design and are easy to re-discover the hard way:
   challenge. Annex III/IV render each code as a table containing **all 24
   languages**, so one fetch yields every translation.
 - **OSHA Appendix C contains no H/P code numbers at all** (verified against
-  osha.gov and the eCFR API). Codes are established against EU CLP English in
-  three stages - identical, identical once fill-ins are collapsed, then 0.97
-  similarity. Precautionary statements live in the C.4 tables one per `<p>` under
+  osha.gov and the eCFR API). Codes are established against two **exact** stages against **GHS Rev.7 English** (not EU CLP - OSHA is aligned
+  to a GHS revision): identical after US/UK spelling folding
+  (`keys/builders/spelling.py`), then identical once fill-ins are collapsed. There
+  is deliberately no similarity fallback; a score cannot separate a spelling
+  difference from a substantive one. Only *directive* parentheticals collapse, or
+  real content like EUH206's "(chlorine)" would be erased.
+  Precautionary statements live in the C.4 tables one per `<p>` under
   Prevention/Response/Storage/Disposal; paragraphs that are directions to the
   labeller ("Chemical manufacturer, importer ... to specify") are not statements.
   OSHA doubles its fill-in brackets (`<<...>>`), which is what the fill-in regex
   must tolerate for H350/H360/H372 to resolve.
-- **Canada's HPR contains no code-keyed statements** - zero H/P codes in the full
-  text - so `ca_whmis` stays pending by evidence, not by omission.
+- **Canada's HPR contains no code-keyed statements**, but does not need to: it
+  defines "GHS" as the *Seventh Revised Edition*, so WHMIS English and French are
+  read from GHS Rev.7 Annex 3, each from its own edition. Chemicals under pressure
+  are the exception - the HPR points there at Rev.8, which is not on file, so
+  those codes are left out (`needs_ghs_rev8_annex3`), never filled from Rev.7 or
+  Rev.11.
+- **Signal words in a translated source** are found by aligning label-element
+  tables on their H codes (identical in every language) and reading the same cell,
+  never by matching a translated heading. `keys/builders/signal_words.py`.
+- **Table extraction truncates some code cells**: a row for "P332 + P317" arrives
+  as bare "P332" and collides with the standalone code. `combined_codes_on_page`
+  repairs it from the page's running text, and only when the bare code appears
+  nowhere standalone on that page.
 - **The Japanese PDF cannot be read at all**: its font carries no ToUnicode CMap,
   so neither PyMuPDF nor pdfplumber can recover characters. Do not "fix" this with
   a decoding heuristic; only OCR would work, and it needs the user's approval.

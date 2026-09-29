@@ -85,11 +85,11 @@ def test_per_code_signal_words_extracted():
     assert by_code["H319"].signal_word == "Warning"
 
 
-# (regulation, language) pairs with no usable source on file. Canada's HPR
-# carries no code-keyed statements, the JIS PDF has no ToUnicode map so its text
-# cannot be read, and no Arabic/Russian/Chinese GHS edition was supplied.
+# (regulation, language) pairs with no usable source on file: the JIS PDF has no
+# ToUnicode map so its text cannot be read, and no Arabic/Russian/Chinese GHS
+# edition was supplied. Canada is no longer here - the HPR names GHS Rev.7 as its
+# source, so WHMIS is built from that.
 PENDING_PAIRS = [
-    ("ca_whmis", "en"), ("ca_whmis", "fr"),
     ("jp_jis", "ja"), ("jp_jis", "en"),
     ("un_ghs", "ar"), ("un_ghs", "ru"), ("un_ghs", "zh"),
 ]
@@ -249,16 +249,6 @@ def test_japan_stays_pending_source():
         assert key.entries == []
 
 
-def test_canada_stays_pending_source():
-    """The HPR carries no code-keyed statements, so nothing may be derived."""
-    for language in ("en", "fr"):
-        key = load_key("ca_whmis", language)
-        if key is None:
-            continue
-        assert key.status is Status.PENDING_SOURCE
-        assert key.entries == []
-
-
 def test_tier_b_activates_against_the_real_keys():
     """With UN GHS English on file, EU CLP translations become borrowable.
 
@@ -333,23 +323,14 @@ def test_japan_reason_is_wrong_source_not_just_pending():
         assert key.entries == []
 
 
-def test_canada_reason_names_the_missing_mapping():
-    """WHMIS is blocked on a class/category mapping, not on a missing source."""
-    for language in ("en", "fr"):
-        key = load_key("ca_whmis", language)
-        if key is None:
-            continue
-        assert key.status is Status.PENDING_SOURCE
-        assert key.status_reason == "needs_class_category_mapping"
-        assert key.entries == []
-
-
-def test_canada_design_note_exists():
+def test_whmis_design_note_records_the_implemented_build():
     from lingua_oracle.keys.store import keys_root
 
     note = keys_root() / "ca_whmis" / "_design_note.md"
     assert note.exists(), "the WHMIS design note is referenced by the status reason"
-    assert "class/category" in note.read_text(encoding="utf-8")
+    body = note.read_text(encoding="utf-8")
+    assert "Seventh Revised Edition" in body
+    assert "needs_ghs_rev8_annex3" in body
 
 
 def test_stats_reports_partial_rather_than_inferring_ok():
@@ -366,7 +347,7 @@ def test_stats_reports_partial_rather_than_inferring_ok():
     assert rows["us_osha"]["status"] == "partial"
     assert rows["us_osha"]["status_reasons"] == ["counts_not_reconciled"]
     assert rows["jp_jis"]["status_reasons"] == ["wrong_source"]
-    assert rows["ca_whmis"]["status_reasons"] == ["needs_class_category_mapping"]
+    assert rows["ca_whmis"]["status_reasons"] == ["needs_ghs_rev8_annex3"]
 
 
 # -- signal words ------------------------------------------------------------
@@ -408,3 +389,64 @@ def test_greek_and_irish_signal_words_resolved():
     irish = load_key("eu_clp", "ga").by_code()
     assert irish["SIGNAL_DANGER"].text and irish["SIGNAL_WARNING"].text
     assert "32008R1272" in irish["SIGNAL_DANGER"].source_ref
+
+
+# -- Canada WHMIS ------------------------------------------------------------
+
+
+@pytest.mark.parametrize("language", ["en", "fr"])
+def test_whmis_is_built_from_ghs_rev7(language):
+    """The HPR defines GHS as the Seventh Revised Edition, so that is the source."""
+    key = load_key("ca_whmis", language)
+    assert key is not None and key.entries, f"ca_whmis/{language} is empty"
+    by_code = key.by_code()
+    for code in ("H225", "P210", "P280"):
+        assert code in by_code, f"ca_whmis/{language} missing {code}"
+    sample = by_code["H225"]
+    assert sample.tier is Tier.A
+    assert "Rev.7" in sample.source_ref
+    assert "Seventh Revised Edition" in sample.source_ref
+
+
+def test_whmis_languages_differ_and_are_not_translated():
+    """English and French come from their own editions, not from each other."""
+    en = load_key("ca_whmis", "en").by_code()
+    fr = load_key("ca_whmis", "fr").by_code()
+    assert en["H225"].text != fr["H225"].text
+    assert set(en) & set(fr), "the two editions should share codes"
+
+
+def test_whmis_excludes_chemicals_under_pressure_pending_rev8():
+    """The HPR sends that class to GHS Rev.8, which is not on file."""
+    from lingua_oracle.keys.store import keys_root
+
+    for language in ("en", "fr"):
+        key = load_key("ca_whmis", language)
+        assert key.status is Status.PARTIAL
+        assert key.status_reason == "needs_ghs_rev8_annex3"
+        for code in ("H282", "H283", "H284"):
+            assert code not in key.by_code(), f"{code} needs Rev.8 and must not be filled"
+    report = (keys_root() / "ca_whmis" / "_parse_issues.txt").read_text(encoding="utf-8")
+    assert "needs GHS Rev.8 Annex 3" in report
+    assert "Canada-only classes" in report
+
+
+# -- combined-code repair (UN GHS French) ------------------------------------
+
+
+def test_french_combined_code_repaired():
+    """P332+P317's code cell is truncated by table extraction; the page text repairs it."""
+    fr = load_key("un_ghs", "fr").by_code()
+    for code in ("P332+P317", "P333+P317", "P337+P317"):
+        assert code in fr, f"un_ghs/fr is missing {code}"
+    # the standalone codes must survive alongside the combined ones
+    assert "P332" in fr and "P317" in fr
+    assert fr["P332"].text != fr["P332+P317"].text
+
+
+def test_combined_code_repair_is_scoped_to_the_page():
+    """A page that defines the bare code standalone must not be rewritten."""
+    from lingua_oracle.keys.builders.pdf_tables import combined_codes_on_page
+
+    assert combined_codes_on_page("P332 + P317 Demander une aide.") == {"P332": "P332+P317"}
+    assert combined_codes_on_page("P331 Ne PAS faire vomir. P332 En cas d'irritation :") == {}

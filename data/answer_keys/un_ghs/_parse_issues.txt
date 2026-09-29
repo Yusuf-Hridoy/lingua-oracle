@@ -3,9 +3,9 @@
     annex pages 283-407
     signal words found: ['Danger', 'Warning']
   parse issues for un_ghs/fr (GHS_Rev11_fr.pdf):
-    pages=117 tables=207 rows=1132 used=245
+    pages=117 tables=207 rows=1132 used=246
     codes with an empty statement (1): P317
-    codes seen twice with different text (1): P332
+    repaired truncated code cell P332 -> P332+P317 on page 353
     annex pages 321-438
     signal words found: ['Attention', 'Danger']
   parse issues for un_ghs/es (GHS_Rev11_es.pdf):
