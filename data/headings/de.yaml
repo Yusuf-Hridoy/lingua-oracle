@@ -1,0 +1,13 @@
+# Section heading patterns for 'de'.
+# Regexes matched case-insensitively against one line of the document.
+# `section_word` is the word this language puts before the section number.
+language: de
+section_word: ABSCHNITT
+sections:
+  '2':
+  - m[öo]gliche\s+gefahren
+  '3':
+  - zusammensetzung\s*/\s*angaben\s+zu\s+bestandteilen
+  - zusammensetzung
+  '16':
+  - sonstige\s+angaben

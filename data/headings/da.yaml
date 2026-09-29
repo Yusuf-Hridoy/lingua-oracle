@@ -1,0 +1,13 @@
+# Section heading patterns for 'da'.
+# Regexes matched case-insensitively against one line of the document.
+# `section_word` is the word this language puts before the section number.
+language: da
+section_word: PUNKT|AFSNIT
+sections:
+  '2':
+  - fareidentifikation
+  '3':
+  - sammens[æa]tning\s+af\s*/\s*oplysning\s+om\s+indholdsstoffer
+  - sammens[æa]tning
+  '16':
+  - andre\s+oplysninger

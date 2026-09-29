@@ -1,0 +1,13 @@
+# Section heading patterns for 'en'.
+# Regexes matched case-insensitively against one line of the document.
+# `section_word` is the word this language puts before the section number.
+language: en
+section_word: SECTION|Section
+sections:
+  '2':
+  - hazards?\s+identification
+  '3':
+  - composition\s*/\s*information\s+on\s+ingredients
+  - composition.{0,5}information
+  '16':
+  - other\s+information

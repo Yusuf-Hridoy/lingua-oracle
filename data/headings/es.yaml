@@ -1,0 +1,13 @@
+# Section heading patterns for 'es'.
+# Regexes matched case-insensitively against one line of the document.
+# `section_word` is the word this language puts before the section number.
+language: es
+section_word: SECCI[ÓO]N
+sections:
+  '2':
+  - identificaci[óo]n\s+de\s+los\s+peligros
+  '3':
+  - composici[óo]n\s*/\s*informaci[óo]n\s+sobre\s+los\s+componentes
+  - composici[óo]n
+  '16':
+  - otra\s+informaci[óo]n

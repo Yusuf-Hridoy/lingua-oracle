@@ -1,0 +1,13 @@
+# Section heading patterns for 'fr'.
+# Regexes matched case-insensitively against one line of the document.
+# `section_word` is the word this language puts before the section number.
+language: fr
+section_word: RUBRIQUE|SECTION
+sections:
+  '2':
+  - identification\s+des\s+dangers
+  '3':
+  - composition\s*/\s*informations?\s+sur\s+les\s+composants
+  - composition
+  '16':
+  - autres\s+informations

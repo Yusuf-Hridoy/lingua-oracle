@@ -1,0 +1,13 @@
+# Section heading patterns for 'ja'.
+# Regexes matched case-insensitively against one line of the document.
+# `section_word` is the word this language puts before the section number.
+language: ja
+section_word: 第
+sections:
+  '2':
+  - 危険有害性の要約
+  '3':
+  - 組成及び成分情報
+  - 組成
+  '16':
+  - その他の情報
