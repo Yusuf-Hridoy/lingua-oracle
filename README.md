@@ -143,10 +143,15 @@ Official texts that could not be fetched programmatically are kept under
 | EU CLP | EU Publications Office **CELLAR** (network) | Annex III/IV multilingual tables — one fetch yields all 24 languages |
 | UN GHS | `un-ghs/GHS_Rev11_{en,fr,es}.pdf` | Annex 3 code/statement tables |
 | UK GB CLP | `uk-gb-clp/gb_clp_full.pdf` | Annex III multilingual (EN row) + Annex IV tables + Annex II prose |
-| Australia | `ghs-rev7/GHS_Rev7_en.pdf` + `australia/swa_classification_guidance.pdf` | GHS Rev.7 for H/P; SWA guidance for AUH |
+| Australia | `ghs-rev7/GHS_Rev7_en.pdf` + `australia/swa_classification_guidance.pdf` | GHS Rev.7 for H/P (Australia adopts Rev.7, not Rev.11); SWA guidance for AUH |
 | US OSHA | `us-osha/appendix_c.html` | Signal words directly; statements by text identity with EU CLP |
 | Canada | `ca-whmis/hpr_bilingual.pdf` | scanned, yields nothing — see below |
 | Japan | `japan/GHS_Rev9_ja_annex2-3.pdf` | unreadable — see below |
+
+`ghs-rev7/` is **not** redundant with `un-ghs/`: Australia adopts GHS Rev.7 while
+UN GHS is built from Rev.11, so the two hold different wording and both are
+needed. The one file nothing reads is `ghs-rev7/GHS_Rev7_fr.pdf` (7.3 MB) —
+Australia's key is English only.
 
 Rows are located by the **code pattern in column 0**, not by header text, so one
 parser works across English, French and Spanish. Every build writes a
