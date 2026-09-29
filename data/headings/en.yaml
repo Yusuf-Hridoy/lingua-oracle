@@ -1,6 +1,7 @@
 # Section heading patterns for 'en'.
 # Regexes matched case-insensitively against one line of the document.
 # `section_word` is the word this language puts before the section number.
+# `label_markers` identify a standalone label/artwork block.
 language: en
 section_word: SECTION|Section
 sections:
@@ -11,3 +12,7 @@ sections:
   - composition.{0,5}information
   '16':
   - other\s+information
+label_markers:
+- label
+- labelling
+- label elements

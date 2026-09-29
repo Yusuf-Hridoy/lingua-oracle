@@ -14,6 +14,11 @@ TITLE = "English left behind in a non-English document"
 def run(ctx: CheckContext) -> list[Finding]:
     if ctx.language.lower().split("-")[0] == "en":
         return []
+    # Some regulations require one document to carry several languages - WHMIS
+    # mandates English and French together - so English sitting beside the
+    # document language is correct there, not a missed translation.
+    if "en" in {t.lower() for t in ctx.regulation.required_languages}:
+        return []
     findings: list[Finding] = []
     for hit in ctx.hits:
         if not hit.text or not looks_untranslated(hit.text, ctx.language):

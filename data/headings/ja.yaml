@@ -1,6 +1,7 @@
 # Section heading patterns for 'ja'.
 # Regexes matched case-insensitively against one line of the document.
 # `section_word` is the word this language puts before the section number.
+# `label_markers` identify a standalone label/artwork block.
 language: ja
 section_word: 第
 sections:
@@ -11,3 +12,5 @@ sections:
   - 組成
   '16':
   - その他の情報
+label_markers:
+- ラベル

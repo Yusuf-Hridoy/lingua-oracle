@@ -1,6 +1,7 @@
 # Section heading patterns for 'da'.
 # Regexes matched case-insensitively against one line of the document.
 # `section_word` is the word this language puts before the section number.
+# `label_markers` identify a standalone label/artwork block.
 language: da
 section_word: PUNKT|AFSNIT
 sections:
@@ -11,3 +12,7 @@ sections:
   - sammens[æa]tning
   '16':
   - andre\s+oplysninger
+label_markers:
+- etiket
+- etikettering
+- mærkning

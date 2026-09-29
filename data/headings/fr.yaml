@@ -1,6 +1,7 @@
 # Section heading patterns for 'fr'.
 # Regexes matched case-insensitively against one line of the document.
 # `section_word` is the word this language puts before the section number.
+# `label_markers` identify a standalone label/artwork block.
 language: fr
 section_word: RUBRIQUE|SECTION
 sections:
@@ -11,3 +12,6 @@ sections:
   - composition
   '16':
   - autres\s+informations
+label_markers:
+- étiquette
+- étiquetage

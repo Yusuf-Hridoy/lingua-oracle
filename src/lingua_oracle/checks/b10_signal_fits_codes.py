@@ -24,18 +24,20 @@ def run(ctx: CheckContext) -> list[Finding]:
     if danger_entry is None:
         return []  # nothing official to compare against
 
-    requires_danger = sorted(
-        {
-            hit.code
-            for hit in ctx.hits
-            if (entry := ctx.entry(hit.code)) is not None and entry.signal_word == "Danger"
-        }
-    )
-    allows_only_warning = all(
-        (entry := ctx.entry(hit.code)) is None or entry.signal_word in (None, "Warning")
+    # Only codes whose source actually states a signal word can be judged. EU CLP
+    # Annex III carries no signal word per code (CLP assigns it per hazard class
+    # in Annex I), so for EU documents this check abstains rather than guessing.
+    known = {
+        hit.code: entry.signal_word
         for hit in ctx.hits
         if hit.code.startswith("H")
-    )
+        and (entry := ctx.entry(hit.code)) is not None
+        and entry.signal_word in ("Danger", "Warning")
+    }
+    if not known:
+        return []
+    requires_danger = sorted(c for c, w in known.items() if w == "Danger")
+    allows_only_warning = all(w == "Warning" for w in known.values())
 
     stated = signal_candidates(ctx)
     if not stated:

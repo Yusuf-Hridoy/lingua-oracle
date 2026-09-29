@@ -211,12 +211,46 @@ def extract_signal_words(doc, positions, en_tables=None) -> dict[str, str]:
     return result
 
 
+def hazard_signal_words(en_doc) -> dict[str, str]:
+    """Map each hazard code to the signal word CLP Annex I assigns it.
+
+    The Annex I label-element tables are column-aligned: a "Signal Word" row and
+    a "Hazard Statement" row share one column per hazard category, so the signal
+    word for a code is the cell directly above it. A code that appears under both
+    Danger and Warning in different categories is recorded as "Either".
+    """
+    seen: dict[str, set[str]] = collections.defaultdict(set)
+    for table in en_doc.xpath("//table"):
+        rows = [_row_cells(r) for r in table.xpath(".//tr")]
+        signal_row = next(
+            (r for r in rows if r and r[0].strip().lower() == "signal word"), None
+        )
+        statement_rows = [
+            r for r in rows if r and "hazard statement" in r[0].strip().lower()
+        ]
+        if signal_row is None or not statement_rows:
+            continue
+        for statement_row in statement_rows:
+            for col in range(1, min(len(signal_row), len(statement_row))):
+                word = strip_markers(signal_row[col])
+                if word not in ("Danger", "Warning"):
+                    continue
+                for m in re.finditer(r"\b(?:EUH|H)\s?\d{3}[A-Za-z]?\b",
+                                     statement_row[col]):
+                    seen[normalise_code(m.group(0))].add(word)
+    return {
+        code: (words.pop() if len(words) == 1 else "Either")
+        for code, words in ((c, set(w)) for c, w in seen.items())
+    }
+
+
 def build(languages: list[str] | None = None, *, use_cache: bool = True,
           with_signal_words: bool = True) -> list[AnswerKey]:
     """Build EU CLP answer keys. Returns one AnswerKey per language."""
     wanted = languages or list(LANGS)
     en_doc = _doc("eng", use_cache=use_cache)
     per_lang = parse_statements(en_doc)
+    code_signals = hazard_signal_words(en_doc)
     positions = signal_word_positions(en_doc)
     en_tables = en_doc.xpath("//table")
     ts = now()
@@ -226,7 +260,12 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
         iso3 = LANGS.get(lang)
         if iso3 is None:
             continue
-        entries = list(per_lang.get(lang, []))
+        entries = [
+            e.model_copy(update={"signal_word": code_signals[e.code]})
+            if e.code in code_signals
+            else e
+            for e in per_lang.get(lang, [])
+        ]
         if with_signal_words:
             # Not every language version of a consolidated act exists (Irish, for
             # one, is often absent). Statements still come from the multilingual

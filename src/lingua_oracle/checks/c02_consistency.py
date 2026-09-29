@@ -10,6 +10,7 @@ from __future__ import annotations
 import collections
 
 from lingua_oracle.checks.base import CheckContext, register
+from lingua_oracle.detect.language import _detector, tag_to_language
 from lingua_oracle.match.normalize import normalize
 from lingua_oracle.models import Finding, Severity, Tier
 
@@ -17,15 +18,39 @@ CHECK_ID = "C-02"
 TITLE = "Same code gives the same text everywhere in the document"
 
 
+def _language_bucket(ctx: CheckContext, text: str, required: list[str]) -> str:
+    """Which required language a phrase is in, for mandated-bilingual documents.
+
+    A document that must carry English and French will legitimately state the
+    same code twice, once per language. Comparing those two against each other
+    would flag every correct bilingual sheet, so phrases are bucketed by
+    language first and only compared within a bucket.
+    """
+    targets = {tag: lang for tag in required if (lang := tag_to_language(tag)) is not None}
+    if len(targets) < 2:
+        return ""
+    values = _detector().compute_language_confidence_values(text)
+    if not values:
+        return ""
+    top = values[0].language
+    for tag, language in targets.items():
+        if top == language:
+            return tag
+    return ""
+
+
 @register(CHECK_ID, TITLE)
 def run(ctx: CheckContext) -> list[Finding]:
-    by_code: dict[str, list] = collections.defaultdict(list)
+    required = list(ctx.regulation.required_languages)
+    multilingual = len(required) > 1
+    by_code: dict[tuple[str, str], list] = collections.defaultdict(list)
     for hit in ctx.hits:
         if hit.text:
-            by_code[hit.code].append(hit)
+            bucket = _language_bucket(ctx, hit.text, required) if multilingual else ""
+            by_code[(hit.code, bucket)].append(hit)
 
     findings: list[Finding] = []
-    for code, hits in sorted(by_code.items()):
+    for (code, _bucket), hits in sorted(by_code.items()):
         variants: dict[str, list] = collections.defaultdict(list)
         for hit in hits:
             variants[normalize(hit.text).casefold().rstrip(".")].append(hit)

@@ -20,6 +20,7 @@ class HeadingRules:
     language: str
     section_word: str
     sections: dict[str, list[str]]
+    label_markers: list[str]
 
 
 @functools.lru_cache(maxsize=32)
@@ -33,6 +34,7 @@ def load_headings(language: str) -> HeadingRules:
         language=raw.get("language", tag),
         section_word=raw.get("section_word") or "SECTION",
         sections={str(k): list(v) for k, v in (raw.get("sections") or {}).items()},
+        label_markers=list(raw.get("label_markers") or []),
     )
 
 
@@ -67,7 +69,16 @@ def detect_sections(doc: Document, language: str) -> list[SectionSpan]:
         if not text or len(text) > 120:
             continue
         matched: str | None = None
+        # A short standalone line naming the label starts a label block. Label
+        # artwork carries no numbered SDS headings, so without this it would be
+        # swallowed by whichever section preceded it.
+        if len(text) <= 60 and any(
+            re.search(rf"\b{m}\b", text, re.IGNORECASE) for m in rules.label_markers
+        ) and not numbered.match(text):
+            matched = LABEL
         for name, patterns in rules.sections.items():
+            if matched:
+                break
             if any(re.search(p, text, re.IGNORECASE) for p in patterns):
                 matched = name
                 break

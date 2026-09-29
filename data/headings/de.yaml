@@ -1,6 +1,7 @@
 # Section heading patterns for 'de'.
 # Regexes matched case-insensitively against one line of the document.
 # `section_word` is the word this language puts before the section number.
+# `label_markers` identify a standalone label/artwork block.
 language: de
 section_word: ABSCHNITT
 sections:
@@ -11,3 +12,7 @@ sections:
   - zusammensetzung
   '16':
   - sonstige\s+angaben
+label_markers:
+- etikett
+- kennzeichnung
+- etikettierung

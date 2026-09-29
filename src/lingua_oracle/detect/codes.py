@@ -6,6 +6,7 @@ import re
 from dataclasses import dataclass
 
 from lingua_oracle.extract.base import Document, Line
+from lingua_oracle.extract.rejoin import is_continuation, starts_new_block
 from lingua_oracle.match.normalize import normalize
 
 # A single code: prefix + 3 digits, optional trailing letter (H350i, EUH201A),
@@ -16,7 +17,8 @@ CODE_RE = re.compile(rf"\b{_SINGLE}(?:\s*\+\s*{_SINGLE})*", re.IGNORECASE)
 
 # Text that ends a phrase even without a following code.
 _SECTION_BREAK_RE = re.compile(
-    r"^\s*(?:SECTION|SEKTION|ABSCHNITT|RUBRIQUE|SECCI[ÓO]N|PUNKT)?\s*\d{1,2}[.)]\s+\S",
+    r"^\s*(?:SECTION|SEKTION|AFSNIT|PUNKT|ABSCHNITT|RUBRIQUE|SECCI[ÓO]N)?\s*"
+    r"\d{1,2}\s*[.):：]\s*\S",
     re.IGNORECASE,
 )
 
@@ -72,15 +74,19 @@ def extract_hits(lines: list[Line]) -> list[CodeHit]:
                 phrase = line.text[end : found[n + 1][1]]
             else:
                 phrase = line.text[end:]
-                # Continue onto following lines while they are plain continuation.
+                # Continue onto following lines only while they genuinely read as
+                # the rest of this statement. Official texts do not all end in a
+                # full stop (OSHA's do not), so "ends with a period" is not a
+                # usable stop condition; the same truncation heuristic the line
+                # rejoiner uses is applied instead.
                 for nxt in lines[idx + 1 : idx + 4]:
-                    if nxt.page != line.page:
+                    if nxt.page != line.page or not nxt.text.strip():
                         break
                     if find_codes_in_text(nxt.text) or _SECTION_BREAK_RE.match(nxt.text):
                         break
-                    if not nxt.text.strip():
+                    if starts_new_block(nxt.text):
                         break
-                    if _clean_phrase(phrase).endswith((".", "!", "?")):
+                    if not is_continuation(_clean_phrase(phrase), nxt.text):
                         break
                     phrase += " " + nxt.text
             hits.append(
