@@ -331,3 +331,22 @@ def test_japan_reason_is_wrong_source_not_just_pending():
         assert key.status is Status.PENDING_SOURCE
         assert key.status_reason == "wrong_source"
         assert key.entries == []
+
+
+def test_canada_reason_names_the_missing_mapping():
+    """WHMIS is blocked on a class/category mapping, not on a missing source."""
+    for language in ("en", "fr"):
+        key = load_key("ca_whmis", language)
+        if key is None:
+            continue
+        assert key.status is Status.PENDING_SOURCE
+        assert key.status_reason == "needs_class_category_mapping"
+        assert key.entries == []
+
+
+def test_canada_design_note_exists():
+    from lingua_oracle.keys.store import keys_root
+
+    note = keys_root() / "ca_whmis" / "_design_note.md"
+    assert note.exists(), "the WHMIS design note is referenced by the status reason"
+    assert "class/category" in note.read_text(encoding="utf-8")

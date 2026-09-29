@@ -3,12 +3,16 @@
 The Hazardous Products Regulations (SOR/2015-17) are supplied under
 data/sources/ca-whmis/ as one bilingual PDF, English and French side by side.
 
-The regulations set out classification criteria and label requirements, but they
-do **not** reproduce the hazard and precautionary statements against their codes:
-a scan of the full text finds no H or P code anywhere. So no entry can be derived
-without inventing the code-to-text mapping, and the key stays `pending_source`.
-The scan is run rather than assumed, so that a future edition that does carry the
-statements is picked up automatically.
+The regulations state hazard and precautionary statements **by hazard class and
+category**, never against a code: a scan of the full text finds no H or P code
+anywhere. Building a key therefore needs a class/category -> statement -> GHS code
+mapping, which does not exist yet; the status reason is
+``needs_class_category_mapping`` rather than a plain missing source, and the
+design for that mapping is written up in
+``data/answer_keys/ca_whmis/_design_note.md``.
+
+The scan is run rather than assumed, so a future edition that does carry codes is
+picked up automatically.
 """
 
 from __future__ import annotations
@@ -66,18 +70,20 @@ def build(
             issues.rows_used += table_issues.rows_used
 
     if not found:
+        issues.notes.append("status_reason: needs_class_category_mapping")
         issues.notes.append(
-            "The HPR states classification criteria and label rules but does not "
-            "reproduce statements against their codes, so nothing can be derived "
-            "without inventing the mapping. Left pending_source; fill with "
-            "`lingua keys import-csv`."
+            "The HPR states statements by hazard class and category, never against "
+            "a code, so nothing can be derived without a class/category -> statement "
+            "-> GHS code mapping. See data/answer_keys/ca_whmis/_design_note.md. "
+            "Until then, fill with `lingua keys import-csv`."
         )
         return (
             [
                 AnswerKey(
                     regulation=REGULATION, language=lang, revision=REVISION,
-                    status=Status.PENDING_SOURCE, source_url=SOURCE_URL,
-                    retrieved_at=ts, entries=[],
+                    status=Status.PENDING_SOURCE,
+                    status_reason="needs_class_category_mapping",
+                    source_url=SOURCE_URL, retrieved_at=ts, entries=[],
                 )
                 for lang in wanted
             ],
