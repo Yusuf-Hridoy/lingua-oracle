@@ -1,0 +1,96 @@
+"""A-02, A-03, A-04: statement wording must match the official text.
+
+The three checks share one comparison and differ only in which codes they own:
+A-02 hazard (H, including combined H codes), A-03 precautionary (P, including
+combined P codes), A-04 supplemental (EUH/AUH).
+
+Codes with no reference text are tier C: no wording verdict is possible, so they
+are recorded as unverified and left to the consistency check C-02.
+"""
+
+from __future__ import annotations
+
+from lingua_oracle.checks.base import CheckContext, register
+from lingua_oracle.match.template import MatchKind, match
+from lingua_oracle.models import Finding, Severity, Tier
+
+
+def _prefix_of(code: str) -> str:
+    if code.startswith(("EUH", "AUH")):
+        return "supplemental"
+    if code.startswith("H"):
+        return "hazard"
+    if code.startswith("P"):
+        return "precautionary"
+    return "other"
+
+
+def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
+    findings: list[Finding] = []
+    for hit in ctx.hits:
+        if _prefix_of(hit.code) != family:
+            continue
+        if not hit.text:
+            continue  # a bare code reference, e.g. in Section 3; B-08 covers that
+        entry = ctx.entry(hit.code)
+        section = ctx.section_for(hit)
+        if entry is None:
+            findings.append(
+                Finding(
+                    check_id=check_id, severity=Severity.WARN, section=section,
+                    page=hit.page, code=hit.code, found=hit.text, tier=Tier.C,
+                    unverified=True,
+                    message=(
+                        f"No reference text for {hit.code} in "
+                        f"{ctx.regulation.display_name} '{ctx.language}' "
+                        "(tier C): wording not verified."
+                    ),
+                )
+            )
+            continue
+
+        result = match(hit.text, entry.text)
+        if result.kind in (MatchKind.EXACT, MatchKind.TEMPLATE) and result.matched:
+            for value in result.fillins:
+                findings.append(
+                    Finding(
+                        check_id=check_id, severity=Severity.INFO, section=section,
+                        page=hit.page, code=hit.code, expected=entry.text,
+                        found=hit.text, tier=entry.tier,
+                        message=f"Fill-in value '{value}' needs human review.",
+                    )
+                )
+            continue
+        if result.matched:
+            findings.append(
+                Finding(
+                    check_id=check_id, severity=Severity.WARN, section=section,
+                    page=hit.page, code=hit.code, expected=entry.text, found=hit.text,
+                    tier=entry.tier, message=f"{hit.code} {result.message}.",
+                )
+            )
+            continue
+        findings.append(
+            Finding(
+                check_id=check_id, severity=Severity.FAIL, section=section,
+                page=hit.page, code=hit.code, expected=entry.text, found=hit.text,
+                tier=entry.tier,
+                message=f"{hit.code} wording does not match the official text.",
+            )
+        )
+    return findings
+
+
+@register("A-02", "H-statement text matches key (incl. combined H codes)")
+def run_a02(ctx: CheckContext) -> list[Finding]:
+    return _run_for(ctx, "A-02", "hazard")
+
+
+@register("A-03", "P-statement text matches key (incl. combined P codes)")
+def run_a03(ctx: CheckContext) -> list[Finding]:
+    return _run_for(ctx, "A-03", "precautionary")
+
+
+@register("A-04", "Supplemental statements (EUH/AUH) match key")
+def run_a04(ctx: CheckContext) -> list[Finding]:
+    return _run_for(ctx, "A-04", "supplemental")
