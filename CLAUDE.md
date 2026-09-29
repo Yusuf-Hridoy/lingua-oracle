@@ -157,5 +157,5 @@ fixtures — the registry is `lru_cache`d.
 
 ## Git
 
-Work on `feat/phase1-core`; the remote is `Yusuf-Hridoy/lingua-oracle` (private).
-Commit one module at a time. Do not push to `main`.
+Work on `main`; the remote is `Yusuf-Hridoy/lingua-oracle` (private) and `main` is
+its default branch. Commit one module at a time.
