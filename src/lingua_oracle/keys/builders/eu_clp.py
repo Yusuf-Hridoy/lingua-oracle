@@ -40,6 +40,9 @@ from lingua_oracle.models import (
     Tier,
 )
 
+# Languages whose act text was unavailable, so signal words could not be read.
+MISSING_SIGNAL_WORDS: set[str] = set()
+
 REGULATION = "eu_clp"
 CELEX = "02008R1272-20260701"
 BASE_URL = f"http://publications.europa.eu/resource/celex/{CELEX}"
@@ -155,15 +158,27 @@ def signal_word_positions(en_doc) -> list[tuple[int, int, int, str]]:
     return out
 
 
-def extract_signal_words(doc, positions) -> dict[str, str]:
+def extract_signal_words(doc, positions, en_tables=None) -> dict[str, str]:
     """Read translated signal words from the aligned cell positions.
 
-    Returns {'Danger': text, 'Warning': text} only for words whose aligned cells
-    agree unanimously; a disagreement means the documents are not parallel and the
-    word is dropped rather than guessed.
+    Language versions are *mostly* structurally parallel, not perfectly so, and a
+    misaligned row contributes nonsense. Two filters keep that out:
+
+    1. A position only counts when the target row has the same cell count as the
+       English row it is aligned to.
+    2. Votes are grouped by the target row's own label cell. Genuine signal-word
+       rows all share one label (``Signalwort``, ``Signalord``, ...), so the
+       largest label group is the real one and stray rows fall away.
+
+    A word is returned only on a two-thirds supermajority within that group. Greek,
+    for one, splits genuinely between two words in the consolidated text; there the
+    right answer is to return nothing and let the check report the code as
+    unverified, rather than to pick one.
     """
     tables = doc.xpath("//table")
-    votes: dict[str, collections.Counter] = collections.defaultdict(collections.Counter)
+    by_label: dict[str, dict[str, collections.Counter]] = collections.defaultdict(
+        lambda: collections.defaultdict(collections.Counter)
+    )
     for ti, ri, ci, en_val in positions:
         if ti >= len(tables):
             continue
@@ -171,17 +186,27 @@ def extract_signal_words(doc, positions) -> dict[str, str]:
         if ri >= len(rows):
             continue
         cells = _row_cells(rows[ri])
+        if en_tables is not None:
+            en_rows = en_tables[ti].xpath(".//tr")
+            if ri >= len(en_rows) or len(cells) != len(_row_cells(en_rows[ri])):
+                continue
         if ci >= len(cells):
             continue
-        val = strip_markers(cells[ci])
-        if val:
-            votes[en_val][val] += 1
-    result = {}
-    for en_val, counter in votes.items():
-        if not counter:
-            continue
-        (best, n), = counter.most_common(1)
-        if n == sum(counter.values()):  # unanimous
+        value = strip_markers(cells[ci])
+        if value:
+            by_label[strip_markers(cells[0])][en_val][value] += 1
+
+    if not by_label:
+        return {}
+    label = max(
+        by_label,
+        key=lambda lb: sum(sum(c.values()) for c in by_label[lb].values()),
+    )
+    result: dict[str, str] = {}
+    for en_val, counter in by_label[label].items():
+        total = sum(counter.values())
+        (best, votes), = counter.most_common(1)
+        if total >= 2 and votes * 3 >= total * 2:
             result[en_val] = best
     return result
 
@@ -193,6 +218,7 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
     en_doc = _doc("eng", use_cache=use_cache)
     per_lang = parse_statements(en_doc)
     positions = signal_word_positions(en_doc)
+    en_tables = en_doc.xpath("//table")
     ts = now()
 
     keys: list[AnswerKey] = []
@@ -202,8 +228,16 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
             continue
         entries = list(per_lang.get(lang, []))
         if with_signal_words:
-            doc = en_doc if lang == "en" else _doc(iso3, use_cache=use_cache)
-            words = extract_signal_words(doc, positions)
+            # Not every language version of a consolidated act exists (Irish, for
+            # one, is often absent). Statements still come from the multilingual
+            # tables; only the signal words are skipped, never invented.
+            try:
+                doc = en_doc if lang == "en" else _doc(iso3, use_cache=use_cache)
+            except SourceUnavailable:
+                MISSING_SIGNAL_WORDS.add(lang)
+                doc = None
+            words = (extract_signal_words(doc, positions, en_tables)
+                     if doc is not None else {})
             for en_val, code in (("Danger", SIGNAL_DANGER), ("Warning", SIGNAL_WARNING)):
                 text = words.get(en_val)
                 if not text:
