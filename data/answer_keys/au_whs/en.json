@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-  "retrieved_at": "2026-09-29T12:08:56.176022Z",
+  "retrieved_at": "2026-09-29T12:43:34.422165Z",
   "entries": [
     {
       "regulation": "au_whs",
@@ -3141,6 +3141,34 @@
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
       "source_ref": "GHS Rev.7 Annex 3 row for P503",
       "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "au_whs",
+      "revision": "GHS-Rev7-AU",
+      "language": "en",
+      "code": "SIGNAL_DANGER",
+      "kind": "signal",
+      "text": "Danger",
+      "signal_word": "Danger",
+      "tier": "A",
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
+      "source_ref": "GHS Rev.7 Annex 1 label element tables (GHS_Rev7_en.pdf)",
+      "retrieved_at": "2026-09-29T12:43:34.422165Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "au_whs",
+      "revision": "GHS-Rev7-AU",
+      "language": "en",
+      "code": "SIGNAL_WARNING",
+      "kind": "signal",
+      "text": "Warning",
+      "signal_word": "Warning",
+      "tier": "A",
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
+      "source_ref": "GHS Rev.7 Annex 1 label element tables (GHS_Rev7_en.pdf)",
+      "retrieved_at": "2026-09-29T12:43:34.422165Z",
       "status": "ok"
     },
     {

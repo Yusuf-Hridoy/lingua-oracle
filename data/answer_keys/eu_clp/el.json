@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-09-29T12:09:09.535682Z",
+  "retrieved_at": "2026-09-29T12:43:55.219769Z",
   "entries": [
     {
       "regulation": "eu_clp",
@@ -2887,8 +2887,22 @@
       "signal_word": "Danger",
       "tier": "A",
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex I label element tables (aligned 'Signal Word' rows)",
-      "retrieved_at": "2026-09-29T12:09:09.535682Z",
+      "source_ref": "Annex I label element tables (aligned 'Signal Word' rows); Warning resolved from EUH206, which opens with the signal word, because the Annex I tables disagree in this language",
+      "retrieved_at": "2026-09-29T12:43:55.219769Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "eu_clp",
+      "revision": "02008R1272-20260701",
+      "language": "el",
+      "code": "SIGNAL_WARNING",
+      "kind": "signal",
+      "text": "Προσοχή",
+      "signal_word": "Warning",
+      "tier": "A",
+      "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
+      "source_ref": "Annex I label element tables (aligned 'Signal Word' rows); Warning resolved from EUH206, which opens with the signal word, because the Annex I tables disagree in this language",
+      "retrieved_at": "2026-09-29T12:43:55.219769Z",
       "status": "ok"
     },
     {

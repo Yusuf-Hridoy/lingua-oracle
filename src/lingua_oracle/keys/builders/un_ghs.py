@@ -20,6 +20,11 @@ from lingua_oracle.keys.builders.pdf_tables import (
     annex_page_range,
     harvest,
 )
+from lingua_oracle.keys.builders.signal_words import (
+    align_by_codes,
+    entries_for,
+    from_english,
+)
 from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Kind, Status, Tier
 from lingua_oracle.registry import data_dir
 
@@ -92,6 +97,29 @@ def build(
             for code, text in sorted(found.items())
             if code[0] in "HP"
         ]
+        # English states the words outright; the other editions are aligned to the
+        # English tables by their H codes, which are identical in every language.
+        english_path = root / FILES["en"]
+        if lang == "en":
+            words, detail = from_english(str(path)), {}
+        elif english_path.exists():
+            words, detail = align_by_codes(str(english_path), str(path))
+        else:
+            words, detail = {}, {"note": "English edition absent; cannot align"}
+        entries.extend(
+            entries_for(
+                words, regulation=REGULATION, revision=REVISION, language=lang,
+                source_url=SOURCE_URL,
+                source_ref=f"GHS {REVISION} Annex 1 label element tables ({path.name})"
+                + ("" if lang == "en" else "; aligned to the English tables by H code"),
+                retrieved_at=ts,
+            )
+        )
+        issues.notes.append(f"signal words found: {sorted(words.values()) or 'none'}")
+        if detail.get("rejected"):
+            issues.notes.append(
+                f"signal words rejected for lack of a supermajority: {detail['rejected']}"
+            )
         entries.sort(key=lambda e: (e.kind, e.code))
         keys.append(
             AnswerKey(

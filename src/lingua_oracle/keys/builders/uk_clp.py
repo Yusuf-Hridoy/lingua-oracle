@@ -28,6 +28,7 @@ from lingua_oracle.keys.builders.pdf_tables import (
     harvest_multilingual,
     harvest_prose,
 )
+from lingua_oracle.keys.builders.signal_words import entries_for, from_english
 from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Kind, Status, Tier
 from lingua_oracle.registry import data_dir
 
@@ -128,6 +129,16 @@ def build(
         )
         for code, text in sorted(found.items())
     ]
+    words = from_english(str(path))
+    entries.extend(
+        entries_for(
+            words, regulation=REGULATION, revision=REVISION, language="en",
+            source_url=SOURCE_URL,
+            source_ref=f"GB CLP Annex I label element tables ({path.name})",
+            retrieved_at=ts,
+        )
+    )
+    issues.notes.append(f"signal words found: {sorted(words.values()) or 'none'}")
     entries.sort(key=lambda e: (e.kind, e.code))
     return (
         [

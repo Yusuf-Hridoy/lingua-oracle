@@ -318,7 +318,7 @@ def test_osha_parse_issues_lists_codes_absent_from_osha():
     from lingua_oracle.keys.store import keys_root
 
     report = (keys_root() / "us_osha" / "_parse_issues.txt").read_text(encoding="utf-8")
-    assert "EU CLP codes with no OSHA statement" in report
+    assert "codes with no OSHA statement" in report
     assert "NOT" in report and "assumed to be gaps" in report
 
 
@@ -367,3 +367,44 @@ def test_stats_reports_partial_rather_than_inferring_ok():
     assert rows["us_osha"]["status_reasons"] == ["counts_not_reconciled"]
     assert rows["jp_jis"]["status_reasons"] == ["wrong_source"]
     assert rows["ca_whmis"]["status_reasons"] == ["needs_class_category_mapping"]
+
+
+# -- signal words ------------------------------------------------------------
+
+
+def _ok_keys():
+    from lingua_oracle.keys.store import iter_all_keys
+
+    return [k for k in iter_all_keys() if k.status is Status.OK and k.entries]
+
+
+def test_every_ok_key_has_both_signal_words():
+    """A key claiming `ok` must be able to answer check A-01 in both directions."""
+    missing = []
+    for key in _ok_keys():
+        by_code = key.by_code()
+        for code in ("SIGNAL_DANGER", "SIGNAL_WARNING"):
+            if code not in by_code or not by_code[code].text.strip():
+                missing.append(f"{key.regulation}/{key.language}:{code}")
+    assert not missing, f"ok keys without signal words: {missing}"
+
+
+def test_signal_words_are_tier_a_with_provenance():
+    for key in _ok_keys():
+        for code in ("SIGNAL_DANGER", "SIGNAL_WARNING"):
+            entry = key.by_code().get(code)
+            if entry is None:
+                continue
+            assert entry.tier is Tier.A
+            assert entry.kind is Kind.SIGNAL
+            assert entry.source_url and entry.source_ref
+
+
+def test_greek_and_irish_signal_words_resolved():
+    """Both needed a documented fallback; pin the results so they cannot regress."""
+    greek = load_key("eu_clp", "el").by_code()
+    assert greek["SIGNAL_WARNING"].text == "Προσοχή"
+    assert "EUH206" in greek["SIGNAL_WARNING"].source_ref
+    irish = load_key("eu_clp", "ga").by_code()
+    assert irish["SIGNAL_DANGER"].text and irish["SIGNAL_WARNING"].text
+    assert "32008R1272" in irish["SIGNAL_DANGER"].source_ref

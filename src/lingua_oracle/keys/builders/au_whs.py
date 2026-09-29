@@ -23,6 +23,7 @@ from lingua_oracle.keys.builders.pdf_tables import (
     harvest,
     harvest_inline,
 )
+from lingua_oracle.keys.builders.signal_words import entries_for, from_english
 from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Kind, Status, Tier
 from lingua_oracle.registry import data_dir
 
@@ -90,6 +91,17 @@ def build(
         )
         for code, (text, url, ref) in sorted(found.items())
     ]
+    if ghs7.exists():
+        words = from_english(str(ghs7))
+        entries.extend(
+            entries_for(
+                words, regulation=REGULATION, revision=REVISION, language="en",
+                source_url=GHS7_URL,
+                source_ref=f"GHS Rev.7 Annex 1 label element tables ({ghs7.name})",
+                retrieved_at=ts,
+            )
+        )
+        issues.notes.append(f"signal words found: {sorted(words.values()) or 'none'}")
     entries.sort(key=lambda e: (e.kind, e.code))
     return (
         [

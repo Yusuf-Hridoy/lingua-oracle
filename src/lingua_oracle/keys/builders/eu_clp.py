@@ -30,6 +30,7 @@ from lingua_oracle.keys.builders.common import (
     now,
     strip_markers,
 )
+from lingua_oracle.keys.builders.signal_words import leading_word
 from lingua_oracle.models import (
     SIGNAL_DANGER,
     SIGNAL_WARNING,
@@ -46,6 +47,15 @@ MISSING_SIGNAL_WORDS: set[str] = set()
 REGULATION = "eu_clp"
 CELEX = "02008R1272-20260701"
 BASE_URL = f"http://publications.europa.eu/resource/celex/{CELEX}"
+# The consolidated act has no Irish version (CELLAR returns 404), but the
+# original 2008 act does, and signal words have not changed since. Irish signal
+# words are read from there and the fallback is recorded in source_ref.
+ORIGINAL_CELEX = "32008R1272"
+ORIGINAL_URL = f"http://publications.europa.eu/resource/celex/{ORIGINAL_CELEX}"
+# Supplemental statements that open with the signal word for Warning. Used only
+# to break a tie where the act contradicts itself; the rule is validated first
+# against languages whose Annex I vote is unambiguous.
+WARNING_LEAD_CODES = ("EUH206", "EUH207", "EUH201A")
 
 # CELLAR wants ISO-639-3 in Accept-Language; keys are the BCP-47 tags we store.
 LANGS: dict[str, str] = {
@@ -63,10 +73,10 @@ COL_TO_BCP47 = {v.upper(): k for k, v in
                  "sv": "SV"}.items()}
 
 
-def _doc(lang_iso3: str, *, use_cache: bool = True):
+def _doc(lang_iso3: str, *, use_cache: bool = True, url: str = BASE_URL):
     try:
         raw = fetch(
-            BASE_URL,
+            url,
             headers={"Accept": "application/xhtml+xml", "Accept-Language": lang_iso3},
             use_cache=use_cache,
         )
@@ -244,6 +254,55 @@ def hazard_signal_words(en_doc) -> dict[str, str]:
     }
 
 
+
+def _signal_words_for(lang, iso3, en_doc, positions, en_tables, entries, *, use_cache=True):
+    """Signal words for one language, with two documented fallbacks.
+
+    1. The Annex I vote on the consolidated act (the normal path).
+    2. Where a word is contested - Greek uses two different words across the
+       consolidated text - it is taken from the opening word of a supplemental
+       statement that begins with it, e.g. EUH206 "Warning! ...". That rule is
+       only applied to the contested word, and it agrees with the Annex I vote in
+       every language where the vote is unambiguous.
+    3. Where the consolidated act has no version in that language at all - Irish -
+       the original 2008 act is used instead, and the source_ref says so.
+    """
+    note = ""
+    try:
+        doc = en_doc if lang == "en" else _doc(iso3, use_cache=use_cache)
+        words = extract_signal_words(doc, positions, en_tables)
+    except SourceUnavailable:
+        words = {}
+
+    if not words:
+        try:
+            original_en = _doc("eng", use_cache=use_cache, url=ORIGINAL_URL)
+            original = _doc(iso3, use_cache=use_cache, url=ORIGINAL_URL)
+        except SourceUnavailable:
+            return {}, note
+        words = extract_signal_words(
+            original, signal_word_positions(original_en), original_en.xpath("//table")
+        )
+        if words:
+            note = (
+                f"; taken from the original act {ORIGINAL_CELEX}, which unlike the "
+                "consolidated version exists in this language"
+            )
+
+    if "Warning" not in words:
+        by_code = {e.code: e.text for e in entries}
+        for code in WARNING_LEAD_CODES:
+            lead = leading_word(by_code.get(code, ""))
+            if lead:
+                words["Warning"] = lead
+                note += (
+                    f"; Warning resolved from {code}, which opens with the signal "
+                    "word, because the Annex I tables disagree in this language"
+                )
+                break
+    return words, note
+
+
 def build(languages: list[str] | None = None, *, use_cache: bool = True,
           with_signal_words: bool = True) -> list[AnswerKey]:
     """Build EU CLP answer keys. Returns one AnswerKey per language."""
@@ -267,19 +326,12 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
             for e in per_lang.get(lang, [])
         ]
         if with_signal_words:
-            # Not every language version of a consolidated act exists (Irish, for
-            # one, is often absent). Statements still come from the multilingual
-            # tables; only the signal words are skipped, never invented.
-            try:
-                doc = en_doc if lang == "en" else _doc(iso3, use_cache=use_cache)
-            except SourceUnavailable:
-                MISSING_SIGNAL_WORDS.add(lang)
-                doc = None
-            words = (extract_signal_words(doc, positions, en_tables)
-                     if doc is not None else {})
+            words, note = _signal_words_for(lang, iso3, en_doc, positions, en_tables,
+                                            entries, use_cache=use_cache)
             for en_val, code in (("Danger", SIGNAL_DANGER), ("Warning", SIGNAL_WARNING)):
                 text = words.get(en_val)
                 if not text:
+                    MISSING_SIGNAL_WORDS.add(f"{lang}/{en_val}")
                     continue
                 entries.append(
                     AnswerKeyEntry(
@@ -287,7 +339,8 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
                         kind=Kind.SIGNAL, text=text,
                         signal_word="Danger" if en_val == "Danger" else "Warning",
                         tier=Tier.A, source_url=BASE_URL,
-                        source_ref="Annex I label element tables (aligned 'Signal Word' rows)",
+                        source_ref="Annex I label element tables "
+                                   "(aligned 'Signal Word' rows)" + note,
                         retrieved_at=ts, status=Status.OK,
                     )
                 )

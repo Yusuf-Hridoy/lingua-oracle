@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
-  "retrieved_at": "2026-09-29T12:09:16.005388Z",
+  "retrieved_at": "2026-09-29T12:41:27.767527Z",
   "entries": [
     {
       "regulation": "uk_clp",
@@ -2959,6 +2959,34 @@
       "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
       "source_ref": "GB CLP (retained Reg. 1272/2008) Annex III/IV, row for P503 (gb_clp_full.pdf)",
       "retrieved_at": "2026-09-29T12:09:16.005388Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "uk_clp",
+      "revision": "retained-1272-2008",
+      "language": "en",
+      "code": "SIGNAL_DANGER",
+      "kind": "signal",
+      "text": "Danger",
+      "signal_word": "Danger",
+      "tier": "A",
+      "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
+      "source_ref": "GB CLP Annex I label element tables (gb_clp_full.pdf)",
+      "retrieved_at": "2026-09-29T12:41:27.767527Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "uk_clp",
+      "revision": "retained-1272-2008",
+      "language": "en",
+      "code": "SIGNAL_WARNING",
+      "kind": "signal",
+      "text": "Warning",
+      "signal_word": "Warning",
+      "tier": "A",
+      "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
+      "source_ref": "GB CLP Annex I label element tables (gb_clp_full.pdf)",
+      "retrieved_at": "2026-09-29T12:41:27.767527Z",
       "status": "ok"
     },
     {

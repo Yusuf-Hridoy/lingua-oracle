@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
-  "retrieved_at": "2026-09-29T12:09:54.846444Z",
+  "retrieved_at": "2026-09-29T12:44:19.069583Z",
   "entries": [
     {
       "regulation": "un_ghs",
@@ -3449,6 +3449,34 @@
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
       "source_ref": "GHS Rev.11 Annex 3, table row for P503 (GHS_Rev11_es.pdf)",
       "retrieved_at": "2026-09-29T12:09:54.846444Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "un_ghs",
+      "revision": "Rev.11",
+      "language": "es",
+      "code": "SIGNAL_DANGER",
+      "kind": "signal",
+      "text": "Peligro",
+      "signal_word": "Danger",
+      "tier": "A",
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
+      "source_ref": "GHS Rev.11 Annex 1 label element tables (GHS_Rev11_es.pdf); aligned to the English tables by H code",
+      "retrieved_at": "2026-09-29T12:44:19.069583Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "un_ghs",
+      "revision": "Rev.11",
+      "language": "es",
+      "code": "SIGNAL_WARNING",
+      "kind": "signal",
+      "text": "Atención",
+      "signal_word": "Warning",
+      "tier": "A",
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
+      "source_ref": "GHS Rev.11 Annex 1 label element tables (GHS_Rev11_es.pdf); aligned to the English tables by H code",
+      "retrieved_at": "2026-09-29T12:44:19.069583Z",
       "status": "ok"
     }
   ]

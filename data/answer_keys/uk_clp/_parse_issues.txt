@@ -5,3 +5,4 @@
     Annex III multilingual EN rows: 209; Annex IV English rows added: 20; Annex II prose (EUH) added: 7
     GB CLP is retained EU law, so EU CLP codes introduced after retention (EUH380/381/430/431/440/441/450/451) are legitimately absent, not missing.
     retained text also carries 23 other language column(s) (bg, cs, da, de, el, es, et, fi…); not stored, GB CLP is English
+    signal words found: ['Danger', 'Warning']
