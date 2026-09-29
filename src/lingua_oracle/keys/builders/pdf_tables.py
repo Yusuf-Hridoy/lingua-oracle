@@ -167,6 +167,38 @@ def harvest_prose(
 
 # Safe Work Australia states the code and its text in one cell:
 #   "AUH001 - Explosive when dry"
+# A combined code as written in running text, e.g. "P332 + P317".
+_COMBINED_IN_TEXT_RE = re.compile(
+    rf"{_SINGLE}(?:\s*\+\s*{_SINGLE})+", re.IGNORECASE
+)
+
+
+def combined_codes_on_page(page_text: str) -> dict[str, str]:
+    """Map a leading bare code to the combined code it is really part of.
+
+    Table extraction sometimes truncates a code cell at the cell boundary, so a
+    row for "P332 + P317" arrives as bare "P332" and collides with the standalone
+    P332 defined elsewhere. The page's own running text still spells the combined
+    code out, so it is used to repair the key. The repair only applies when every
+    occurrence of the bare code on that page is inside a combined token - if the
+    page also defines the code standalone, nothing is changed.
+    """
+    flat = " ".join(page_text.split())
+    combined = {normalise_code(m.group(0)) for m in _COMBINED_IN_TEXT_RE.finditer(flat)}
+    repair: dict[str, str] = {}
+    for full in combined:
+        lead = full.split("+")[0]
+        occurrences = len(re.findall(rf"\b{re.escape(lead)}\b", flat.replace(" ", "")))
+        inside = sum(1 for c in combined if c.split("+")[0] == lead)
+        # ambiguous if the lead heads more than one combined code on this page
+        if inside != 1:
+            continue
+        standalone = re.search(rf"\b{re.escape(lead)}\b(?!\s*\+)", flat)
+        if standalone is None and occurrences:
+            repair[lead] = full
+    return repair
+
+
 _INLINE_RE = re.compile(
     rf"^\s*({_SINGLE}(?:\s*\+\s*{_SINGLE})*)\s*[\u2013\u2014-]\s*(\S.*)$",
     re.IGNORECASE | re.DOTALL,
@@ -297,7 +329,7 @@ def harvest(
                 "stat": [Path(path).stat().st_size, int(Path(path).stat().st_mtime)],
                 "range": [first_page, last_page, statement_column],
                 "pages": pages,
-                "v": 2,
+                "v": 3,
             },
             sort_keys=True,
         ).encode()
@@ -317,6 +349,7 @@ def harvest(
     try:
         for index in targets:
             issues.pages_scanned += 1
+            repair = combined_codes_on_page(doc[index].get_text())
             for table in doc[index].find_tables().tables:
                 issues.tables_seen += 1
                 for row in table.extract():
@@ -328,6 +361,12 @@ def harvest(
                     if not match:
                         continue
                     code = normalise_code(match.group(1))
+                    if code in repair:
+                        issues.notes.append(
+                            f"repaired truncated code cell {code} -> {repair[code]} "
+                            f"on page {index}"
+                        )
+                        code = repair[code]
                     statement = clean_statement(row[statement_column])
                     if not statement:
                         issues.empty_statement.append(code)

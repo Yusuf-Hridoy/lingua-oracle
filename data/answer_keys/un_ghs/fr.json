@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
-  "retrieved_at": "2026-09-29T12:44:19.069583Z",
+  "retrieved_at": "2026-09-29T12:53:02.592737Z",
   "entries": [
     {
       "regulation": "un_ghs",
@@ -2595,6 +2595,20 @@
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
       "source_ref": "GHS Rev.11 Annex 3, table row for P332 (GHS_Rev11_fr.pdf)",
       "retrieved_at": "2026-09-29T12:09:54.846444Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "un_ghs",
+      "revision": "Rev.11",
+      "language": "fr",
+      "code": "P332+P317",
+      "kind": "precautionary",
+      "text": "En cas d'irritation cutanée : Demander une aide médicale.",
+      "signal_word": null,
+      "tier": "A",
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
+      "source_ref": "GHS Rev.11 Annex 3, table row for P332+P317 (GHS_Rev11_fr.pdf)",
+      "retrieved_at": "2026-09-29T12:53:02.592737Z",
       "status": "ok"
     },
     {
