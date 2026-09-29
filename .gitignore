@@ -12,5 +12,6 @@ build/
 *.egg-info/
 .DS_Store
 
-# Source documents dropped in for ad-hoc checking; never committed.
-data/sources/
+# data/sources/ holds the official regulation PDFs the answer keys are built
+# from (UN GHS, Canada HPR, UK GB CLP, JIS). These are published law and are
+# committed for provenance. Real SDS / product documents must NOT go here.
