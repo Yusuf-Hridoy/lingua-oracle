@@ -108,7 +108,15 @@ class TriageEntry(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     id: str
-    classification: str
+    #: The user's decision. Empty until they confirm one, so a proposal is
+    #: never mistaken for a verdict - unclassified findings still count
+    #: against the false-alarm target.
+    classification: str = ""
+    #: What the triage pass proposes the classification should be. Advisory
+    #: only; nothing in the runner reads it.
+    proposed: str = ""
+    #: Name of the pattern this finding belongs to (see TriageFile.patterns).
+    pattern: str = ""
     note: str = ""
     fixed: bool = False
 
@@ -116,9 +124,32 @@ class TriageEntry(BaseModel):
         return self.classification in TOOL_AT_FAULT
 
 
+class TriagePattern(BaseModel):
+    """A group of findings that share one cause, with a proposed class.
+
+    Proposals are advisory. Nothing in the runner reads this; it exists so the
+    reasoning behind a classification is recorded next to it rather than lost
+    in a chat log. It lives in triage.yaml, which is gitignored, so the
+    examples may quote document text - with product names redacted.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    proposed: str
+    count: int = 0
+    regulations: list[str] = Field(default_factory=list)
+    codes: list[str] = Field(default_factory=list)
+    hypothesis: str = ""
+    revision: str = ""
+    source_ref: str = ""
+    examples: list[dict[str, str]] = Field(default_factory=list)
+
+
 class TriageFile(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    patterns: list[TriagePattern] = Field(default_factory=list)
     findings: list[TriageEntry] = Field(default_factory=list)
 
     def by_id(self) -> dict[str, TriageEntry]:
