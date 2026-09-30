@@ -80,7 +80,12 @@ def build(
         added = 0
         for code, text in auh.items():
             if code.startswith("AUH"):
-                found[code] = (text, SWA_URL, f"Safe Work Australia guidance, row for {code}")
+                page = swa_issues.code_pages.get(code)
+                found[code] = (
+                    text, SWA_URL,
+                    f"Safe Work Australia guidance, row for {code} ({swa.name}"
+                    + (f", p{page}" if page else "") + ")",
+                )
                 added += 1
         issues.tables_seen += swa_issues.tables_seen
         issues.duplicate_conflict.extend(swa_issues.duplicate_conflict)

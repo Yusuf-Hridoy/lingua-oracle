@@ -96,6 +96,46 @@ def cellar_row(code: str, language: str) -> list[list[str]] | None:
     return None
 
 
+def html_row(text: str, source_html: Path) -> list[list[str]] | None:
+    """The Appendix C table row containing `text`, for HTML-sourced keys.
+
+    OSHA's Appendix C is an HTML page with no page numbers, so a crop is not
+    possible. The row the statement was read from is shown instead.
+    """
+    if not source_html.exists():
+        return None
+    from lxml import html as LH
+
+    from lingua_oracle.keys.builders.us_osha import _match_key
+
+    want = _match_key(text)
+    doc = LH.fromstring(source_html.read_bytes())
+
+    def holds(cell) -> bool:
+        """A precautionary statement sits in its own <p> inside the cell."""
+        whole = " ".join(" ".join(cell.itertext()).split())
+        if whole and _match_key(whole) == want:
+            return True
+        return any(
+            _match_key(" ".join(" ".join(para.itertext()).split())) == want
+            for para in cell.xpath(".//p")
+        )
+
+    for table in doc.xpath("//table"):
+        for row in table.xpath(".//tr"):
+            cell_els = row.xpath("./td|./th")
+            cells = [" ".join(" ".join(c.itertext()).split()) for c in cell_els]
+            if any(holds(c) for c in cell_els):
+                header = None
+                first = table.xpath(".//tr")[0]
+                head = [" ".join(" ".join(c.itertext()).split())
+                        for c in first.xpath("./td|./th")]
+                if any(h for h in head) and head != cells:
+                    header = head
+                return [header, cells] if header else [cells]
+    return None
+
+
 def build(spot: SpotCheckFile, sources_root: Path) -> str:
     e = html.escape
     cards = []
@@ -112,6 +152,13 @@ def build(spot: SpotCheckFile, sources_root: Path) -> str:
                         f"<img alt='source row for {e(entry.code)}' "
                         f"src='data:image/png;base64,{b64}'>"
                     )
+        elif entry.regulation == "us_osha":
+            rows = html_row(entry.text, sources_root / "us-osha" / "appendix_c.html")
+            if rows:
+                body = "".join(
+                    "<tr>" + "".join(f"<td>{e(c)}</td>" for c in r) + "</tr>" for r in rows
+                )
+                evidence = f"<table class='src'>{body}</table>"
         elif entry.regulation == "eu_clp":
             rows = cellar_row(entry.code, entry.language)
             if rows:

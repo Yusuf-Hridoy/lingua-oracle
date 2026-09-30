@@ -242,6 +242,7 @@ def harvest_inline(
                             continue
                         if code not in out:
                             out[code] = statement
+                            issues.code_pages.setdefault(code, index + 1)
                             issues.rows_used += 1
                         elif out[code] != statement:
                             issues.duplicate_conflict.append(code)

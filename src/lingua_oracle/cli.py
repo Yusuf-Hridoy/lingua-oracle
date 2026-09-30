@@ -483,11 +483,67 @@ def validate_triage(
     typer.echo("    fixed: false")
 
 
+def _stratified(pool, spec, required, rng):
+    """Draw a per-regulation quota, spreading languages as widely as possible.
+
+    A uniform random sample is dominated by whichever key is largest - EU CLP
+    holds most entries, so it takes most of the sample and the other regulations
+    go unchecked. Quotas fix that, and within a regulation each language is used
+    before any is used twice.
+    """
+    import collections
+
+    quotas = {}
+    for part in spec.split(","):
+        reg, _, count = part.partition(":")
+        if reg.strip() and count.strip().isdigit():
+            quotas[reg.strip()] = int(count)
+
+    must = collections.defaultdict(list)
+    for part in (required or "").split(","):
+        reg, _, langs = part.partition(":")
+        if reg.strip():
+            must[reg.strip()] = [x for x in langs.split("+") if x.strip()]
+
+    by_reg = collections.defaultdict(lambda: collections.defaultdict(list))
+    for key, entry in pool:
+        by_reg[key.regulation][key.language].append((key, entry))
+
+    chosen = []
+    for reg, want in quotas.items():
+        langs = by_reg.get(reg)
+        if not langs:
+            continue
+        order = [ln for ln in must.get(reg, []) if ln in langs]
+        rest = [ln for ln in langs if ln not in order]
+        rng.shuffle(rest)
+        order += rest
+        # round-robin so every language is used before any is repeated
+        picked, round_no = [], 0
+        while len(picked) < want and round_no < 40:
+            for lang in order:
+                if len(picked) >= want:
+                    break
+                bucket = langs[lang]
+                if len(bucket) > round_no:
+                    picked.append(rng.choice(bucket))
+            round_no += 1
+        chosen.extend(picked[:want])
+    return chosen
+
+
 @keys_app.command("sample")
 def keys_sample(
     n: Annotated[int, typer.Option("--n", help="How many entries to sample.")] = 20,
     regulation: Annotated[str | None, typer.Option("--regulation", "-r")] = None,
     seed: Annotated[int | None, typer.Option("--seed", help="Reproducible sample.")] = None,
+    stratify: Annotated[str | None, typer.Option(
+        "--stratify",
+        help='Per-regulation quotas, e.g. "eu_clp:6,ca_whmis:3,un_ghs:3". '
+             "Languages are spread as widely as the keys allow.")] = None,
+    require_languages: Annotated[str | None, typer.Option(
+        "--require-languages",
+        help='Languages that must appear, e.g. "eu_clp:da+el".')] = None,
 ) -> None:
     """Sample answer-key entries for a human spot check.
 
@@ -519,7 +575,10 @@ def keys_sample(
         raise typer.Exit(code=2)
 
     rng = random.Random(seed)
-    chosen = rng.sample(pool, min(n, len(pool)))
+    if stratify:
+        chosen = _stratified(pool, stratify, require_languages, rng)
+    else:
+        chosen = rng.sample(pool, min(n, len(pool)))
 
     existing = {(e.regulation, e.language, e.code): e for e in load_spot_check().entries}
     entries = []

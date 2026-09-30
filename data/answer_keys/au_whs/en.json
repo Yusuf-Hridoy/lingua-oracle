@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-  "retrieved_at": "2026-09-30T07:24:18.209031Z",
+  "retrieved_at": "2026-09-30T09:00:55.195159Z",
   "notes": [],
   "entries": [
     {
@@ -3409,8 +3409,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH001",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH001 (swa_classification_guidance.pdf, p32)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3424,8 +3424,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH006",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH006 (swa_classification_guidance.pdf, p32)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3439,8 +3439,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH014",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH014 (swa_classification_guidance.pdf, p32)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3454,8 +3454,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH018",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH018 (swa_classification_guidance.pdf, p32)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3469,8 +3469,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH019",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH019 (swa_classification_guidance.pdf, p32)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3484,8 +3484,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH029",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH029 (swa_classification_guidance.pdf, p32)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3499,8 +3499,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH031",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH031 (swa_classification_guidance.pdf, p32)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3514,8 +3514,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH032",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH032 (swa_classification_guidance.pdf, p32)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3529,8 +3529,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH044",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH044 (swa_classification_guidance.pdf, p33)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3544,8 +3544,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH066",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH066 (swa_classification_guidance.pdf, p33)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3559,8 +3559,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH070",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH070 (swa_classification_guidance.pdf, p34)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     },
     {
@@ -3574,8 +3574,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-      "source_ref": "Safe Work Australia guidance, row for AUH071",
-      "retrieved_at": "2026-09-29T12:08:56.176022Z",
+      "source_ref": "Safe Work Australia guidance, row for AUH071 (swa_classification_guidance.pdf, p34)",
+      "retrieved_at": "2026-09-30T09:00:55.195159Z",
       "status": "ok"
     }
   ]
