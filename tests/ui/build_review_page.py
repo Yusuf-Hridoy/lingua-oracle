@@ -57,6 +57,7 @@ dd{margin:0}
 .shot{margin-top:16px;border:1px solid var(--line);border-radius:10px;
       overflow:hidden;background:#fafafa}
 .shot img{display:block;width:100%}
+.shot.missing{padding:28px;text-align:center;color:var(--muted);font-size:14px}
 .note{margin-top:16px;display:grid;gap:8px}
 .verdicts{display:flex;gap:8px;flex-wrap:wrap}
 label.v{font-size:13px;border:1px solid var(--line);border-radius:999px;
@@ -146,8 +147,16 @@ TAGS = {"clean": ("t-clean", "correct document"),
         "": ("t-defect", "planted defect")}
 
 
-def _card(key: str, title: str, tag: str, plain: str, should: str, img: str) -> str:
+def _card(key: str, title: str, tag: str, plain: str, should: str,
+          img: str, *, captured: bool = True) -> str:
     cls, label = TAGS[tag]
+    shot = (
+        f'<div class="shot"><img loading="lazy" src="{html.escape(img)}" '
+        f'alt="report for {html.escape(key)}"></div>'
+        if captured else
+        '<div class="shot missing">No screenshot yet &mdash; run '
+        '<code>uv run pytest tests/ui</code>, then rebuild this page.</div>'
+    )
     return f"""
   <div class="card" id="c-{key}">
     <h3>{html.escape(title)}<span class="tag {cls}">{label}</span></h3>
@@ -155,7 +164,7 @@ def _card(key: str, title: str, tag: str, plain: str, should: str, img: str) -> 
       <dt>What it is</dt><dd>{html.escape(plain)}</dd>
       <dt>Report should show</dt><dd>{html.escape(should)}</dd>
     </dl>
-    <div class="shot"><img loading="lazy" src="{html.escape(img)}" alt="report for {html.escape(key)}"></div>
+    {shot}
     <div class="note">
       <div class="verdicts">
         <label class="v" data-for="{key}" data-val="ok">
@@ -173,13 +182,15 @@ def build() -> Path:
     keys, cards = [], []
 
     cards.append('<h2 class="sec">Synthetic test documents</h2>')
+    # Every case gets a card, captured or not. Skipping the uncaptured ones made
+    # the page depend on whether the browser tests had already run, which is what
+    # made test_review_page fail on a cold checkout and pass on the second run.
     for case in CASES:
         img = f"{case.name}.png"
-        if not (OUT / img).exists():
-            continue
         tag = next((t for t in ("clean", "regression", "compare") if t in case.tags), "")
         keys.append(case.name)
-        cards.append(_card(case.name, case.name, tag, case.plain, case.should_show, img))
+        cards.append(_card(case.name, case.name, tag, case.plain, case.should_show,
+                           img, captured=(OUT / img).exists()))
 
     real = sorted(REAL.glob("*.png")) if REAL.exists() else []
     if real:

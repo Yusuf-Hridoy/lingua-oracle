@@ -84,6 +84,10 @@ def browser():
 @pytest.fixture
 def page(browser):
     ctx = browser.new_context(viewport={"width": 1280, "height": 900})
+    # The review page remembers answers in localStorage. Clearing it before any
+    # page script runs keeps each test independent of the ones before it,
+    # without a reload to race against.
+    ctx.add_init_script("try { localStorage.clear(); } catch (e) {}")
     pg = ctx.new_page()
     try:
         yield pg
