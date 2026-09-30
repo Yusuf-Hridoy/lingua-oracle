@@ -38,6 +38,61 @@ def rev8_name(language: str = "en") -> str:
 REV8_NAME = rev8_name("en")
 PRESSURE_CLASS_RE = re.compile(r"chemicals?\s+under\s+pressure", re.IGNORECASE)
 
+# French typography puts a space before ':', ';', '!' and '?'. Editions are
+# inconsistent about it - GHS Rev.7 French prints "LA PEAU :" where Rev.8 French
+# prints "LA PEAU:" - and about which space character it uses.
+#
+# THIS IS FOR EDITION-PROOF COMPARISON ONLY: deciding whether two *editions* of
+# the same official statement say the same thing. It is deliberately NOT used when
+# matching a document against the key - that comparison stays exact, and a
+# document differing from the key by punctuation is still reported. Do not import
+# this into the matcher.
+_FRENCH_SPACE_BEFORE_PUNCT_RE = re.compile("[ \u00a0\u202f\u2009]+(?=[:;!?])")
+
+
+def edition_equal(left: str, right: str) -> bool:
+    """Whether two editions state the same statement, ignoring French spacing."""
+    def key(text: str) -> str:
+        return _FRENCH_SPACE_BEFORE_PUNCT_RE.sub("", normalize(text))
+
+    return bool(left) and bool(right) and key(left) == key(right)
+
+
+def recover_damaged_cells(
+    sources_root: Path, language: str, proof_language: str
+) -> dict[str, str]:
+    """Rev.7 statements lost to a damaged cell, recovered from Rev.8.
+
+    Some Rev.7 code cells are unreadable - the English edition renders one row's
+    code as literally "P302 +", with the rest of the combined code absent from the
+    page's text layer. The statement is not missing from the regulation, only from
+    this rendering of it.
+
+    Such a code is recovered from Rev.8 **only when another language proves the
+    statement did not change between the two editions**: `proof_language` must
+    carry the code in both editions with the same wording. Without that proof
+    nothing is recovered, which is what keeps statements that genuinely changed -
+    and statements Rev.8 introduced, such as chemicals under pressure - out of it.
+    """
+    paths = {
+        ("7", language): sources_root / REV7_FILE.format(lang=language),
+        ("8", language): sources_root / REV8_FILE.format(lang=language),
+        ("7", proof_language): sources_root / REV7_FILE.format(lang=proof_language),
+        ("8", proof_language): sources_root / REV8_FILE.format(lang=proof_language),
+    }
+    if not all(p.exists() for p in paths.values()):
+        return {}
+    tables = {k: annex3(v) for k, v in paths.items()}
+    rev7, rev8 = tables[("7", language)], tables[("8", language)]
+    proof7, proof8 = tables[("7", proof_language)], tables[("8", proof_language)]
+
+    return {
+        code: text
+        for code, text in rev8.items()
+        if code not in rev7
+        and edition_equal(proof7.get(code, ""), proof8.get(code, ""))
+    }
+
 
 def annex3(path: str | Path) -> dict[str, str]:
     """Code -> statement for one GHS edition's Annex 3."""

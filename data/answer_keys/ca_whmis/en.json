@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2015-17/",
-  "retrieved_at": "2026-09-30T05:50:16.456786Z",
+  "retrieved_at": "2026-09-30T07:02:56.618931Z",
   "notes": [],
   "entries": [
     {
@@ -2151,6 +2151,21 @@
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
       "source_ref": "GHS Rev.7 Annex 3 row for P302+P334 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
       "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "ca_whmis",
+      "revision": "SOR-2015-17",
+      "language": "en",
+      "code": "P302+P335+P334",
+      "kind": "precautionary",
+      "text": "IF ON SKIN: Brush off loose particles from skin. Immerse in cool water [or wrap in wet bandages].",
+      "signal_word": null,
+      "tier": "A",
+      "internal_id": false,
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev8-2019",
+      "source_ref": "UN GHS Rev.8 Annex 3 (English) row for P302+P335+P334. The GHS Rev.7 en PDF renders this row's code cell unreadably, so the text is taken from Rev.8; the fr edition proves the statement is unchanged between Rev.7 and Rev.8, being word-for-word identical apart from the French typographic space before ':'. That spacing licence applies to this edition-proof comparison only - document-vs-key matching stays exact.",
+      "retrieved_at": "2026-09-30T07:02:56.618931Z",
       "status": "ok"
     },
     {

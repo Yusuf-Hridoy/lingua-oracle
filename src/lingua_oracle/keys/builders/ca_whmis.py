@@ -32,7 +32,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from lingua_oracle.keys.builders.common import now
-from lingua_oracle.keys.builders.ghs_editions import pressure_overlay, rev8_name
+from lingua_oracle.keys.builders.ghs_editions import (
+    pressure_overlay,
+    recover_damaged_cells,
+    rev8_name,
+)
 from lingua_oracle.keys.builders.pdf_tables import (
     ParseIssues,
     annex_page_range,
@@ -125,6 +129,37 @@ def build(
             for code, text in sorted(found.items())
             if code[:1] in "HP"
         ]
+        # A few Rev.7 code cells are unreadable in one edition's PDF. Where
+        # another language proves the statement is unchanged between Rev.7 and
+        # Rev.8, the text is recovered from Rev.8 rather than dropped.
+        proof_lang = "fr" if lang == "en" else "en"
+        recovered = recover_damaged_cells(root, lang, proof_lang)
+        if recovered:
+            entries.extend(
+                AnswerKeyEntry(
+                    regulation=REGULATION, revision=REVISION, language=lang, code=code,
+                    kind=_kind(code), text=text, tier=Tier.A, source_url=GHS8_URL,
+                    source_ref=(
+                        f"{rev8_name(lang)} row for {code}. The GHS Rev.7 {lang} PDF "
+                        f"renders this row's code cell unreadably, so the text is "
+                        f"taken from Rev.8; the {proof_lang} edition proves the "
+                        f"statement is unchanged between Rev.7 and Rev.8, being "
+                        f"word-for-word identical apart from the French typographic "
+                        f"space before ':'. That spacing licence applies to this "
+                        f"edition-proof comparison only - document-vs-key matching "
+                        f"stays exact."
+                    ),
+                    retrieved_at=ts, status=Status.OK,
+                )
+                for code, text in sorted(recovered.items())
+                if code not in {e.code for e in entries}
+            )
+            issues.notes.append(
+                f"{lang}: recovered from {rev8_name(lang)} where the Rev.7 cell is "
+                f"unreadable and the {proof_lang} edition proves the statement "
+                f"unchanged: {', '.join(sorted(recovered))}"
+            )
+
         overlay, unchanged = pressure_overlay(root, lang)
         if overlay:
             entries.extend(

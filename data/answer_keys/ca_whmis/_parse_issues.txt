@@ -1,9 +1,10 @@
   parse issues for ca_whmis (GHS Rev.7 per HPR definition):
-    pages=0 tables=228 rows=2065 used=455
+    pages=0 tables=228 rows=2065 used=456
     HPR: "GHS means the United Nations document entitled Globally Harmonized System of Classification and Labelling of Chemicals (GHS), Seventh Revised Edition." Statements are therefore read from GHS Rev.7 Annex 3.
         The HPR additionally states, in both languages, the hazard statement "Chemical under pressure: May explode if heated / Produit chimique sous pression : peut exploser sous l'effet de la chaleur". It is not recorded here because the HPR gives it no code.
+    en: recovered from UN GHS Rev.8 Annex 3 (English) where the Rev.7 cell is unreadable and the fr edition proves the statement unchanged: P302+P335+P334
     en: chemicals under pressure overlaid from UN GHS Rev.8 Annex 3 (English) for H282, H283, H284; the class's other codes (P370+P378, P376, P378, P410+P403) are identical in Rev.7 and stay there.
-    en: 229 entries from GHS_Rev7_en.pdf; signal words ['Danger', 'Warning']
+    en: 230 entries from GHS_Rev7_en.pdf; signal words ['Danger', 'Warning']
     fr: chemicals under pressure overlaid from UN GHS Rev.8 Annex 3 (French) for H282, H283, H284; the class's other codes (P370+P378, P376, P378, P410+P403) are identical in Rev.7 and stay there.
     fr: 230 entries from GHS_Rev7_fr.pdf; signal words ['Attention', 'Danger']
     Canada-only classes are not represented: the HPR defines them and sets classification criteria but states no statement text for them, so nothing can be recorded. Affected: Biohazardous Infectious Materials; Physical Hazards Not Otherwise Classified; Health Hazards Not Otherwise Classified

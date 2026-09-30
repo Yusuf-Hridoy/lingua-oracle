@@ -498,27 +498,41 @@ def test_osha_notes_record_the_unverifiable_rendering_cases():
     assert any("graphics" in n for n in key.notes), "the eCFR finding must be recorded"
 
 
-#: Codes whose cell is damaged beyond recovery in one edition's published PDF.
-#: In GHS Rev.7 English the cell for this row reads literally "P302 +" - the rest
-#: of the combined code is absent from the page's text layer, so it cannot be
-#: recovered without inferring it from the French edition, which would be
-#: guessing. The French edition carries the row intact.
-UNRECOVERABLE_IN_ENGLISH = {"P302+P335+P334"}
-
-
 def test_whmis_english_and_french_have_the_same_code_set():
     """Both languages are read from the same editions, so the codes must agree.
 
-    Only the text should differ between them. Any divergence beyond the single
-    documented source defect means one edition was parsed less completely than
-    the other, which is the regression this guards against.
+    Only the text may differ between them. Any divergence at all now means one
+    edition was parsed less completely than the other.
     """
     en = set(load_key("ca_whmis", "en").by_code())
     fr = set(load_key("ca_whmis", "fr").by_code())
-    assert en - fr == set(), f"codes missing from French: {sorted(en - fr)}"
-    assert fr - en == UNRECOVERABLE_IN_ENGLISH, (
-        f"unexpected divergence: {sorted((fr - en) - UNRECOVERABLE_IN_ENGLISH)}"
-    )
+    assert en == fr, {"only_en": sorted(en - fr), "only_fr": sorted(fr - en)}
+
+
+def test_damaged_cell_recovered_only_with_an_edition_proof():
+    """P302+P335+P334's Rev.7 English cell is unreadable; Rev.8 supplies the text.
+
+    The recovery is licensed by the French edition showing the statement unchanged
+    between Rev.7 and Rev.8, and the entry must say so.
+    """
+    entry = load_key("ca_whmis", "en").by_code()["P302+P335+P334"]
+    assert entry.tier is Tier.A
+    assert "Rev.8" in entry.source_ref
+    assert "unchanged between Rev.7 and Rev.8" in entry.source_ref
+    assert "document-vs-key matching stays exact" in entry.source_ref
+
+
+def test_edition_proof_spacing_licence_is_not_used_by_the_matcher():
+    """The French-spacing licence is for comparing editions, never for checking.
+
+    A document that differs from the key by a space before a colon must still be
+    reported, so the matcher must not treat the two as identical.
+    """
+    from lingua_oracle.match.template import MatchKind, match
+
+    result = match("EN CAS DE CONTACT AVEC LA PEAU: Rincer.",
+                   "EN CAS DE CONTACT AVEC LA PEAU : Rincer.")
+    assert result.kind is not MatchKind.EXACT
 
 
 def test_whmis_both_languages_are_ok_and_carry_the_rev8_overlay():
