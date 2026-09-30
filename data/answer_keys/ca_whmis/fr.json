@@ -2,13 +2,11 @@
   "regulation": "ca_whmis",
   "language": "fr",
   "revision": "SOR-2015-17",
-  "status": "partial",
-  "status_reason": "needs_ghs_rev8_french",
+  "status": "ok",
+  "status_reason": null,
   "source_url": "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2015-17/",
-  "retrieved_at": "2026-09-29T13:06:46.736803Z",
-  "notes": [
-    "Chemicals under pressure (H282, H283, H284) are absent: the HPR points them at GHS Rev.8 Annex 3 and no French edition of Rev.8 is on file. They are not filled from Rev.7, from another revision, or from the English text."
-  ],
+  "retrieved_at": "2026-09-30T06:41:48.937770Z",
+  "notes": [],
   "entries": [
     {
       "regulation": "ca_whmis",
@@ -533,6 +531,51 @@
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
       "source_ref": "GHS Rev.7 Annex 3 row for H281 (GHS_Rev7_fr.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
       "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "ca_whmis",
+      "revision": "SOR-2015-17",
+      "language": "fr",
+      "code": "H282",
+      "kind": "hazard",
+      "text": "Produit chimique sous pression extrêmement inflammable: peut exploser sous l'effet de la chaleur",
+      "signal_word": null,
+      "tier": "A",
+      "internal_id": false,
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev8-2019",
+      "source_ref": "UN GHS Rev.8 Annex 3 (French) row for H282; SOR/2015-17 points chemicals under pressure at the Eighth Revised Edition",
+      "retrieved_at": "2026-09-30T06:38:33.560450Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "ca_whmis",
+      "revision": "SOR-2015-17",
+      "language": "fr",
+      "code": "H283",
+      "kind": "hazard",
+      "text": "Produit chimique sous pression inflammable: peut exploser sous l'effet de la chaleur",
+      "signal_word": null,
+      "tier": "A",
+      "internal_id": false,
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev8-2019",
+      "source_ref": "UN GHS Rev.8 Annex 3 (French) row for H283; SOR/2015-17 points chemicals under pressure at the Eighth Revised Edition",
+      "retrieved_at": "2026-09-30T06:38:33.560450Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "ca_whmis",
+      "revision": "SOR-2015-17",
+      "language": "fr",
+      "code": "H284",
+      "kind": "hazard",
+      "text": "Produit chimique sous pression: peut exploser sous l'effet de la chaleur",
+      "signal_word": null,
+      "tier": "A",
+      "internal_id": false,
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev8-2019",
+      "source_ref": "UN GHS Rev.8 Annex 3 (French) row for H284; SOR/2015-17 points chemicals under pressure at the Eighth Revised Edition",
+      "retrieved_at": "2026-09-30T06:38:33.560450Z",
       "status": "ok"
     },
     {
@@ -2483,6 +2526,21 @@
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
       "source_ref": "GHS Rev.7 Annex 3 row for P332 (GHS_Rev7_fr.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
       "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "ca_whmis",
+      "revision": "SOR-2015-17",
+      "language": "fr",
+      "code": "P332+P313",
+      "kind": "precautionary",
+      "text": "En cas d'irritation cutanée: Demander un avis médical/Consulter un médecin.",
+      "signal_word": null,
+      "tier": "A",
+      "internal_id": false,
+      "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
+      "source_ref": "GHS Rev.7 Annex 3 row for P332+P313 (GHS_Rev7_fr.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T06:41:48.937770Z",
       "status": "ok"
     },
     {

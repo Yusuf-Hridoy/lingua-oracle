@@ -188,7 +188,10 @@ def combined_codes_on_page(page_text: str) -> dict[str, str]:
     repair: dict[str, str] = {}
     for full in combined:
         lead = full.split("+")[0]
-        occurrences = len(re.findall(rf"\b{re.escape(lead)}\b", flat.replace(" ", "")))
+        # Count on the spaced text: stripping spaces glues the code to the
+        # preceding word ("supplementaireP332") and destroys the word boundary,
+        # which silently suppressed every repair on such a page.
+        occurrences = len(re.findall(rf"\b{re.escape(lead)}\b", flat))
         inside = sum(1 for c in combined if c.split("+")[0] == lead)
         # ambiguous if the lead heads more than one combined code on this page
         if inside != 1:
@@ -329,7 +332,7 @@ def harvest(
                 "stat": [Path(path).stat().st_size, int(Path(path).stat().st_mtime)],
                 "range": [first_page, last_page, statement_column],
                 "pages": pages,
-                "v": 3,
+                "v": 4,
             },
             sort_keys=True,
         ).encode()

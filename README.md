@@ -139,8 +139,7 @@ memory; where a source could not be read, the key stays empty.
 | UN GHS Rev.11 | ar, ru, zh | 0 | `pending_source` / `no_source_edition` | — | no edition on file |
 | UK GB CLP | en | 238 | `ok` | A | `uk-gb-clp/gb_clp_full.pdf`, Annex III + IV + Annex II prose |
 | Australia WHS | en | 238 | `ok` | A | `ghs-rev7/GHS_Rev7_en.pdf` (H/P) + `australia/swa_classification_guidance.pdf` (AUH) |
-| Canada WHMIS | en | 229 | `ok` | A | `ghs-rev7/GHS_Rev7_en.pdf` + `ghs-rev8/GHS_Rev8_en.pdf` for chemicals under pressure |
-| Canada WHMIS | fr | 226 | `partial` / `needs_ghs_rev8_french` | A | `ghs-rev7/GHS_Rev7_fr.pdf`; no French Rev.8 on file |
+| Canada WHMIS | en, fr | 229 / 230 | `ok` | A | `ghs-rev7/GHS_Rev7_{en,fr}.pdf` + `ghs-rev8/GHS_Rev8_{en,fr}.pdf` for chemicals under pressure |
 | US OSHA HazCom | en | 126 | `partial` / `unrepresented_statements_remain` | A | `us-osha/appendix_c.html`, keyed against GHS Rev.7 + Rev.8 |
 | Japan JIS | ja, en | 0 | `pending_source` / `wrong_source` | — | file on record is UN GHS Rev.9 Japanese, not JIS |
 
@@ -176,9 +175,11 @@ any diff is a real change.
   a paid standard and is not scraped. Fill via `lingua keys import-csv`.
 * **UN GHS ar/ru/zh are `no_source_edition`.** No Arabic, Russian or Chinese
   edition is on file. Their text is not derivable from the editions that are.
-* **Canada French lacks chemicals under pressure.** The HPR points that class at
-  GHS Rev.8 and no French Rev.8 is on file, so H282/H283/H284 are absent rather
-  than filled from Rev.7, another revision, or the English text.
+* **Canada's two languages differ by one code.** `P302+P335+P334` is present in
+  French and absent in English, because the English GHS Rev.7 PDF renders that
+  row's code cell as literally `"P302 +"` — the rest of the combined code is not
+  in the page's text layer at all. Recovering it would mean inferring the code
+  from the French edition, so it is left out and pinned by a test.
 * **OSHA holds 126 entries and four statements remain out.** Appendix C states no
   codes at all, so codes are established by exact wording against GHS Rev.7 (plus
   Rev.8 for chemicals under pressure). Four statements differ from GHS only in

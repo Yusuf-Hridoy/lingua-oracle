@@ -25,9 +25,17 @@ from lingua_oracle.keys.builders.common import normalise_code
 from lingua_oracle.keys.builders.pdf_tables import annex_page_range, harvest
 from lingua_oracle.match.normalize import normalize
 
-REV7_FILE = "ghs-rev7/GHS_Rev7_en.pdf"
-REV8_FILE = "ghs-rev8/GHS_Rev8_en.pdf"
-REV8_NAME = "UN GHS Rev.8 Annex 3 (English)"
+REV7_FILE = "ghs-rev7/GHS_Rev7_{lang}.pdf"
+REV8_FILE = "ghs-rev8/GHS_Rev8_{lang}.pdf"
+_EDITION_NAME = {"en": "English", "fr": "French", "es": "Spanish"}
+
+
+def rev8_name(language: str = "en") -> str:
+    return f"UN GHS Rev.8 Annex 3 ({_EDITION_NAME.get(language, language)})"
+
+
+#: Kept for callers that only ever deal with English.
+REV8_NAME = rev8_name("en")
 PRESSURE_CLASS_RE = re.compile(r"chemicals?\s+under\s+pressure", re.IGNORECASE)
 
 
@@ -61,20 +69,30 @@ def codes_for_class(path: str | Path, pattern: re.Pattern[str]) -> set[str]:
     return out
 
 
-def pressure_overlay(sources_root: Path) -> tuple[dict[str, str], dict[str, str]]:
+def pressure_overlay(
+    sources_root: Path, language: str = "en"
+) -> tuple[dict[str, str], dict[str, str]]:
     """Rev.8 statements for chemicals under pressure that Rev.7 does not carry.
 
-    Returns (overlay, unchanged) where `overlay` is what must come from Rev.8 and
-    `unchanged` is the class's other codes, which are identical in Rev.7 and stay
-    there. A code whose text differs between the editions is *not* overlaid
-    silently - it would be reported by the caller - but in practice none does.
+    Returns (overlay, unchanged) where `overlay` is what must come from Rev.8 in
+    `language`, and `unchanged` is the class's other codes, which are identical in
+    Rev.7 and stay there.
+
+    Which codes the class covers is always decided from the **English** Rev.8,
+    whose hazard-class column names the class in a form this code can match. The
+    statement text then comes from the requested language's own edition, so no
+    wording is ever carried across languages - only the set of codes is.
     """
-    rev7_path, rev8_path = sources_root / REV7_FILE, sources_root / REV8_FILE
-    if not rev8_path.exists() or not rev7_path.exists():
+    class_source = sources_root / REV8_FILE.format(lang="en")
+    rev7_path = sources_root / REV7_FILE.format(lang=language)
+    rev8_path = sources_root / REV8_FILE.format(lang=language)
+    if not class_source.exists() or not rev8_path.exists() or not rev7_path.exists():
         return {}, {}
+
+    codes = codes_for_class(class_source, PRESSURE_CLASS_RE)
     rev7, rev8 = annex3(rev7_path), annex3(rev8_path)
     overlay, unchanged = {}, {}
-    for code in codes_for_class(rev8_path, PRESSURE_CLASS_RE):
+    for code in codes:
         text8 = rev8.get(code)
         if text8 is None:
             continue

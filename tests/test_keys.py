@@ -349,7 +349,7 @@ def test_stats_reports_partial_rather_than_inferring_ok():
     assert rows["us_osha"]["status"] == "partial"
     assert rows["us_osha"]["status_reasons"] == ["unrepresented_statements_remain"]
     assert rows["jp_jis"]["status_reasons"] == ["wrong_source"]
-    assert rows["ca_whmis"]["status_reasons"] == ["needs_ghs_rev8_french"]
+    assert rows["ca_whmis"]["status_reasons"] == []      # both languages are ok now
 
 
 # -- signal words ------------------------------------------------------------
@@ -435,15 +435,6 @@ def test_whmis_english_takes_chemicals_under_pressure_from_rev8():
     assert key.status_reason is None
 
 
-def test_whmis_french_keeps_the_rev8_gap():
-    """No French Rev.8 is on file, so those codes stay absent rather than borrowed."""
-    key = load_key("ca_whmis", "fr")
-    assert key.status is Status.PARTIAL
-    assert key.status_reason == "needs_ghs_rev8_french"
-    for code in PRESSURE_CODES:
-        assert code not in key.by_code(), f"{code} must not be filled from another source"
-    assert any("no French edition of Rev.8" in n for n in key.notes)
-
 
 def test_whmis_parse_report_names_the_overlay():
     from lingua_oracle.keys.store import keys_root
@@ -505,3 +496,42 @@ def test_osha_notes_record_the_unverifiable_rendering_cases():
     key = load_key("us_osha", "en")
     assert key.status is Status.PARTIAL
     assert any("graphics" in n for n in key.notes), "the eCFR finding must be recorded"
+
+
+#: Codes whose cell is damaged beyond recovery in one edition's published PDF.
+#: In GHS Rev.7 English the cell for this row reads literally "P302 +" - the rest
+#: of the combined code is absent from the page's text layer, so it cannot be
+#: recovered without inferring it from the French edition, which would be
+#: guessing. The French edition carries the row intact.
+UNRECOVERABLE_IN_ENGLISH = {"P302+P335+P334"}
+
+
+def test_whmis_english_and_french_have_the_same_code_set():
+    """Both languages are read from the same editions, so the codes must agree.
+
+    Only the text should differ between them. Any divergence beyond the single
+    documented source defect means one edition was parsed less completely than
+    the other, which is the regression this guards against.
+    """
+    en = set(load_key("ca_whmis", "en").by_code())
+    fr = set(load_key("ca_whmis", "fr").by_code())
+    assert en - fr == set(), f"codes missing from French: {sorted(en - fr)}"
+    assert fr - en == UNRECOVERABLE_IN_ENGLISH, (
+        f"unexpected divergence: {sorted((fr - en) - UNRECOVERABLE_IN_ENGLISH)}"
+    )
+
+
+def test_whmis_both_languages_are_ok_and_carry_the_rev8_overlay():
+    for language in ("en", "fr"):
+        key = load_key("ca_whmis", language)
+        assert key.status is Status.OK
+        assert key.status_reason is None
+        by_code = key.by_code()
+        for code in ("H282", "H283", "H284"):
+            assert code in by_code, f"{language} is missing {code}"
+            assert "Rev.8" in by_code[code].source_ref
+            assert by_code[code].tier is Tier.A
+    # and the two languages really are different text, not a copy
+    assert load_key("ca_whmis", "en").by_code()["H284"].text != (
+        load_key("ca_whmis", "fr").by_code()["H284"].text
+    )

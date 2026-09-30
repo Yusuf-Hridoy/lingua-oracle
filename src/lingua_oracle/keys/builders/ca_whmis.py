@@ -32,7 +32,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from lingua_oracle.keys.builders.common import now
-from lingua_oracle.keys.builders.ghs_editions import REV8_NAME, pressure_overlay
+from lingua_oracle.keys.builders.ghs_editions import pressure_overlay, rev8_name
 from lingua_oracle.keys.builders.pdf_tables import (
     ParseIssues,
     annex_page_range,
@@ -81,20 +81,8 @@ def build(
     )
 
     # The HPR points chemicals under pressure at Annex 3 of the EIGHTH revised
-    # edition. That overlay is applied to English, where Rev.8 is on file.
-    overlay, unchanged = pressure_overlay(root)
-    if overlay:
-        issues.notes.append(
-            f"chemicals under pressure -> the HPR points at {REV8_NAME}; overlaid "
-            f"for: {', '.join(sorted(overlay))}. The class's other codes "
-            f"({', '.join(sorted(unchanged))}) are word-for-word identical in Rev.7 "
-            "and stay there."
-        )
-    else:
-        issues.notes.append(
-            "chemicals under pressure -> GHS Rev.8 Annex 3 is not on file; those "
-            "codes are absent, reason 'needs GHS Rev.8 Annex 3'."
-        )
+    # edition. The overlay is resolved per language, so each language's statements
+    # come from its own Rev.8 edition; only the set of codes is shared.
     issues.notes.append(
         "    The HPR additionally states, in both languages, the hazard statement "
         '"Chemical under pressure: May explode if heated / Produit chimique sous '
@@ -104,7 +92,7 @@ def build(
 
     english_path = root / GHS7_FILES["en"]
     keys: list[AnswerKey] = []
-    missing_rev8_fr: list[str] = []
+    missing_rev8: list[str] = []
     for lang in wanted:
         relative = GHS7_FILES.get(lang)
         path = Path(from_file) if (from_file and len(wanted) == 1) else (
@@ -137,21 +125,25 @@ def build(
             for code, text in sorted(found.items())
             if code[:1] in "HP"
         ]
-        # Rev.8 exists in English only, so the overlay applies there. French keeps
-        # the gap rather than borrowing English or another revision's wording.
-        if lang == "en" and overlay:
+        overlay, unchanged = pressure_overlay(root, lang)
+        if overlay:
             entries.extend(
                 AnswerKeyEntry(
                     regulation=REGULATION, revision=REVISION, language=lang, code=code,
                     kind=_kind(code), text=text, tier=Tier.A, source_url=GHS8_URL,
-                    source_ref=f"{REV8_NAME} row for {code}; SOR/2015-17 points "
+                    source_ref=f"{rev8_name(lang)} row for {code}; SOR/2015-17 points "
                                "chemicals under pressure at the Eighth Revised Edition",
                     retrieved_at=ts, status=Status.OK,
                 )
                 for code, text in sorted(overlay.items())
             )
-        elif lang != "en" and overlay:
-            missing_rev8_fr.extend(sorted(overlay))
+            issues.notes.append(
+                f"{lang}: chemicals under pressure overlaid from {rev8_name(lang)} "
+                f"for {', '.join(sorted(overlay))}; the class's other codes "
+                f"({', '.join(sorted(unchanged))}) are identical in Rev.7 and stay there."
+            )
+        else:
+            missing_rev8.append(lang)
         issues.rows_used += len(entries)
 
         words = (
@@ -174,21 +166,21 @@ def build(
         )
 
         entries.sort(key=lambda e: (e.kind, e.code))
-        gap = lang != "en" and bool(overlay)
+        gap = not overlay
         notes = []
         if gap:
             notes.append(
-                "Chemicals under pressure (" + ", ".join(sorted(overlay)) + ") are "
-                "absent: the HPR points them at GHS Rev.8 Annex 3 and no French "
-                "edition of Rev.8 is on file. They are not filled from Rev.7, from "
-                "another revision, or from the English text."
+                "Chemicals under pressure are absent: the HPR points them at GHS "
+                f"Rev.8 Annex 3 and no {lang} edition of Rev.8 is on file. They are "
+                "not filled from Rev.7, from another revision, or from another "
+                "language's text."
             )
         keys.append(
             AnswerKey(
                 regulation=REGULATION, language=lang, revision=REVISION,
                 status=(Status.PARTIAL if gap else Status.OK) if entries
                 else Status.PENDING_SOURCE,
-                status_reason=("needs_ghs_rev8_french" if gap else None) if entries
+                status_reason=(f"needs_ghs_rev8_{lang}" if gap else None) if entries
                 else "no_source_edition",
                 source_url=SOURCE_URL, retrieved_at=ts, notes=notes, entries=entries,
             )

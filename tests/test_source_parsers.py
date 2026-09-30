@@ -88,3 +88,24 @@ def test_parse_issues_render_is_quiet_when_clean():
     out = ParseIssues(source="x", pages_scanned=1).render()
     assert "empty statement" not in out
     assert "different text" not in out
+
+
+def test_combined_code_repair_survives_a_preceding_word():
+    """Regression: the lead code is usually glued to the word before it.
+
+    An earlier version counted occurrences on the text with spaces stripped,
+    which turned "supplémentaire P332 + P313" into "supplémentaireP332+P313" and
+    destroyed the word boundary in front of the code. The count came out zero and
+    every repair on such a page was silently skipped.
+    """
+    from lingua_oracle.keys.builders.pdf_tables import combined_codes_on_page
+
+    page = "Catégorie supplémentaire P332 + P313 En cas d'irritation cutanée: Demander"
+    assert combined_codes_on_page(page) == {"P332": "P332+P313"}
+
+
+def test_combined_code_repair_still_refuses_when_the_code_stands_alone():
+    from lingua_oracle.keys.builders.pdf_tables import combined_codes_on_page
+
+    page = "P332 En cas d'irritation cutanée: P333 + P313 En cas d'irritation"
+    assert "P332" not in combined_codes_on_page(page)
