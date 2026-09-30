@@ -126,6 +126,58 @@ def _grouped(report: Report, display: str = "") -> list[dict]:
     return rendered
 
 
+_STATUS_ORDER = {"wrong": 0, "check": 1, "not_checked": 2, "correct": 3}
+
+
+def display_of(report: Report) -> str:
+    try:
+        return load_registry().get(report.regulation).display_name
+    except KeyError:
+        return report.regulation
+
+
+def _statement_cards(report: Report) -> dict:
+    """The report as a reader wants it: what is wrong, then what is fine."""
+    rows = []
+    for verdict in sorted(report.statements,
+                          key=lambda v: (_STATUS_ORDER.get(v.status, 9), v.code)):
+        left, right = word_diff(verdict.expected, verdict.found)
+        rows.append({
+            "v": verdict,
+            "label": labels.STATUS.get(verdict.status, labels.NOT_CHECKED),
+            "found_html": right,
+            "expected_html": left,
+            "action": labels.STATUS_ACTION.get(verdict.status, ""),
+        })
+    problems = [r for r in rows if r["v"].status != "correct"]
+    correct = [r for r in rows if r["v"].status == "correct"]
+
+    # Findings that are not about one statement's wording - a missing
+    # language, a leftover placeholder, a code set that differs between two
+    # documents. Without these the report would simply lose them.
+    statement_checks = {"A-02", "A-03", "A-04", "C-15"}
+    others = []
+    for finding in report.findings:
+        if finding.check_id in statement_checks or finding.unverified:
+            continue
+        if finding.severity is Severity.INFO and finding.code:
+            continue  # fill-in notes ride on their own statement card
+        others.append({
+            "finding": finding,
+            "label": labels.result_of(finding.check_id, finding.severity, False),
+            "action": labels.action_for(finding, display_of(report)),
+        })
+    others.sort(key=lambda o: _SEVERITY_ORDER.get(o["finding"].severity, 9))
+
+    return {"problems": problems, "correct": correct, "others": others,
+            "counts": {
+                "correct": len(correct),
+                "wrong": sum(1 for r in rows if r["v"].status == "wrong"),
+                "check": sum(1 for r in rows if r["v"].status == "check"),
+                "not_checked": sum(1 for r in rows if r["v"].status == "not_checked"),
+            }}
+
+
 def render_html(report: Report) -> str:
     registry = load_registry()
     try:
@@ -139,6 +191,7 @@ def render_html(report: Report) -> str:
         regulation_display=display,
         coverage_percent=report.coverage.percent,
         verdict=labels.verdict_of(report, display),
+        cards=_statement_cards(report),
         L=labels,
         SEV=Severity,
         set_by=labels.SET_BY.get(report.detected_by, report.detected_by),

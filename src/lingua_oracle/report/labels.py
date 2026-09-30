@@ -158,6 +158,25 @@ _ACTIONS: dict[str, str] = {
 }
 
 
+#: The statement card's own result words.
+STATUS: dict[str, Label] = {
+    "wrong": Label("Wrong wording", "❌", "fail",
+                   "This does not say what the official text says."),
+    "check": Label("Check this", "⚠", "warn",
+                   "A difference that may or may not matter."),
+    "correct": Label("Correct", "✅", "ok", "Matches the official wording."),
+    "not_checked": Label("Not checked", "?", "unver",
+                         "We hold no official wording for this code."),
+}
+
+#: What to do about one statement, in the imperative.
+STATUS_ACTION = {
+    "wrong": "Replace it with the correct text.",
+    "check": "Read both and decide whether the difference matters.",
+    "not_checked": "No action; our tool has no official text for this.",
+}
+
+
 def action_for(finding, regulation_display: str = "") -> str:
     """The plain-words next step for one finding."""
     message = finding.message or ""
@@ -176,8 +195,11 @@ def action_for(finding, regulation_display: str = "") -> str:
         if "no equivalent statement" in message:
             return (f"Ask whether {where} allows this wording; there is no "
                     f"equivalent statement to use instead.")
-        nearest = message.rsplit(" is ", 1)[-1].rstrip(".")
-        return f"Ask whether {where} allows this wording; if not, use {nearest}."
+        marker = "publishes is "
+        if marker in message:
+            nearest = message.rsplit(marker, 1)[-1].rstrip(".").strip()
+            return f"Ask whether {where} allows this wording; if not, use {nearest}."
+        return f"Ask whether {where} allows this wording."
     if finding.check_id == "C-14":
         # "Confirm the French version of this SDS exists."
         return message.split(".")[0].strip() + "."

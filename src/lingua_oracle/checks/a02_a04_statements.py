@@ -94,8 +94,10 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
         # The official text only says a value belongs here, never which value is
         # right, so no automatic verdict can cover it and it must not be hidden
         # behind a clean pass.
+        unfilled = False
         for value in result.fillins:
             blank = value.strip() in ("…", "...")
+            unfilled = unfilled or blank
             findings.append(
                 Finding(
                     check_id=check_id, severity=Severity.WARN if blank else Severity.INFO,
@@ -110,11 +112,22 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                 )
             )
         if result.kind in (MatchKind.EXACT, MatchKind.TEMPLATE) and result.matched:
+            # The wording is right, but a slot someone filled in - or left
+            # empty - still needs a person. Filing those under "correct" would
+            # collapse them into a line nobody opens.
+            if unfilled:
+                why = ("The wording is correct, but a blank was never filled "
+                       "in: the document still shows the placeholder.")
+            elif result.fillins:
+                why = "The wording is correct. Check the text you filled in."
+            else:
+                why = "Matches the official wording."
             ctx.record(StatementVerdict(
-                code=hit.code, status="correct", found=hit.text,
-                expected=entry.text, source=_source_of(ctx, entry),
-                why="Matches the official wording.",
-                section=section, page=hit.page, fillins=list(result.fillins),
+                code=hit.code,
+                status="check" if result.fillins else "correct",
+                found=hit.text, expected=entry.text, source=_source_of(ctx, entry),
+                why=why, section=section, page=hit.page,
+                fillins=[v for v in result.fillins if v.strip() not in ("…", "...")],
             ))
             continue
         if result.matched:

@@ -33,6 +33,8 @@ def run(ctx: CheckContext) -> list[Finding]:
     for hit in ctx.hits:
         if not hit.code or hit.code in seen or ctx.entry(hit.code) is not None:
             continue
+        if not hit.text:
+            continue  # a bare code reference carries no wording to judge
         seen.add(hit.code)
         missing = classify(hit.code, ctx.reference.key_status,
                            ctx.reference.entries, ctx.regulation.id)
