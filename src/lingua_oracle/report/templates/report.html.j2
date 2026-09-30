@@ -37,6 +37,44 @@
   .t-info .n{color:var(--info)} .t-ok .n{color:var(--ok)}
   .badge { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px;
            border-radius:999px; text-transform:uppercase; letter-spacing:.03em; }
+  /* Severity is icon + word + colour. Colour alone is not a signal: it is
+     invisible in greyscale and to a reader with colour vision deficiency. */
+  .result { display:inline-flex; align-items:center; gap:6px; font-size:12px;
+            font-weight:700; padding:3px 10px 3px 5px; border-radius:999px;
+            white-space:nowrap; }
+  .result .ico { display:inline-flex; align-items:center; justify-content:center;
+                 width:16px; height:16px; border-radius:50%; font-size:11px;
+                 line-height:1; font-weight:800; color:#fff; }
+  .r-fail{background:var(--fail-bg);color:var(--fail)} .r-fail .ico{background:var(--fail)}
+  .r-warn{background:var(--warn-bg);color:var(--warn)} .r-warn .ico{background:var(--warn)}
+  .r-info{background:var(--info-bg);color:var(--info)} .r-info .ico{background:var(--info)}
+  .r-unver{background:#eceff1;color:#455a64} .r-unver .ico{background:#607d8b}
+  .src { display:inline-flex; align-items:center; gap:6px; font-size:12px;
+         white-space:nowrap; }
+  .src .k { display:inline-flex; align-items:center; justify-content:center;
+            width:18px; height:18px; border-radius:50%; font-size:10px;
+            font-weight:800; background:#eceff1; color:#37474f; }
+  .src-A .k{background:var(--ok-bg);color:var(--ok)}
+  .src-B .k{background:var(--info-bg);color:var(--info)}
+  .src-C .k{background:#eceff1;color:#546e7a}
+  .verdict { border-radius:10px; padding:18px 20px; margin:16px 0;
+             border:1px solid var(--line); background:var(--card); }
+  .verdict .head { display:flex; gap:12px; align-items:flex-start; }
+  .verdict .vico { flex:0 0 auto; width:28px; height:28px; border-radius:50%;
+                   display:flex; align-items:center; justify-content:center;
+                   color:#fff; font-weight:800; font-size:15px; }
+  .verdict h2 { font-size:18px; line-height:1.3; }
+  .verdict .detail { color:var(--muted); font-size:13px; margin-top:3px; }
+  .v-ok{background:var(--ok-bg);border-color:#bfe3cc}   .v-ok .vico{background:var(--ok)}
+  .v-warn{background:var(--warn-bg);border-color:#efdcb0} .v-warn .vico{background:var(--warn)}
+  .v-bad{background:var(--fail-bg);border-color:#f3c9c4}  .v-bad .vico{background:var(--fail)}
+  .caveats { margin:14px 0 0; padding:12px 14px; background:rgba(255,255,255,.65);
+             border:1px solid var(--line); border-radius:8px; }
+  .caveats .t { font-size:11px; font-weight:700; text-transform:uppercase;
+                letter-spacing:.05em; color:var(--muted); margin-bottom:6px; }
+  .caveats ul { margin:0; padding-left:18px; }
+  .caveats li { font-size:12.5px; color:var(--ink); margin:3px 0; }
+  .cid { font-size:12px; color:var(--muted); font-weight:500; }
   .b-fail{background:var(--fail-bg);color:var(--fail)}
   .b-warn{background:var(--warn-bg);color:var(--warn)}
   .b-info{background:var(--info-bg);color:var(--info)}
@@ -71,26 +109,42 @@
   <h1>Lingua Oracle report</h1>
   <div class="sub">{{ report.file_name }}{% if report.compared_with %} &middot; compared with {{ report.compared_with }}{% endif %}</div>
 
+  <div class="verdict v-{{ verdict.tone }}" role="status" id="verdict">
+    <div class="head">
+      <span class="vico" aria-hidden="true">{{ verdict.icon }}</span>
+      <div>
+        <h2>{{ verdict.headline }}</h2>
+        <div class="detail">{{ verdict.detail }}</div>
+      </div>
+    </div>
+    <div class="caveats">
+      <div class="t">What this does not tell you</div>
+      <ul>
+        {% for line in verdict.caveats %}<li>{{ line }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+
   <div class="card">
     <dl class="meta">
-      <div><dt>File</dt><dd>{{ report.file_name }}</dd></div>
-      <div><dt>Regulation</dt><dd>{{ regulation_display }}</dd></div>
-      <div><dt>Language</dt><dd>{{ report.language }}</dd></div>
-      <div><dt>Detected by</dt><dd>{{ report.detected_by }}</dd></div>
-      <div><dt>Generated</dt><dd>{{ report.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</dd></div>
-      <div><dt>Report ID</dt><dd>{{ report.id }}</dd></div>
+      <div><dt>{{ L.META.file }}</dt><dd>{{ report.file_name }}</dd></div>
+      <div><dt>{{ L.META.regulation }}</dt><dd>{{ regulation_display }}</dd></div>
+      <div><dt>{{ L.META.language }}</dt><dd>{{ report.language }}</dd></div>
+      <div><dt>{{ L.META.set_by }}</dt><dd>{{ set_by }}</dd></div>
+      <div><dt>{{ L.META.created }}</dt><dd>{{ report.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</dd></div>
+      <div><dt>{{ L.META.id }}</dt><dd>{{ report.id }}</dd></div>
     </dl>
   </div>
 
   <div class="card">
     <header><h2>Summary</h2></header>
     <div class="tiles">
-      <div class="tile t-fail"><div class="n">{{ report.summary.fail }}</div><div class="l">Fail</div></div>
-      <div class="tile t-warn"><div class="n">{{ report.summary.warn }}</div><div class="l">Warn</div></div>
-      <div class="tile t-info"><div class="n">{{ report.summary.info }}</div><div class="l">Info</div></div>
-      <div class="tile"><div class="n">{{ report.summary.unverified }}</div><div class="l">Unverified</div></div>
-      <div class="tile t-ok"><div class="n">{{ coverage_percent }}%</div><div class="l">Coverage</div></div>
-      <div class="tile"><div class="n">{{ report.coverage.codes_found }}</div><div class="l">Codes found</div></div>
+      <div class="tile t-fail"><div class="n">{{ report.summary.fail }}</div><div class="l">{{ L.TILES.fail }}</div></div>
+      <div class="tile t-warn"><div class="n">{{ report.summary.warn }}</div><div class="l">{{ L.TILES.warn }}</div></div>
+      <div class="tile t-info"><div class="n">{{ report.summary.info }}</div><div class="l">{{ L.TILES.info }}</div></div>
+      <div class="tile"><div class="n">{{ report.summary.unverified }}</div><div class="l">{{ L.TILES.unverified }}</div></div>
+      <div class="tile t-ok"><div class="n">{{ coverage_percent }}%</div><div class="l">{{ L.TILES.coverage }}</div></div>
+      <div class="tile"><div class="n">{{ report.coverage.codes_found }}</div><div class="l">{{ L.TILES.codes }}</div></div>
     </div>
     {% if report.notes %}
     <div class="notes"><ul>
@@ -106,30 +160,33 @@
   {% for group in groups %}
   <div class="card">
     <header>
-      <h2>{{ group.check_id }} &mdash; {{ group.title }}</h2>
-      {% if group.fails %}<span class="badge b-fail">{{ group.fails }} fail</span>{% endif %}
-      {% if group.warns %}<span class="badge b-warn">{{ group.warns }} warn</span>{% endif %}
-      {% if group.unverified %}<span class="badge b-unver">{{ group.unverified }} unverified</span>{% endif %}
+      <h2>{{ group.title }} <span class="cid">(check {{ group.check_id }})</span></h2>
+      {% if group.fails %}<span class="result r-fail"><span class="ico" aria-hidden="true">{{ L.SEVERITY[SEV.FAIL].icon }}</span>{{ group.fails }} {{ L.SEVERITY[SEV.FAIL].word|lower }}</span>{% endif %}
+      {% if group.warns %}<span class="result r-warn"><span class="ico" aria-hidden="true">{{ L.SEVERITY[SEV.WARN].icon }}</span>{{ group.warns }} to check</span>{% endif %}
+      {% if group.unverified %}<span class="result r-unver"><span class="ico" aria-hidden="true">{{ L.NOT_CHECKED.icon }}</span>{{ group.unverified }} not checked</span>{% endif %}
       <span class="count">{{ group.rows|length }} finding{{ '' if group.rows|length == 1 else 's' }}</span>
     </header>
     <div class="scroll">
     <table>
       <thead><tr>
-        <th>Severity</th><th>Section</th><th>Page</th><th>Code</th>
-        <th>Tier</th><th>Expected</th><th>Found</th>
+        <th>{{ L.COLUMNS.severity }}</th><th>{{ L.COLUMNS.section }}</th>
+        <th>{{ L.COLUMNS.page }}</th><th>{{ L.COLUMNS.code }}</th>
+        <th>{{ L.COLUMNS.tier }}</th><th>{{ L.COLUMNS.expected }}</th>
+        <th>{{ L.COLUMNS.found }}</th>
       </tr></thead>
       <tbody>
       {% for row in group.rows %}
         {% set f = row.finding %}
         <tr>
           <td>
-            {% if f.unverified %}<span class="badge b-unver">unverified</span>
-            {% else %}<span class="badge b-{{ f.severity.value }}">{{ f.severity.value }}</span>{% endif %}
+            <span class="result r-{{ row.result.css }}" title="{{ row.result.help }}">
+              <span class="ico" aria-hidden="true">{{ row.result.icon }}</span>{{ row.result.word }}
+            </span>
           </td>
-          <td>{{ f.section or '&mdash;' | safe }}</td>
+          <td>{{ row.section_label or '—' }}</td>
           <td>{{ f.page if f.page is not none else '' }}</td>
-          <td class="code">{{ f.code or '' }}</td>
-          <td>{% if f.tier %}<span class="tier tier-{{ f.tier.value }}">{{ f.tier.value }}</span>{% endif %}</td>
+          <td class="code">{{ row.code_label }}</td>
+          <td>{% if row.source %}<span class="src src-{{ row.source.css }}" title="{{ row.source.help }}"><span class="k" aria-hidden="true">{{ row.source.icon }}</span>{{ row.source.word }}</span>{% endif %}</td>
           <td class="txt">{{ row.expected_html | safe }}</td>
           <td class="txt">
             {{ row.found_html | safe }}
@@ -144,9 +201,10 @@
   {% endfor %}
 
   <div class="sub" style="margin-top:20px">
-    Tier A = official text for this regulation and language &middot;
-    Tier B = official text borrowed from EU CLP where the English wording is identical &middot;
-    Tier C = no official source, consistency only.
+    <b>Source of official text</b> &mdash;
+    {% for tier, label in L.SOURCE.items() %}
+      <b>{{ label.word }}</b>: {{ label.help }}{% if not loop.last %} &middot; {% endif %}
+    {% endfor %}
   </div>
 </div>
 </body>

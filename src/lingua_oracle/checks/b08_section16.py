@@ -7,7 +7,7 @@ from lingua_oracle.detect.codes import split_combined
 from lingua_oracle.models import Finding, Severity
 
 CHECK_ID = "B-08"
-TITLE = "Every H-code in Section 3 has full text in Section 16"
+TITLE = "Every hazard code in Section 3 is written out in Section 16"
 
 
 @register(CHECK_ID, TITLE)

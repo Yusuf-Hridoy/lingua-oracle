@@ -16,7 +16,7 @@ from lingua_oracle.match.template import match
 from lingua_oracle.models import Finding, Severity
 
 CHECK_ID = "C-13"
-TITLE = "Wording matches the current revision"
+TITLE = "Wording matches the revision in force"
 
 
 @functools.lru_cache(maxsize=16)

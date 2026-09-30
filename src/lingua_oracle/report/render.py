@@ -12,6 +12,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from lingua_oracle.checks import title_of
 from lingua_oracle.models import Report, Severity
 from lingua_oracle.registry import load_registry
+from lingua_oracle.report import labels
 
 TEMPLATES = Path(__file__).parent / "templates"
 
@@ -79,7 +80,16 @@ def _grouped(report: Report) -> list[dict]:
         rows = []
         for f in findings:
             left, right = char_diff(f.expected, f.found)
-            rows.append({"finding": f, "expected_html": left, "found_html": right})
+            rows.append({
+                "finding": f,
+                "expected_html": left,
+                "found_html": right,
+                "result": (labels.NOT_CHECKED if f.unverified
+                           else labels.SEVERITY[f.severity]),
+                "source": labels.SOURCE.get(f.tier) if f.tier else None,
+                "code_label": labels.code_label(f.code),
+                "section_label": labels.section_label(f.section),
+            })
         rendered.append(
             {
                 "check_id": check_id,
@@ -106,6 +116,10 @@ def render_html(report: Report) -> str:
         groups=_grouped(report),
         regulation_display=display,
         coverage_percent=report.coverage.percent,
+        verdict=labels.verdict_of(report),
+        L=labels,
+        SEV=Severity,
+        set_by=labels.SET_BY.get(report.detected_by, report.detected_by),
     )
 
 

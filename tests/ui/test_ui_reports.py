@@ -14,7 +14,9 @@ import re
 
 import pytest
 
+from lingua_oracle.models import Severity
 from lingua_oracle.registry import load_registry
+from lingua_oracle.report import labels
 from tests.ui.manifest import CASES, Case
 
 FIXTURES = "tests/fixtures"
@@ -29,7 +31,10 @@ def _fail_count(page) -> int:
 
 
 def _card(page, check_id: str):
-    return page.locator(".card").filter(has=page.locator(f"h2:text-matches('^{check_id} ')"))
+    """The heading leads with the plain-language title; the id follows it."""
+    return page.locator(".card").filter(
+        has=page.locator(f'h2:has-text("check {check_id}")')
+    )
 
 
 def _upload(page, base: str, case: Case) -> None:
@@ -69,11 +74,13 @@ def test_fixture_report_in_the_browser(case: Case, page, server, shots_dir):
     )
 
     # -- the header must identify what was checked --------------------------
-    assert _meta(page, "File") == f"{case.name}.pdf"
+    # Labels come from the presentation module, so renaming one cannot leave a
+    # test asserting on wording the page no longer uses.
+    assert _meta(page, labels.META["file"]) == f"{case.name}.pdf"
     expected_display = load_registry().get(case.expect_regulation).display_name
-    assert _meta(page, "Regulation") == expected_display
-    assert _meta(page, "Language") == case.expect_language
-    assert _meta(page, "Report ID"), "the report has no id on screen"
+    assert _meta(page, labels.META["regulation"]) == expected_display
+    assert _meta(page, labels.META["language"]) == case.expect_language
+    assert _meta(page, labels.META["id"]), "the report has no reference on screen"
 
     # -- the verdict --------------------------------------------------------
     if case.clean:
@@ -88,15 +95,25 @@ def test_fixture_report_in_the_browser(case: Case, page, server, shots_dir):
     for check_id, severity, code in case.expect:
         card = _card(page, check_id)
         assert card.count() == 1, f"no card on the page for {check_id}"
+        # Our internal placeholders are shown under their plain name, so look
+        # for what the reader sees rather than for the raw code.
+        shown_code = labels.code_label(code)
         row = card.locator("tbody tr").filter(
-            has=page.locator(f"td.code:text-is('{code}')")
+            has=page.locator(f'td.code:text-is("{shown_code}")')
         ) if code else card.locator("tbody tr")
-        assert row.count() >= 1, f"{check_id}: no row for code {code!r}"
+        assert row.count() >= 1, (
+            f"{check_id}: no row for code {code!r} (shown as {shown_code!r})"
+        )
         first = row.first
-        # inner_text() is the *rendered* text and the badge is uppercased in CSS.
-        badge = first.locator("td").first.inner_text().strip()
-        assert badge.casefold() == severity, (
-            f"{check_id}/{code}: severity shown as {badge!r}, expected {severity!r}"
+        # The result cell carries an icon AND a word, never colour alone.
+        cell = first.locator("td").first
+        want = labels.SEVERITY[Severity(severity)]
+        shown = cell.inner_text().strip()
+        assert want.word in shown, (
+            f"{check_id}/{code}: result shown as {shown!r}, expected {want.word!r}"
+        )
+        assert cell.locator(".result .ico").count() == 1, (
+            f"{check_id}/{code}: the result has no icon, so colour is the only signal"
         )
         cells = first.locator("td")
         expected_text = cells.nth(5).inner_text().strip()
@@ -107,9 +124,12 @@ def test_fixture_report_in_the_browser(case: Case, page, server, shots_dir):
             assert expected_text != found_text, (
                 f"{check_id}/{code}: Expected and Found are identical on screen"
             )
-        tier = first.locator("td .tier")
-        if tier.count():
-            assert tier.first.inner_text().strip().upper() in ("A", "B", "C")
+        source = first.locator("td .src")
+        if source.count():
+            # The cell carries the letter and the words, e.g. "A" + "Official".
+            shown = " ".join(source.first.inner_text().split())
+            assert any(lbl.word in shown for lbl in labels.SOURCE.values()), shown
+            assert source.first.locator(".k").count() == 1
 
     page.screenshot(path=str(shots_dir / f"{case.name}.png"), full_page=True)
 

@@ -41,9 +41,9 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                     page=hit.page, code=hit.code, found=hit.text, tier=Tier.C,
                     unverified=True,
                     message=(
-                        f"No reference text for {hit.code} in "
-                        f"{ctx.regulation.display_name} '{ctx.language}' "
-                        "(tier C): wording not verified."
+                        f"We hold no official {ctx.regulation.display_name} "
+                        f"wording for {hit.code} in '{ctx.language}', so this "
+                        "statement could not be checked."
                     ),
                 )
             )
@@ -146,16 +146,16 @@ def _internal_statements(ctx: CheckContext, check_id: str) -> list[Finding]:
     return findings
 
 
-@register("A-02", "H-statement text matches key (incl. combined H codes)")
+@register("A-02", "Hazard statements match the official wording")
 def run_a02(ctx: CheckContext) -> list[Finding]:
     return _run_for(ctx, "A-02", "hazard") + _internal_statements(ctx, "A-02")
 
 
-@register("A-03", "P-statement text matches key (incl. combined P codes)")
+@register("A-03", "Precautionary statements match the official wording")
 def run_a03(ctx: CheckContext) -> list[Finding]:
     return _run_for(ctx, "A-03", "precautionary")
 
 
-@register("A-04", "Supplemental statements (EUH/AUH) match key")
+@register("A-04", "EU and Australia-only statements match the official wording")
 def run_a04(ctx: CheckContext) -> list[Finding]:
     return _run_for(ctx, "A-04", "supplemental")

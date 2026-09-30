@@ -60,7 +60,9 @@ def test_html_report_is_self_contained():
 def test_html_report_lists_failures_first():
     report = check_pdf(pdf("defect_a05_english"), "eu_clp")
     html = render_html(report)
-    assert html.index("A-05") < html.index("Tier A = official text")
+    # Findings come before the legend that closes the page. Anchor on a string
+    # that appears only in that legend - the column header uses the same words.
+    assert html.index("A-05") < html.index("<b>None on file</b>")
 
 
 def test_report_round_trips_through_disk(tmp_path):

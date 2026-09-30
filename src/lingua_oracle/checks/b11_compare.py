@@ -6,7 +6,7 @@ from lingua_oracle.checks.base import CheckContext, register
 from lingua_oracle.models import Finding, Severity
 
 CHECK_ID = "B-11"
-TITLE = "Translated copy has the same code set"
+TITLE = "The translated copy lists the same codes"
 
 
 @register(CHECK_ID, TITLE)

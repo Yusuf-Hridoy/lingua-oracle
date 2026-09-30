@@ -92,24 +92,32 @@ def check_pdf(
     )
     report.recount()
 
-    key_status = "" if verified else "no answer key entries matched this document"
-    if key_status:
-        report.notes.append(key_status)
+    # Notes are shown to a reviewer, so they say what happened rather than
+    # naming the tiers. The tier letters stay in the JSON and in the table's
+    # "Source of official text" column.
+    if not verified:
+        report.notes.append(
+            "None of the codes in this document could be matched to official "
+            "wording we hold."
+        )
     if reference.borrowed_codes:
         report.notes.append(
-            f"{len(reference.borrowed_codes)} code(s) used tier B text borrowed from EU CLP."
+            f"{len(reference.borrowed_codes)} statement(s) were compared against "
+            "EU CLP's published translation, borrowed because this regulation's "
+            "English wording is identical."
         )
-    tier_c = sorted(codes - verified)
-    if tier_c:
+    no_source = sorted(codes - verified)
+    if no_source:
         report.notes.append(
-            "Tier C (no reference text, consistency only): " + ", ".join(tier_c[:20])
-            + ("…" if len(tier_c) > 20 else "")
+            "No official wording on file for: " + ", ".join(no_source[:20])
+            + ("…" if len(no_source) > 20 else "")
+            + " - these were not checked."
         )
-    report.notes.append(f"Extraction backend: {document.backend}.")
     report.notes.append(
-        "Sections found: "
+        "Sections read: "
         + (", ".join(sorted({span.name for span in spans})) or "none")
     )
+    report.notes.append(f"PDF text read with {document.backend}.")
     return report
 
 

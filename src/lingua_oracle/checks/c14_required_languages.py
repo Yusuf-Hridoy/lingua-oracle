@@ -13,7 +13,7 @@ from lingua_oracle.match.normalize import normalize
 from lingua_oracle.models import Finding, Severity
 
 CHECK_ID = "C-14"
-TITLE = "Required languages present"
+TITLE = "Every language the regulation requires is present"
 
 # A language counts as present when enough of the body is confidently in it.
 _MIN_LINES = 3

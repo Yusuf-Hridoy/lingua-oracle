@@ -12,7 +12,7 @@ from lingua_oracle.checks.base import CheckContext, register
 from lingua_oracle.models import Finding, Severity
 
 CHECK_ID = "C-12"
-TITLE = "Phrases valid for the chosen regulation"
+TITLE = "Every statement belongs to this regulation"
 
 _PREFIX_RE = re.compile(r"^(EUH|AUH|H|P)")
 

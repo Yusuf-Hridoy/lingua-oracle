@@ -10,7 +10,7 @@ from lingua_oracle.match.template import match
 from lingua_oracle.models import SIGNAL_DANGER, SIGNAL_WARNING, Finding, Severity, Tier
 
 CHECK_ID = "A-01"
-TITLE = "Signal word exact for the language"
+TITLE = "Signal word is the official one for this language"
 
 _LABEL = (
     r"signal\s*word|signalord|signalwort|signaalwoord|mention\s+d['’]avertissement"

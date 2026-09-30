@@ -100,7 +100,7 @@ def test_language_is_detected_without_a_flag():
 
 def test_sections_are_found():
     report = check_pdf(pdf("clean_eu_da"), "eu_clp")
-    note = next(n for n in report.notes if n.startswith("Sections found"))
+    note = next(n for n in report.notes if n.startswith("Sections read"))
     for section in ("2", "3", "16"):
         assert section in note
 
