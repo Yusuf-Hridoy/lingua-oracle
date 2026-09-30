@@ -50,18 +50,52 @@ def _detector(tags: tuple[str, ...] | None = None):
     return LanguageDetectorBuilder.from_all_languages().build()
 
 
+#: How close a second reading has to be before the regulation's own languages
+#: are allowed to break the tie. Far enough apart and the best reading stands.
+_TIE_MARGIN = 0.15
+
+
 def detect_language(text: str, flag: str | None = None,
-                    candidates: tuple[str, ...] | None = None) -> tuple[str, str]:
-    """Return (bcp47_tag, "flag" | "auto"). Falls back to 'en' on no signal."""
+                    preferred: tuple[str, ...] | None = None) -> tuple[str, str]:
+    """Return (bcp47_tag, "flag" | "auto"). Falls back to 'en' on no signal.
+
+    Detection runs against every language, never against a shortlist. `preferred`
+    - normally the regulation's official languages - only breaks a tie between
+    readings that are already close.
+
+    This used to restrict the detector to `preferred`, and that was the worst
+    bug this tool had. UN GHS is published in six languages; a Danish UN GHS
+    sheet is perfectly ordinary, but Danish was not on the list, so the detector
+    returned the best of the six it was allowed - English - and every statement
+    in the document was then checked against the English key and failed. A
+    regulation's official languages are the languages the *regulation* is
+    published in, not the languages a *document* may be written in.
+
+    A language with no key is not a problem to route around: tier B borrows the
+    wording where that is provable and tier C reports the codes as unverified.
+    An unverified finding is honest. A confident failure against the wrong
+    language is not.
+    """
     if flag:
         return flag.lower(), "flag"
     body = normalize(text)[:20000]
     if not body:
         return "en", "auto"
-    result = _detector(candidates).detect_language_of(body)
-    if result is None:
+    values = _detector().compute_language_confidence_values(body)
+    if not values:
         return "en", "auto"
-    return language_to_tag(result) or "en", "auto"
+    best = values[0]
+    best_tag = language_to_tag(best.language)
+    if preferred:
+        wanted = {t.lower().split("-")[0] for t in preferred}
+        if best_tag not in wanted:
+            for other in values[1:]:
+                if best.value - other.value > _TIE_MARGIN:
+                    break
+                tag = language_to_tag(other.language)
+                if tag in wanted:
+                    return tag, "auto"
+    return best_tag or "en", "auto"
 
 
 def looks_untranslated(text: str, doc_language: str, *, min_chars: int = 25,

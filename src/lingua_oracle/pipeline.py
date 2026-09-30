@@ -21,8 +21,10 @@ def _prepare(path: str, regulation: str | None, language: str | None, backend: s
     document = extract(path, backend=backend)
     detection = detect_regulation(document.normalized_text, regulation)
     reg = load_registry().get(detection.regulation)
-    candidates = tuple(reg.official_languages) or None
-    lang, lang_by = detect_language(document.normalized_text, language, candidates)
+    # The regulation's official languages are a tie-break only. Restricting the
+    # detector to them once turned a Danish UN GHS sheet into an English one.
+    preferred = tuple(reg.official_languages) or None
+    lang, lang_by = detect_language(document.normalized_text, language, preferred)
     spans = detect_sections(document, lang)
     hits = extract_document_hits(document)
     for hit in hits:

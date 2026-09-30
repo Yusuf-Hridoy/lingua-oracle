@@ -290,3 +290,43 @@ def test_a_capitalisation_match_cannot_be_clean():
         result = match(found, template)
         assert result.matched, f"{found!r} should still match {template!r}"
         assert not result.is_clean, f"{found!r} passed silently against {template!r}"
+
+
+# -- finding #1: language detection restricted to the regulation's languages ---
+
+
+def test_a_danish_sheet_against_un_ghs_is_read_as_danish():
+    """UN GHS is not published in Danish; a Danish UN GHS sheet is still Danish."""
+    report = check_pdf(pdf("pattern_language_outside_regulation"))
+    assert report.regulation == "un_ghs"
+    assert report.language == "da", (
+        f"read as {report.language!r}; restricting detection to the regulation's "
+        "own languages is what this fixture exists to prevent"
+    )
+
+
+def test_a_language_with_no_key_is_unverified_not_failed():
+    """Tier C says "not checked". It must never say "wrong"."""
+    report = check_pdf(pdf("pattern_language_outside_regulation"))
+    fails = [f for f in report.findings
+             if f.severity is Severity.FAIL and not f.unverified]
+    assert fails == [], [f"{f.check_id} {f.code}: {f.message}" for f in fails]
+    assert any(f.unverified for f in report.findings), (
+        "nothing was reported as unverified, so the absent key went unnoticed"
+    )
+
+
+def test_official_languages_only_break_a_tie():
+    """They may choose between close readings; they may never exclude one."""
+    from lingua_oracle.detect.language import detect_language
+
+    danish = (
+        "Brandfarlig væske og damp. Forårsager alvorlig øjenirritation. "
+        "Holdes væk fra varme, varme overflader, gnister, åben ild og andre "
+        "antændelseskilder. Rygning forbudt. Bær beskyttelseshandsker."
+    )
+    un_ghs_languages = ("ar", "zh", "en", "fr", "ru", "es")
+    assert detect_language(danish, None, un_ghs_languages)[0] == "da"
+    assert detect_language(danish, None, None)[0] == "da"
+    # A flag still wins outright.
+    assert detect_language(danish, "en", un_ghs_languages) == ("en", "flag")

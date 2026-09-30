@@ -8,7 +8,7 @@ reproductions in `tests/`.
 
 | # | Title | Class | Status |
 | --- | --- | --- | --- |
-| 1 | Language detection restricted to the regulation's official languages | false_alarm (tool bug) | open — fix scheduled |
+| 1 | Language detection restricted to the regulation's official languages | false_alarm (tool bug) | **fixed** |
 | 2 | A negative declaration read as a signal word | false_alarm (tool bug) | **fixed** |
 | 3 | `XXXX` in a REACH registration number read as a placeholder | false_alarm (tool bug) | **fixed** |
 
@@ -57,7 +57,7 @@ registry's `official_languages` describes the languages the *regulation* is
 published in, not the languages a *document* may be written in. Using one as a
 constraint on the other conflates two different things.
 
-### Agreed fix (scheduled for step 6, not yet implemented)
+### Fix (implemented)
 
 1. Detect the language **unrestricted** first. That result is the document's
    language, full stop.
@@ -71,12 +71,16 @@ constraint on the other conflates two different things.
 The regulation's official languages may still be used as a tie-break *between
 plausible readings*, never to exclude the detected one.
 
+The official languages survive as a tie-break between readings that are already
+close (`_TIE_MARGIN` in `detect/language.py`), never as a filter.
+
 ### Reproduction
 
-To be added in step 6 as a synthetic fixture: a Danish document declaring a
-regulation whose official languages exclude Danish, with fictional product data.
-The fixture must show the document's language reported as `da`, and its codes
-reported as unverified rather than failed.
+`tests/fixtures/pattern_language_outside_regulation.pdf` — a Danish sheet issued
+against UN GHS, fictional product data, Danish wording taken from EU CLP (which
+publishes Danish officially; the point of the fixture is the language, not the
+wording). It reports `language == "da"`, no failures, and P280 as unverified —
+the rest resolve through tier B.
 
 
 ---

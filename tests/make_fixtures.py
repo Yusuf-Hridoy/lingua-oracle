@@ -287,6 +287,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "defect_c14_english_only.pdf"))
 
     # Patterns found on real documents, reproduced with fictional data.
+    add("pattern_language_outside_regulation", _language_outside_the_regulation(
+        FIXTURES / "pattern_language_outside_regulation.pdf"))
     add("pattern_spacing_variant", _spacing_variant(
         FIXTURES / "pattern_spacing_variant.pdf"))
     add("pattern_optional_fillin", _optional_group_filled(
@@ -392,6 +394,49 @@ def _odd_capitalisation(path: Path) -> Path:
         h_codes=["H225", "H319"], p_codes=["P210", code],
         overrides={code: odd},
     )
+
+
+
+def _language_outside_the_regulation(path: Path) -> Path:
+    """A Danish sheet issued against UN GHS.
+
+    UN GHS is published in six languages and Danish is not one of them, but a
+    company may perfectly well issue a UN GHS sheet in Danish. The document's
+    Danish wording is taken from EU CLP, which publishes Danish officially -
+    the point of the fixture is the language, not the wording.
+
+    Detection used to be restricted to the regulation's own languages, so this
+    document came back as English and every statement failed against the
+    English key.
+    """
+    head = HEADINGS["da"]
+    codes = ["H225", "H319"], ["P210", "P280"]
+    official = texts("eu_clp", "da", codes[0] + codes[1])
+
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.line("Udarbejdet efter UN Globally Harmonized System (GHS Rev. 11)")
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line(f"{head['signal']}: {signal_text('eu_clp', 'da', True)}")
+    sheet.blank()
+    sheet.line(head["haz"], bold=True)
+    for code in codes[0]:
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["prec"], bold=True)
+    for code in codes[1]:
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("Syntetisk komponent A  CAS 000-00-0  30-60%")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in codes[0]:
+        sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
 
 
 def _negative_declaration(path: Path) -> Path:
