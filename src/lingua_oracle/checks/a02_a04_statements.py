@@ -13,7 +13,7 @@ from __future__ import annotations
 from lingua_oracle.checks.base import CheckContext, register
 from lingua_oracle.checks.missing_source import Reason, classify
 from lingua_oracle.match.template import MatchKind, match
-from lingua_oracle.models import Finding, Severity, Tier
+from lingua_oracle.models import Finding, Severity, StatementVerdict, Tier
 
 
 def _prefix_of(code: str) -> str:
@@ -24,6 +24,12 @@ def _prefix_of(code: str) -> str:
     if code.startswith("P"):
         return "precautionary"
     return "other"
+
+
+def _source_of(ctx: CheckContext, entry) -> str:
+    """Where this wording came from, as a reader would cite it."""
+    where = entry.source_ref or ctx.regulation.authority or ""
+    return f"{ctx.regulation.display_name} — {where}" if where else ctx.regulation.display_name
 
 
 def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
@@ -57,6 +63,12 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                     ),
                 )
             )
+            ctx.record(StatementVerdict(
+                code=hit.code, status="not_checked", found=hit.text,
+                why=f"We hold no official {ctx.regulation.display_name} wording "
+                    f"for {hit.code}, so it could not be compared.",
+                section=section, page=hit.page,
+            ))
             continue
 
         loose_end = ctx.regulation.statements_lack_terminal_punctuation
@@ -98,6 +110,12 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                 )
             )
         if result.kind in (MatchKind.EXACT, MatchKind.TEMPLATE) and result.matched:
+            ctx.record(StatementVerdict(
+                code=hit.code, status="correct", found=hit.text,
+                expected=entry.text, source=_source_of(ctx, entry),
+                why="Matches the official wording.",
+                section=section, page=hit.page, fillins=list(result.fillins),
+            ))
             continue
         if result.matched:
             findings.append(
@@ -107,6 +125,12 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                     tier=entry.tier, message=f"{hit.code} {result.message}.",
                 )
             )
+            ctx.record(StatementVerdict(
+                code=hit.code, status="check", found=hit.text, expected=entry.text,
+                source=_source_of(ctx, entry),
+                why=f"The wording {result.message}.",
+                section=section, page=hit.page, fillins=list(result.fillins),
+            ))
             continue
         findings.append(
             Finding(
@@ -116,6 +140,12 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                 message=f"{hit.code} wording does not match the official text.",
             )
         )
+        ctx.record(StatementVerdict(
+            code=hit.code, status="wrong", found=hit.text, expected=entry.text,
+            source=_source_of(ctx, entry),
+            why="This does not say what the official text says.",
+            section=section, page=hit.page,
+        ))
     return findings
 
 

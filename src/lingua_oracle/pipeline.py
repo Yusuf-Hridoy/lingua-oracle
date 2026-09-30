@@ -74,7 +74,12 @@ def check_pdf(
     findings = run_all(ctx, only=only)
 
     codes = {hit.code for hit in hits}
-    verified = {code for code in codes if reference.entries.get(code) is not None}
+    # Coverage is what the tool actually formed an opinion about, not what it
+    # holds a key entry for. Those are different numbers, and the second one
+    # flatters the tool: a code can have an entry and still never be compared,
+    # because the document gave it no text.
+    statements = sorted(ctx.statements.values(), key=lambda v: v.code)
+    verified = {v.code for v in statements if v.checked}
     report = Report(
         id=uuid.uuid4().hex[:12],
         file_name=Path(path).name,
@@ -83,6 +88,7 @@ def check_pdf(
         detected_by=detection.detected_by if regulation else lang_by,
         created_at=datetime.now(UTC),
         findings=findings,
+        statements=statements,
         coverage=Coverage(
             codes_found=len(codes),
             codes_checked=len(verified),

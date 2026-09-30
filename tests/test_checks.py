@@ -377,3 +377,61 @@ def test_is_complete_statement():
     assert not _is_complete_statement("")
     assert _is_complete_statement("IF SWALLOWED: Rinse mouth.")
     assert _is_complete_statement("Get medical advice/attention.")
+
+
+# -- coverage counts verdicts, not key entries -------------------------------
+
+
+def test_a_code_alone_on_its_line_takes_the_next_line():
+    """Most sheets lay Section 2 out as a table: code on one line, text below."""
+    from lingua_oracle.detect.codes import extract_hits
+    from lingua_oracle.extract.base import Line
+
+    lines = [Line(text="H225", page=1),
+             Line(text="Highly flammable liquid and vapour", page=1)]
+    hits = extract_hits(lines)
+    assert [(h.code, h.text) for h in hits] == \
+        [("H225", "Highly flammable liquid and vapour")]
+
+
+@pytest.mark.parametrize(
+    "neighbour",
+    ["Category 2", "Cat. 1A", "Type B", "2026-09-30", "Revision date: 2026-09-30",
+     "Page 2", "12.5", "H319"],
+)
+def test_a_table_field_is_not_taken_as_a_statement(neighbour):
+    """The classification table puts the category next to the code."""
+    from lingua_oracle.detect.codes import extract_hits
+    from lingua_oracle.extract.base import Line
+
+    hits = extract_hits([Line(text="H225", page=1), Line(text=neighbour, page=1)])
+    assert hits[0].text == "", f"{neighbour!r} was read as H225's statement"
+
+
+def test_coverage_counts_only_codes_that_got_a_verdict():
+    report = check_pdf(pdf("clean_eu_da"), "eu_clp")
+    verdicts = {v.code for v in report.statements if v.checked}
+    assert report.coverage.codes_checked == len(verdicts)
+    assert report.coverage.codes_checked <= report.coverage.codes_found
+
+
+def test_a_correct_statement_is_recorded_not_just_silent():
+    """Findings only cover problems, so "23 match" needs its own record."""
+    report = check_pdf(pdf("clean_eu_da"), "eu_clp")
+    correct = [v for v in report.statements if v.status == "correct"]
+    assert correct, "a clean document recorded no correct statements"
+    assert all(v.expected and v.found and v.source for v in correct)
+
+
+def test_not_checked_never_counts_towards_coverage():
+    from lingua_oracle.models import StatementVerdict
+
+    assert not StatementVerdict(code="P243", status="not_checked").checked
+
+
+def test_newer_ghs_wording_is_checked_against_its_own_edition():
+    report = check_pdf(pdf("defect_c15_newer_ghs"), "eu_clp")
+    by_code = {v.code: v for v in report.statements}
+    assert by_code["P317"].status == "check"
+    assert by_code["P317"].checked, "a checkable code must count for coverage"
+    assert "GHS Rev.8" in by_code["P317"].source

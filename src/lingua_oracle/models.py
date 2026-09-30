@@ -140,6 +140,35 @@ class Summary(BaseModel):
     unverified: int = 0
 
 
+class StatementVerdict(BaseModel):
+    """What happened to one code's wording, including the ones that were fine.
+
+    Findings only exist for problems, so a report built from findings alone can
+    say what is wrong but never "23 statements match". Coverage had the same
+    gap: it counted codes that had a key entry, not codes that actually got a
+    verdict. This records every code the tool formed an opinion about.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    code: str
+    #: correct | wrong | check | not_checked
+    status: str
+    found: str = ""
+    expected: str = ""
+    #: One plain sentence a non-specialist can act on.
+    why: str = ""
+    #: Where the official text came from, as a reader would cite it.
+    source: str = ""
+    section: str | None = None
+    page: int | None = None
+    fillins: list[str] = Field(default_factory=list)
+
+    @property
+    def checked(self) -> bool:
+        return self.status in ("correct", "wrong", "check")
+
+
 class Report(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -151,6 +180,7 @@ class Report(BaseModel):
     created_at: datetime
     summary: Summary = Field(default_factory=Summary)
     findings: list[Finding] = Field(default_factory=list)
+    statements: list[StatementVerdict] = Field(default_factory=list)
     coverage: Coverage = Field(default_factory=Coverage)
     compared_with: str | None = None
     notes: list[str] = Field(default_factory=list)

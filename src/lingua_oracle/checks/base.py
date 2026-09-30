@@ -10,7 +10,7 @@ from lingua_oracle.detect.codes import CodeHit
 from lingua_oracle.detect.sections import LABEL, SectionSpan, section_of
 from lingua_oracle.extract.base import Document
 from lingua_oracle.keys.tierb import Borrowed
-from lingua_oracle.models import AnswerKeyEntry, Finding, Tier
+from lingua_oracle.models import AnswerKeyEntry, Finding, StatementVerdict, Tier
 from lingua_oracle.registry import Regulation
 
 
@@ -32,6 +32,22 @@ class CheckContext:
     compare_hits: list[CodeHit] = field(default_factory=list)
     compare_language: str | None = None
     notes: list[str] = field(default_factory=list)
+    #: Filled in by the statement checks: one entry per code they formed an
+    #: opinion about, including the ones that were correct. Coverage and the
+    #: report's statement cards are both built from this, so a code that gets
+    #: no entry here is genuinely not checked.
+    statements: dict[str, StatementVerdict] = field(default_factory=dict)
+
+    def record(self, verdict: StatementVerdict) -> None:
+        """Keep the strongest opinion held about a code.
+
+        The same code appears in Section 2 and again in Section 16, and a sheet
+        can get one right and the other wrong. The worse outcome is the one
+        that matters."""
+        rank = {"wrong": 0, "check": 1, "correct": 2, "not_checked": 3}
+        held = self.statements.get(verdict.code)
+        if held is None or rank[verdict.status] < rank[held.status]:
+            self.statements[verdict.code] = verdict
 
     # -- convenience ------------------------------------------------------
     def entry(self, code: str) -> AnswerKeyEntry | None:

@@ -65,6 +65,11 @@ def _is_supplemental(code: str) -> bool:
 class Reason(StrEnum):
     NOT_ON_FILE = "not_on_file"
     NEWER_GHS = "newer_ghs"
+    #: The regulation does not carry this code, but the GHS edition it aligns
+    #: to always has - OSHA's HazCom leaves out environmental hazards and
+    #: Category 5 acute toxicity, for instance. The wording can still be
+    #: checked, against GHS, and saying so is more use than "not checked".
+    OUTSIDE_SCOPE = "outside_scope"
     UNKNOWN = "unknown"
 
 
@@ -166,16 +171,15 @@ def classify(code: str, key_status: str, entries, regulation: str = "") -> Missi
     if not can_judge:
         return Missing(Reason.NOT_ON_FILE)
 
-    # A statement the oldest edition on file already carried is not "newer
-    # wording"; the regulation simply never adopted it. Saying otherwise would
-    # put a misleading edition label on the finding.
-    if ghs_index.oldest_edition_defines(code):
-        return Missing(Reason.NOT_ON_FILE)
-
     edition = defining[0]
     text = ghs_index.text_in(code, edition)
     near_code, near_text = _nearest(code, text, entries)
+    # A statement the oldest edition on file already carried is not "newer
+    # wording"; the regulation has simply never covered it. Labelling that as a
+    # later revision would be wrong, but it is still checkable against GHS.
+    reason = (Reason.OUTSIDE_SCOPE if ghs_index.oldest_edition_defines(code)
+              else Reason.NEWER_GHS)
     return Missing(
-        reason=Reason.NEWER_GHS, edition=edition, edition_text=text,
+        reason=reason, edition=edition, edition_text=text,
         nearest_code=near_code, nearest_text=near_text,
     )

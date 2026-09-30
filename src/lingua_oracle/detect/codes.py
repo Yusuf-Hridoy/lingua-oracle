@@ -54,6 +54,37 @@ def find_codes_in_text(text: str) -> list[tuple[str, int, int]]:
     return [(canonical_code(m.group(0)), m.start(), m.end()) for m in CODE_RE.finditer(text)]
 
 
+#: Table cells that sit next to a code but are not its statement: the hazard
+#: category, a date, a bare number, a class name. Real statements never take
+#: these shapes, and attaching one would report a false wording failure.
+_NOT_A_STATEMENT_RE = re.compile(
+    r"^\s*(?:"
+    r"category\s+\d|cat\.?\s*\d|type\s+[A-G]\b"
+    r"|\d+(?:[.,]\d+)?\s*%?$"
+    r"|(?:revision|version|issue|print)\s*date\b"
+    r"|\d{4}-\d{2}-\d{2}"
+    r"|page\s+\d"
+    r")",
+    re.IGNORECASE,
+)
+
+
+def statement_on_next_line(text: str) -> bool:
+    """True when a line following a bare code reads as that code's statement.
+
+    Most real sheets lay Section 2 out as a table, so the code lands on one
+    line and its statement on the next. Nothing attached them, so those codes
+    reached the checks with no text and could never be verified - which is what
+    kept coverage down rather than any gap in the answer keys.
+    """
+    stripped = (text or "").strip()
+    if not stripped or find_codes_in_text(stripped):
+        return False
+    if starts_new_block(stripped) or _NOT_A_STATEMENT_RE.match(stripped):
+        return False
+    return bool(re.search(r"[A-Za-z]{3}", stripped))
+
+
 def _clean_phrase(text: str) -> str:
     """Trim separators, and stop where the statement stops.
 
@@ -83,12 +114,27 @@ def extract_hits(lines: list[Line]) -> list[CodeHit]:
                 phrase = line.text[end : found[n + 1][1]]
             else:
                 phrase = line.text[end:]
+                start_at = idx + 1
+                if not _clean_phrase(phrase):
+                    # The code stands alone on its line, which is how most
+                    # sheets lay Section 2 out. Its statement is the next line
+                    # - but only if that line reads like one. Where it does
+                    # not, this code has no text at all, and the continuation
+                    # loop below must not reach past it and pick up whatever
+                    # the table holds next.
+                    nxt = lines[idx + 1] if idx + 1 < len(lines) else None
+                    if (nxt is not None and nxt.page == line.page
+                            and statement_on_next_line(nxt.text)):
+                        phrase = nxt.text
+                        start_at = idx + 2
+                    else:
+                        start_at = len(lines)
                 # Continue onto following lines only while they genuinely read as
                 # the rest of this statement. Official texts do not all end in a
                 # full stop (OSHA's do not), so "ends with a period" is not a
                 # usable stop condition; the same truncation heuristic the line
                 # rejoiner uses is applied instead.
-                for nxt in lines[idx + 1 : idx + 4]:
+                for nxt in lines[start_at : start_at + 3]:
                     if nxt.page != line.page or not nxt.text.strip():
                         break
                     if find_codes_in_text(nxt.text) or _SECTION_BREAK_RE.match(nxt.text):
