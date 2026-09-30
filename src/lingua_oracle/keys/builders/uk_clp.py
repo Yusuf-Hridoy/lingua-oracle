@@ -119,12 +119,16 @@ def build(
             f"({', '.join(other[:8])}…); not stored, GB CLP is English"
         )
 
+    # page each code was read from, across all three parsers, for the spot check
+    code_pages = {**issues.code_pages, **issues2.code_pages, **issues3.code_pages}
     entries = [
         AnswerKeyEntry(
             regulation=REGULATION, revision=REVISION, language="en", code=code,
             kind=_kind(code), text=text, tier=Tier.A, source_url=SOURCE_URL,
-            source_ref=f"GB CLP (retained Reg. 1272/2008) Annex III/IV, row for {code}"
-                       f" ({path.name})",
+            source_ref=f"GB CLP (retained Reg. 1272/2008) Annex II/III/IV, row for "
+                       f"{code} ({path.name}"
+                       + (f", p{code_pages[code]}" if code in code_pages else "")
+                       + ")",
             retrieved_at=ts, status=Status.OK,
         )
         for code, text in sorted(found.items())

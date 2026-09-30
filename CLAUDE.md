@@ -231,6 +231,25 @@ official EU text matches itself across five languages; keep that guard.
 Tests use `LINGUA_DATA_DIR` with `load_registry.cache_clear()` to isolate key
 fixtures — the registry is `lru_cache`d.
 
+## Validation harness (Phase 1.5)
+
+`lingua validate` runs the checker against **real company documents**. Those live
+only in `data/validation/` and everything derived from them in
+`reports/validation/`; both are gitignored, and `tests/test_validation_privacy.py`
+fails the build if anything from either is ever tracked or appears in history.
+**Never copy real PDF text, product names or customer names into a test, a
+fixture, a commit message or a report that lands in the repo.** A pattern found
+on a real document gets reproduced as a synthetic fixture with fictional data.
+
+- `validate init` refuses to run if the folder is not gitignored.
+- Finding ids (`runner.finding_id`) are stable across runs and contain no
+  document text - file stem, check, code, and a hash of the message - so
+  `triage.yaml` never has to quote a product.
+- A target that cannot be measured shows "not measured" and **withholds** the
+  overall pass; "not measured" is not "met" (`Summary.passed`).
+- A finding on a `known_good` document counts as a false alarm while it is
+  unclassified, or classified as the tool's fault and not yet `fixed`.
+
 ## Git
 
 Work on `main`; the remote is `Yusuf-Hridoy/lingua-oracle` (private) and `main` is

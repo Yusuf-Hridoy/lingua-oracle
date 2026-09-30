@@ -91,7 +91,10 @@ def build(
             AnswerKeyEntry(
                 regulation=REGULATION, revision=REVISION, language=lang, code=code,
                 kind=_kind(code), text=text, tier=Tier.A, source_url=SOURCE_URL,
-                source_ref=f"GHS {REVISION} Annex 3, table row for {code} ({path.name})",
+                source_ref=f"GHS {REVISION} Annex 3, table row for {code} "
+                           f"({path.name}"
+                           + (f", p{issues.code_pages[code]}" if code in issues.code_pages else "")
+                           + ")",
                 retrieved_at=ts, status=Status.OK,
             )
             for code, text in sorted(found.items())

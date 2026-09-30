@@ -66,6 +66,10 @@ lingua compare <pdf_a> <pdf_b>         # adds check B-11
 lingua keys build <regulation|all> [--languages da,de] [--no-cache]
 lingua keys import-csv <file> --regulation jp_jis --language ja --tier C
 lingua keys stats [--json]
+lingua keys sample [--n 20] [--regulation X] [--seed N]
+lingua validate init
+lingua validate
+lingua validate triage [--all]
 lingua serve [--host 127.0.0.1] [--port 8000]
 ```
 
@@ -165,6 +169,97 @@ Every build writes `data/answer_keys/<reg>/_parse_issues.txt` recording pages
 scanned, rows used, and what could not be used — and **rebuilds are
 deterministic**: running `lingua keys build all` twice leaves the tree clean, so
 any diff is a real change.
+
+## Validating on real documents
+
+Real SDS and label PDFs are **company data**. They live only in
+`data/validation/`, which is gitignored — along with everything derived from them
+under `reports/validation/`. Nothing from either reaches the repository, and
+`tests/test_validation_privacy.py` fails the build if anything ever does.
+
+```bash
+uv run lingua validate init      # creates the gitignored folder + case template
+# put your PDFs in data/validation/ and fill in data/validation/cases.yaml
+uv run lingua validate           # runs every case, writes the summary
+```
+
+`lingua validate` exits `1` unless every target passes, and writes
+`reports/validation/summary.html` and `summary.json`.
+
+### The case file
+
+Copy from `data/cases.example.yaml`. Per document:
+
+```yaml
+cases:
+  - file: some-sheet.pdf
+    regulation: eu_clp          # omit to let the checker detect it
+    language: da                # omit to let the checker detect it
+    known_good: true            # you believe this document is correct
+    expected_codes: [H225, H319, P210]   # copied from the authoring UI
+    known_defects:              # optional: defects you already know about
+      - check: A-01
+        code: SIGNAL_DANGER
+        note: "signal word printed as 'Gøre' instead of 'Fare'"
+```
+
+### Targets
+
+| Metric | Target |
+| --- | --- |
+| Code recall (found ∩ expected / expected) | ≥ 98% |
+| False alarms on `known_good` documents | 0 |
+| Known defects caught | 100% |
+| Answer-key spot check | 20/20 |
+
+A target that cannot be measured — no `expected_codes`, or the spot check not
+done — shows **not measured** and withholds the overall pass. "Not measured" is
+not the same as "met".
+
+### Triage
+
+```bash
+uv run lingua validate triage    # lists findings awaiting classification
+```
+
+Classify each in `data/validation/triage.yaml` as `real_bug`, `false_alarm`,
+`key_error` or `extraction_error`:
+
+```yaml
+findings:
+  - id: some-sheet:A-02:H225:1a2b3c4d
+    classification: false_alarm
+    note: "why"
+    fixed: false
+```
+
+Finding ids are stable across runs and contain no document text — only the file
+stem, the check, the code and a hash — so `triage.yaml` never has to quote a
+product name.
+
+A finding on a `known_good` document counts against the false-alarm target while
+it is unclassified, or classified as the tool's fault and not yet `fixed: true`.
+**Every non-`real_bug` item gets a synthetic fixture** reproducing the pattern
+with fictional product data, then the fix, then the fixture passing — real
+content is never copied into a test.
+
+### Answer-key spot check
+
+```bash
+uv run lingua keys sample --n 20            # optionally -r eu_clp, --seed N
+```
+
+Writes `data/validation/spot_check.yaml` with each entry's code, text and
+`source_ref` (source file and page, so a row can be found quickly). Record
+`correct` or `wrong` per entry; `lingua validate` scores it.
+
+### When a code is missed
+
+Any document with recall below 100% gets
+`reports/validation/<file>_extraction.txt`: the raw extracted text of sections 2,
+3 and 16 plus every code span found. If a missed code is absent from the text
+entirely the extractor never saw it (layout, column order, encoding); if it is
+present but not listed as a span, the code regex or line rejoining is at fault.
 
 ## Known limitations
 

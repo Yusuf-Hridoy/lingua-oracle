@@ -60,7 +60,12 @@ def build(
         base, ghs_issues = harvest(str(ghs7), first_page=first, last_page=last)
         for code, text in base.items():
             if code[0] in "HP":
-                found[code] = (text, GHS7_URL, f"GHS Rev.7 Annex 3 row for {code}")
+                page = ghs_issues.code_pages.get(code)
+                found[code] = (
+                    text, GHS7_URL,
+                    f"GHS Rev.7 Annex 3 row for {code} ({ghs7.name}"
+                    + (f", p{page}" if page else "") + ")",
+                )
         issues.pages_scanned += ghs_issues.pages_scanned
         issues.tables_seen += ghs_issues.tables_seen
         issues.rows_seen += ghs_issues.rows_seen

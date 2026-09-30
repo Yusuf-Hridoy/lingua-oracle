@@ -122,8 +122,11 @@ def build(
             AnswerKeyEntry(
                 regulation=REGULATION, revision=REVISION, language=lang, code=code,
                 kind=_kind(code), text=text, tier=Tier.A, source_url=GHS7_URL,
-                source_ref=f"GHS Rev.7 Annex 3 row for {code} ({path.name}); adopted by "
-                           f"SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+                source_ref=f"GHS Rev.7 Annex 3 row for {code} ({path.name}"
+                           + (f", p{table_issues.code_pages[code]}"
+                              if code in table_issues.code_pages else "")
+                           + "); adopted by SOR/2015-17, which defines GHS as the "
+                             "Seventh Revised Edition",
                 retrieved_at=ts, status=Status.OK,
             )
             for code, text in sorted(found.items())

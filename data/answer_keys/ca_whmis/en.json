@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2015-17/",
-  "retrieved_at": "2026-09-30T07:02:56.618931Z",
+  "retrieved_at": "2026-09-30T07:24:31.385050Z",
   "notes": [],
   "entries": [
     {
@@ -19,8 +19,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H200 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H200 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -34,8 +34,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H201 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H201 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -49,8 +49,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H202 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H202 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -64,8 +64,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H203 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H203 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -79,8 +79,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H204 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H204 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -94,8 +94,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H205 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H205 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -109,8 +109,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H206 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H206 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -124,8 +124,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H207 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H207 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -139,8 +139,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H208 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H208 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -154,8 +154,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H220 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H220 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -169,8 +169,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H221 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H221 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -184,8 +184,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H222 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H222 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -199,8 +199,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H223 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H223 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -214,8 +214,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H224 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H224 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -229,8 +229,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H225 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H225 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -244,8 +244,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H226 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H226 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -259,8 +259,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H227 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H227 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -274,8 +274,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H228 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H228 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -289,8 +289,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H229 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H229 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -304,8 +304,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H230 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H230 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -319,8 +319,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H231 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H231 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -334,8 +334,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H232 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H232 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -349,8 +349,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H240 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H240 (GHS_Rev7_en.pdf, p276); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -364,8 +364,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H241 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H241 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -379,8 +379,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H242 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H242 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -394,8 +394,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H250 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H250 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -409,8 +409,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H251 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H251 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -424,8 +424,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H252 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H252 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -439,8 +439,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H260 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H260 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -454,8 +454,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H261 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H261 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -469,8 +469,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H270 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H270 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -484,8 +484,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H271 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H271 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -499,8 +499,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H272 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H272 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -514,8 +514,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H280 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H280 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -529,8 +529,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H281 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H281 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -589,8 +589,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H290 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H290 (GHS_Rev7_en.pdf, p277); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -604,8 +604,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H300 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H300 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -619,8 +619,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H300+H310 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H300+H310 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -634,8 +634,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H300+H310+H330 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H300+H310+H330 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -649,8 +649,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H300+H330 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H300+H330 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -664,8 +664,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H301 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H301 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -679,8 +679,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H301+H311 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H301+H311 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -694,8 +694,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H301+H311+H331 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H301+H311+H331 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -709,8 +709,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H301+H331 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H301+H331 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -724,8 +724,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H302 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H302 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -739,8 +739,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H302+H312 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H302+H312 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -754,8 +754,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H302+H312+H332 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H302+H312+H332 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -769,8 +769,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H302+H332 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H302+H332 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -784,8 +784,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H303 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H303 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -799,8 +799,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H303+H313 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H303+H313 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -814,8 +814,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H303+H313+H333 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H303+H313+H333 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -829,8 +829,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H303+H333 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H303+H333 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -844,8 +844,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H304 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H304 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -859,8 +859,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H305 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H305 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -874,8 +874,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H310 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H310 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -889,8 +889,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H310+H330 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H310+H330 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -904,8 +904,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H311 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H311 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -919,8 +919,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H311+H331 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H311+H331 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -934,8 +934,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H312 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H312 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -949,8 +949,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H312+H332 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H312+H332 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -964,8 +964,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H313 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H313 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -979,8 +979,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H313+H333 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H313+H333 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -994,8 +994,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H314 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H314 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1009,8 +1009,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H315 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H315 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1024,8 +1024,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H315+H320 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H315+H320 (GHS_Rev7_en.pdf, p280); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1039,8 +1039,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H316 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H316 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1054,8 +1054,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H317 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H317 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1069,8 +1069,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H318 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H318 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1084,8 +1084,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H319 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H319 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1099,8 +1099,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H320 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H320 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1114,8 +1114,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H330 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H330 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1129,8 +1129,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H331 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H331 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1144,8 +1144,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H332 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H332 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1159,8 +1159,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H333 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H333 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1174,8 +1174,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H334 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H334 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1189,8 +1189,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H335 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H335 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1204,8 +1204,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H336 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H336 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1219,8 +1219,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H340 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H340 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1234,8 +1234,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H341 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H341 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1249,8 +1249,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H350 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H350 (GHS_Rev7_en.pdf, p278); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1264,8 +1264,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H351 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H351 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1279,8 +1279,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H360 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H360 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1294,8 +1294,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H361 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H361 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1309,8 +1309,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H362 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H362 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1324,8 +1324,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H370 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H370 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1339,8 +1339,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H371 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H371 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1354,8 +1354,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H372 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H372 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1369,8 +1369,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H373 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H373 (GHS_Rev7_en.pdf, p279); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1384,8 +1384,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H400 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H400 (GHS_Rev7_en.pdf, p281); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1399,8 +1399,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H401 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H401 (GHS_Rev7_en.pdf, p281); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1414,8 +1414,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H402 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H402 (GHS_Rev7_en.pdf, p281); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1429,8 +1429,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H410 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H410 (GHS_Rev7_en.pdf, p281); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1444,8 +1444,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H411 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H411 (GHS_Rev7_en.pdf, p281); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1459,8 +1459,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H412 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H412 (GHS_Rev7_en.pdf, p281); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1474,8 +1474,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H413 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H413 (GHS_Rev7_en.pdf, p281); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1489,8 +1489,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for H420 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for H420 (GHS_Rev7_en.pdf, p281); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1504,8 +1504,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P101 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P101 (GHS_Rev7_en.pdf, p285); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1519,8 +1519,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P102 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P102 (GHS_Rev7_en.pdf, p285); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1534,8 +1534,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P103 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P103 (GHS_Rev7_en.pdf, p285); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1549,8 +1549,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P201 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P201 (GHS_Rev7_en.pdf, p285); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1564,8 +1564,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P202 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P202 (GHS_Rev7_en.pdf, p285); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1579,8 +1579,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P210 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P210 (GHS_Rev7_en.pdf, p286); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1594,8 +1594,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P211 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P211 (GHS_Rev7_en.pdf, p286); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1609,8 +1609,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P212 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P212 (GHS_Rev7_en.pdf, p286); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1624,8 +1624,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P220 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P220 (GHS_Rev7_en.pdf, p286); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1639,8 +1639,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P222 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P222 (GHS_Rev7_en.pdf, p286); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1654,8 +1654,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P223 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P223 (GHS_Rev7_en.pdf, p286); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1669,8 +1669,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P230 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P230 (GHS_Rev7_en.pdf, p286); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1684,8 +1684,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P231 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P231 (GHS_Rev7_en.pdf, p287); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1699,8 +1699,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P231+P232 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P231+P232 (GHS_Rev7_en.pdf, p291); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1714,8 +1714,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P232 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P232 (GHS_Rev7_en.pdf, p287); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1729,8 +1729,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P233 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P233 (GHS_Rev7_en.pdf, p287); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1744,8 +1744,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P234 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P234 (GHS_Rev7_en.pdf, p287); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1759,8 +1759,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P235 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P235 (GHS_Rev7_en.pdf, p287); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1774,8 +1774,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P240 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P240 (GHS_Rev7_en.pdf, p288); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1789,8 +1789,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P241 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P241 (GHS_Rev7_en.pdf, p288); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1804,8 +1804,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P242 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P242 (GHS_Rev7_en.pdf, p288); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1819,8 +1819,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P243 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P243 (GHS_Rev7_en.pdf, p288); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1834,8 +1834,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P244 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P244 (GHS_Rev7_en.pdf, p288); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1849,8 +1849,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P250 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P250 (GHS_Rev7_en.pdf, p289); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1864,8 +1864,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P251 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P251 (GHS_Rev7_en.pdf, p289); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1879,8 +1879,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P260 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P260 (GHS_Rev7_en.pdf, p289); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1894,8 +1894,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P261 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P261 (GHS_Rev7_en.pdf, p289); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1909,8 +1909,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P262 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P262 (GHS_Rev7_en.pdf, p289); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1924,8 +1924,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P263 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P263 (GHS_Rev7_en.pdf, p289); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1939,8 +1939,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P264 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P264 (GHS_Rev7_en.pdf, p289); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1954,8 +1954,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P270 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P270 (GHS_Rev7_en.pdf, p290); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1969,8 +1969,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P271 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P271 (GHS_Rev7_en.pdf, p290); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1984,8 +1984,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P272 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P272 (GHS_Rev7_en.pdf, p290); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -1999,8 +1999,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P273 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P273 (GHS_Rev7_en.pdf, p290); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2014,8 +2014,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P280 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P280 (GHS_Rev7_en.pdf, p290); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2029,8 +2029,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P282 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P282 (GHS_Rev7_en.pdf, p291); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2044,8 +2044,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P283 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P283 (GHS_Rev7_en.pdf, p291); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2059,8 +2059,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P284 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P284 (GHS_Rev7_en.pdf, p291); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2074,8 +2074,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P301 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P301 (GHS_Rev7_en.pdf, p292); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2089,8 +2089,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P301+P310 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P301+P310 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2104,8 +2104,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P301+P312 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P301+P312 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2119,8 +2119,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P301+P330+P331 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P301+P330+P331 (GHS_Rev7_en.pdf, p299); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2134,8 +2134,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P302 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P302 (GHS_Rev7_en.pdf, p292); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2149,8 +2149,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P302+P334 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P302+P334 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2179,8 +2179,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P302+P352 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P302+P352 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2194,8 +2194,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P303 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P303 (GHS_Rev7_en.pdf, p292); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2209,8 +2209,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P303+P361+P353 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P303+P361+P353 (GHS_Rev7_en.pdf, p300); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2224,8 +2224,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P304 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P304 (GHS_Rev7_en.pdf, p292); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2239,8 +2239,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P304+P312 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P304+P312 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2254,8 +2254,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P304+P340 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P304+P340 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2269,8 +2269,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P305 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P305 (GHS_Rev7_en.pdf, p292); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2284,8 +2284,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P305+P351+P338 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P305+P351+P338 (GHS_Rev7_en.pdf, p300); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2299,8 +2299,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P306 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P306 (GHS_Rev7_en.pdf, p292); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2314,8 +2314,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P306+P360 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P306+P360 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2329,8 +2329,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P308 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P308 (GHS_Rev7_en.pdf, p292); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2344,8 +2344,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P308+P311 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P308+P311 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2359,8 +2359,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P308+P313 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P308+P313 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2374,8 +2374,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P310 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P310 (GHS_Rev7_en.pdf, p293); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2389,8 +2389,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P311 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P311 (GHS_Rev7_en.pdf, p293); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2404,8 +2404,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P312 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P312 (GHS_Rev7_en.pdf, p293); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2419,8 +2419,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P313 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P313 (GHS_Rev7_en.pdf, p293); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2434,8 +2434,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P314 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P314 (GHS_Rev7_en.pdf, p293); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2449,8 +2449,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P315 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P315 (GHS_Rev7_en.pdf, p293); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2464,8 +2464,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P320 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P320 (GHS_Rev7_en.pdf, p293); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2479,8 +2479,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P321 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P321 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2494,8 +2494,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P330 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P330 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2509,8 +2509,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P331 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P331 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2524,8 +2524,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P332 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P332 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2539,8 +2539,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P332+P313 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P332+P313 (GHS_Rev7_en.pdf, p298); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2554,8 +2554,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P333 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P333 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2569,8 +2569,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P333+P313 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P333+P313 (GHS_Rev7_en.pdf, p299); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2584,8 +2584,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P334 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P334 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2599,8 +2599,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P335 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P335 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2614,8 +2614,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P336 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P336 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2629,8 +2629,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P336+P315 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P336+P315 (GHS_Rev7_en.pdf, p299); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2644,8 +2644,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P337 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P337 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2659,8 +2659,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P337+P313 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P337+P313 (GHS_Rev7_en.pdf, p299); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2674,8 +2674,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P338 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P338 (GHS_Rev7_en.pdf, p294); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2689,8 +2689,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P340 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P340 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2704,8 +2704,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P342 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P342 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2719,8 +2719,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P342+P311 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P342+P311 (GHS_Rev7_en.pdf, p299); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2734,8 +2734,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P351 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P351 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2749,8 +2749,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P352 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P352 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2764,8 +2764,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P353 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P353 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2779,8 +2779,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P360 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P360 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2794,8 +2794,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P361 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P361 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2809,8 +2809,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P361+P364 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P361+P364 (GHS_Rev7_en.pdf, p299); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2824,8 +2824,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P362 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P362 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2839,8 +2839,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P362+P364 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P362+P364 (GHS_Rev7_en.pdf, p299); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2854,8 +2854,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P363 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P363 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2869,8 +2869,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P364 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P364 (GHS_Rev7_en.pdf, p295); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2884,8 +2884,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P370 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P370 (GHS_Rev7_en.pdf, p296); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2899,8 +2899,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P370+P372+P380+P373 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P370+P372+P380+P373 (GHS_Rev7_en.pdf, p300); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2914,8 +2914,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P370+P376 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P370+P376 (GHS_Rev7_en.pdf, p299); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2929,8 +2929,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P370+P378 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P370+P378 (GHS_Rev7_en.pdf, p299); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2944,8 +2944,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P370+P380+P375 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P370+P380+P375 (GHS_Rev7_en.pdf, p300); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2959,8 +2959,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P371 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P371 (GHS_Rev7_en.pdf, p296); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2974,8 +2974,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P371+P380+P375 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P371+P380+P375 (GHS_Rev7_en.pdf, p300); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -2989,8 +2989,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P372 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P372 (GHS_Rev7_en.pdf, p296); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3004,8 +3004,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P373 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P373 (GHS_Rev7_en.pdf, p296); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3019,8 +3019,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P375 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P375 (GHS_Rev7_en.pdf, p297); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3034,8 +3034,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P376 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P376 (GHS_Rev7_en.pdf, p297); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3049,8 +3049,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P377 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P377 (GHS_Rev7_en.pdf, p297); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3064,8 +3064,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P378 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P378 (GHS_Rev7_en.pdf, p297); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3079,8 +3079,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P380 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P380 (GHS_Rev7_en.pdf, p297); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3094,8 +3094,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P381 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P381 (GHS_Rev7_en.pdf, p297); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3109,8 +3109,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P390 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P390 (GHS_Rev7_en.pdf, p297); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3124,8 +3124,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P391 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P391 (GHS_Rev7_en.pdf, p297); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3139,8 +3139,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P401 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P401 (GHS_Rev7_en.pdf, p301); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3154,8 +3154,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P402 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P402 (GHS_Rev7_en.pdf, p301); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3169,8 +3169,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P402+P404 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P402+P404 (GHS_Rev7_en.pdf, p303); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3184,8 +3184,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P403 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P403 (GHS_Rev7_en.pdf, p301); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3199,8 +3199,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P403+P233 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P403+P233 (GHS_Rev7_en.pdf, p303); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3214,8 +3214,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P403+P235 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P403+P235 (GHS_Rev7_en.pdf, p303); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3229,8 +3229,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P404 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P404 (GHS_Rev7_en.pdf, p301); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3244,8 +3244,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P405 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P405 (GHS_Rev7_en.pdf, p302); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3259,8 +3259,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P406 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P406 (GHS_Rev7_en.pdf, p302); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3274,8 +3274,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P407 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P407 (GHS_Rev7_en.pdf, p302); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3289,8 +3289,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P410 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P410 (GHS_Rev7_en.pdf, p302); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3304,8 +3304,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P410+P403 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P410+P403 (GHS_Rev7_en.pdf, p304); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3319,8 +3319,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P410+P412 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P410+P412 (GHS_Rev7_en.pdf, p304); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3334,8 +3334,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P411 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P411 (GHS_Rev7_en.pdf, p303); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3349,8 +3349,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P412 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P412 (GHS_Rev7_en.pdf, p303); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3364,8 +3364,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P413 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P413 (GHS_Rev7_en.pdf, p303); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3379,8 +3379,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P420 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P420 (GHS_Rev7_en.pdf, p303); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3394,8 +3394,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P501 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P501 (GHS_Rev7_en.pdf, p304); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3409,8 +3409,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P502 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P502 (GHS_Rev7_en.pdf, p305); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {
@@ -3424,8 +3424,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
-      "source_ref": "GHS Rev.7 Annex 3 row for P503 (GHS_Rev7_en.pdf); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
-      "retrieved_at": "2026-09-29T12:59:27.420168Z",
+      "source_ref": "GHS Rev.7 Annex 3 row for P503 (GHS_Rev7_en.pdf, p305); adopted by SOR/2015-17, which defines GHS as the Seventh Revised Edition",
+      "retrieved_at": "2026-09-30T07:24:31.385050Z",
       "status": "ok"
     },
     {

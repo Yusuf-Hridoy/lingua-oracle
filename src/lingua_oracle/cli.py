@@ -18,6 +18,12 @@ app = typer.Typer(
 )
 keys_app = typer.Typer(help="Build and inspect answer keys.", no_args_is_help=True)
 app.add_typer(keys_app, name="keys")
+validate_app = typer.Typer(
+    help="Validate the checker against real documents (kept out of the repo).",
+    no_args_is_help=False,
+    invoke_without_command=True,
+)
+app.add_typer(validate_app, name="validate")
 
 RegOpt = Annotated[str | None, typer.Option("--regulation", "-r", help="Regulation id.")]
 LangOpt = Annotated[str | None, typer.Option("--language", "-l", help="BCP-47 language tag.")]
@@ -323,3 +329,208 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# --------------------------------------------------------------------------
+# validate
+# --------------------------------------------------------------------------
+
+
+@validate_app.callback(invoke_without_command=True)
+def validate_main(ctx: typer.Context) -> None:
+    """Run every validation case and write the summary."""
+    if ctx.invoked_subcommand is not None:
+        return
+    from lingua_oracle.validate import run, validation_dir, validation_reports_dir
+    from lingua_oracle.validate.diagnostics import write_extraction_report
+    from lingua_oracle.validate.report import write
+
+    try:
+        summary = run()
+    except FileNotFoundError as exc:
+        typer.secho(str(exc), fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=2) from None
+
+    out = validation_reports_dir()
+    json_path, html_path = write(summary, out)
+
+    typer.secho("\nTARGETS", bold=True)
+    for t in summary.targets():
+        if t["skipped"]:
+            mark, colour = "n/a ", typer.colors.YELLOW
+        else:
+            mark, colour = ("PASS", typer.colors.GREEN) if t["passed"] else (
+                "FAIL", typer.colors.RED)
+        typer.secho(f"  [{mark}] {t['name']:<40} target {t['target']:<7} actual {t['actual']}",
+                    fg=colour)
+
+    typer.secho("\nDOCUMENTS", bold=True)
+    for r in summary.results:
+        if r.error:
+            typer.secho(f"  ERROR {r.case.file}: {r.error}", fg=typer.colors.RED)
+            continue
+        recall = "n/a" if r.recall is None else f"{r.recall * 100:.0f}%"
+        c = r.counts
+        colour = typer.colors.RED if (c["fail"] or r.defects_missed) else typer.colors.GREEN
+        typer.secho(
+            f"  {r.case.file:<40} recall {recall:>5}  "
+            f"{c['fail']} fail  {c['warn']} warn  {c['unverified']} unverified",
+            fg=colour,
+        )
+        if r.missed:
+            typer.secho(f"      missed: {', '.join(sorted(r.missed))}", fg=typer.colors.YELLOW)
+            written = write_extraction_report(
+                validation_dir() / r.case.file,
+                r.report.language if r.report else (r.case.language or "en"),
+                out,
+                r.missed,
+            )
+            typer.secho(f"      extraction diagnostic: {written}", fg=typer.colors.BLUE)
+
+    counts = summary.triage_counts
+    if counts:
+        typer.echo("\ntriage: " + ", ".join(f"{k}={v}" for k, v in sorted(counts.items())))
+    typer.echo(f"\nsummary: {html_path}")
+    typer.echo(f"         {json_path}")
+    raise typer.Exit(code=0 if summary.passed else 1)
+
+
+@validate_app.command("init")
+def validate_init() -> None:
+    """Create the gitignored validation folder and copy the case template in."""
+    import shutil
+    import subprocess
+
+    from lingua_oracle.validate import cases_path, template_path, validation_dir
+
+    folder = validation_dir()
+    folder.mkdir(parents=True, exist_ok=True)
+
+    check = subprocess.run(
+        ["git", "check-ignore", "-q", str(folder / "probe.pdf")],
+        capture_output=True, check=False,
+    )
+    if check.returncode != 0:
+        typer.secho(
+            f"REFUSING to continue: {folder} is not gitignored. Real documents are "
+            "company data. Add 'data/validation/' to .gitignore first.",
+            fg=typer.colors.RED, err=True,
+        )
+        raise typer.Exit(code=2)
+
+    target = cases_path()
+    if target.exists():
+        typer.secho(f"{target} already exists; leaving it alone.", fg=typer.colors.YELLOW)
+    else:
+        shutil.copy(template_path(), target)
+        typer.secho(f"created {target}", fg=typer.colors.GREEN)
+    typer.echo(f"  folder   : {folder}  (gitignored)")
+    typer.echo("  next     : put your PDFs in that folder and fill in cases.yaml,")
+    typer.echo("             then run `lingua validate`.")
+
+
+@validate_app.command("triage")
+def validate_triage(
+    show_all: Annotated[bool, typer.Option("--all", help="Include classified findings.")] = False,
+) -> None:
+    """List findings awaiting classification."""
+    from lingua_oracle.validate import CLASSES, run, triage_path
+
+    try:
+        summary = run()
+    except FileNotFoundError as exc:
+        typer.secho(str(exc), fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=2) from None
+
+    pending = [
+        (r, f) for r in summary.results for f in r.findings
+        if show_all or not f["classification"]
+    ]
+    if not pending:
+        typer.secho("Nothing awaiting classification.", fg=typer.colors.GREEN)
+        raise typer.Exit(code=0)
+
+    typer.secho(f"{len(pending)} finding(s) to classify", bold=True)
+    typer.echo(f"Classify each in {triage_path()} as one of: {', '.join(CLASSES)}\n")
+    for r, f in pending:
+        flag = " [known defect]" if f["known_defect"] else ""
+        good = " [on a known_good document]" if r.case.known_good else ""
+        typer.secho(f"  {f['id']}", bold=True)
+        typer.echo(f"      {f['severity']} {f['check_id']} {f['code'] or ''}{flag}{good}")
+        typer.echo(f"      {f['message'][:110]}")
+        if f["classification"]:
+            typer.echo(f"      classified: {f['classification']}")
+    typer.echo("\nExample entry:\n")
+    typer.echo("findings:")
+    typer.echo(f"  - id: {pending[0][1]['id']}")
+    typer.echo("    classification: false_alarm")
+    typer.echo('    note: "why"')
+    typer.echo("    fixed: false")
+
+
+@keys_app.command("sample")
+def keys_sample(
+    n: Annotated[int, typer.Option("--n", help="How many entries to sample.")] = 20,
+    regulation: Annotated[str | None, typer.Option("--regulation", "-r")] = None,
+    seed: Annotated[int | None, typer.Option("--seed", help="Reproducible sample.")] = None,
+) -> None:
+    """Sample answer-key entries for a human spot check.
+
+    Writes data/validation/spot_check.yaml with a blank verdict per entry; fill
+    each in as `correct` or `wrong`, then re-run `lingua validate` to score it.
+    """
+    import random
+    from datetime import UTC, datetime
+
+    from lingua_oracle.keys.store import iter_all_keys
+    from lingua_oracle.models import Status
+    from lingua_oracle.validate import (
+        SpotCheckEntry,
+        SpotCheckFile,
+        load_spot_check,
+        save_spot_check,
+        spot_check_path,
+    )
+
+    pool = [
+        (key, entry)
+        for key in iter_all_keys()
+        if key.status in (Status.OK, Status.PARTIAL) and key.entries
+        for entry in key.entries
+        if regulation is None or key.regulation == regulation
+    ]
+    if not pool:
+        typer.secho("No entries to sample.", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=2)
+
+    rng = random.Random(seed)
+    chosen = rng.sample(pool, min(n, len(pool)))
+
+    existing = {(e.regulation, e.language, e.code): e for e in load_spot_check().entries}
+    entries = []
+    for key, entry in chosen:
+        previous = existing.get((key.regulation, key.language, entry.code))
+        entries.append(
+            SpotCheckEntry(
+                regulation=key.regulation, language=key.language, code=entry.code,
+                text=entry.text, source_ref=entry.source_ref or "",
+                source_url=entry.source_url,
+                verdict=previous.verdict if previous else "",
+            )
+        )
+
+    save_spot_check(
+        SpotCheckFile(sampled_at=datetime.now(UTC).isoformat(), entries=entries)
+    )
+    typer.secho(f"{len(entries)} entries sampled for review\n", bold=True)
+    for i, e in enumerate(entries, start=1):
+        typer.secho(f"{i:>3}. {e.regulation}/{e.language}  {e.code}", bold=True)
+        typer.echo(f"     text      : {e.text}")
+        typer.echo(f"     source_ref: {e.source_ref}")
+        if e.source_url:
+            typer.echo(f"     source_url: {e.source_url}")
+        typer.echo("")
+    typer.secho(
+        f"Record a verdict (correct/wrong) for each in {spot_check_path()}",
+        fg=typer.colors.BLUE,
+    )

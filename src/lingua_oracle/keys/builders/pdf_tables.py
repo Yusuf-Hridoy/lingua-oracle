@@ -52,6 +52,8 @@ class ParseIssues:
     duplicate_conflict: list[str] = field(default_factory=list)
     unparsed_codes: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    #: code -> 1-based page it was read from, so a reviewer can find the row.
+    code_pages: dict[str, int] = field(default_factory=dict)
 
     def render(self) -> str:
         lines = [f"  parse issues for {self.source}:"]
@@ -119,6 +121,7 @@ def harvest_multilingual(
                         bucket = out.setdefault(c1.lower(), {})
                         if current not in bucket:
                             bucket[current] = text
+                            issues.code_pages.setdefault(current, index + 1)
                             issues.rows_used += 1
                         elif bucket[current] != text:
                             issues.duplicate_conflict.append(f"{current}/{c1}")
@@ -158,6 +161,7 @@ def harvest_prose(
                     continue
                 if code not in out:
                     out[code] = statement
+                    issues.code_pages.setdefault(code, index + 1)
                 elif out[code] != statement:
                     issues.duplicate_conflict.append(code)
     finally:
@@ -332,7 +336,7 @@ def harvest(
                 "stat": [Path(path).stat().st_size, int(Path(path).stat().st_mtime)],
                 "range": [first_page, last_page, statement_column],
                 "pages": pages,
-                "v": 4,
+                "v": 6,
             },
             sort_keys=True,
         ).encode()
@@ -377,6 +381,7 @@ def harvest(
                     previous = found.get(code)
                     if previous is None:
                         found[code] = statement
+                        issues.code_pages[code] = index + 1
                         issues.rows_used += 1
                     elif previous != statement:
                         # Keep the first reading; record the disagreement.
