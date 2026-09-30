@@ -80,9 +80,22 @@ _SCAFFOLD_RE = re.compile(r"^[\s<>…(){}\[\].,;:]*$")
 # content such as EUH206's "(chlorine)" and make two different statements compare
 # equal, which is exactly the kind of false match this builder must not produce.
 _DIRECTIVE = r"(?:or\s+)?(?:state|specify|indicate|insert|list|name\s+of)\b"
-_FILLIN_RE = re.compile(
-    rf"(?:<+[^<>]*>+|\(\s*{_DIRECTIVE}[^()]{{0,240}}\)|…)+",
-    re.IGNORECASE,
+_FILLIN_ATOM = rf"(?:<+[^<>]*>+|\(\s*{_DIRECTIVE}[^()]{{0,240}}\)|\u2026)"
+# A run of slots separated only by spaces is one slot. Appendix C prints the same
+# statement as "to... ... in accordance", "to... ...in accordance" and
+# "to ... ... in accordance"; all three mean one fill-in.
+_FILLIN_RE = re.compile(rf"{_FILLIN_ATOM}(?:\s*{_FILLIN_ATOM})*", re.IGNORECASE)
+
+# (2b) A usage condition appended to a statement, e.g.
+#   "Do not breathe dusts or mists. - if inhalable particles of dusts or mists..."
+#   "Ground and bond container and receiving equipment. if the explosive is..."
+# Appendix C column 5 conditions leak into the statement cell; they are guidance
+# on when to apply the statement, not part of its text. Only a trailing "if"
+# clause introduced by a dash, or following a full stop, is stripped - so
+# "...\u2026/ if you feel unwell." keeps its clause.
+_CONDITION_RE = re.compile(
+    r"(?:\s*[-\u2013\u2014]\s*if\b.*$)|(?<=\.)\s*if\b.*$",
+    re.IGNORECASE | re.DOTALL,
 )
 
 # Paragraphs that are directions to the labeller rather than label text.
@@ -92,6 +105,21 @@ _INSTRUCTION_RE = re.compile(
     r"|^\s*no (?:hazard|precautionary) statement",
     re.IGNORECASE,
 )
+
+
+def _node_text(element) -> str:
+    """Text of an element, joining its text nodes with a space.
+
+    lxml's text_content() concatenates adjacent nodes directly, so markup such as
+    "when<i>fire</i> reaches" comes out as "whenfire reaches". Joining on
+    itertext() keeps the words apart.
+    """
+    return " ".join(" ".join(element.itertext()).split())
+
+
+def strip_condition(text: str) -> str:
+    """Remove a trailing usage condition from a statement cell."""
+    return _CONDITION_RE.sub("", text or "").strip().rstrip("-\u2013\u2014").strip()
 
 
 def _is_statement(text: str) -> bool:
@@ -146,7 +174,7 @@ def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str], set[str]]:
         prec_cols: list[int] | None = None
         for row in table.xpath(".//tr"):
             cells = row.xpath("./td|./th")
-            values = [" ".join(c.text_content().split()) for c in cells]
+            values = [_node_text(c) for c in cells]
             lower = [v.lower() for v in values]
 
             if "hazard statement" in lower and "signal word" in lower:
@@ -171,12 +199,12 @@ def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str], set[str]]:
                         continue
                     paragraphs = cells[index].xpath(".//p")
                     chunks = (
-                        [" ".join(p.text_content().split()) for p in paragraphs]
+                        [_node_text(p) for p in paragraphs]
                         if paragraphs
                         else [values[index]]
                     )
                     for chunk in chunks:
-                        text = chunk.strip()
+                        text = strip_condition(chunk.strip())
                         if _is_statement(text):
                             precautionary.add(text)
     return hazard, precautionary, signals
@@ -194,6 +222,46 @@ def _resolve_code(
         if core and core == ccore:
             return code, "identical once fill-ins collapsed"
     return None, "no exact match"
+
+
+def _entry(code, text, kind, signal, ts, how):
+    return AnswerKeyEntry(
+        regulation=REGULATION, revision=REVISION, language="en", code=code,
+        kind=kind, text=text,
+        signal_word=signal if signal in ("Danger", "Warning") else None,
+        tier=Tier.A, source_url=SOURCE_URL,
+        source_ref=f"29 CFR 1910.1200 App. C; code established by wording {how} "
+                   f"to {REFERENCE_NAME}",
+        retrieved_at=ts, status=Status.OK,
+    )
+
+
+def split_two_statements(
+    text: str, candidates: list[tuple[str, str, str]]
+) -> list[tuple[str, str, str]] | None:
+    """Split a cell that holds two statements, e.g. H222 followed by H229.
+
+    Appendix C sometimes prints two statements in one cell with no separator:
+    "Extremely flammable aerosol Pressurized container: may burst if heated".
+    Rather than guess where one ends - a capitalised word after a lower-case one
+    is not a reliable signal, since statements contain capitalised words - every
+    word boundary is tried and a split is accepted only when **both** halves
+    resolve to a code exactly. A wrong split cannot survive that test, so this
+    adds no guesswork.
+    """
+    words = text.split()
+    if len(words) < 4:
+        return None
+    for cut in range(2, len(words) - 1):
+        left, right = " ".join(words[:cut]), " ".join(words[cut:])
+        left_code, left_how = _resolve_code(left, candidates)
+        if left_code is None:
+            continue
+        right_code, right_how = _resolve_code(right, candidates)
+        if right_code is None or right_code == left_code:
+            continue
+        return [(left, left_code, left_how), (right, right_code, right_how)]
+    return None
 
 
 def build(use_cache: bool = True, *, from_file: str | None = None,
@@ -226,6 +294,7 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
     ts = now()
     entries: dict[str, AnswerKeyEntry] = {}
     unmapped: list[str] = []
+    split_count = [0]
 
     for prefix, items, kind in (
         ("H", sorted(hazard), Kind.HAZARD),
@@ -239,19 +308,21 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
         for text in items:
             code, how = _resolve_code(text, candidates)
             if code is None:
-                unmapped.append(f"{prefix}: {text[:70]}")
+                pair = split_two_statements(text, candidates)
+                if pair is None:
+                    unmapped.append(f"{prefix}: {text[:70]}")
+                    continue
+                split_count[0] += 1
+                for part, part_code, part_how in pair:
+                    if part_code not in entries:
+                        entries[part_code] = _entry(
+                            part_code, part, kind, hazard.get(text), ts,
+                            f"{part_how}; split from a cell holding two statements",
+                        )
                 continue
             if code in entries:
                 continue
-            entries[code] = AnswerKeyEntry(
-                regulation=REGULATION, revision=REVISION, language="en", code=code,
-                kind=kind, text=text,
-                signal_word=hazard.get(text) if hazard.get(text) in ("Danger", "Warning") else None,
-                tier=Tier.A, source_url=SOURCE_URL,
-                source_ref=f"29 CFR 1910.1200 App. C; code established by wording {how} "
-                           f"to {REFERENCE_NAME}",
-                retrieved_at=ts, status=Status.OK,
-            )
+            entries[code] = _entry(code, text, kind, hazard.get(text), ts, how)
 
     for signal, code in (("Danger", SIGNAL_DANGER), ("Warning", SIGNAL_WARNING)):
         if signal in signals:
@@ -278,6 +349,10 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
     )
     issues.notes.append(f"codes established: {h_count} H, {p_count} P, "
                         f"{len(signals)} signal word(s)")
+    if split_count[0]:
+        issues.notes.append(
+            f"cells holding two statements, split and both halves resolved: {split_count[0]}"
+        )
     if unmapped:
         issues.notes.append(
             f"statements with no exact match ({len(unmapped)}); Appendix C states no "
