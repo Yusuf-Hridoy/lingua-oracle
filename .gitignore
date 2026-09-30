@@ -7,6 +7,7 @@ __pycache__/
 reports/*
 !reports/.gitkeep
 tests/fixtures/*.pdf
+tests/fixtures/.build-stamp.json
 dist/
 build/
 *.egg-info/
