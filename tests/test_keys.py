@@ -296,7 +296,9 @@ def test_osha_key_has_both_families_and_is_marked_partial():
     assert len(h) >= 40, f"expected OSHA hazard codes, got {len(h)}"
     assert len(p) >= 40, f"expected OSHA precautionary codes, got {len(p)}"
     assert key.status is Status.PARTIAL
-    assert key.status_reason == "counts_not_reconciled"
+    assert key.status_reason == "unrepresented_statements_remain"
+    # the caveat must be stated on the key, not only in the parse report
+    assert any("not represented by any code held" in n for n in key.notes)
 
 
 def test_osha_carries_no_euh_codes():
@@ -345,7 +347,7 @@ def test_stats_reports_partial_rather_than_inferring_ok():
     assert result.exit_code == 0
     rows = {r["regulation"]: r for r in json.loads(result.output)}
     assert rows["us_osha"]["status"] == "partial"
-    assert rows["us_osha"]["status_reasons"] == ["counts_not_reconciled"]
+    assert rows["us_osha"]["status_reasons"] == ["unrepresented_statements_remain"]
     assert rows["jp_jis"]["status_reasons"] == ["wrong_source"]
     assert rows["ca_whmis"]["status_reasons"] == ["needs_ghs_rev8_annex3"]
 

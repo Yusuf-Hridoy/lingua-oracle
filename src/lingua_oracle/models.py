@@ -94,6 +94,9 @@ class AnswerKey(BaseModel):
     status_reason: str | None = None
     source_url: str | None = None
     retrieved_at: datetime | None = None
+    #: Human-readable caveats about this key: what is knowingly absent and why.
+    #: Populated by the builder; the full parse detail lives in _parse_issues.txt.
+    notes: list[str] = Field(default_factory=list)
     entries: list[AnswerKeyEntry] = Field(default_factory=list)
 
     def by_code(self) -> dict[str, AnswerKeyEntry]:

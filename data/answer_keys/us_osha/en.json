@@ -3,9 +3,20 @@
   "language": "en",
   "revision": "29-CFR-1910.1200-AppC",
   "status": "partial",
-  "status_reason": "counts_not_reconciled",
+  "status_reason": "unrepresented_statements_remain",
   "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
-  "retrieved_at": "2026-09-30T05:31:37.004324Z",
+  "retrieved_at": "2026-09-30T05:34:07.875950Z",
+  "notes": [
+    "5 Appendix C statement(s) are not represented by any code held. Matching is exact, so they are left out rather than guessed:",
+    "  H: Chemical under pressure: may explode if heated.",
+    "  H: Explosive; fire, blast or projection",
+    "  H: Extremely flammable chemical under pressure. May explode if heated.",
+    "  H: Flammable chemical under pressure. May explode if heated.",
+    "  H: In contact with water releases flammable gases, which may ignite spontaneously",
+    "Of these, the 'chemical under pressure' statements need GHS Rev.8 Annex 3, which the HPR and OSHA both reference but which is not on file. The remainder differ from GHS Rev.7 only in the published rendering - a dropped word or an added comma - not in substance, and are excluded solely because matching is exact.",
+    "56 further statement(s) restate a code already held (fill-in completed, usage condition attached, or a typo in the published HTML). Those are not gaps.",
+    "OSHA-only hazard classes are stored under internal identifiers (OSHA-CD, OSHA-SA). These are NOT regulatory codes and are matched by text."
+  ],
   "entries": [
     {
       "regulation": "us_osha",
@@ -755,6 +766,21 @@
       "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
       "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
       "retrieved_at": "2026-09-29T12:47:41.266598Z",
+      "status": "ok"
+    },
+    {
+      "regulation": "us_osha",
+      "revision": "29-CFR-1910.1200-AppC",
+      "language": "en",
+      "code": "H335",
+      "kind": "hazard",
+      "text": "May cause respiratory irritation",
+      "signal_word": "Warning",
+      "tier": "A",
+      "internal_id": false,
+      "source_url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC",
+      "source_ref": "29 CFR 1910.1200 App. C; code established by wording identical to UN GHS Rev.7 Annex 3 (English)",
+      "retrieved_at": "2026-09-30T05:34:07.875950Z",
       "status": "ok"
     },
     {

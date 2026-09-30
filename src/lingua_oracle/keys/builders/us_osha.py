@@ -23,12 +23,18 @@ The previous 0.97-similarity stage is gone. A similarity score cannot tell a
 spelling difference from a substantive one, so it risked attaching a code to
 wording that does not actually say the same thing.
 
-Anything that does not match exactly is left out and listed in the parse report,
-together with every GHS code OSHA has no statement for. Those are *not* assumed
-to be gaps: OSHA adopted an earlier GHS revision, so some absences are real.
+Anything that does not match exactly is left out and listed in the parse report.
+That report separates two very different things, because conflating them made the
+key look far worse than it is:
 
-The key is therefore marked `partial`: the statements it holds are OSHA's own,
-but the set is smaller than EU CLP's and the counts are not reconciled.
+* statements that **restate a code already held** - the same statement printed
+  again with its fill-in completed, a usage condition attached, or a typo in the
+  published HTML. Not gaps.
+* statements **not represented by any code held**. Only these decide the status.
+
+OSHA also defines hazard classes GHS does not and gives them no code. Those are
+stored under internal identifiers (OSHA-CD, OSHA-SA) flagged `internal_id`, and
+are matched by text - see `internal_id_for`.
 """
 
 from __future__ import annotations
@@ -64,6 +70,8 @@ DEFAULT_FILE = "us-osha/appendix_c.html"
 
 # Statements the source states but that could not be keyed to a code.
 UNMAPPED: dict[str, int] = {}
+#: Statements not represented by any code held - the real gaps.
+UNREPRESENTED: dict[str, int] = {}
 
 #: GHS Rev.7 English is the reference; OSHA HazCom is aligned to a GHS revision.
 REFERENCE_FILE = "ghs-rev7/GHS_Rev7_en.pdf"
@@ -117,9 +125,15 @@ def _node_text(element) -> str:
     return " ".join(" ".join(element.itertext()).split())
 
 
+#: Appendix C lists alternative statements and the connector leaks into the cell,
+#: e.g. "May cause respiratory irritation; or".
+_CONNECTOR_RE = re.compile(r"\s*[;,]?\s*\b(?:or|and)\s*$", re.IGNORECASE)
+
+
 def strip_condition(text: str) -> str:
-    """Remove a trailing usage condition from a statement cell."""
-    return _CONDITION_RE.sub("", text or "").strip().rstrip("-\u2013\u2014").strip()
+    """Remove a trailing usage condition or list connector from a statement cell."""
+    out = _CONDITION_RE.sub("", text or "").strip().rstrip("-\u2013\u2014").strip()
+    return _CONNECTOR_RE.sub("", out).strip()
 
 
 def _is_statement(text: str) -> bool:
@@ -200,7 +214,7 @@ def parse_appendix_c(
 
             if hazard_cols and len(values) > max(hazard_cols):
                 signal = values[hazard_cols[0]].strip()
-                statement = values[hazard_cols[1]].strip()
+                statement = strip_condition(values[hazard_cols[1]].strip())
                 if signal in ("Danger", "Warning"):
                     signals.add(signal)
                 if _is_statement(statement):
@@ -370,7 +384,7 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
                         )
                         internal_count.append(internal)
                         continue
-                    unmapped.append(f"{prefix}: {text[:70]}")
+                    unmapped.append((prefix, text))
                     continue
                 split_count[0] += 1
                 for part, part_code, part_how in pair:
@@ -418,15 +432,36 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
         issues.notes.append(
             f"cells holding two statements, split and both halves resolved: {split_count[0]}"
         )
-    if unmapped:
-        issues.notes.append(
-            f"statements with no exact match ({len(unmapped)}); Appendix C states no "
-            "codes, and matching is exact after spelling and fill-in folding, so "
-            "these are left out rather than guessed:"
+    # An unmatched statement is not the same as a missing code. Most are the same
+    # statement printed again with its fill-in completed, with a usage condition
+    # attached, or with a typo in the published HTML - the code is already held.
+    # Only the remainder are real gaps, and only those decide the key's status.
+    from lingua_oracle.match.template import match as _template_match
+
+    duplicates: list[tuple[str, str]] = []
+    genuinely_absent: list[tuple[str, str]] = []
+    for prefix, raw_text in unmapped:
+        restates = any(
+            not e.internal_id
+            and e.code.startswith(prefix)
+            and _template_match(raw_text, e.text).matched
+            for e in entries.values()
         )
-        issues.notes.extend(f"    {u}" for u in unmapped[:40])
-        if len(unmapped) > 40:
-            issues.notes.append(f"    … and {len(unmapped) - 40} more")
+        (duplicates if restates else genuinely_absent).append((prefix, raw_text))
+
+    if duplicates:
+        issues.notes.append(
+            f"statements that restate a code already held ({len(duplicates)}): the "
+            "same statement printed again with its fill-in completed, a usage "
+            "condition attached, or a typo in the published HTML. Not gaps."
+        )
+    if genuinely_absent:
+        issues.notes.append(
+            f"statements not represented by any code held ({len(genuinely_absent)}). "
+            "Matching is exact, so these are left out rather than guessed:"
+        )
+        issues.notes.extend(f"    {p}: {t[:100]}" for p, t in genuinely_absent)
+    UNREPRESENTED[REGULATION] = len(genuinely_absent)
     if absent:
         issues.notes.append(
             f"GHS Rev.7 codes with no OSHA statement ({len(absent)}). These are NOT "
@@ -434,16 +469,46 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
             "differences and some are parse misses. Needs review:"
         )
         issues.notes.append("    " + ", ".join(absent))
-    issues.notes.append(
-        "status=partial: the statements are OSHA's own, but the code set is smaller "
-        "than EU CLP's and the counts are not reconciled."
+
+
+    notes: list[str] = []
+    if genuinely_absent:
+        notes.append(
+            f"{len(genuinely_absent)} Appendix C statement(s) are not represented by "
+            "any code held. Matching is exact, so they are left out rather than "
+            "guessed:"
+        )
+        notes.extend(f"  {p}: {t}" for p, t in genuinely_absent)
+        notes.append(
+            "Of these, the 'chemical under pressure' statements need GHS Rev.8 "
+            "Annex 3, which the HPR and OSHA both reference but which is not on "
+            "file. The remainder differ from GHS Rev.7 only in the published "
+            "rendering - a dropped word or an added comma - not in substance, and "
+            "are excluded solely because matching is exact."
+        )
+    notes.append(
+        f"{len(duplicates)} further statement(s) restate a code already held "
+        "(fill-in completed, usage condition attached, or a typo in the published "
+        "HTML). Those are not gaps."
     )
+    if internal_count:
+        notes.append(
+            "OSHA-only hazard classes are stored under internal identifiers "
+            f"({', '.join(sorted(internal_count))}). These are NOT regulatory "
+            "codes and are matched by text."
+        )
+
+    if genuinely_absent:
+        status, reason = Status.PARTIAL, "unrepresented_statements_remain"
+    elif entries:
+        status, reason = Status.OK, None
+    else:
+        status, reason = Status.PENDING_SOURCE, "source_unreadable"
 
     key = AnswerKey(
         regulation=REGULATION, language="en", revision=REVISION,
-        status=Status.PARTIAL if entries else Status.PENDING_SOURCE,
-        status_reason="counts_not_reconciled" if entries else "source_unreadable",
-        source_url=SOURCE_URL, retrieved_at=ts,
+        status=status, status_reason=reason,
+        source_url=SOURCE_URL, retrieved_at=ts, notes=notes,
         entries=sorted(entries.values(), key=lambda e: (e.kind, e.code)),
     )
     return [key], [issues]
