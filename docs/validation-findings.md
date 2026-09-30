@@ -9,6 +9,8 @@ reproductions in `tests/`.
 | # | Title | Class | Status |
 | --- | --- | --- | --- |
 | 1 | Language detection restricted to the regulation's official languages | false_alarm (tool bug) | open — fix scheduled |
+| 2 | A negative declaration read as a signal word | false_alarm (tool bug) | **fixed** |
+| 3 | `XXXX` in a REACH registration number read as a placeholder | false_alarm (tool bug) | open — fix next |
 
 ---
 
@@ -75,3 +77,41 @@ To be added in step 6 as a synthetic fixture: a Danish document declaring a
 regulation whose official languages exclude Danish, with fictional product data.
 The fixture must show the document's language reported as `da`, and its codes
 reported as unverified rather than failed.
+
+
+---
+
+## Finding #2 — "no signal word" read as a signal word
+
+**Class:** `false_alarm` — the tool is at fault. **Status:** fixed.
+**Found:** a non-hazardous EU SDS, used as a known-good negative control.
+
+### What happened
+
+The document states, correctly, that it needs no label elements:
+
+> No hazard pictogram, no signal word, no hazard statement(s), no
+> precautionary statement(s) required.
+
+A-01 searched for the words "signal word" and captured `(.+)` — the rest of the
+line — as the stated value. So a sentence declaring the **absence** of a signal
+word was reported as a document claiming a signal word of
+`", no hazard statement(s), no precautionary statement(s) required"`, and failed
+against the official Danish/English words.
+
+Two mistakes compounded: reading a negation as an assertion, and treating free
+text as a value.
+
+### Fix
+
+1. A line matching `_NEGATIVE_RE` — "no signal word", "not classified", "none
+   assigned", "not a hazardous substance", and the da/de/fr/es equivalents — is
+   skipped. It declares an absence, not a value.
+2. The capture stops at the first separator and is rejected if it runs to more
+   than two words. A signal word is one word in every language on file.
+
+The check still fails a genuinely wrong signal word; `test_a01_still_catches_a_
+wrong_signal_word` pins that, so the fix cannot be blunted into uselessness.
+
+**Reproduction:** `tests/fixtures/pattern_negative_declaration.pdf`, built with
+fictional product data by `tests/make_fixtures.py`.

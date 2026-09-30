@@ -286,6 +286,12 @@ def build_all() -> dict[str, Path]:
     add("defect_c14_english_only", _whmis_english_only(
         FIXTURES / "defect_c14_english_only.pdf"))
 
+    # Patterns found on real documents, reproduced with fictional data.
+    add("pattern_negative_declaration", _negative_declaration(
+        FIXTURES / "pattern_negative_declaration.pdf"))
+    add("pattern_reach_registration", _reach_registration_number(
+        FIXTURES / "pattern_reach_registration.pdf"))
+
     # C-02: the same code written two different ways.
     add("defect_c02_inconsistent", write_sds(
         FIXTURES / "defect_c02_inconsistent.pdf", regulation="eu_clp", language="da",
@@ -293,6 +299,65 @@ def build_all() -> dict[str, Path]:
         extra_lines_s16=[f"H336 {texts('eu_clp','da',['H336'])['H336'].rstrip('.')} i hovedet."]))
 
     return built
+
+
+def _negative_declaration(path: Path) -> Path:
+    """An unclassified sheet that says it has no signal word and no statements.
+
+    Pattern found on a real document: an SDS for a non-hazardous product states
+    "No hazard pictogram, no signal word, no hazard statement(s), no
+    precautionary statement(s) required." The signal-word reader matched the
+    words "signal word" and took the rest of the sentence as the value, turning a
+    declaration that there is NO signal word into a claim that there is one.
+    """
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.blank()
+    sheet.line(HEADINGS["en"]["2"], bold=True, size=11)
+    sheet.line("Classification: Not a hazardous substance or mixture according to "
+               "Regulation (EC) No 1272/2008.")
+    sheet.line("No hazard pictogram, no signal word, no hazard statement(s), "
+               "no precautionary statement(s) required.")
+    sheet.blank()
+    sheet.line(HEADINGS["en"]["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
+    sheet.blank()
+    sheet.line(HEADINGS["en"]["16"], bold=True, size=11)
+    sheet.line("Full text of hazard statements: none assigned.")
+    sheet.save()
+    return path
+
+
+def _reach_registration_number(path: Path) -> Path:
+    """A sheet carrying a REACH registration number ending in XXXX.
+
+    Pattern found on a real document: REACH registration numbers are printed as
+    01-2119485491-33-XXXX, where the trailing XXXX is the standard
+    company-specific suffix, not an unfilled placeholder.
+    """
+    en = texts("eu_clp", "en", EU_H + EU_P)
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line("REACH registration number: 01-2119485491-33-XXXX")
+    sheet.blank()
+    sheet.line(HEADINGS["en"]["2"], bold=True, size=11)
+    sheet.line(f"Signal word: {signal_text('eu_clp', 'en')}")
+    for code in EU_H:
+        sheet.line(f"{code} {en[code]}")
+    for code in EU_P:
+        sheet.line(f"{code} {en[code]}")
+    sheet.blank()
+    sheet.line(HEADINGS["en"]["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
+    sheet.line("Registration number 01-2119485491-33-XXXX")
+    sheet.line("Classification: " + ", ".join(EU_H))
+    sheet.blank()
+    sheet.line(HEADINGS["en"]["16"], bold=True, size=11)
+    for code in EU_H:
+        sheet.line(f"{code} {en[code]}")
+    sheet.save()
+    return path
 
 
 def _whmis_bilingual(path: Path) -> Path:

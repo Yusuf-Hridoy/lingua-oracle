@@ -69,6 +69,10 @@ class Case(BaseModel):
     confirmed: bool = False
     known_good: bool = False
     expected_codes: list[str] = Field(default_factory=list)
+    #: Where expected_codes came from - the authoring application, an operator
+    #: declaration, or similar. Recorded so a scored case can always be traced to
+    #: an authority independent of this tool.
+    expected_source: str = ""
     known_defects: list[KnownDefect] = Field(default_factory=list)
 
     def normalised_expected(self) -> set[str]:

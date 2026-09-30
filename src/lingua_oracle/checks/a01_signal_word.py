@@ -12,9 +12,28 @@ from lingua_oracle.models import SIGNAL_DANGER, SIGNAL_WARNING, Finding, Severit
 CHECK_ID = "A-01"
 TITLE = "Signal word exact for the language"
 
-_LABEL_RE = re.compile(
-    r"(?:signal\s*word|signalord|signalwort|signaalwoord|mention\s+d['’]avertissement"
-    r"|palabra\s+de\s+advertencia|注意喚起語)\s*[:\-–]?\s*(.+)",
+_LABEL = (
+    r"signal\s*word|signalord|signalwort|signaalwoord|mention\s+d['’]avertissement"
+    r"|palabra\s+de\s+advertencia|注意喚起語"
+)
+# The value, not the rest of the line: a signal word is a single short word in
+# every language on file, so the capture stops at the first separator. Taking
+# "(.+)" swallowed a whole sentence and reported it as the stated signal word.
+_LABEL_RE = re.compile(rf"(?:{_LABEL})\s*[:\-–]?\s+([^,;.:()\[\]]{{1,40}})", re.IGNORECASE)
+
+# A line declaring that there is NO signal word, or that the product is not
+# classified, is the opposite of a signal-word declaration and must not be read
+# as one. These are document phrases, not regulatory text.
+_NEGATIVE_RE = re.compile(
+    r"\bno\s+(?:hazard\s+)?(?:pictogram|signal\s*word|hazard\s+statement|"
+    r"precautionary\s+statement)"
+    r"|\bnot\s+(?:classified|applicable|required|assigned)"
+    r"|\bnone\s+(?:assigned|required)"
+    r"|\bnot\s+a\s+hazardous\s+(?:substance|mixture)"
+    r"|\bingen\s+signalord|\bikke\s+klassificeret"
+    r"|\bkein\s+signalwort|\bnicht\s+eingestuft"
+    r"|\bpas\s+de\s+mention\s+d['’]avertissement|\bnon\s+class[ée]"
+    r"|\bsin\s+palabra\s+de\s+advertencia|\bno\s+clasificado",
     re.IGNORECASE,
 )
 
@@ -23,11 +42,16 @@ def _candidates(ctx: CheckContext) -> list[tuple[str, int]]:
     """(text, page) for anything that looks like a stated signal word."""
     out: list[tuple[str, int]] = []
     for line in ctx.document.lines:
+        if _NEGATIVE_RE.search(line.text):
+            continue  # states that there is no signal word, not what it is
         m = _LABEL_RE.search(line.text)
-        if m:
-            value = normalize(m.group(1)).strip(" .:;-")
-            if value:
-                out.append((value, line.page))
+        if not m:
+            continue
+        value = normalize(m.group(1)).strip(" .:;-")
+        # A signal word is one word. Anything longer is surrounding prose that
+        # happened to follow the label, not a stated value.
+        if value and len(value.split()) <= 2:
+            out.append((value, line.page))
     return out
 
 
