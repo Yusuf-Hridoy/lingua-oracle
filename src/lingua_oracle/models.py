@@ -58,6 +58,12 @@ class AnswerKeyEntry(BaseModel):
     text: str
     signal_word: SignalWord | None = None
     tier: Tier = Tier.A
+    #: True when `code` is an internal identifier invented by this tool, not a
+    #: regulatory code. Used for hazards a regulation defines without giving them
+    #: a GHS code (OSHA's combustible dust and simple asphyxiant). These are
+    #: matched by TEXT, never by code, and must never be written onto a document
+    #: or reported as though the regulator had assigned them.
+    internal_id: bool = False
     source_url: str | None = None
     source_ref: str | None = None
     retrieved_at: datetime | None = None

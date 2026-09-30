@@ -37,6 +37,24 @@ class CheckContext:
     def entry(self, code: str) -> AnswerKeyEntry | None:
         return self.reference.entries.get(code)
 
+    def internal_entries(self) -> list[AnswerKeyEntry]:
+        """Entries keyed by an internal identifier rather than a regulatory code."""
+        return [e for e in self.reference.entries.values() if e.internal_id]
+
+    def match_internal(self, text: str):
+        """Find an internal-ID entry whose official text this phrase matches.
+
+        These hazards carry no regulatory code, so a document cannot cite them by
+        code and they must be recognised by their wording alone.
+        """
+        from lingua_oracle.match.template import match as _match
+
+        for entry in self.internal_entries():
+            result = _match(text, entry.text)
+            if result.matched:
+                return entry, result
+        return None
+
     def alternate_entries(self, code: str) -> list[tuple[str, AnswerKeyEntry]]:
         """The same code's text in the regulation's other required languages."""
         out = []

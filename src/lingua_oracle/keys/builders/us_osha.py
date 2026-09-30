@@ -156,8 +156,15 @@ def _core_key(text: str) -> str:
     return " ".join(out)
 
 
-def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str], set[str]]:
-    """Return ({hazard statement: signal word}, {precautionary statements}, signals).
+def parse_appendix_c(
+    raw: bytes,
+) -> tuple[dict[str, str], set[str], set[str], dict[str, str]]:
+    """Return hazard statements, precautionary statements, signals and categories.
+
+    The fourth value maps a hazard statement to its "Hazard category" cell. For
+    most rows that is a GHS category number, but for hazard classes OSHA defines
+    itself it is the class name - "Simple Asphyxiant", "Combustible Dust 2" -
+    which is what identifies them without recall.
 
     Hazard statements come from tables carrying a "Hazard statement" column beside
     a "Signal word" column. Precautionary statements live in the C.4 tables under
@@ -168,9 +175,11 @@ def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str], set[str]]:
     hazard: dict[str, str] = {}
     precautionary: set[str] = set()
     signals: set[str] = set()
+    categories: dict[str, str] = {}
 
     for table in doc.xpath("//table"):
         hazard_cols: tuple[int, int] | None = None
+        category_col: int | None = None
         prec_cols: list[int] | None = None
         for row in table.xpath(".//tr"):
             cells = row.xpath("./td|./th")
@@ -179,6 +188,9 @@ def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str], set[str]]:
 
             if "hazard statement" in lower and "signal word" in lower:
                 hazard_cols = (lower.index("signal word"), lower.index("hazard statement"))
+                category_col = (
+                    lower.index("hazard category") if "hazard category" in lower else None
+                )
                 prec_cols = None
                 continue
             if len([v for v in lower if v in _PRECAUTIONARY_COLUMNS]) >= 2:
@@ -193,6 +205,10 @@ def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str], set[str]]:
                     signals.add(signal)
                 if _is_statement(statement):
                     hazard.setdefault(statement, signal)
+                    if category_col is not None and category_col < len(values):
+                        category = values[category_col].strip()
+                        if category:
+                            categories.setdefault(statement, category)
             elif prec_cols:
                 for index in prec_cols:
                     if index >= len(cells):
@@ -207,7 +223,7 @@ def parse_appendix_c(raw: bytes) -> tuple[dict[str, str], set[str], set[str]]:
                         text = strip_condition(chunk.strip())
                         if _is_statement(text):
                             precautionary.add(text)
-    return hazard, precautionary, signals
+    return hazard, precautionary, signals, categories
 
 
 def _resolve_code(
@@ -222,6 +238,28 @@ def _resolve_code(
         if core and core == ccore:
             return code, "identical once fill-ins collapsed"
     return None, "no exact match"
+
+
+# A "Hazard category" cell that names a class rather than a GHS category. OSHA
+# defines a few hazard classes GHS does not, and their rows carry the class name
+# here instead of a number ("Simple Asphyxiant", "Combustible Dust 2").
+_CLASS_CATEGORY_RE = re.compile(r"^(?!Division|Type|Category)([A-Za-z][A-Za-z ]{3,})\s*\d*$")
+
+
+def internal_id_for(category: str) -> str | None:
+    """An internal identifier for an OSHA-only hazard class, or None.
+
+    These are NOT regulatory codes - OSHA assigns none - so they are prefixed
+    OSHA- and flagged `internal_id` on the entry. The initials come from the
+    class name the document itself states.
+    """
+    match = _CLASS_CATEGORY_RE.match((category or "").strip())
+    if not match:
+        return None
+    words = [w for w in match.group(1).split() if w]
+    if not words:
+        return None
+    return "OSHA-" + "".join(w[0].upper() for w in words)
 
 
 def _entry(code, text, kind, signal, ts, how):
@@ -278,7 +316,7 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
         except Exception as exc:  # noqa: BLE001
             raise SourceUnavailable(f"OSHA Appendix C fetch failed: {exc}") from exc
 
-    hazard, precautionary, signals = parse_appendix_c(raw)
+    hazard, precautionary, signals, categories = parse_appendix_c(raw)
 
     reference_path = root / REFERENCE_FILE
     if not reference_path.exists():
@@ -295,6 +333,7 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
     entries: dict[str, AnswerKeyEntry] = {}
     unmapped: list[str] = []
     split_count = [0]
+    internal_count: list[str] = []
 
     for prefix, items, kind in (
         ("H", sorted(hazard), Kind.HAZARD),
@@ -310,6 +349,27 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
             if code is None:
                 pair = split_two_statements(text, candidates)
                 if pair is None:
+                    internal = (
+                        internal_id_for(categories.get(text, ""))
+                        if prefix == "H" else None
+                    )
+                    if internal and internal not in entries:
+                        entries[internal] = AnswerKeyEntry(
+                            regulation=REGULATION, revision=REVISION, language="en",
+                            code=internal, kind=Kind.HAZARD, text=text,
+                            signal_word=hazard.get(text)
+                            if hazard.get(text) in ("Danger", "Warning") else None,
+                            tier=Tier.A, internal_id=True, source_url=SOURCE_URL,
+                            source_ref=f"29 CFR 1910.1200 App. C, hazard class "
+                                       f"'{categories.get(text, '').strip()}'. OSHA "
+                                       "defines this class without a GHS code; "
+                                       f"'{internal}' is an internal identifier of "
+                                       "this tool, NOT a regulatory code, and is "
+                                       "matched by text.",
+                            retrieved_at=ts, status=Status.OK,
+                        )
+                        internal_count.append(internal)
+                        continue
                     unmapped.append(f"{prefix}: {text[:70]}")
                     continue
                 split_count[0] += 1
@@ -349,6 +409,11 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
     )
     issues.notes.append(f"codes established: {h_count} H, {p_count} P, "
                         f"{len(signals)} signal word(s)")
+    if internal_count:
+        issues.notes.append(
+            "OSHA-only hazard classes, stored under internal identifiers (NOT "
+            f"regulatory codes) and matched by text: {', '.join(sorted(internal_count))}"
+        )
     if split_count[0]:
         issues.notes.append(
             f"cells holding two statements, split and both halves resolved: {split_count[0]}"

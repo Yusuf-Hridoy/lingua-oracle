@@ -98,9 +98,46 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
     return findings
 
 
+def _internal_statements(ctx: CheckContext, check_id: str) -> list[Finding]:
+    """Recognise hazards the regulation defines without giving them a code.
+
+    OSHA's combustible dust and simple asphyxiant statements have no H code, so
+    no code hit points at them. They are found by matching the document's own
+    lines against the stored wording instead.
+    """
+    if not ctx.internal_entries():
+        return []
+    findings: list[Finding] = []
+    seen: set[str] = set()
+    for line in ctx.document.lines:
+        text = line.text.strip()
+        if len(text) < 20:
+            continue
+        found = ctx.match_internal(text)
+        if found is None:
+            continue
+        entry, result = found
+        if entry.code in seen:
+            continue
+        seen.add(entry.code)
+        findings.append(
+            Finding(
+                check_id=check_id, severity=Severity.INFO, page=line.page,
+                code=entry.code, expected=entry.text, found=text, tier=entry.tier,
+                message=(
+                    f"Matched {ctx.regulation.display_name}'s '{entry.code}' by wording. "
+                    "That is an internal identifier of this tool, not a regulatory "
+                    "code: this hazard class has no GHS code."
+                )
+                + ("" if result.is_clean else f" Note: {result.message}."),
+            )
+        )
+    return findings
+
+
 @register("A-02", "H-statement text matches key (incl. combined H codes)")
 def run_a02(ctx: CheckContext) -> list[Finding]:
-    return _run_for(ctx, "A-02", "hazard")
+    return _run_for(ctx, "A-02", "hazard") + _internal_statements(ctx, "A-02")
 
 
 @register("A-03", "P-statement text matches key (incl. combined P codes)")

@@ -17,6 +17,7 @@ from lingua_oracle.keys.builders.us_osha import (
     split_two_statements,
     strip_condition,
 )
+from lingua_oracle.models import Kind, Tier
 
 # A miniature reference table, in the shape _resolve_code expects.
 REFERENCE = {
@@ -113,3 +114,54 @@ def test_resolve_is_exact_and_refuses_a_near_miss():
     assert code == "P210"
     code, _how = _resolve_code("Keep well away from heat sources", CANDIDATES)
     assert code is None
+
+
+# -- OSHA-only hazard classes -------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("category", "expected"),
+    [
+        ("Simple Asphyxiant", "OSHA-SA"),
+        ("Combustible Dust 2", "OSHA-CD"),
+        ("Division 1.3", None),      # a GHS division, not an OSHA class
+        ("Type A", None),
+        ("Category 1", None),
+        ("3", None),
+        ("1A, Chemically unstable gas B", None),
+    ],
+)
+def test_internal_id_only_for_osha_defined_classes(category, expected):
+    from lingua_oracle.keys.builders.us_osha import internal_id_for
+
+    assert internal_id_for(category) == expected
+
+
+def test_internal_ids_are_flagged_and_not_regulatory():
+    from lingua_oracle.keys.store import load_key
+
+    key = load_key("us_osha", "en")
+    by_code = key.by_code()
+    internal = [e for e in key.entries if e.internal_id]
+    assert {e.code for e in internal} == {"OSHA-CD", "OSHA-SA"}
+    for entry in internal:
+        assert entry.code.startswith("OSHA-")
+        assert entry.kind is Kind.HAZARD
+        assert entry.tier is Tier.A
+        assert "NOT a regulatory code" in entry.source_ref
+        assert entry.text.strip()
+    # a real code must never be flagged internal
+    assert by_code["H225"].internal_id is False
+
+
+def test_internal_ids_are_matched_by_text_not_code():
+    """A document cites these by wording; there is no code to cite."""
+    from lingua_oracle.checks.base import CheckContext
+    from lingua_oracle.detect.codes import CODE_RE
+    from lingua_oracle.keys.store import load_key
+
+    for entry in load_key("us_osha", "en").entries:
+        if entry.internal_id:
+            # the identifier must not look like a regulatory code to the detector
+            assert not CODE_RE.fullmatch(entry.code)
+    assert hasattr(CheckContext, "match_internal")
