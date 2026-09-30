@@ -289,6 +289,8 @@ def build_all() -> dict[str, Path]:
     # Patterns found on real documents, reproduced with fictional data.
     add("pattern_spacing_variant", _spacing_variant(
         FIXTURES / "pattern_spacing_variant.pdf"))
+    add("pattern_optional_fillin", _optional_group_filled(
+        FIXTURES / "pattern_optional_fillin.pdf"))
     add("pattern_negative_declaration", _negative_declaration(
         FIXTURES / "pattern_negative_declaration.pdf"))
     add("pattern_reach_registration", _reach_registration_number(
@@ -323,6 +325,25 @@ def _spacing_variant(path: Path) -> Path:
         path, regulation="un_ghs", language="en",
         h_codes=["H225", "H319"], p_codes=["P210", "P370+P378", "P410+P412"],
         overrides={"P370+P378": fire, "P410+P412": heat},
+    )
+
+
+
+def _optional_group_filled(path: Path) -> Path:
+    """A sheet that keeps an optional group AND fills the slot inside it.
+
+    P264+P265 reads "Wash hands [and…] thoroughly after handling." - a fill-in
+    nested in an optional group. An author who keeps the group has to write a
+    space before the value they supply, which the template does not contain.
+    """
+    official = texts("un_ghs", "en", ["P264+P265"])["P264+P265"]
+    filled = official.replace("[and…]", "and other specified body parts")
+    if filled == official:
+        raise SystemExit("optional-fill-in fixture: the key text no longer has '[and…]'")
+    return write_sds(
+        path, regulation="un_ghs", language="en",
+        h_codes=["H225", "H319"], p_codes=["P210", "P264+P265"],
+        overrides={"P264+P265": filled},
     )
 
 

@@ -95,7 +95,10 @@ def _lit(text: str) -> str:
     pos = 0
     for m in _FILLIN_RE.finditer(text):
         parts.append(_escape_ws(text[pos : m.start()]))
-        parts.append(rf"(?P<fill_{next(_GROUP_SEQ)}>[^\s].*?)")
+        # Allow whitespace between the literal and the value. A template may
+        # abut the two ("[and…]", "Use…") while the document that fills it in
+        # naturally writes a space ("and other specified body parts").
+        parts.append(rf"\s*(?P<fill_{next(_GROUP_SEQ)}>[^\s].*?)")
         pos = m.end()
     parts.append(_escape_ws(text[pos:]))
     return "".join(parts)

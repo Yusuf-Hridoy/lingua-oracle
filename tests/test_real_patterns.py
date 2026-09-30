@@ -162,3 +162,41 @@ def test_spacing_tolerance_stops_at_spacing(template, found, should_match):
         assert result.kind is not MatchKind.EXACT
     else:
         assert result.matched is should_match
+
+
+# -- finding #5: a fill-in nested inside an optional group ---------------------
+
+
+def test_filled_optional_group_matches():
+    """Keeping "[and…]" and supplying a value is correct use of the template."""
+    report = check_pdf(pdf("pattern_optional_fillin"), "un_ghs")
+    wording = [f for f in report.findings
+               if f.check_id == "A-03" and f.severity is Severity.FAIL
+               and not f.unverified]
+    assert wording == [], [f"{f.code}: {f.message}" for f in wording]
+
+
+def test_the_supplied_value_is_reported_for_review():
+    report = check_pdf(pdf("pattern_optional_fillin"), "un_ghs")
+    values = [f.message for f in report.findings
+              if f.code == "P264+P265" and "fill-in" in f.message.lower()]
+    assert values, "the value supplied for the optional fill-in was not reported"
+
+
+@pytest.mark.parametrize(
+    ("found", "should_match"),
+    [
+        ("Wash hands and other specified body parts thoroughly after handling. "
+         "Do not touch eyes.", True),
+        ("Wash hands and forearms thoroughly after handling. Do not touch eyes.", True),
+        ("Wash hands thoroughly after handling. Do not touch eyes.", True),
+        # Tolerating the space must not tolerate different wording.
+        ("Wash hands thoroughly after handling. Do not touch nose.", False),
+        ("Rinse hands thoroughly after handling. Do not touch eyes.", False),
+    ],
+)
+def test_optional_group_tolerance_stops_at_the_space(found, should_match):
+    from lingua_oracle.match.template import match
+
+    template = "Wash hands [and…] thoroughly after handling. Do not touch eyes."
+    assert match(found, template).matched is should_match
