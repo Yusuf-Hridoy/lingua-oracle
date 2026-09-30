@@ -15,3 +15,9 @@ build/
 # data/sources/ holds the official regulation PDFs the answer keys are built
 # from (UN GHS, Canada HPR, UK GB CLP, JIS). These are published law and are
 # committed for provenance. Real SDS / product documents must NOT go here.
+
+# Real SDS and label PDFs used for validation are COMPANY DATA. Everything in
+# this directory stays local: the PDFs themselves and the case, triage and
+# spot-check files, which quote product names. Only cases.example.yaml is
+# tracked, and it is kept outside this directory.
+data/validation/

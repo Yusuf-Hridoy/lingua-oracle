@@ -1,0 +1,45 @@
+# Validation case file — EXAMPLE / TEMPLATE
+#
+# Copy this to data/validation/cases.yaml and fill it in. That directory is
+# gitignored: the real file names products and customers, so it must stay local.
+# `lingua validate init` does the copy for you.
+#
+# Everything below is FICTIONAL. Do not put real product or customer names here.
+#
+# Fields
+#   file            file name inside data/validation/
+#   regulation      eu_clp | uk_clp | us_osha | ca_whmis | un_ghs | au_whs | jp_jis
+#                   omit to let the checker detect it
+#   language        BCP-47 tag; omit to let the checker detect it
+#   known_good      true if you believe the document is correct. A finding on a
+#                   known_good document counts against the false-alarm target.
+#   expected_codes  every code the document should carry, copied from the
+#                   authoring UI. Recall is measured against this list.
+#   known_defects   defects you already know about. Each must be caught, or the
+#                   "known defects caught" target fails.
+
+cases:
+  - file: example-clean-danish.pdf
+    regulation: eu_clp
+    language: da
+    known_good: true
+    expected_codes: [H225, H319, H336, P210, P280, P305+P351+P338, EUH066]
+
+  - file: example-seeded-defect.pdf
+    regulation: eu_clp
+    language: da
+    known_good: false
+    expected_codes: [H225, H319, P210]
+    known_defects:
+      - check: A-01
+        code: SIGNAL_DANGER
+        note: "signal word printed as 'Gøre' instead of the official Danish 'Fare'"
+      - check: A-02
+        code: H319
+        note: "English wording left in a Danish document"
+
+  - file: example-osha-label.pdf
+    regulation: us_osha
+    language: en
+    known_good: true
+    expected_codes: [H228, H240]
