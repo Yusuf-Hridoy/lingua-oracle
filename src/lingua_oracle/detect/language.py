@@ -26,6 +26,24 @@ _TAGS: dict[str, str] = {
 UNSUPPORTED_BY_DETECTOR = {"mt"}
 
 
+#: Names for the languages a report may have to talk about. A reader should be
+#: told "the French version", not "'fr'".
+_NAMES: dict[str, str] = {
+    "ar": "Arabic", "bg": "Bulgarian", "cs": "Czech", "da": "Danish",
+    "de": "German", "el": "Greek", "en": "English", "es": "Spanish",
+    "et": "Estonian", "fi": "Finnish", "fr": "French", "ga": "Irish",
+    "hr": "Croatian", "hu": "Hungarian", "it": "Italian", "ja": "Japanese",
+    "lt": "Lithuanian", "lv": "Latvian", "mt": "Maltese", "nl": "Dutch",
+    "pl": "Polish", "pt": "Portuguese", "ro": "Romanian", "ru": "Russian",
+    "sk": "Slovak", "sl": "Slovene", "sv": "Swedish", "zh": "Chinese",
+}
+
+
+def language_name(tag: str) -> str:
+    """"fr" -> "French". Falls back to the tag when we have no name for it."""
+    return _NAMES.get((tag or "").lower().split("-")[0], tag)
+
+
 def tag_to_language(tag: str) -> Language | None:
     name = _TAGS.get(tag.lower().split("-")[0])
     return getattr(Language, name, None) if name else None

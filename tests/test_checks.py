@@ -35,7 +35,9 @@ DEFECTS = {
     "defect_b09_label": ("B-09", Severity.FAIL, set()),
     "defect_b10_signal_fit": ("B-10", Severity.FAIL, set()),
     "defect_c12_euh_on_osha": ("C-12", Severity.FAIL, set()),
-    "defect_c14_english_only": ("C-14", Severity.FAIL, set()),
+    # A missing language is a question, not a verdict on the wording: the
+    # French sheet may exist as a separate file. C-14 asks; it never fails.
+    "defect_c14_english_only": ("C-14", Severity.WARN, set()),
     "defect_c02_inconsistent": ("C-02", Severity.WARN, set()),
 }
 
@@ -294,3 +296,35 @@ def test_a_supplemental_code_is_never_called_a_typo():
             is Reason.NOT_ON_FILE
     report = check_pdf(pdf("defect_c12_euh_on_osha"), "us_osha")
     assert not [f for f in report.findings if f.check_id == "C-15"]
+
+
+# -- C-14 asks for confirmation; it never accuses ----------------------------
+
+
+def test_c14_names_the_language_and_asks():
+    report = check_pdf(pdf("defect_c14_english_only"), "ca_whmis")
+    c14 = [f for f in report.findings if f.check_id == "C-14"]
+    assert len(c14) == 1
+    assert c14[0].severity is Severity.WARN
+    assert "Confirm the French version" in c14[0].message
+    # Never a language tag; a reader should not have to know what "fr" is.
+    assert "'fr'" not in c14[0].message
+
+
+def test_c14_never_fails():
+    """A company issuing the French sheet separately has complied."""
+    report = check_pdf(pdf("defect_c14_english_only"), "ca_whmis")
+    assert not [f for f in report.findings
+                if f.check_id == "C-14" and f.severity is Severity.FAIL]
+
+
+def test_c14_is_satisfied_when_the_pair_supplies_the_language():
+    """Comparing the English and French sheets answers the question."""
+    from lingua_oracle.checks.base import CheckContext
+
+    report = check_pdf(pdf("defect_c14_english_only"), "ca_whmis")
+    assert [f for f in report.findings if f.check_id == "C-14"]
+
+    # The same document checked as one half of a bilingual pair.
+    ctx_fields = {f.name for f in CheckContext.__dataclass_fields__.values()}
+    assert "compare_language" in ctx_fields
