@@ -72,3 +72,42 @@ def test_a01_still_catches_a_wrong_signal_word():
     report = check_pdf(pdf("defect_a01_signal"), "eu_clp")
     fired = {f.check_id for f in report.findings if f.severity is Severity.FAIL}
     assert "A-01" in fired
+
+
+# -- finding #3: XXXX in a REACH registration number --------------------------
+
+
+def test_reach_registration_number_is_not_a_placeholder():
+    """01-2119485491-33-XXXX is the published form of the number."""
+    report = check_pdf(pdf("pattern_reach_registration"), "eu_clp")
+    failures = [f for f in report.findings
+                if f.severity is Severity.FAIL and not f.unverified]
+    assert failures == [], [f"{f.check_id}: {f.message}" for f in failures]
+
+
+@pytest.mark.parametrize(
+    ("text", "flagged"),
+    [
+        ("Registration number 01-2119485491-33-XXXX", False),
+        ("REACH No.: 01-2119471843-32-XXXX", False),
+        ("01-2119485491-33-0012", False),          # a filled suffix, also fine
+        ("Supplier: XXXX", True),                  # a real unfilled placeholder
+        ("Emergency telephone XXXXXX", True),
+        ("Batch 12-345-XXXX", True),               # not a REACH number shape
+    ],
+)
+def test_only_the_reach_shape_is_exempt(text, flagged):
+    from lingua_oracle.checks.a06_placeholders import _COMPILED, _inside_reach_number
+
+    hit = False
+    for pattern, _label in _COMPILED:
+        for m in pattern.finditer(text):
+            if not _inside_reach_number(text, m.start(), m.end()):
+                hit = True
+    assert hit is flagged, f"{text!r} should {'be' if flagged else 'not be'} flagged"
+
+
+def test_a06_still_catches_a_real_placeholder():
+    report = check_pdf(pdf("defect_a06_placeholder"), "eu_clp")
+    fired = {f.check_id for f in report.findings if f.severity is Severity.FAIL}
+    assert "A-06" in fired

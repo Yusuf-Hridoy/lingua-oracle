@@ -10,7 +10,7 @@ reproductions in `tests/`.
 | --- | --- | --- | --- |
 | 1 | Language detection restricted to the regulation's official languages | false_alarm (tool bug) | open — fix scheduled |
 | 2 | A negative declaration read as a signal word | false_alarm (tool bug) | **fixed** |
-| 3 | `XXXX` in a REACH registration number read as a placeholder | false_alarm (tool bug) | open — fix next |
+| 3 | `XXXX` in a REACH registration number read as a placeholder | false_alarm (tool bug) | **fixed** |
 
 ---
 
@@ -115,3 +115,34 @@ wrong_signal_word` pins that, so the fix cannot be blunted into uselessness.
 
 **Reproduction:** `tests/fixtures/pattern_negative_declaration.pdf`, built with
 fictional product data by `tests/make_fixtures.py`.
+
+
+---
+
+## Finding #3 — `XXXX` in a REACH registration number read as a placeholder
+
+**Class:** `false_alarm` — the tool is at fault. **Status:** fixed.
+**Found:** the same non-hazardous EU SDS as finding #2.
+
+### What happened
+
+A-06 flags `XXXX` as unfilled placeholder text, which it usually is. But REACH
+registration numbers are published in the form
+
+```
+01-2119485491-33-XXXX
+```
+
+where the trailing four characters are the company-specific suffix and are
+printed exactly like that on real sheets. The check read a correctly-formatted
+registration number as an unfinished document.
+
+### Fix
+
+A match is skipped when it sits inside a REACH registration number, recognised by
+its shape: `\d{2}-\d{10}-\d{2}-(XXXX|\d{4})`. The exemption is deliberately tied
+to that whole shape rather than to the token `XXXX`, so a bare "Supplier: XXXX"
+is still flagged — `test_only_the_reach_shape_is_exempt` pins both directions,
+including a near-miss (`Batch 12-345-XXXX`) that must still be caught.
+
+**Reproduction:** `tests/fixtures/pattern_reach_registration.pdf`, fictional data.

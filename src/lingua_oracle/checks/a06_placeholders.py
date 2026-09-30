@@ -24,6 +24,16 @@ _PATTERNS: list[tuple[str, str]] = [
 ]
 _COMPILED = [(re.compile(p, re.IGNORECASE), label) for p, label in _PATTERNS]
 
+# A REACH registration number ends in a company-specific suffix printed as XXXX,
+# e.g. 01-2119485491-33-XXXX. That is the published form of the number, not an
+# unfilled placeholder, so the run of X must not be flagged.
+_REACH_NUMBER_RE = re.compile(r"\b\d{2}-\d{10}-\d{2}-(?:XXXX|\d{4})\b", re.IGNORECASE)
+
+
+def _inside_reach_number(text: str, start: int, end: int) -> bool:
+    """Whether a match sits inside a REACH registration number."""
+    return any(m.start() <= start and end <= m.end() for m in _REACH_NUMBER_RE.finditer(text))
+
 
 @register(CHECK_ID, TITLE)
 def run(ctx: CheckContext) -> list[Finding]:
@@ -33,6 +43,8 @@ def run(ctx: CheckContext) -> list[Finding]:
         for pattern, label in _COMPILED:
             for m in pattern.finditer(line.text):
                 token = m.group(0).strip()
+                if _inside_reach_number(line.text, m.start(), m.end()):
+                    continue
                 if (token, line.page) in seen:
                     continue
                 seen.add((token, line.page))
