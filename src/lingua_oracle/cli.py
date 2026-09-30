@@ -545,7 +545,18 @@ def keys_sample(
         if e.source_url:
             typer.echo(f"     source_url: {e.source_url}")
         typer.echo("")
+    # Build the evidence page: each entry beside the source it was read from.
+    from lingua_oracle.registry import data_dir
+    from lingua_oracle.validate import load_spot_check, validation_reports_dir
+    from lingua_oracle.validate.spot_check_page import build as build_page
+
+    page = validation_reports_dir() / "spot_check.html"
+    page.write_text(
+        build_page(load_spot_check(), data_dir() / "sources"), encoding="utf-8"
+    )
+    typer.secho(f"\nevidence page: {page}", fg=typer.colors.BLUE)
     typer.secho(
-        f"Record a verdict (correct/wrong) for each in {spot_check_path()}",
+        f"Review each entry there, then save the file it gives you over "
+        f"{spot_check_path()} and re-run `lingua validate`.",
         fg=typer.colors.BLUE,
     )
