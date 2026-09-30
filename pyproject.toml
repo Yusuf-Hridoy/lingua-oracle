@@ -25,6 +25,12 @@ dev = [
     "ruff>=0.7",
     "reportlab>=4.2",
 ]
+# Browser tests under tests/ui/. They skip themselves when Playwright is not
+# installed, so the default suite runs without it:
+#   uv pip install -e ".[ui]" && uv run playwright install chromium
+ui = [
+    "playwright>=1.44",
+]
 
 [project.scripts]
 lingua = "lingua_oracle.cli:app"

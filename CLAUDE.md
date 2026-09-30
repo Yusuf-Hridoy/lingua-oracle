@@ -14,6 +14,8 @@ uv run pytest tests/test_checks.py::test_defect_triggers_its_check -q
 uv run ruff check .                            # lint (must be clean)
 
 uv run python tests/make_fixtures.py           # regenerate fixture PDFs
+uv run pytest tests/ui                        # browser tests (needs the ui extra)
+uv run python tests/ui/build_review_page.py   # rebuild reports/ui_review/index.html
 uv run lingua keys build all                   # the ONLY networked command
 uv run lingua keys stats
 uv run lingua check <pdf> -r eu_clp -l da
@@ -249,6 +251,27 @@ on a real document gets reproduced as a synthetic fixture with fictional data.
   overall pass; "not measured" is not "met" (`Summary.passed`).
 - A finding on a `known_good` document counts as a false alarm while it is
   unclassified, or classified as the tool's fault and not yet `fixed`.
+
+## Browser tests (`tests/ui/`)
+
+They start `lingua serve` in a subprocess, drive the real upload form with
+Playwright, and assert on the **rendered HTML** - the verdict, code, expected and
+found text, regulation, language and tier as a person actually sees them. A green
+unit suite says the checks are right; it says nothing about whether any of that
+reaches the screen.
+
+They skip themselves when Playwright is absent, so the default suite needs
+nothing extra:
+
+```bash
+uv pip install -e ".[ui]" && uv run playwright install chromium
+```
+
+`tests/ui/manifest.py` is the single table of what each fixture is and what the
+report must show, in plain words. It drives the assertions *and* labels the
+review page, so the two cannot drift. Screenshots land in `reports/ui_review/`;
+the real app documents are a separate, skipped-by-default module whose
+screenshots go to `data/validation/ui_review/` and which names no product.
 
 ## Git
 
