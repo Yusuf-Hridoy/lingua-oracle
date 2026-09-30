@@ -111,10 +111,12 @@ CASES: tuple[Case, ...] = (
          should_show="C-12 fails, naming the code that is not valid for OSHA."),
     Case("defect_c14_english_only", regulation="",
          expect_regulation="ca_whmis", expect_language="en",
-         expect=(("C-14", "fail", None),),
+         clean=True, tags=("warnings",),
+         expect=(("C-14", "warn", None),),
          plain="A Canadian WHMIS sheet in English only. Canada requires both "
                "English and French.",
-         should_show="C-14 fails, saying the French version is required."),
+         should_show="C-14 warns, asking whether the French version exists. It "
+                     "never fails: the French sheet may be a separate file."),
 
     Case("defect_c15_newer_ghs", regulation="",
          expect_language="en",
@@ -125,6 +127,22 @@ CASES: tuple[Case, ...] = (
                      "and the closest statement CLP does publish, and fails "
                      "P999 as not a code at all."),
 
+    Case("pattern_conditional_slots", regulation="", expect_regulation="ca_whmis",
+         expect_language="en", clean=True, tags=("warnings",),
+         expect=(("C-14", "warn", None),),
+         plain="A Canadian WHMIS sheet in English only. H373 leaves out its "
+               "\"if known\" parts and H302 ends with a full stop the GHS "
+               "tables do not print.",
+         should_show="No wording failures - both statements are correct. One "
+                     "warning asking whether the French version exists. The "
+                     "banner reads REVIEW BEFORE RELEASE."),
+    Case("pattern_legend_after_statement", regulation="",
+         expect_regulation="ca_whmis", expect_language="en", clean=True,
+         tags=("warnings",),
+         plain="A WHMIS sheet whose Section 16 ends with an abbreviation "
+               "legend and a footnote marker, right after the statements.",
+         should_show="No wording failures: the statements stop where they "
+                     "stop and do not swallow the glossary."),
     Case("defect_c15_osha_partial_key", regulation="",
          expect_regulation="us_osha", expect_language="en", clean=True,
          tags=("warnings",),

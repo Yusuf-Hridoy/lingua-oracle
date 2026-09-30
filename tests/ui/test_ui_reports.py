@@ -22,7 +22,13 @@ FIXTURES = "tests/fixtures"
 
 
 def _meta(page, label: str) -> str:
-    return page.locator(f"//dt[normalize-space()='{label}']/following-sibling::dd").first.inner_text().strip()
+    """Value of a labelled field.
+
+    text_content() rather than inner_text(): the technical fields live inside a
+    collapsed <details>, and inner_text() returns nothing for hidden elements.
+    """
+    cell = page.locator(f"//dt[normalize-space()='{label}']/following-sibling::dd").first
+    return (cell.text_content() or "").strip()
 
 
 def _fail_count(page) -> int:
@@ -103,9 +109,11 @@ def test_fixture_report_in_the_browser(case: Case, page, server, shots_dir):
             f"{check_id}: no row for code {code!r} (shown as {shown_code!r})"
         )
         first = row.first
-        # The result cell carries an icon AND a word, never colour alone.
+        # The result cell carries an icon AND a word, never colour alone. The
+        # word depends on the check as well as the severity: only a wording
+        # check may say "Wrong wording".
         cell = first.locator("td").first
-        want = labels.SEVERITY[Severity(severity)]
+        want = labels.result_of(check_id, Severity(severity), False)
         shown = cell.inner_text().strip()
         assert want.word in shown, (
             f"{check_id}/{code}: result shown as {shown!r}, expected {want.word!r}"
@@ -136,3 +144,75 @@ def test_every_case_produced_a_screenshot(shots_dir):
     """Runs last in file order; a missing image means a case never rendered."""
     missing = [c.name for c in CASES if not (shots_dir / f"{c.name}.png").exists()]
     assert missing == [], missing
+
+
+# -- what a reader must be able to see on the page ---------------------------
+
+
+def _shown(page) -> str:
+    return page.inner_text("body")
+
+
+def test_whmis_sheet_reads_review_before_release(page, server, shots_dir):
+    """The acceptance case: correct wording, one open question."""
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_conditional_slots"])
+    text = _shown(page)
+    assert "REVIEW BEFORE RELEASE" in text, text[:400]
+    assert "Wrong wording" not in text, "a correct sheet must not say wrong wording"
+    assert "Confirm the French version of this SDS exists." in text
+
+
+def test_the_page_never_strikes_through_the_official_wording(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_a02_hazard"])
+    assert page.locator("mark.del, mark.ins").count() == 0
+    assert page.locator("mark.diff").count() > 0
+    struck = page.evaluate(
+        "() => [...document.querySelectorAll('mark')]"
+        ".filter(m => getComputedStyle(m).textDecorationLine.includes('line-through')).length"
+    )
+    assert struck == 0, "official wording is shown struck through"
+
+
+def test_every_finding_carries_a_next_step(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_c15_osha_partial_key"])
+    rows = page.locator(".card tbody tr")
+    assert rows.count() > 0
+    for i in range(rows.count()):
+        cell = rows.nth(i).locator("td").last
+        assert "→" in cell.inner_text(), f"row {i} has no what-to-do line"
+
+
+def test_a_newer_ghs_finding_is_not_called_wrong_wording(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_c15_osha_partial_key"])
+    card = _card(page, "C-15")
+    assert card.count() == 1
+    text = card.first.inner_text()
+    assert "Wrong wording" not in text, text[:300]
+    assert "Check this" in text
+    # Either a complete statement to use, or an explicit "no equivalent".
+    assert ("use P" in text) or ("no equivalent statement" in text), text[:300]
+
+
+def test_technical_details_are_collapsed_at_the_bottom(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["clean_eu_da"])
+    tech = page.locator("details.tech")
+    assert tech.count() == 1
+    assert not tech.first.evaluate("el => el.open"), "technical block starts open"
+    assert "pymupdf" not in page.locator(".verdict").inner_text()
+
+
+def test_a_clean_sheet_reads_ready_to_release(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["clean_eu_da"])
+    assert "READY TO RELEASE" in _shown(page)
