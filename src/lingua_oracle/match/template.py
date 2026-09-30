@@ -29,11 +29,32 @@ from itertools import combinations
 
 from lingua_oracle.match.normalize import normalize, strip_punctuation
 
-# A fill-in: an ellipsis, or an <instruction> the author must replace.
+# A fill-in: an ellipsis, an <instruction>, or a (parenthetical instruction).
+# The sources write the same slot three ways - EU CLP uses angle brackets, the
+# GHS Annex 3 tables use parentheses, and both use the ellipsis - so a matcher
+# that knew only angle brackets treated "(state all organs affected, if known)"
+# as literal text the document had to reproduce word for word.
+#
+# Only *directive* parentheticals count, ones opening with an instruction to the
+# author. Treating every parenthetical as a slot would erase real content such
+# as EUH206's "(chlorine)" and let two different statements compare equal.
+#
 # Adjacent fill-ins separated only by spaces are treated as one slot, so that
 # "<or state all organs affected> <state route of exposure>" reports a single
 # readable value instead of an arbitrary split across the two.
-_FILLIN_RE = re.compile(r"(?:<[^<>]*>|…)(?:\s*(?:<[^<>]*>|…))*")
+_DIRECTIVE = r"(?:or\s+)?(?:state|specify|indicate|insert|list|name\s+of)\b"
+_FILLIN_ATOM = rf"(?:<[^<>]*>|\(\s*{_DIRECTIVE}[^()]{{0,240}}\)|…)"
+_FILLIN_RE = re.compile(rf"{_FILLIN_ATOM}(?:\s*{_FILLIN_ATOM})*", re.IGNORECASE)
+
+# Some slots are conditional by the source's own words: "<or state all organs
+# affected, if known>", "<state route of exposure if it is conclusively proven
+# that no other routes of exposure cause the hazard>". An author who does not
+# know the organs, or cannot prove the route, is meant to leave them out - so
+# requiring them failed correct sheets. These two phrasings are the only
+# conditional forms in any key on file.
+_CONDITIONAL_SLOT_RE = re.compile(
+    r"\bif\s+known\b|\bif\s+it\s+is\s+conclusively\s+proven\b", re.IGNORECASE
+)
 _SENTENCE_END_RE = re.compile(r"(?<=[.!?])\s")
 # Two places where PDF producers move a space and nothing is meant by it:
 # beside a fill-in ellipsis ("Use… to" / "Use … to"), and between a number and
@@ -98,7 +119,10 @@ def _lit(text: str) -> str:
         # Allow whitespace between the literal and the value. A template may
         # abut the two ("[and…]", "Use…") while the document that fills it in
         # naturally writes a space ("and other specified body parts").
-        parts.append(rf"\s*(?P<fill_{next(_GROUP_SEQ)}>[^\s].*?)")
+        group = rf"\s*(?P<fill_{next(_GROUP_SEQ)}>[^\s].*?)"
+        if _CONDITIONAL_SLOT_RE.search(m.group(0)):
+            group = f"(?:{group})?"
+        parts.append(group)
         pos = m.end()
     parts.append(_escape_ws(text[pos:]))
     return "".join(parts)
