@@ -34,6 +34,64 @@ def index_path() -> Path:
     return data_dir() / "ghs_index" / "en.json"
 
 
+def presence_path() -> Path:
+    return data_dir() / "ghs_index" / "source_presence.json"
+
+
+def presence_key(text: str) -> str:
+    """Comparison key for "does this wording appear in the source at all".
+
+    The builder's own `_core_key` - normalised, case-folded, US/UK spelling
+    folded, fill-ins collapsed - with a trailing plural folded off each word.
+    That last step is the only tolerance, and it exists for one observed
+    difference: GHS writes "static discharges" where Appendix C writes "static
+    discharge". Everything else must match exactly.
+
+    Deliberately not a similarity score. The question here is whether the
+    regulation's own source carries this wording, and a score cannot separate
+    "discharge/discharges" from "medical help"/"medical advice" - which is the
+    distinction the whole thing turns on.
+    """
+    from lingua_oracle.keys.builders.us_osha import _core_key
+
+    return " ".join(
+        word[:-1] if len(word) > 3 and word.endswith("s") else word
+        for word in _core_key(text).split()
+    )
+
+
+def write_source_presence(regulation: str, source: str, statements) -> Path:
+    """Record which GHS codes' wording appears in a regulation's own source.
+
+    Only meaningful for a regulation whose key is knowingly incomplete. Without
+    it, a code missing from such a key can only be called "our gap" - which is
+    wrong when the regulation's source does not contain the wording at all, and
+    hides a sheet that is running ahead of the regulation it cites.
+    """
+    pool = {presence_key(s) for s in statements if s}
+    index = json.loads(index_path().read_text(encoding="utf-8"))
+    present = sorted(
+        code for code, editions in index.get("codes", {}).items()
+        if any(presence_key(text) in pool for text in editions.values())
+    )
+
+    target = presence_path()
+    target.parent.mkdir(parents=True, exist_ok=True)
+    record = {}
+    if target.exists():
+        record = json.loads(target.read_text(encoding="utf-8"))
+    record[regulation] = {
+        "source": source,
+        "statements_read": len(pool),
+        "present": present,
+    }
+    target.write_text(
+        json.dumps(dict(sorted(record.items())), ensure_ascii=False, indent=1),
+        encoding="utf-8",
+    )
+    return target
+
+
 def build(sources_root: str | Path | None = None) -> Path:
     """Read every edition on file and write the index. Offline."""
     root = Path(sources_root or (data_dir() / "sources"))

@@ -289,6 +289,8 @@ def build_all() -> dict[str, Path]:
     # Patterns found on real documents, reproduced with fictional data.
     add("defect_c15_newer_ghs", _newer_ghs_codes(
         FIXTURES / "defect_c15_newer_ghs.pdf"))
+    add("defect_c15_osha_partial_key", _newer_ghs_on_osha(
+        FIXTURES / "defect_c15_osha_partial_key.pdf"))
     add("pattern_language_outside_regulation", _language_outside_the_regulation(
         FIXTURES / "pattern_language_outside_regulation.pdf"))
     add("pattern_spacing_variant", _spacing_variant(
@@ -477,6 +479,57 @@ def _newer_ghs_codes(path: Path) -> Path:
     for code, text in newer.items():
         sheet.line(f"{code} {text}")
     sheet.line("P999 Consult the imaginary appendix before use.")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in ("H225", "H319"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
+
+
+
+def _newer_ghs_on_osha(path: Path) -> Path:
+    """An OSHA sheet citing P317-family codes, against a knowingly partial key.
+
+    The interesting case. us_osha's key does not hold every statement in
+    Appendix C, so "missing from the key" cannot decide anything on its own:
+    P243 is missing from the key and IS in Appendix C, while P317 is missing
+    from the key and is nowhere in it. The first is our gap, the second is a
+    sheet ahead of the regulation, and the fixture carries both.
+    """
+    from lingua_oracle.keys import ghs_index
+
+    head = HEADINGS["en"]
+    official = texts("us_osha", "en", ["H225", "H319", "P210"])
+    newer = {}
+    for code in ("P317", "P319", "P332+P317"):
+        text = ghs_index.text_in(code, "GHS Rev.8")
+        if not text:
+            raise SystemExit(f"OSHA C-15 fixture: {code} is not in the GHS index")
+        newer[code] = text
+    # In Appendix C but not in our key: must stay "not checked", never C-15.
+    p243 = ghs_index.text_in("P243", "GHS Rev.7")
+
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.line("Prepared under 29 CFR 1910.1200 (OSHA Hazard Communication)")
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line(f"{head['signal']}: {signal_text('us_osha', 'en', True)}")
+    sheet.blank()
+    sheet.line(head["haz"], bold=True)
+    for code in ("H225", "H319"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["prec"], bold=True)
+    sheet.line(f"P210 {official['P210']}")
+    sheet.line(f"P243 {p243}")
+    for code, text in newer.items():
+        sheet.line(f"{code} {text}")
     sheet.blank()
     sheet.line(head["3"], bold=True, size=11)
     sheet.line("Synthetic component A  CAS 000-00-0  30-60%")

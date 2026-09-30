@@ -41,7 +41,7 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
             # edition, and a code that exists nowhere - so reporting them here
             # as well would say the same thing twice in different words.
             missing = classify(hit.code, ctx.reference.key_status,
-                               ctx.reference.entries)
+                               ctx.reference.entries, ctx.regulation.id)
             if missing.reason is not Reason.NOT_ON_FILE:
                 continue
             findings.append(

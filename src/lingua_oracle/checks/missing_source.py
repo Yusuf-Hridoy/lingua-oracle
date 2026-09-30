@@ -45,6 +45,23 @@ def base_code(code: str) -> str:
     return match.group(1) if match else ""
 
 
+def _is_supplemental(code: str) -> bool:
+    """True for a prefix some regulation defines outside GHS, e.g. EUH, AUH.
+
+    The GHS index knows nothing about these, so without this they read as
+    invented codes. EUH066 on an OSHA sheet is a real statement in the wrong
+    place, which is C-12's finding to make, not a typo.
+    """
+    from lingua_oracle.registry import load_registry
+
+    prefixes = {
+        prefix
+        for regulation in load_registry().regulations.values()
+        for prefix in regulation.supplemental_prefixes
+    }
+    return any(code.startswith(prefix) for prefix in prefixes if prefix)
+
+
 class Reason(StrEnum):
     NOT_ON_FILE = "not_on_file"
     NEWER_GHS = "newer_ghs"
@@ -91,20 +108,46 @@ def _nearest(code: str, target: str, entries) -> tuple[str, str]:
     return best if best_ratio >= floor else ("", "")
 
 
-def classify(code: str, key_status: str, entries) -> Missing:
-    """Decide why `code` has no reference text."""
+def classify(code: str, key_status: str, entries, regulation: str = "") -> Missing:
+    """Decide why `code` has no reference text.
+
+    The hard case is a regulation whose key is knowingly incomplete. Membership
+    of the key cannot settle anything there - "not in our key" is equally
+    consistent with "the regulation has it and we missed it" and with "the
+    regulation does not have it at all". So where the regulation's own source
+    text has been searched (`keys/builders/ghs_index.write_source_presence`),
+    that search decides instead: wording found in the source means our gap,
+    wording found nowhere in it means the sheet is ahead of the regulation.
+
+    Without such a search an incomplete key can only own the gap, which is the
+    honest answer when we do not know.
+    """
     defining = ghs_index.editions_defining(code)
+
+    if regulation and ghs_index.source_searched(regulation):
+        if ghs_index.wording_in_source(regulation, code):
+            return Missing(Reason.NOT_ON_FILE)
+        can_judge = True
+    else:
+        can_judge = key_status == "ok"
+
     if not defining:
-        # An incomplete key cannot tell us a code does not exist, only that we
-        # do not hold it.
-        if key_status != "ok":
+        if not can_judge:
             return Missing(Reason.NOT_ON_FILE)
         base = base_code(code)
         if base and (base in entries or ghs_index.known_anywhere(base)):
             return Missing(Reason.NOT_ON_FILE)
+        if _is_supplemental(code):
+            return Missing(Reason.NOT_ON_FILE)
         return Missing(Reason.UNKNOWN)
 
-    if key_status != "ok":
+    if not can_judge:
+        return Missing(Reason.NOT_ON_FILE)
+
+    # A statement the oldest edition on file already carried is not "newer
+    # wording"; the regulation simply never adopted it. Saying otherwise would
+    # put a misleading edition label on the finding.
+    if ghs_index.oldest_edition_defines(code):
         return Missing(Reason.NOT_ON_FILE)
 
     edition = defining[0]

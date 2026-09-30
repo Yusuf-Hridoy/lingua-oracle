@@ -38,3 +38,36 @@ def text_in(code: str, edition: str) -> str:
 
 def known_anywhere(code: str) -> bool:
     return bool(_index().get("codes", {}).get(code))
+
+
+def oldest_edition_defines(code: str) -> bool:
+    """True when the oldest edition on file already gives this code a statement.
+
+    Used to separate "this is newer GHS wording" from "this regulation simply
+    never adopted an old statement", which are different things to tell a
+    reader.
+    """
+    labels = editions()
+    return bool(labels) and labels[0] in _index().get("codes", {}).get(code, {})
+
+
+@functools.lru_cache(maxsize=1)
+def _presence() -> dict:
+    path = data_dir() / "ghs_index" / "source_presence.json"
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def source_searched(regulation: str) -> bool:
+    """True when we have searched this regulation's own source text."""
+    return regulation in _presence()
+
+
+def wording_in_source(regulation: str, code: str) -> bool:
+    """True when the regulation's source carries this code's GHS wording.
+
+    Only meaningful where `source_searched` is true.
+    """
+    record = _presence().get(regulation)
+    return bool(record) and code in record.get("present", [])

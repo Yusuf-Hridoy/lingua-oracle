@@ -33,7 +33,8 @@ def run(ctx: CheckContext) -> list[Finding]:
         if not hit.code or hit.code in seen or ctx.entry(hit.code) is not None:
             continue
         seen.add(hit.code)
-        missing = classify(hit.code, ctx.reference.key_status, ctx.reference.entries)
+        missing = classify(hit.code, ctx.reference.key_status,
+                           ctx.reference.entries, ctx.regulation.id)
         section = ctx.section_for(hit)
 
         if missing.reason is Reason.UNKNOWN:

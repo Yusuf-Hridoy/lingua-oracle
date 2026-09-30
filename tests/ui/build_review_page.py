@@ -143,6 +143,7 @@ restore();
 
 TAGS = {"clean": ("t-clean", "correct document"),
         "regression": ("t-regression", "false alarm, must stay clean"),
+        "warnings": ("t-regression", "warnings only, no failures"),
         "compare": ("t-compare", "comparison"),
         "": ("t-defect", "planted defect")}
 
@@ -187,7 +188,8 @@ def build() -> Path:
     # made test_review_page fail on a cold checkout and pass on the second run.
     for case in CASES:
         img = f"{case.name}.png"
-        tag = next((t for t in ("clean", "regression", "compare") if t in case.tags), "")
+        tag = next((t for t in ("warnings", "clean", "regression", "compare")
+                    if t in case.tags), "")
         keys.append(case.name)
         cards.append(_card(case.name, case.name, tag, case.plain, case.should_show,
                            img, captured=(OUT / img).exists()))

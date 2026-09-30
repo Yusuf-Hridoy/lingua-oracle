@@ -395,6 +395,17 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
 
     hazard, precautionary, signals, categories = parse_appendix_c(raw)
 
+    # OSHA's key is knowingly incomplete, so "this code is not in the key" does
+    # not mean "this regulation does not have it". Record which GHS wordings
+    # appear anywhere in Appendix C, so check time can tell the two apart.
+    from lingua_oracle.keys.builders.ghs_index import write_source_presence
+
+    write_source_presence(
+        "us_osha",
+        Path(from_file).name if from_file else "appendix_c.html",
+        list(hazard) + list(precautionary),
+    )
+
     reference_path = root / REFERENCE_FILE
     if not reference_path.exists():
         raise SourceUnavailable(

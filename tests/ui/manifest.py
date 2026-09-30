@@ -125,6 +125,17 @@ CASES: tuple[Case, ...] = (
                      "and the closest statement CLP does publish, and fails "
                      "P999 as not a code at all."),
 
+    Case("defect_c15_osha_partial_key", regulation="",
+         expect_regulation="us_osha", expect_language="en", clean=True,
+         tags=("warnings",),
+         expect=(("C-15", "warn", "P317"),),
+         plain="An OSHA sheet citing P317, P319 and P332+P317 - GHS Rev.8 "
+               "wording that is nowhere in Appendix C - alongside P243, whose "
+               "wording IS in Appendix C but is not yet in our records.",
+         should_show="C-15 warns for the three Rev.8 codes. P243 is reported "
+                     "as not checked, because that gap is ours, not the "
+                     "sheet's."),
+
     # -- false alarms that were fixed; these must stay clean ------------------
     Case("pattern_negative_declaration", regulation="",
          expect_language="en", clean=True,

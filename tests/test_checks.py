@@ -210,3 +210,87 @@ def test_a_sub_lettered_code_is_not_called_unknown():
         assert classify(code, eu.key_status, eu.entries).reason is Reason.NOT_ON_FILE
     # A code that really is not one still fails.
     assert classify("P999", eu.key_status, eu.entries).reason is Reason.UNKNOWN
+
+
+# -- C-15 where the key is knowingly incomplete -------------------------------
+
+
+def test_partial_key_does_not_decide_from_key_membership_alone():
+    """us_osha holds neither P243 nor P317. Appendix C holds one of them.
+
+    Deciding from the key alone called both "our gap", which hid every sheet
+    running ahead of OSHA. The regulation's own source text decides instead.
+    """
+    report = check_pdf(pdf("defect_c15_osha_partial_key"), "us_osha")
+    c15 = {f.code for f in report.findings if f.check_id == "C-15"}
+    unverified = {f.code for f in report.findings if f.unverified}
+
+    assert {"P317", "P319", "P332+P317"} <= c15, c15
+    # P243's wording IS in Appendix C, so it stays ours to own.
+    assert "P243" in unverified
+    assert "P243" not in c15
+
+
+@pytest.mark.parametrize(
+    "code", ["P316", "P317", "P318", "P319", "P203",
+             "P301+P316", "P264+P265", "P332+P317", "P337+P317"],
+)
+def test_wording_absent_from_appendix_c_is_newer_ghs(code):
+    from lingua_oracle.checks.missing_source import Reason, classify
+    from lingua_oracle.keys.tierb import resolve
+
+    osha = resolve("us_osha", "en")
+    assert classify(code, osha.key_status, osha.entries, "us_osha").reason \
+        is Reason.NEWER_GHS
+
+
+@pytest.mark.parametrize("code", ["P243", "P241", "P302+P352", "P260", "P321"])
+def test_wording_present_in_appendix_c_stays_our_gap(code):
+    from lingua_oracle.checks.missing_source import Reason, classify
+    from lingua_oracle.keys.tierb import resolve
+
+    osha = resolve("us_osha", "en")
+    assert classify(code, osha.key_status, osha.entries, "us_osha").reason \
+        is Reason.NOT_ON_FILE
+
+
+def test_the_source_search_is_exact_not_a_similarity_score():
+    """"medical help" and "medical advice/attention" must not be confused.
+
+    The only tolerance is a trailing plural, which exists for one observed
+    difference: GHS "static discharges" against Appendix C "static discharge".
+    """
+    from lingua_oracle.keys.builders.ghs_index import presence_key
+
+    assert presence_key("Take action to prevent static discharges.") == \
+        presence_key("Take action to prevent static discharge.")
+    assert presence_key("Get medical help.") != \
+        presence_key("Get medical advice/attention.")
+    assert presence_key("IF exposed or concerned: Get immediate medical advice/attention.") != \
+        presence_key("If exposed or concerned: Get medical advice/attention.")
+
+
+def test_a_regulation_with_no_source_search_still_owns_its_gaps():
+    """Without a search we do not know, and the honest answer is "our gap"."""
+    from lingua_oracle.checks.missing_source import Reason, classify
+    from lingua_oracle.keys import ghs_index
+
+    assert not ghs_index.source_searched("jp_jis")
+    assert classify("P317", "pending_source", {}, "jp_jis").reason is Reason.NOT_ON_FILE
+
+
+def test_a_supplemental_code_is_never_called_a_typo():
+    """EUH066 on an OSHA sheet is a real statement in the wrong place.
+
+    Which regulation may use the EUH prefix is C-12's question. C-15 knows only
+    the GHS editions, so without this it read every EU-only code as invented.
+    """
+    from lingua_oracle.checks.missing_source import Reason, classify
+    from lingua_oracle.keys.tierb import resolve
+
+    osha = resolve("us_osha", "en")
+    for code in ("EUH066", "AUH001"):
+        assert classify(code, osha.key_status, osha.entries, "us_osha").reason \
+            is Reason.NOT_ON_FILE
+    report = check_pdf(pdf("defect_c12_euh_on_osha"), "us_osha")
+    assert not [f for f in report.findings if f.check_id == "C-15"]
