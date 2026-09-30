@@ -32,6 +32,10 @@ class Regulation(BaseModel):
     supplemental_prefixes: list[str] = Field(default_factory=list)
     allowed_prefixes: list[str] = Field(default_factory=lambda: ["H", "P"])
     signal_words: list[str] = Field(default_factory=list)
+    #: True when the authority's own rendering omits the closing full stop, so
+    #: a document that supplies one has not changed the wording. Set for
+    #: us_osha only; see the note in data/regulations.yaml.
+    statements_lack_terminal_punctuation: bool = False
     source_url: str | None = None
     source_note: str | None = None
     detect_patterns: list[str] = Field(default_factory=list)

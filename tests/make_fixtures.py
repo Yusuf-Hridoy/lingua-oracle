@@ -291,6 +291,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "pattern_spacing_variant.pdf"))
     add("pattern_optional_fillin", _optional_group_filled(
         FIXTURES / "pattern_optional_fillin.pdf"))
+    add("pattern_osha_terminator", _osha_terminator(
+        FIXTURES / "pattern_osha_terminator.pdf"))
     add("pattern_negative_declaration", _negative_declaration(
         FIXTURES / "pattern_negative_declaration.pdf"))
     add("pattern_reach_registration", _reach_registration_number(
@@ -344,6 +346,28 @@ def _optional_group_filled(path: Path) -> Path:
         path, regulation="un_ghs", language="en",
         h_codes=["H225", "H319"], p_codes=["P210", "P264+P265"],
         overrides={"P264+P265": filled},
+    )
+
+
+
+def _osha_terminator(path: Path) -> Path:
+    """An OSHA sheet that ends its statements with a full stop.
+
+    osha.gov prints Appendix C without closing punctuation. A sheet that writes
+    the sentences normally has not changed the wording, so it must pass - and
+    the fill-in it supplies must still be reported for review.
+    """
+    codes = ["P210", "P370+P378", "P501"]
+    official = texts("us_osha", "en", codes)
+    if any(official[c].endswith(".") for c in ("P370+P378", "P501")):
+        raise SystemExit("osha terminator fixture: the key now has terminal punctuation")
+    overrides = {
+        "P370+P378": official["P370+P378"].replace("…", "appropriate extinguishing media") + ".",
+        "P501": official["P501"].replace("…", "an approved waste disposal facility") + ".",
+    }
+    return write_sds(
+        path, regulation="us_osha", language="en",
+        h_codes=["H225", "H319"], p_codes=codes, overrides=overrides,
     )
 
 

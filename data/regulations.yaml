@@ -48,6 +48,11 @@ regulations:
     supplemental_prefixes: []
     allowed_prefixes: [H, P]
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
+    # Appendix C is published as graphics in the official CFR; the osha.gov
+    # HTML is the only text rendering and it prints the statements without a
+    # closing full stop. A document that ends the sentence normally is not
+    # deviating from the regulation, so the terminator is optional here.
+    statements_lack_terminal_punctuation: true
     source_url: "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC"
     detect_patterns:
       - "29 CFR 1910\\.1200"

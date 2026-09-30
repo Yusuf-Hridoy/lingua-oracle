@@ -200,3 +200,44 @@ def test_optional_group_tolerance_stops_at_the_space(found, should_match):
 
     template = "Wash hands [and…] thoroughly after handling. Do not touch eyes."
     assert match(found, template).matched is should_match
+
+
+# -- finding #6: a closing full stop OSHA's own rendering omits ----------------
+
+
+def test_osha_sheet_may_end_its_sentences():
+    """osha.gov prints Appendix C without a closing full stop; sheets don't."""
+    report = check_pdf(pdf("pattern_osha_terminator"), "us_osha")
+    wording = [f for f in report.findings
+               if f.check_id in ("A-02", "A-03") and not f.unverified
+               and f.severity in (Severity.FAIL, Severity.WARN)]
+    assert wording == [], [f"{f.check_id} {f.code}: {f.message}" for f in wording]
+
+
+def test_the_licence_is_scoped_to_the_regulation_that_needs_it():
+    """Only a regulation whose own text lacks the terminator gets the licence."""
+    from lingua_oracle.registry import load_registry
+
+    registry = load_registry()
+    relaxed = {k for k, r in registry.regulations.items()
+               if r.statements_lack_terminal_punctuation}
+    assert relaxed == {"us_osha"}, relaxed
+
+
+@pytest.mark.parametrize(
+    ("template", "found", "with_flag", "without_flag"),
+    [
+        # Supplying the terminator OSHA omits: fine, but only for OSHA.
+        ("In case of fire: Use … to extinguish",
+         "In case of fire: Use water spray to extinguish.", True, False),
+        # Dropping a terminator the official text HAS is not licensed either way.
+        ("Keep away from heat.", "Keep away from heat", False, False),
+        # The licence covers the terminator, nothing else.
+        ("Use non-sparking tools", "Use only non-sparking tools.", False, False),
+    ],
+)
+def test_terminator_licence_is_one_way_and_narrow(template, found, with_flag, without_flag):
+    from lingua_oracle.match.template import match
+
+    assert match(found, template, optional_terminator=True).is_clean is with_flag
+    assert match(found, template).is_clean is without_flag

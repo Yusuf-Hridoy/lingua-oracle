@@ -255,12 +255,24 @@ def compile_template(template: str) -> list[re.Pattern[str]]:
 # --------------------------------------------------------------------------
 
 
-def match(found: str, template: str) -> MatchResult:
-    """Compare a phrase from a document against official template text."""
+_TERMINATORS = (".", "!", "?")
+
+
+def match(found: str, template: str, *, optional_terminator: bool = False) -> MatchResult:
+    """Compare a phrase from a document against official template text.
+
+    `optional_terminator` is for a regulation whose own rendering prints the
+    statements without a closing full stop (us_osha - see the note in
+    data/regulations.yaml). It lets the document end the sentence normally. It
+    never works the other way round: a document that DROPS a terminator the
+    official text has is still a difference, and no other punctuation moves.
+    """
     f = normalize(found)
     t = normalize(template)
     if not f:
         return MatchResult(False, MatchKind.MISMATCH, message="empty text in document")
+    if optional_terminator and not t.endswith(_TERMINATORS) and f.endswith(_TERMINATORS):
+        f = f[:-1].rstrip()
 
     if f == t:
         return MatchResult(True, MatchKind.EXACT)
