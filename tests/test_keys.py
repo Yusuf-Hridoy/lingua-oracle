@@ -564,9 +564,9 @@ _PDF_SOURCED_KEYS = [("uk_clp", "en"), ("au_whs", "en"),
 @pytest.mark.parametrize(("reg", "lang"), _PDF_SOURCED_KEYS)
 def test_no_key_holds_a_wrapped_alternative(reg, lang):
     """"dust/fume/gas/\\nmist" must not land in the key as "gas/ mist"."""
-    from lingua_oracle.keys.store import load_key
-
     import re
+
+    from lingua_oracle.keys.store import load_key
 
     bad = [(e.code, e.text) for e in load_key(reg, lang).entries
            if re.search(r"/\s+\S", e.text)]
@@ -576,9 +576,9 @@ def test_no_key_holds_a_wrapped_alternative(reg, lang):
 @pytest.mark.parametrize(("reg", "lang"), _PDF_SOURCED_KEYS)
 def test_no_key_holds_a_wrapped_hyphen(reg, lang):
     """"non-\\nsparking" must not land in the key as "non- sparking"."""
-    from lingua_oracle.keys.store import load_key
-
     import re
+
+    from lingua_oracle.keys.store import load_key
 
     bad = [(e.code, e.text) for e in load_key(reg, lang).entries
            if re.search(r"\w-\s+\w", e.text)]
