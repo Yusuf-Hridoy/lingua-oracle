@@ -64,6 +64,11 @@ def run(ctx: CheckContext) -> list[Finding]:
                 f" The closest statement {ctx.regulation.display_name} does "
                 f"publish is {missing.nearest_code}."
             )
+        else:
+            message += (
+                f" There is no equivalent statement in "
+                f"{ctx.regulation.display_name}."
+            )
         findings.append(
             Finding(
                 check_id=CHECK_ID, severity=severity, section=section,

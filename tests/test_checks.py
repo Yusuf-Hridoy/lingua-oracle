@@ -328,3 +328,52 @@ def test_c14_is_satisfied_when_the_pair_supplies_the_language():
     # The same document checked as one half of a bilingual pair.
     ctx_fields = {f.name for f in CheckContext.__dataclass_fields__.values()}
     assert "compare_language" in ctx_fields
+
+
+# -- C-15 suggests only statements a label could actually carry ---------------
+
+
+def test_c15_never_suggests_a_bare_lead_in():
+    """P301 is "IF SWALLOWED:" - an opening, not a statement."""
+    from lingua_oracle.checks.missing_source import classify
+    from lingua_oracle.keys.tierb import resolve
+
+    for regulation in ("eu_clp", "us_osha"):
+        reference = resolve(regulation, "en")
+        near = classify("P301+P317", reference.key_status,
+                        reference.entries, regulation)
+        assert near.nearest_code != "P301"
+        assert "+" in near.nearest_code, near.nearest_code
+        assert not near.nearest_text.rstrip().endswith(":")
+
+
+@pytest.mark.parametrize(
+    ("code", "expected"),
+    [("P301+P317", "P301+P310"), ("P332+P317", "P332+P313"),
+     ("P337+P317", "P337+P313")],
+)
+def test_c15_suggests_the_same_first_code(code, expected):
+    from lingua_oracle.checks.missing_source import classify
+    from lingua_oracle.keys.tierb import resolve
+
+    reference = resolve("eu_clp", "en")
+    assert classify(code, reference.key_status, reference.entries,
+                    "eu_clp").nearest_code == expected
+
+
+def test_c15_says_so_when_there_is_no_equivalent():
+    report = check_pdf(pdf("defect_c15_osha_partial_key"), "us_osha")
+    rows = {f.code: f for f in report.findings if f.check_id == "C-15"}
+    assert "P317" in rows
+    assert "no equivalent statement" in rows["P317"].message.lower(), \
+        rows["P317"].message
+
+
+def test_is_complete_statement():
+    from lingua_oracle.checks.missing_source import _is_complete_statement
+
+    assert not _is_complete_statement("IF SWALLOWED:")
+    assert not _is_complete_statement("If skin irritation occurs:")
+    assert not _is_complete_statement("")
+    assert _is_complete_statement("IF SWALLOWED: Rinse mouth.")
+    assert _is_complete_statement("Get medical advice/attention.")

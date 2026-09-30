@@ -82,21 +82,43 @@ class Missing:
     nearest_text: str = ""
 
 
-def _nearest(code: str, target: str, entries) -> tuple[str, str]:
-    """The regulation's statement closest to `target`, or ("", "").
+def _is_complete_statement(text: str) -> bool:
+    """False for a fragment that only introduces a statement.
 
-    A combined code is compared only against the regulation's codes sharing its
-    first component, when it has any. Without that, "IF SWALLOWED: Get emergency
-    medical help immediately." scored highest against a statement about exposure
-    rather than about swallowing.
+    A regulation publishes P301 as "IF SWALLOWED:" - the opening of a combined
+    statement, not something anyone can put on a label on its own. Offering it
+    as the nearest equivalent to P301+P317 tells a reader to use a colon.
     """
-    pool = {c: e for c, e in entries.items() if e.text and not e.internal_id}
+    stripped = (text or "").strip()
+    if not stripped or stripped.endswith(":"):
+        return False
+    # Something has to follow the lead-in.
+    after = stripped.split(":", 1)[-1] if ":" in stripped else stripped
+    return len(after.split()) >= 2
+
+
+def _nearest(code: str, target: str, entries) -> tuple[str, str]:
+    """The regulation's closest *complete* statement, or ("", "").
+
+    A combined code is compared only against the regulation's other combined
+    codes sharing its first component. Without the shared component, "IF
+    SWALLOWED: Get emergency medical help immediately." scored highest against a
+    statement about exposure rather than about swallowing; without "combined",
+    the winner was the bare P301, "IF SWALLOWED:", which is not a statement a
+    label can carry.
+    """
+    pool = {c: e for c, e in entries.items()
+            if e.text and not e.internal_id and _is_complete_statement(e.text)}
     floor = _LONE_FLOOR
     if "+" in code:
         head = code.split("+")[0]
-        family = {c: e for c, e in pool.items() if c.split("+")[0] == head}
-        if family:
-            pool, floor = family, _FAMILY_FLOOR
+        family = {c: e for c, e in pool.items()
+                  if "+" in c and c.split("+")[0] == head}
+        if not family:
+            return "", ""
+        pool, floor = family, _FAMILY_FLOOR
+    else:
+        pool = {c: e for c, e in pool.items() if "+" not in c}
     want = normalize(target).casefold()
     best_ratio, best = 0.0, ("", "")
     for candidate, entry in pool.items():
