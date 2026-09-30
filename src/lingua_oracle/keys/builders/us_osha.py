@@ -35,6 +35,16 @@ key look far worse than it is:
 OSHA also defines hazard classes GHS does not and gives them no code. Those are
 stored under internal identifiers (OSHA-CD, OSHA-SA) flagged `internal_id`, and
 are matched by text - see `internal_id_for`.
+
+**On the statements that differ only in rendering.** Four of OSHA's statements
+differ from GHS by a dropped word, an added comma, or a full stop where GHS
+prints a colon. Whether those are OSHA's wording or errors in the osha.gov HTML
+was checked against the official text and could not be settled: the eCFR renderer
+returns 404 for the appendix, eCFR's structure API lists no appendix node under
+1910.1200, and the CFR XML on both ecfr.gov and govinfo.gov publishes Appendix C's
+tables as **graphics** rather than text - the statements appear nowhere in either.
+Until an authoritative text rendering exists, they stay out of the key rather than
+being aliased on a guess, and matching stays exact.
 """
 
 from __future__ import annotations
@@ -497,11 +507,20 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
         )
         notes.extend(f"  {p}: {t}" for p, t in genuinely_absent)
         notes.append(
-            "Of these, the 'chemical under pressure' statements need GHS Rev.8 "
-            "Annex 3, which the HPR and OSHA both reference but which is not on "
-            "file. The remainder differ from GHS Rev.7 only in the published "
-            "rendering - a dropped word or an added comma - not in substance, and "
-            "are excluded solely because matching is exact."
+            "None is substantive divergence. Each differs from the GHS text only in "
+            "how the osha.gov HTML renders it: a dropped word ('Explosive; fire, "
+            "blast or projection' against Rev.7 H203's '... projection hazard'), an "
+            "added comma (against H260), or a full stop where Rev.8 prints a colon "
+            "(H282, H283). They are excluded solely because matching is exact."
+        )
+    if genuinely_absent:
+        notes.append(
+            "Whether these are OSHA's own wording or errors in the osha.gov HTML "
+            "could not be verified: the official CFR publishes Appendix C's tables "
+            "as graphics, not text (eCFR renderer 404s for the appendix, its "
+            "structure API lists no appendix node, and neither ecfr.gov nor "
+            "govinfo.gov XML contains the statements). They are left out rather "
+            "than aliased on a guess."
         )
     notes.append(
         f"{len(duplicates)} further statement(s) restate a code already held "

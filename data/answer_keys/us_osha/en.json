@@ -12,7 +12,8 @@
     "  H: Extremely flammable chemical under pressure. May explode if heated.",
     "  H: Flammable chemical under pressure. May explode if heated.",
     "  H: In contact with water releases flammable gases, which may ignite spontaneously",
-    "Of these, the 'chemical under pressure' statements need GHS Rev.8 Annex 3, which the HPR and OSHA both reference but which is not on file. The remainder differ from GHS Rev.7 only in the published rendering - a dropped word or an added comma - not in substance, and are excluded solely because matching is exact.",
+    "None is substantive divergence. Each differs from the GHS text only in how the osha.gov HTML renders it: a dropped word ('Explosive; fire, blast or projection' against Rev.7 H203's '... projection hazard'), an added comma (against H260), or a full stop where Rev.8 prints a colon (H282, H283). They are excluded solely because matching is exact.",
+    "Whether these are OSHA's own wording or errors in the osha.gov HTML could not be verified: the official CFR publishes Appendix C's tables as graphics, not text (eCFR renderer 404s for the appendix, its structure API lists no appendix node, and neither ecfr.gov nor govinfo.gov XML contains the statements). They are left out rather than aliased on a guess.",
     "56 further statement(s) restate a code already held (fill-in completed, usage condition attached, or a typo in the published HTML). Those are not gaps.",
     "OSHA-only hazard classes are stored under internal identifiers (OSHA-CD, OSHA-SA). These are NOT regulatory codes and are matched by text."
   ],
