@@ -349,7 +349,7 @@ def test_stats_reports_partial_rather_than_inferring_ok():
     assert rows["us_osha"]["status"] == "partial"
     assert rows["us_osha"]["status_reasons"] == ["unrepresented_statements_remain"]
     assert rows["jp_jis"]["status_reasons"] == ["wrong_source"]
-    assert rows["ca_whmis"]["status_reasons"] == ["needs_ghs_rev8_annex3"]
+    assert rows["ca_whmis"]["status_reasons"] == ["needs_ghs_rev8_french"]
 
 
 # -- signal words ------------------------------------------------------------
@@ -418,18 +418,38 @@ def test_whmis_languages_differ_and_are_not_translated():
     assert set(en) & set(fr), "the two editions should share codes"
 
 
-def test_whmis_excludes_chemicals_under_pressure_pending_rev8():
-    """The HPR sends that class to GHS Rev.8, which is not on file."""
+PRESSURE_CODES = ("H282", "H283", "H284")
+
+
+def test_whmis_english_takes_chemicals_under_pressure_from_rev8():
+    """The HPR sends that class to Rev.8, and the English edition is on file."""
+    key = load_key("ca_whmis", "en")
+    by_code = key.by_code()
+    for code in PRESSURE_CODES:
+        assert code in by_code, f"{code} should come from GHS Rev.8"
+        assert "Rev.8" in by_code[code].source_ref
+        assert by_code[code].tier is Tier.A
+    # everything else must still come from Rev.7
+    assert "Rev.7" in by_code["H225"].source_ref
+    assert key.status is Status.OK
+    assert key.status_reason is None
+
+
+def test_whmis_french_keeps_the_rev8_gap():
+    """No French Rev.8 is on file, so those codes stay absent rather than borrowed."""
+    key = load_key("ca_whmis", "fr")
+    assert key.status is Status.PARTIAL
+    assert key.status_reason == "needs_ghs_rev8_french"
+    for code in PRESSURE_CODES:
+        assert code not in key.by_code(), f"{code} must not be filled from another source"
+    assert any("no French edition of Rev.8" in n for n in key.notes)
+
+
+def test_whmis_parse_report_names_the_overlay():
     from lingua_oracle.keys.store import keys_root
 
-    for language in ("en", "fr"):
-        key = load_key("ca_whmis", language)
-        assert key.status is Status.PARTIAL
-        assert key.status_reason == "needs_ghs_rev8_annex3"
-        for code in ("H282", "H283", "H284"):
-            assert code not in key.by_code(), f"{code} needs Rev.8 and must not be filled"
     report = (keys_root() / "ca_whmis" / "_parse_issues.txt").read_text(encoding="utf-8")
-    assert "needs GHS Rev.8 Annex 3" in report
+    assert "Rev.8" in report
     assert "Canada-only classes" in report
 
 

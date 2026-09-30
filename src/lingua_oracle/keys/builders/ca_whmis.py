@@ -16,9 +16,11 @@ position: the code comes from the table it is in.
 Two documented exceptions, both recorded in the parse report rather than guessed:
 
 * **Chemicals under pressure.** For that class the HPR points at Annex 3 of the
-  *Eighth* revised edition, which is not on file. Those codes are left out with
-  the reason ``needs GHS Rev.8 Annex 3``. The class is identified from the
-  hazard-class column of the GHS edition on file, not from recall.
+  *Eighth* revised edition. Rev.8 is on file in English, so those statements are
+  overlaid there (see ``keys/builders/ghs_editions.py``); the class's other codes
+  are identical in Rev.7 and stay there. No French edition of Rev.8 is on file, so
+  the French key keeps that gap with reason ``needs_ghs_rev8_french`` rather than
+  borrowing Rev.7, another revision, or the English text.
 * **Canada-only classes** (biohazardous infectious materials, and the physical
   and health hazards "not otherwise classified"). The HPR defines them and sets
   classification criteria, but states no statement text for them, so nothing can
@@ -27,12 +29,10 @@ Two documented exceptions, both recorded in the parse report rather than guessed
 
 from __future__ import annotations
 
-import re
 from pathlib import Path
 
-import pymupdf
-
 from lingua_oracle.keys.builders.common import now
+from lingua_oracle.keys.builders.ghs_editions import REV8_NAME, pressure_overlay
 from lingua_oracle.keys.builders.pdf_tables import (
     ParseIssues,
     annex_page_range,
@@ -46,12 +46,10 @@ REGULATION = "ca_whmis"
 REVISION = "SOR-2015-17"
 SOURCE_URL = "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2015-17/"
 GHS7_URL = "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017"
+GHS8_URL = "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev8-2019"
 
 HPR_FILE = "ca-whmis/hpr_bilingual.pdf"
 GHS7_FILES = {"en": "ghs-rev7/GHS_Rev7_en.pdf", "fr": "ghs-rev7/GHS_Rev7_fr.pdf"}
-#: Used to find which codes belong to the class the HPR sends to Rev.8.
-CLASS_SOURCE = "un-ghs/GHS_Rev11_en.pdf"
-REV8_CLASS_RE = re.compile(r"chemicals?\s+under\s+pressure", re.IGNORECASE)
 
 CANADA_ONLY_CLASSES = (
     "Biohazardous Infectious Materials",
@@ -64,30 +62,6 @@ def _kind(code: str) -> Kind:
     return Kind.HAZARD if code.startswith("H") else Kind.PRECAUTIONARY
 
 
-def rev8_codes(path: Path) -> set[str]:
-    """Hazard codes whose class is 'chemicals under pressure', read from the source.
-
-    The HPR sends that class to GHS Rev.8, which is not on file. Which codes the
-    class covers is taken from the hazard-class column of a GHS edition that does
-    name them, never from recall.
-    """
-    if not path.exists():
-        return set()
-    doc = pymupdf.open(path)
-    out: set[str] = set()
-    try:
-        for index in range(doc.page_count):
-            for table in doc[index].find_tables().tables:
-                for row in table.extract():
-                    if len(row) < 3:
-                        continue
-                    code = " ".join((row[0] or "").split())
-                    hazard_class = " ".join((row[2] or "").split())
-                    if re.fullmatch(r"H\d{3}", code) and REV8_CLASS_RE.search(hazard_class):
-                        out.add(code)
-    finally:
-        doc.close()
-    return out
 
 
 def build(
@@ -106,22 +80,31 @@ def build(
         'Edition." Statements are therefore read from GHS Rev.7 Annex 3.'
     )
 
-    excluded = rev8_codes(root / CLASS_SOURCE)
-    if excluded:
+    # The HPR points chemicals under pressure at Annex 3 of the EIGHTH revised
+    # edition. That overlay is applied to English, where Rev.8 is on file.
+    overlay, unchanged = pressure_overlay(root)
+    if overlay:
         issues.notes.append(
-            f"chemicals under pressure -> the HPR points at Annex 3 of the EIGHTH "
-            f"revised edition, which is not on file. Left out, reason "
-            f"'needs GHS Rev.8 Annex 3': {', '.join(sorted(excluded))}"
+            f"chemicals under pressure -> the HPR points at {REV8_NAME}; overlaid "
+            f"for: {', '.join(sorted(overlay))}. The class's other codes "
+            f"({', '.join(sorted(unchanged))}) are word-for-word identical in Rev.7 "
+            "and stay there."
         )
+    else:
         issues.notes.append(
-            "    The HPR additionally states, in both languages, the hazard statement "
-            '"Chemical under pressure: May explode if heated / Produit chimique sous '
-            'pression : peut exploser sous l\'effet de la chaleur". It is not recorded '
-            "here because the HPR gives it no code."
+            "chemicals under pressure -> GHS Rev.8 Annex 3 is not on file; those "
+            "codes are absent, reason 'needs GHS Rev.8 Annex 3'."
         )
+    issues.notes.append(
+        "    The HPR additionally states, in both languages, the hazard statement "
+        '"Chemical under pressure: May explode if heated / Produit chimique sous '
+        "pression : peut exploser sous l'effet de la chaleur\". It is not recorded "
+        "here because the HPR gives it no code."
+    )
 
     english_path = root / GHS7_FILES["en"]
     keys: list[AnswerKey] = []
+    missing_rev8_fr: list[str] = []
     for lang in wanted:
         relative = GHS7_FILES.get(lang)
         path = Path(from_file) if (from_file and len(wanted) == 1) else (
@@ -152,8 +135,23 @@ def build(
                 retrieved_at=ts, status=Status.OK,
             )
             for code, text in sorted(found.items())
-            if code[:1] in "HP" and code not in excluded
+            if code[:1] in "HP"
         ]
+        # Rev.8 exists in English only, so the overlay applies there. French keeps
+        # the gap rather than borrowing English or another revision's wording.
+        if lang == "en" and overlay:
+            entries.extend(
+                AnswerKeyEntry(
+                    regulation=REGULATION, revision=REVISION, language=lang, code=code,
+                    kind=_kind(code), text=text, tier=Tier.A, source_url=GHS8_URL,
+                    source_ref=f"{REV8_NAME} row for {code}; SOR/2015-17 points "
+                               "chemicals under pressure at the Eighth Revised Edition",
+                    retrieved_at=ts, status=Status.OK,
+                )
+                for code, text in sorted(overlay.items())
+            )
+        elif lang != "en" and overlay:
+            missing_rev8_fr.extend(sorted(overlay))
         issues.rows_used += len(entries)
 
         words = (
@@ -176,12 +174,23 @@ def build(
         )
 
         entries.sort(key=lambda e: (e.kind, e.code))
+        gap = lang != "en" and bool(overlay)
+        notes = []
+        if gap:
+            notes.append(
+                "Chemicals under pressure (" + ", ".join(sorted(overlay)) + ") are "
+                "absent: the HPR points them at GHS Rev.8 Annex 3 and no French "
+                "edition of Rev.8 is on file. They are not filled from Rev.7, from "
+                "another revision, or from the English text."
+            )
         keys.append(
             AnswerKey(
                 regulation=REGULATION, language=lang, revision=REVISION,
-                status=Status.PARTIAL if entries else Status.PENDING_SOURCE,
-                status_reason="needs_ghs_rev8_annex3" if entries else "no_source_edition",
-                source_url=SOURCE_URL, retrieved_at=ts, entries=entries,
+                status=(Status.PARTIAL if gap else Status.OK) if entries
+                else Status.PENDING_SOURCE,
+                status_reason=("needs_ghs_rev8_french" if gap else None) if entries
+                else "no_source_edition",
+                source_url=SOURCE_URL, retrieved_at=ts, notes=notes, entries=entries,
             )
         )
 

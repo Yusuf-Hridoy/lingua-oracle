@@ -1,16 +1,15 @@
   parse issues for us_osha/en (appendix_c.html):
-    pages=0 tables=100 rows=190 used=125
-    reference table: UN GHS Rev.7 Annex 3 (English) (224 codes)
+    pages=0 tables=100 rows=190 used=126
+    reference table: UN GHS Rev.7 Annex 3 (English) (224 codes), overlaid with UN GHS Rev.8 Annex 3 (English) for H282, H283, H284 (chemicals under pressure, a class Rev.7 does not define)
     statements read from the source: 70 hazard, 120 precautionary
-    codes established: 63 H, 58 P, 2 signal word(s)
+    codes established: 64 H, 58 P, 2 signal word(s)
     OSHA-only hazard classes, stored under internal identifiers (NOT regulatory codes) and matched by text: OSHA-CD, OSHA-SA
     cells holding two statements, split and both halves resolved: 7
     statements that restate a code already held (56): the same statement printed again with its fill-in completed, a usage condition attached, or a typo in the published HTML. Not gaps.
-    statements not represented by any code held (5). Matching is exact, so these are left out rather than guessed:
-        H: Chemical under pressure: may explode if heated.
+    statements not represented by any code held (4). Matching is exact, so these are left out rather than guessed:
         H: Explosive; fire, blast or projection
         H: Extremely flammable chemical under pressure. May explode if heated.
         H: Flammable chemical under pressure. May explode if heated.
         H: In contact with water releases flammable gases, which may ignite spontaneously
-    GHS Rev.7 codes with no OSHA statement (103). These are NOT assumed to be gaps: OSHA's adoption is partial, so some are genuine differences and some are parse misses. Needs review:
-        H203, H207, H260, H300+H310, H300+H310+H330, H300+H330, H301+H311, H301+H311+H331, H301+H331, H302+H312, H302+H312+H332, H302+H332, H303, H303+H313, H303+H313+H333, H303+H333, H305, H310+H330, H311+H331, H312+H332, H313, H313+H333, H315+H320, H316, H333, H400, H401, H402, H410, H411, H412, H413, H420, P101, P102, P103, P212, P230, P231, P232, P235, P241, P243, P244, P260, P261, P272, P273, P301, P301+P312, P302, P302+P352, P303, P303+P361+P353, P304, P304+P312, P305, P306, P308+P311, P308+P313, P310, P311, P312, P314, P315, P320, P321, P332, P332+P313, P333, P333+P313, P334, P335, P336, P337, P338, P340, P342, P342+P311, P351, P352, P353, P360, P361, P362, P364, P370, P371, P372, P375, P378, P380, P391, P402, P403+P235, P404, P406, P410+P412, P411, P412, P413, P502, P503
+    GHS Rev.7 codes with no OSHA statement (105). These are NOT assumed to be gaps: OSHA's adoption is partial, so some are genuine differences and some are parse misses. Needs review:
+        H203, H207, H260, H282, H283, H300+H310, H300+H310+H330, H300+H330, H301+H311, H301+H311+H331, H301+H331, H302+H312, H302+H312+H332, H302+H332, H303, H303+H313, H303+H313+H333, H303+H333, H305, H310+H330, H311+H331, H312+H332, H313, H313+H333, H315+H320, H316, H333, H400, H401, H402, H410, H411, H412, H413, H420, P101, P102, P103, P212, P230, P231, P232, P235, P241, P243, P244, P260, P261, P272, P273, P301, P301+P312, P302, P302+P352, P303, P303+P361+P353, P304, P304+P312, P305, P306, P308+P311, P308+P313, P310, P311, P312, P314, P315, P320, P321, P332, P332+P313, P333, P333+P313, P334, P335, P336, P337, P338, P340, P342, P342+P311, P351, P352, P353, P360, P361, P362, P364, P370, P371, P372, P375, P378, P380, P391, P402, P403+P235, P404, P406, P410+P412, P411, P412, P413, P502, P503

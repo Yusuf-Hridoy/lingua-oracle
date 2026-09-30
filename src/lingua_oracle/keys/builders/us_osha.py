@@ -45,6 +45,7 @@ from pathlib import Path
 from lxml import html as LH
 
 from lingua_oracle.keys.builders.common import BROWSER_UA, SourceUnavailable, fetch, now
+from lingua_oracle.keys.builders.ghs_editions import REV8_NAME, pressure_overlay
 from lingua_oracle.keys.builders.pdf_tables import (
     ParseIssues,
     annex_page_range,
@@ -276,14 +277,14 @@ def internal_id_for(category: str) -> str | None:
     return "OSHA-" + "".join(w[0].upper() for w in words)
 
 
-def _entry(code, text, kind, signal, ts, how):
+def _entry(code, text, kind, signal, ts, how, reference_name=None):
     return AnswerKeyEntry(
         regulation=REGULATION, revision=REVISION, language="en", code=code,
         kind=kind, text=text,
         signal_word=signal if signal in ("Danger", "Warning") else None,
         tier=Tier.A, source_url=SOURCE_URL,
         source_ref=f"29 CFR 1910.1200 App. C; code established by wording {how} "
-                   f"to {REFERENCE_NAME}",
+                   f"to {reference_name or REFERENCE_NAME}",
         retrieved_at=ts, status=Status.OK,
     )
 
@@ -341,6 +342,13 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
     reference, ref_issues = harvest(str(reference_path), first_page=first, last_page=last)
     reference = {c: t for c, t in reference.items() if c[:1] in "HP"}
 
+    # OSHA covers chemicals under pressure, a class Rev.7 does not define. Its
+    # statements come from Rev.8, which is the edition that introduced them, and
+    # only for that class - everything else stays on Rev.7.
+    overlay, _unchanged = pressure_overlay(root)
+    reference.update(overlay)
+    rev8_codes = set(overlay)
+
     issues = ParseIssues(source=f"{REGULATION}/en ({origin})")
     issues.rows_seen = len(hazard) + len(precautionary)
     ts = now()
@@ -392,11 +400,15 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
                         entries[part_code] = _entry(
                             part_code, part, kind, hazard.get(text), ts,
                             f"{part_how}; split from a cell holding two statements",
+                            REV8_NAME if part_code in rev8_codes else None,
                         )
                 continue
             if code in entries:
                 continue
-            entries[code] = _entry(code, text, kind, hazard.get(text), ts, how)
+            entries[code] = _entry(
+                code, text, kind, hazard.get(text), ts, how,
+                REV8_NAME if code in rev8_codes else None,
+            )
 
     for signal, code in (("Danger", SIGNAL_DANGER), ("Warning", SIGNAL_WARNING)):
         if signal in signals:
@@ -416,7 +428,12 @@ def build(use_cache: bool = True, *, from_file: str | None = None,
 
     issues.rows_used = len(entries)
     issues.tables_seen += ref_issues.tables_seen
-    issues.notes.append(f"reference table: {REFERENCE_NAME} ({len(reference)} codes)")
+    issues.notes.append(
+        f"reference table: {REFERENCE_NAME} ({len(reference) - len(rev8_codes)} codes)"
+        + (f", overlaid with {REV8_NAME} for {', '.join(sorted(rev8_codes))} "
+           "(chemicals under pressure, a class Rev.7 does not define)"
+           if rev8_codes else "")
+    )
     issues.notes.append(
         f"statements read from the source: {len(hazard)} hazard, "
         f"{len(precautionary)} precautionary"

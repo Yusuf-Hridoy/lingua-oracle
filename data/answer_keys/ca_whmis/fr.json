@@ -3,10 +3,12 @@
   "language": "fr",
   "revision": "SOR-2015-17",
   "status": "partial",
-  "status_reason": "needs_ghs_rev8_annex3",
+  "status_reason": "needs_ghs_rev8_french",
   "source_url": "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2015-17/",
   "retrieved_at": "2026-09-29T13:06:46.736803Z",
-  "notes": [],
+  "notes": [
+    "Chemicals under pressure (H282, H283, H284) are absent: the HPR points them at GHS Rev.8 Annex 3 and no French edition of Rev.8 is on file. They are not filled from Rev.7, from another revision, or from the English text."
+  ],
   "entries": [
     {
       "regulation": "ca_whmis",
