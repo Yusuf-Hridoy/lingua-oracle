@@ -5,6 +5,7 @@ from __future__ import annotations
 import difflib
 import html
 import json
+import re
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -27,36 +28,54 @@ def reports_dir() -> Path:
     return d
 
 
-def char_diff(expected: str | None, found: str | None) -> tuple[str, str]:
-    """Character-level diff of expected vs found, as two HTML fragments."""
+_TOKEN_RE = re.compile(r"\s+")
+
+
+def _tokens(text: str) -> list[str]:
+    """Words with their trailing space, so joining restores the original."""
+    out, pos = [], 0
+    for match in _TOKEN_RE.finditer(text):
+        out.append(text[pos : match.end()])
+        pos = match.end()
+    if pos < len(text):
+        out.append(text[pos:])
+    return out
+
+
+def word_diff(expected: str | None, found: str | None) -> tuple[str, str]:
+    """Both texts in full, with only the differing words marked.
+
+    The previous rendering struck through the official wording, which reads as
+    "this text is wrong" - the exact opposite of what the column means. Neither
+    side is deleted here: both are shown whole, and the highlight says only
+    "these are the words that differ".
+
+    Word-level rather than character-level, because a character diff of two
+    sentences aligns on stray letters and reads as confetti.
+    """
     if expected is None and found is None:
         return "", ""
-    a, b = expected or "", found or ""
-    matcher = difflib.SequenceMatcher(None, a, b, autojunk=False)
-    # Character diffs between two unrelated sentences align on stray letters and
-    # read as confetti. Below this similarity the texts are simply different, so
-    # show each one whole.
-    if a and b and matcher.ratio() < 0.65:
-        return (
-            f'<mark class="del">{html.escape(a)}</mark>',
-            f'<mark class="ins">{html.escape(b)}</mark>',
-        )
+    a, b = _tokens(expected or ""), _tokens(found or "")
     left: list[str] = []
     right: list[str] = []
-    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
-        piece_a = html.escape(a[i1:i2])
-        piece_b = html.escape(b[j1:j2])
+    for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(
+        None, [t.strip() for t in a], [t.strip() for t in b], autojunk=False
+    ).get_opcodes():
+        piece_a = html.escape("".join(a[i1:i2]))
+        piece_b = html.escape("".join(b[j1:j2]))
         if tag == "equal":
             left.append(piece_a)
             right.append(piece_b)
-        elif tag == "delete":
-            left.append(f'<mark class="del">{piece_a}</mark>')
-        elif tag == "insert":
-            right.append(f'<mark class="ins">{piece_b}</mark>')
-        else:
-            left.append(f'<mark class="del">{piece_a}</mark>')
-            right.append(f'<mark class="ins">{piece_b}</mark>')
+            continue
+        if piece_a:
+            left.append(f'<mark class="diff">{piece_a}</mark>')
+        if piece_b:
+            right.append(f'<mark class="diff">{piece_b}</mark>')
     return "".join(left), "".join(right)
+
+
+#: Kept under the old name so nothing outside has to change.
+char_diff = word_diff
 
 
 def _environment() -> Environment:
@@ -64,11 +83,11 @@ def _environment() -> Environment:
         loader=FileSystemLoader(str(TEMPLATES)),
         autoescape=select_autoescape(["html"]),
     )
-    env.filters["char_diff"] = lambda pair: char_diff(pair[0], pair[1])
+    env.filters["word_diff"] = lambda pair: word_diff(pair[0], pair[1])
     return env
 
 
-def _grouped(report: Report) -> list[dict]:
+def _grouped(report: Report, display: str = "") -> list[dict]:
     """Findings grouped by check, failures first."""
     groups: dict[str, list] = {}
     for finding in report.findings:
@@ -79,13 +98,13 @@ def _grouped(report: Report) -> list[dict]:
         findings.sort(key=lambda f: (_SEVERITY_ORDER.get(f.severity, 3), f.code or ""))
         rows = []
         for f in findings:
-            left, right = char_diff(f.expected, f.found)
+            left, right = word_diff(f.expected, f.found)
             rows.append({
                 "finding": f,
                 "expected_html": left,
                 "found_html": right,
-                "result": (labels.NOT_CHECKED if f.unverified
-                           else labels.SEVERITY[f.severity]),
+                "result": labels.result_of(check_id, f.severity, f.unverified),
+                "action": labels.action_for(f, display),
                 "source": labels.SOURCE.get(f.tier) if f.tier else None,
                 "code_label": labels.code_label(f.code),
                 "section_label": labels.section_label(f.section),
@@ -116,10 +135,10 @@ def render_html(report: Report) -> str:
     template = _environment().get_template("report.html.j2")
     return template.render(
         report=report,
-        groups=_grouped(report),
+        groups=_grouped(report, display),
         regulation_display=display,
         coverage_percent=report.coverage.percent,
-        verdict=labels.verdict_of(report),
+        verdict=labels.verdict_of(report, display),
         L=labels,
         SEV=Severity,
         set_by=labels.SET_BY.get(report.detected_by, report.detected_by),

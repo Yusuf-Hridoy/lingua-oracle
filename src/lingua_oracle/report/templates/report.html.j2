@@ -75,6 +75,24 @@
   .caveats ul { margin:0; padding-left:18px; }
   .caveats li { font-size:12.5px; color:var(--ink); margin:3px 0; }
   .cid { font-size:12px; color:var(--muted); font-weight:500; }
+  .verdict .release { font-size:13px; font-weight:800; letter-spacing:.09em;
+                      text-transform:uppercase; margin-bottom:2px; }
+  .todo { margin:14px 0 0; padding:12px 14px 12px 16px; background:#fff;
+          border:1px solid var(--line); border-radius:8px; }
+  .todo .t { font-size:11px; font-weight:700; text-transform:uppercase;
+             letter-spacing:.05em; color:var(--muted); margin-bottom:6px; }
+  .todo ol { margin:0; padding-left:20px; }
+  .todo li { font-size:13.5px; margin:4px 0; }
+  .todo .times { color:var(--muted); font-size:12px; }
+  .todo-line { margin-top:4px; font-size:12px; color:#1b5e20; }
+  details.tech { margin-top:22px; border:1px solid var(--line); border-radius:10px;
+                 background:var(--card); }
+  details.tech > summary { cursor:pointer; padding:11px 16px; font-size:13px;
+                           color:var(--muted); font-weight:600; }
+  details.tech .body { padding:0 16px 14px; font-size:12px; color:var(--muted); }
+  details.tech dl { display:grid; grid-template-columns:200px 1fr; gap:4px 14px;
+                    margin:0; }
+  details.tech dt { font-weight:600; }
   .b-fail{background:var(--fail-bg);color:var(--fail)}
   .b-warn{background:var(--warn-bg);color:var(--warn)}
   .b-info{background:var(--info-bg);color:var(--info)}
@@ -94,8 +112,10 @@
   td.code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; white-space:nowrap; }
   .txt { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
          line-height:1.55; word-break:break-word; max-width:420px; }
-  mark.del { background:var(--del); text-decoration:line-through; }
-  mark.ins { background:var(--ins); }
+  /* Only the differing words are marked, in both columns. Nothing is struck
+     through: the official wording is not wrong, and showing it crossed out
+     said the opposite of what that column means. */
+  mark.diff { background:#fff3a3; border-radius:3px; padding:0 1px; }
   .msg { color:var(--muted); font-size:12px; margin-top:4px; }
   .notes { padding:12px 16px; font-size:12px; color:var(--muted); }
   .notes li { margin:3px 0; }
@@ -113,10 +133,21 @@
     <div class="head">
       <span class="vico" aria-hidden="true">{{ verdict.icon }}</span>
       <div>
+        <div class="release">{{ verdict.release }}</div>
         <h2>{{ verdict.headline }}</h2>
         <div class="detail">{{ verdict.detail }}</div>
       </div>
     </div>
+    {% if verdict.actions %}
+    <div class="todo">
+      <div class="t">What to do</div>
+      <ol>
+        {% for text, count in verdict.actions %}
+        <li>{{ text }}{% if count > 1 %} <span class="times">({{ count }} places)</span>{% endif %}</li>
+        {% endfor %}
+      </ol>
+    </div>
+    {% endif %}
     <div class="caveats">
       <div class="t">What this does not tell you</div>
       <ul>
@@ -131,8 +162,7 @@
       <div><dt>{{ L.META.regulation }}</dt><dd>{{ regulation_display }}</dd></div>
       <div><dt>{{ L.META.language }}</dt><dd>{{ report.language }}</dd></div>
       <div><dt>{{ L.META.set_by }}</dt><dd>{{ set_by }}</dd></div>
-      <div><dt>{{ L.META.created }}</dt><dd>{{ report.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</dd></div>
-      <div><dt>{{ L.META.id }}</dt><dd>{{ report.id }}</dd></div>
+
     </dl>
   </div>
 
@@ -147,9 +177,6 @@
       <div class="tile"><div class="n">{{ report.coverage.codes_found }}</div><div class="l">{{ L.TILES.codes }}</div></div>
     </div>
     {% if report.notes %}
-    <div class="notes"><ul>
-      {% for note in report.notes %}<li>{{ note }}</li>{% endfor %}
-    </ul></div>
     {% endif %}
   </div>
 
@@ -191,6 +218,7 @@
           <td class="txt">
             {{ row.found_html | safe }}
             {% if f.message %}<div class="msg">{{ f.message }}</div>{% endif %}
+            {% if row.action %}<div class="todo-line">&rarr; {{ row.action }}</div>{% endif %}
           </td>
         </tr>
       {% endfor %}
@@ -199,6 +227,19 @@
     </div>
   </div>
   {% endfor %}
+
+  <details class="tech">
+    <summary>Technical details</summary>
+    <div class="body">
+      <dl>
+        <dt>{{ L.META.created }}</dt><dd>{{ report.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</dd>
+        <dt>{{ L.META.id }}</dt><dd>{{ report.id }}</dd>
+        {% for note in report.notes %}
+        <dt>&nbsp;</dt><dd>{{ note }}</dd>
+        {% endfor %}
+      </dl>
+    </div>
+  </details>
 
   <div class="sub" style="margin-top:20px">
     <b>Source of official text</b> &mdash;

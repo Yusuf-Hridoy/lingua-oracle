@@ -25,6 +25,12 @@ class Label:
     help: str = ""
 
 
+#: The checks that compare a statement against official wording. Only these may
+#: report "Wrong wording" - a missing language or a code from a later revision
+#: is not a wording defect, and saying so sent readers hunting for a typo that
+#: was never there.
+WORDING_CHECKS = frozenset({"A-01", "A-02", "A-03", "A-04"})
+
 #: Severity as a reader meets it. The icon carries the same meaning as the
 #: colour, so the page still reads correctly in greyscale or with colour vision
 #: deficiency.
@@ -36,6 +42,20 @@ SEVERITY: dict[Severity, Label] = {
     Severity.INFO: Label("Needs a person", "i", "info",
                          "Correct so far as the tool can tell; a human has to judge it."),
 }
+
+#: A failure from a check that is not about wording. Same severity, different
+#: words: something has to change, but not the wording of a statement.
+NEEDS_FIXING = Label("Fix this", "✕", "fail",
+                     "Something on the sheet has to change before release.")
+
+
+def result_of(check_id: str, severity: Severity, unverified: bool) -> Label:
+    """The words shown in the Result column."""
+    if unverified:
+        return NOT_CHECKED
+    if severity is Severity.FAIL and check_id not in WORDING_CHECKS:
+        return NEEDS_FIXING
+    return SEVERITY[severity]
 
 #: A code we had no official text for. Not a verdict on the document.
 NOT_CHECKED = Label("Not checked", "?", "unver",
@@ -114,16 +134,102 @@ def section_label(section: str | None) -> str:
 
 
 # --------------------------------------------------------------------------
+# What to do about it
+# --------------------------------------------------------------------------
+
+#: One imperative per finding. The finding says what is wrong; this says what
+#: the reader does next, which is the thing they actually came for.
+_ACTIONS: dict[str, str] = {
+    "A-01": "Use the official signal word for this language.",
+    "A-02": "Correct this statement to the official wording.",
+    "A-03": "Correct this statement to the official wording.",
+    "A-04": "Correct this statement to the official wording.",
+    "A-05": "Translate this statement into the document's language.",
+    "A-06": "Replace the placeholder with the real information.",
+    "A-07": "Fix the damaged characters.",
+    "B-08": "Write this statement out in full in Section 16.",
+    "B-09": "Make Section 2 and the label agree.",
+    "B-10": "Check the signal word against the hazard codes on this sheet.",
+    "B-11": "Add the missing statement to the other-language version.",
+    "C-02": "Write this statement the same way everywhere in the document.",
+    "C-12": "Remove this statement, or use the code this regulation defines.",
+    "C-13": "Check which revision this wording comes from.",
+    "C-14": "Confirm that version of the SDS exists.",
+}
+
+
+def action_for(finding, regulation_display: str = "") -> str:
+    """The plain-words next step for one finding."""
+    message = finding.message or ""
+    if finding.unverified:
+        return "No action; our tool has no official text for this."
+    if "not filled in" in message.lower():
+        return "Fill in the blank before this sheet is issued."
+    if message.lower().startswith("filled in:"):
+        return "Check the filled-in text is right for this product."
+    if "differs only in capitalisation" in message:
+        return "Match the capitalisation of the official text, or confirm it does not matter."
+    if finding.check_id == "C-15":
+        if "not a code" in message:
+            return "Check this code for a typo."
+        where = regulation_display or "this regulation"
+        if "no equivalent statement" in message:
+            return (f"Ask whether {where} allows this wording; there is no "
+                    f"equivalent statement to use instead.")
+        nearest = message.rsplit(" is ", 1)[-1].rstrip(".")
+        return f"Ask whether {where} allows this wording; if not, use {nearest}."
+    if finding.check_id == "C-14":
+        # "Confirm the French version of this SDS exists."
+        return message.split(".")[0].strip() + "."
+    return _ACTIONS.get(finding.check_id, "Review this finding.")
+
+
+# --------------------------------------------------------------------------
 # The verdict banner
 # --------------------------------------------------------------------------
 
 @dataclass(frozen=True)
 class Verdict:
+    #: The one line a reader acts on, in capitals at the top of the report.
+    release: str
     headline: str
     tone: str          # ok | warn | bad
     icon: str
     detail: str
+    #: Grouped "what to do" lines, most urgent first, at most five.
+    actions: list[tuple[str, int]]
     caveats: list[str]
+
+
+READY = "READY TO RELEASE"
+REVIEW = "REVIEW BEFORE RELEASE"
+FIX = "FIX BEFORE RELEASE"
+
+_MAX_ACTIONS = 5
+
+
+def _rank(finding) -> int:
+    if finding.unverified:
+        return 3
+    if finding.severity is Severity.FAIL:
+        return 0
+    if finding.severity is Severity.WARN:
+        return 1
+    return 2
+
+
+def actions_for(report: Report, regulation_display: str = "") -> list[tuple[str, int]]:
+    """Every finding's next step, identical ones grouped and counted."""
+    counted: dict[str, int] = {}
+    order: dict[str, int] = {}
+    for finding in report.findings:
+        if finding.unverified:
+            continue  # nothing to do about our own gap
+        text = action_for(finding, regulation_display)
+        counted[text] = counted.get(text, 0) + 1
+        order[text] = min(order.get(text, 99), _rank(finding))
+    ranked = sorted(counted.items(), key=lambda kv: (order[kv[0]], -kv[1], kv[0]))
+    return ranked[:_MAX_ACTIONS]
 
 
 def _caveats(report: Report) -> list[str]:
@@ -168,30 +274,47 @@ def _caveats(report: Report) -> list[str]:
     return out
 
 
-def verdict_of(report: Report) -> Verdict:
-    s = report.summary
-    if s.fail:
+def verdict_of(report: Report, regulation_display: str = "") -> Verdict:
+    """One line to act on, then what to do, then what was not covered."""
+    summary = report.summary
+    actions = actions_for(report, regulation_display)
+    wording_fails = sum(
+        1 for f in report.findings
+        if f.severity is Severity.FAIL and not f.unverified
+        and f.check_id in WORDING_CHECKS
+    )
+    other_fails = summary.fail - wording_fails
+
+    if summary.fail:
+        parts = []
+        if wording_fails:
+            parts.append(f"{wording_fails} statement(s) do not match the official text")
+        if other_fails:
+            parts.append(f"{other_fails} other problem(s) to fix")
         return Verdict(
-            headline="Wording problems found — fix before release",
-            tone="bad", icon="✕",
-            detail=f"{s.fail} statement(s) do not match the official text.",
-            caveats=_caveats(report),
+            release=FIX,
+            headline="Wording problems found — fix before release"
+            if wording_fails else "Problems found — fix before release",
+            tone="bad", icon="✕", detail="; ".join(parts) + ".",
+            actions=actions, caveats=_caveats(report),
         )
-    if s.warn or s.info:
+    if summary.warn or summary.info:
         bits = []
-        if s.warn:
-            bits.append(f"{s.warn} to check")
-        if s.info:
-            bits.append(f"{s.info} needing a person")
+        if summary.warn:
+            bits.append(f"{summary.warn} to check")
+        if summary.info:
+            bits.append(f"{summary.info} needing a person")
         return Verdict(
+            release=REVIEW,
             headline="Looks correct — some items need a person to check",
             tone="warn", icon="!",
             detail="Nothing contradicts the official text. " + ", ".join(bits) + ".",
-            caveats=_caveats(report),
+            actions=actions, caveats=_caveats(report),
         )
     return Verdict(
+        release=READY,
         headline="All checked wording matches the official text",
         tone="ok", icon="✓",
         detail="Every statement we could check is word for word the official text.",
-        caveats=_caveats(report),
+        actions=actions, caveats=_caveats(report),
     )

@@ -28,14 +28,25 @@ def runner():
 # -- report ----------------------------------------------------------------
 
 
-def test_char_diff_marks_the_changed_characters():
+def test_the_diff_marks_only_the_changed_words():
     left, right = char_diff("Meget brandfarlig væske.", "Ekstremt brandfarlig væske.")
-    assert 'class="del"' in left
-    assert 'class="ins"' in right
-    assert "brandfarlig" in left
+    assert 'class="diff"' in left
+    assert 'class="diff"' in right
+    # Both texts are shown whole; neither side is struck through or dropped.
+    assert "brandfarlig" in left and "brandfarlig" in right
+    assert "line-through" not in left + right
+    assert "Meget" in left and "Ekstremt" in right
 
 
-def test_char_diff_on_unrelated_text_highlights_whole_strings():
+def test_matching_words_are_not_marked():
+    left, right = char_diff("Keep away from heat, hot surfaces, sparks.",
+                            "Keep away from heat, hot surface, sparks.")
+    assert left.count("<mark") == 1
+    assert right.count("<mark") == 1
+    assert left.startswith("Keep away from heat, hot ")
+
+
+def test_unrelated_text_marks_everything_on_both_sides():
     left, right = char_diff("Forårsager alvorlig øjenirritation.",
                             "Causes serious eye irritation.")
     assert left.count("<mark") == 1
@@ -204,8 +215,10 @@ def test_compare_lands_on_a_report_page(client):
     page = client.get(location)
     assert page.status_code == 200
     assert "B-11" in page.text
-    # The comparison report gets the same verdict banner as any other.
-    assert "Wording problems found" in page.text
+    # The comparison report gets the same verdict banner as any other. B-11 is
+    # not a wording check, so the headline says "Problems", not "Wording
+    # problems" - the release line is the part a reader acts on.
+    assert "FIX BEFORE RELEASE" in page.text
 
 
 def test_compare_json_still_serves_the_api(client):
