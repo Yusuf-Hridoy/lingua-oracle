@@ -1,0 +1,61 @@
+# Terms the report shows that a non-developer may not understand
+
+Collected from what the page actually renders, not from memory: the labels in
+`report.html.j2` and `index.html.j2`, the 15 check titles, and every distinct
+message shape produced across the fixture set.
+
+**Nothing has been changed.** This is a proposal for review.
+
+Ordered by how likely it is to stop a reviewer, worst first.
+
+## 1. Words that mean something other than their everyday meaning
+
+| Shown now | Where | Why it misleads | Suggested label |
+| --- | --- | --- | --- |
+| `Tier` · `A` `B` `C` | Column + legend | Reads like a quality grade of the *document*. It is the provenance of the text we compared against. | **Source of official text** — `A` → `Official`, `B` → `Borrowed (EU CLP)`, `C` → `None on file` |
+| `UNVERIFIED` | Tile + badge | Sounds like the document failed a verification. It means we had nothing to check against. | **Not checked** (tile: *Could not check*) |
+| `Coverage` `100.0%` | Tile | Coverage of what? Reads like "the document is 100% compliant". | **Codes we could check** |
+| `Codes found` | Tile | Ambiguous between "codes in the document" and "problems found". | **Codes in document** |
+| `Detected by` `flag` / `auto` | Header | "flag" is a command-line word. Users see it when they *chose* the regulation. | **Regulation set by** → `You chose it` / `Read from the document` |
+| `key` (in 3 check titles) | Check titles | "key" means the answer key. Reads as encryption or a database key. | **official wording** |
+| `Fill-in` / `Filled in` / `Not filled in` | Messages | Jargon for the `…` slot in an official phrase. | **Blank to complete** — "You completed this blank with '…'" / "This blank was never completed" |
+| `Extraction backend: pymupdf.` | Notes | Internal detail; means nothing to a reviewer. | Drop it, or **How we read the PDF** |
+
+## 2. Codes and identifiers shown without explanation
+
+| Shown now | Why it misleads | Suggested label |
+| --- | --- | --- |
+| `A-01` … `C-14` | Our internal check numbers. Easily mistaken for regulatory references like H225 or P210 — the very things on the page next to them. | Lead with the title and demote the id: **"Signal word exact for the language"** *(check A‑01)* |
+| `SIGNAL` in the Code column | Not a regulatory code; our placeholder for the signal word. | **Signal word** |
+| `OSHA-CD`, `OSHA-SA` | Internal ids for OSHA hazard classes with no GHS code. Already flagged in the data, but the page does not say so. | Show as **"OSHA class (no GHS code)"** |
+| `EUH` / `AUH` "family" | "family" is ours. | **EU-only statements** / **Australia-only statements** |
+| `Section` `2` `3` `16` | Fine for SDS authors, opaque to anyone else. | Keep the number, add the name: **2 — Hazards identification** |
+
+## 3. Severity words
+
+| Shown now | Why it misleads | Suggested label |
+| --- | --- | --- |
+| `FAIL` | Reads as "this document is rejected". It means one statement does not match. | **Wrong wording** |
+| `WARN` | Says nothing about what to do. | **Check this** |
+| `INFO` | Looks ignorable; it is where fill-ins needing human judgement appear. | **Needs a person** |
+
+Severity is also the one place where colour alone carries meaning — red, amber,
+blue. Worth a shape or icon for colour-blind reviewers.
+
+## 4. Column headers and phrasing
+
+| Shown now | Suggested |
+| --- | --- |
+| `Expected` / `Found` | **Official wording** / **Your document** |
+| `Report ID` | **Reference** (say it is for quoting back to us) |
+| `Generated` | **Checked on** |
+| `No reference text for P319 in UN GHS 'en' (tier C): wording not verified.` | **"We have no official UN GHS (en) wording for P319 on file, so we could not check it."** |
+| `H336 is in this document but missing from da.` | **"H336 is in this document but not in the Danish one."** (use the language name) |
+| `Compare (returns JSON)` (upload page) | Users should not be shown a raw JSON page at all — **Compare** should land on a report like the single-document flow does. |
+
+## 5. One thing the page does not say at all
+
+A reviewer cannot tell **what to do next**. Every finding states a difference;
+none states whether the document may ship. A one-line verdict at the top —
+*"3 statements do not match the official wording. This sheet should not be
+issued until they are corrected."* — would carry more than all six tiles.
