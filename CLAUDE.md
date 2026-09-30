@@ -86,9 +86,16 @@ the A→B→C resolution and returns the `Borrowed` object the checks read from.
 `data/answer_keys/{regulation}/{lang}.json`, built by `keys/builders/*.py` and
 committed. Check time only reads them.
 
-Current coverage: EU CLP 24 languages (5,757), UN GHS Rev.11 en/fr/es (737),
-UK GB CLP en (236), Australia en (236), US OSHA en (111, `partial`). Canada,
-Japan and UN GHS ar/ru/zh are `pending_source`.
+Current coverage: EU CLP 24 languages (240 each), UN GHS Rev.11 en/es/fr (248
+each), UK GB CLP en (238), Australia en (238), Canada en (229, `ok`) and fr (226,
+`partial`), US OSHA en (126, `partial`). Japan and UN GHS ar/ru/zh are
+`pending_source`. Every entry is tier A.
+
+**Editions are chosen by the regulation's own words**, not by recency. The HPR
+states "GHS means ... Seventh Revised Edition" and points chemicals under pressure
+at the Eighth, so `keys/builders/ghs_editions.py` overlays exactly H282/H283/H284
+from Rev.8 and leaves everything else on Rev.7 - including the class's other codes
+(P376, P378, P370+P378, P410+P403), which are identical in both editions.
 
 A key's `status` is `ok`, `partial` (built but knowingly incomplete) or
 `pending_source` (empty). `status_reason` carries a machine-readable why:
@@ -154,6 +161,14 @@ Two source facts that drive the design and are easy to re-discover the hard way:
   a decoding heuristic; only OCR would work, and it needs the user's approval.
 - **GB CLP is retained law**: EU codes added after retention (EUH380/381/430/431/
   440/441/450/451) are legitimately absent from `uk_clp`, not missing.
+- **OSHA Appendix C is published as GRAPHICS in the official CFR** - the statements
+  appear nowhere in ecfr.gov's or govinfo.gov's XML, and eCFR's structure API lists
+  no appendix node for 1910.1200. The osha.gov HTML is the only text rendering, so
+  statements that differ from GHS only in punctuation cannot be verified against an
+  authority. Do not alias them, and do not make matching punctuation-insensitive.
+- **`OSHA-CD` and `OSHA-SA` are NOT regulatory codes** - they are internal
+  identifiers for hazard classes OSHA defines without a GHS code, flagged
+  `internal_id` and matched by text. Never emit them onto a document.
 
 Signal-word **text** never goes in `regulations.yaml` — it lives in the keys under
 the pseudo-codes `SIGNAL_DANGER` / `SIGNAL_WARNING`. Per-code signal words (for

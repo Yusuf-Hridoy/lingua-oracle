@@ -35,7 +35,29 @@ uv run ruff check .
 
 ---
 
-## Commands
+## Running a check
+
+```bash
+# one document — regulation and language are detected unless you name them
+uv run lingua check data/sources/somefile.pdf
+uv run lingua check tests/fixtures/clean_eu_da.pdf --regulation eu_clp --language da
+
+# a folder of documents (drop-folder mode)
+uv run lingua check-folder ~/inbox
+
+# two documents, adds check B-11 (same code set in both)
+uv run lingua compare sheet_en.pdf sheet_da.pdf
+```
+
+Each run writes `reports/<id>.json` and a self-contained `reports/<id>.html`, and
+prints the path. **Exit code is `1` when there are failures, `0` otherwise**, so it
+drops straight into a pipeline. Detection never guesses: if the regulation cannot
+be determined the run stops and asks you to pass `--regulation`.
+
+A finding is `fail`, `warn`, `info`, or *unverified* — the last means there was no
+reference text to judge against (tier C), never a pass or a failure.
+
+## All commands
 
 ```bash
 lingua check <pdf> [--regulation eu_clp] [--language da] [--out DIR]
@@ -104,115 +126,82 @@ produces "unverified", never a false accusation.
 
 ---
 
-## Answer-key coverage as built
+## Coverage
 
-`lingua keys stats` on this build:
+Every entry is **tier A** — official text for that regulation and language, with
+`source_url`, `source_ref` and `retrieved_at` on each one. Nothing is filled from
+memory; where a source could not be read, the key stays empty.
 
-| Regulation | Languages | Entries | Status |
-| --- | --- | --- | --- |
-| EU CLP | 24 | 5 757 | ok (tier A) |
-| UN GHS Rev.11 | 3 (en, fr, es) | 737 | ok (tier A); ar/ru/zh `pending_source` |
-| UK GB CLP | 1 (en) | 236 | ok (tier A) |
-| Australia WHS | 1 (en) | 236 | ok (tier A) |
-| US OSHA HazCom | 1 (en) | 111 | **partial** (tier A) — see below |
-| Canada WHMIS | 2 (en, fr) | see stats | **partial** (tier A) — `needs_ghs_rev8_annex3` |
-| Japan JIS | — | 0 | `pending_source` / `wrong_source` |
+| Regulation | Languages | Entries | Status | Tier | Source |
+| --- | --- | --- | --- | --- | --- |
+| EU CLP | 24 (bg cs da de el en es et fi fr ga hr hu it lt lv mt nl pl pt ro sk sl sv) | 240 each | `ok` | A | EU Publications Office **CELLAR**, consolidated 1272/2008 |
+| UN GHS Rev.11 | en, es, fr | 248 each | `ok` | A | `un-ghs/GHS_Rev11_{en,es,fr}.pdf`, Annex 3 |
+| UN GHS Rev.11 | ar, ru, zh | 0 | `pending_source` / `no_source_edition` | — | no edition on file |
+| UK GB CLP | en | 238 | `ok` | A | `uk-gb-clp/gb_clp_full.pdf`, Annex III + IV + Annex II prose |
+| Australia WHS | en | 238 | `ok` | A | `ghs-rev7/GHS_Rev7_en.pdf` (H/P) + `australia/swa_classification_guidance.pdf` (AUH) |
+| Canada WHMIS | en | 229 | `ok` | A | `ghs-rev7/GHS_Rev7_en.pdf` + `ghs-rev8/GHS_Rev8_en.pdf` for chemicals under pressure |
+| Canada WHMIS | fr | 226 | `partial` / `needs_ghs_rev8_french` | A | `ghs-rev7/GHS_Rev7_fr.pdf`; no French Rev.8 on file |
+| US OSHA HazCom | en | 126 | `partial` / `unrepresented_statements_remain` | A | `us-osha/appendix_c.html`, keyed against GHS Rev.7 + Rev.8 |
+| Japan JIS | ja, en | 0 | `pending_source` / `wrong_source` | — | file on record is UN GHS Rev.9 Japanese, not JIS |
 
-**No key is ever filled from memory.** Where a source could not be read, the key
-is empty and marked `pending_source`, with a machine-readable `status_reason` and
-the full explanation in `data/answer_keys/{regulation}/_parse_issues.txt`. Fill
-those with `lingua keys import-csv`.
+`status` is `ok` (built and believed complete), `partial` (built but knowingly
+incomplete — `status_reason` and the key's `notes` say what is missing) or
+`pending_source` (empty). `lingua keys stats` prints this live.
 
-| `status` | Meaning |
-| --- | --- |
-| `ok` | Built from its official source and believed complete |
-| `partial` | Built from its official source, but the code set is knowingly incomplete (`status_reason` says why) |
-| `pending_source` | Nothing could be derived; the key is empty |
+### How the sources are read
 
-Rebuilds are deterministic: an entry keeps its stored `retrieved_at` when its
-code, text and `source_ref` are unchanged, so re-running `lingua keys build`
-against unchanged sources leaves the working tree clean and any diff is real.
+Sources that cannot be fetched programmatically live under
+`data/sources/<regulation>/`. `keys/builders/pdf_tables.py` matches rows on the
+**code pattern in column 0** rather than header text, so one parser serves
+English, French and Spanish. Four table shapes are handled: plain code/statement,
+the CLP multilingual table, inline (`AUH001 - Explosive when dry`), and quoted
+prose in GB CLP's Annex II.
 
-### Sources
+Which regulation reads which edition is decided by the regulation's own words —
+the HPR states *"GHS means … Seventh Revised Edition"*, and points chemicals under
+pressure at the Eighth. The Rev.8 overlay is therefore exactly three codes
+(H282/H283/H284); the class's other codes are identical in Rev.7 and stay there.
 
-Official texts that could not be fetched programmatically are kept under
-`data/sources/<regulation>/` and parsed with `--from-file`:
+Every build writes `data/answer_keys/<reg>/_parse_issues.txt` recording pages
+scanned, rows used, and what could not be used — and **rebuilds are
+deterministic**: running `lingua keys build all` twice leaves the tree clean, so
+any diff is a real change.
 
-| Regulation | Source | How it is read |
-| --- | --- | --- |
-| EU CLP | EU Publications Office **CELLAR** (network) | Annex III/IV multilingual tables — one fetch yields all 24 languages |
-| UN GHS | `un-ghs/GHS_Rev11_{en,fr,es}.pdf` | Annex 3 code/statement tables |
-| UK GB CLP | `uk-gb-clp/gb_clp_full.pdf` | Annex III multilingual (EN row) + Annex IV tables + Annex II prose |
-| Australia | `ghs-rev7/GHS_Rev7_en.pdf` + `australia/swa_classification_guidance.pdf` | GHS Rev.7 for H/P (Australia adopts Rev.7, not Rev.11); SWA guidance for AUH |
-| US OSHA | `us-osha/appendix_c.html` | Signal words directly; statements by text identity with EU CLP |
-| Canada | `ghs-rev7/GHS_Rev7_{en,fr}.pdf` | the HPR defines GHS as the Seventh Revised Edition, so both languages come from Rev.7 Annex 3 |
-| Japan | `japan/GHS_Rev9_ja_annex2-3.pdf` | unreadable — see below |
+## Known limitations
 
-`ghs-rev7/` is **not** redundant with `un-ghs/`: UN GHS is built from Rev.11,
-while **both** Australia and Canada are defined against Rev.7 — the HPR states
-outright that *"GHS means the United Nations document entitled Globally Harmonized
-System of Classification and Labelling of Chemicals (GHS), Seventh Revised
-Edition"*. Rev.7 is therefore the reference text for Australian and Canadian
-wording, in English and French.
+* **Japan is `wrong_source`.** The file on record is the Japanese edition of UN
+  GHS Rev.9, not JIS Z 7252/7253 — a different document at a different revision —
+  so nothing is taken from it. It is unreadable regardless: its Japanese font
+  carries no ToUnicode CMap, so no extractor can recover characters. JIS itself is
+  a paid standard and is not scraped. Fill via `lingua keys import-csv`.
+* **UN GHS ar/ru/zh are `no_source_edition`.** No Arabic, Russian or Chinese
+  edition is on file. Their text is not derivable from the editions that are.
+* **Canada French lacks chemicals under pressure.** The HPR points that class at
+  GHS Rev.8 and no French Rev.8 is on file, so H282/H283/H284 are absent rather
+  than filled from Rev.7, another revision, or the English text.
+* **OSHA holds 126 entries and four statements remain out.** Appendix C states no
+  codes at all, so codes are established by exact wording against GHS Rev.7 (plus
+  Rev.8 for chemicals under pressure). Four statements differ from GHS only in
+  rendering — a dropped word, an added comma, a full stop where GHS prints a
+  colon. Whether those are OSHA's wording or errors in the osha.gov HTML could not
+  be verified: the official CFR publishes Appendix C's tables as **graphics**, not
+  text, on both ecfr.gov and govinfo.gov. They are left out rather than aliased on
+  a guess, and matching stays exact.
+* **OSHA internal identifiers.** OSHA defines hazard classes GHS does not and
+  gives them no code. Their statements are stored under `OSHA-CD` (combustible
+  dust) and `OSHA-SA` (simple asphyxiant), flagged `internal_id: true`. **These
+  are not regulatory codes.** They never appear as codes on a document and are
+  matched by text. Do not put them on a label or an SDS.
+* **Tier B is implemented but currently borrows little**, since most regulations
+  now have their own tier A text.
+* **The slash-alternative matcher is deliberately permissive** where the official
+  text is ambiguous about where a slash run begins; a false failure on correct
+  wording was judged the worse error.
+* **No OCR, no classification correctness, no pictograms, no layout checks.**
+* PyMuPDF is **AGPL**. It is the default backend but sits behind an interface; set
+  `LINGUA_PDF_BACKEND=pdfplumber` to avoid it.
 
-Rows are located by the **code pattern in column 0**, not by header text, so one
-parser works across English, French and Spanish. Every build writes a
-`_parse_issues.txt` next to the keys recording pages scanned, rows used, codes
-with an empty statement, and codes seen twice with conflicting text.
-
-### Why OSHA is partial
-
-29 CFR 1910.1200 Appendix C contains **no H or P code numbers at all** — verified
-against osha.gov, the eCFR API and the local copy. It gives signal words and
-statement text organised by hazard class, but never says which code a statement
-belongs to.
-
-So codes are established by comparing OSHA's own wording against EU CLP's English,
-against **UN GHS Rev.7 English** — the revision OSHA's HazCom is aligned to, and
-the same table Australia uses. Matching is **exact**, in two stages: identical
-after normalisation, case folding and US/UK spelling folding
-(`keys/builders/spelling.py`, an explicit reviewed table rather than a blanket
-rule); then identical once fill-ins are collapsed, since the three sources write
-the same slot three different ways. There is no fuzzy fallback — a similarity
-score cannot tell a spelling difference from a substantive one.
-
-That yields **58 H and 51 P codes** plus both signal words. Statements with no
-confident code are listed in `_parse_issues.txt` rather than guessed, as are the
-GHS Rev.7 codes OSHA has no statement for — those are **not** assumed to be gaps,
-since OSHA's adoption is partial and some absences are genuine differences. The
-key is `partial` until those counts are reconciled.
-
-### Why Canada is partial
-
-The Hazardous Products Regulations contain **zero** H or P codes, but they do not
-need to: they say where their statements come from — *"GHS means the United
-Nations document entitled Globally Harmonized System of Classification and
-Labelling of Chemicals (GHS), Seventh Revised Edition"*. WHMIS statements are
-therefore GHS Rev.7 statements, and each language is read from its own Rev.7
-edition. Nothing is translated or inferred across languages.
-
-The gap is **chemicals under pressure**, where the HPR points instead at Annex 3
-of the *Eighth* revised edition, which is not on file. Those codes are left out
-with `status_reason: needs_ghs_rev8_annex3` rather than filled from another
-revision. Canada-only classes (biohazardous infectious materials, and the physical
-and health hazards "not otherwise classified") carry no statement text in the HPR
-at all, so nothing is recorded for them. Both are detailed in
-`data/answer_keys/ca_whmis/_design_note.md`.
-
-### Why Japan is pending
-
-Two separate reasons, hence `status_reason: wrong_source`. First, the file on
-record is the Japanese edition of **UN GHS Rev.9, not JIS Z 7252/7253** — a
-different document at a different revision — so nothing may be taken from it for a
-JIS key, and nothing is. Second, it is unreadable anyway:
-`GHS_Rev9_ja_annex2-3.pdf` does not yield readable Japanese. PyMuPDF returns
-mojibake (0.6% Japanese characters, `㝃ᒓ᭩` where `附属書` is meant) and pdfplumber
-returns `(cid:NNNN)` placeholders only. The cause is in the file: its Japanese
-font (`MS-Mincho-90ms-RKSJ-H`) carries **no ToUnicode CMap**, so the PDF contains
-no glyph-to-character mapping to recover. No amount of text extraction can fix
-that; OCR would be required, and has not been run.
-
-## Adding a regulation## Adding a regulation
+## Adding a regulation
 
 1. Add an entry to `data/regulations.yaml`: `display_name`, `revision`,
    `official_languages`, `required_languages`, `allowed_prefixes`,
@@ -236,45 +225,6 @@ under the pseudo-codes `SIGNAL_DANGER` / `SIGNAL_WARNING`.
 3. Add the tag to `_TAGS` in `src/lingua_oracle/detect/language.py` so lingua-py
    can detect it.
 4. Rebuild the key for that language.
-
----
-
-## Known limitations
-
-* **Canada and Japan have no answer key**, for the reasons above, as do Arabic,
-  Russian and Chinese UN GHS (no edition on file). Documents under those report
-  *unverified*, never pass or fail on wording.
-* **OSHA covers 31 codes**, for the reason above.
-* **The UK key has 19 codes whose English text appears twice with different
-  wording** in the retained text, most likely an original and an amended version.
-  The first reading is kept and every conflict is listed in
-  `data/answer_keys/uk_clp/_parse_issues.txt` for a human to settle.
-* **EUH211 and EUH212 are absent from the UK key** — they are not in Annex III's
-  tables nor stated as quoted prose in Annex II of the copy on file.
-* **UN GHS French is missing P317** (the source cell is empty) and reports one
-  conflicting reading for P332.
-* **C-13 finds nothing** until an older revision is archived at
-  `data/answer_keys/{regulation}@{revision}/{lang}.json`. Only one revision is
-  currently built.
-* **B-10 needs per-code signal words.** These are extracted from CLP Annex I for
-  EU (68 codes) and from Appendix C for OSHA. For a regulation with neither, the
-  check abstains rather than guessing.
-* **Greek and Irish signal words are incomplete.** The Greek consolidated text
-  genuinely splits between two words for *Warning*, so neither is recorded; there
-  is no Irish language version of the consolidated act. Both are left absent by
-  design — A-01 reports them as unverified.
-* **The slash-alternative parser is deliberately permissive.** Where the official
-  text is ambiguous about where a slash run begins (`Get medical
-  advice/attention.`), every plausible split is compiled and the phrase passes if
-  any matches. This can accept an unusual-but-plausible subset. A false failure
-  on correct official wording was judged the worse error.
-* **Per-phrase language detection is unreliable under ~25 characters**, so A-05
-  skips short phrases.
-* **Scanned/image-only PDFs are not handled.** There is no OCR.
-* **No classification correctness.** The tool checks wording, not whether the
-  classification itself is right. Pictograms and layout are out of scope.
-* PyMuPDF is **AGPL**. It is the default backend but sits behind an interface;
-  set `LINGUA_PDF_BACKEND=pdfplumber` to avoid it entirely.
 
 ---
 

@@ -472,3 +472,36 @@ def test_combined_code_repair_is_scoped_to_the_page():
 
     assert combined_codes_on_page("P332 + P317 Demander une aide.") == {"P332": "P332+P317"}
     assert combined_codes_on_page("P331 Ne PAS faire vomir. P332 En cas d'irritation :") == {}
+
+
+# -- GHS edition overlay ------------------------------------------------------
+
+
+def test_rev8_overlay_is_exactly_the_codes_rev7_lacks():
+    """The overlay must stay as narrow as the regulation makes it."""
+    from pathlib import Path
+
+    from lingua_oracle.keys.builders.ghs_editions import pressure_overlay
+    from lingua_oracle.registry import data_dir
+
+    overlay, unchanged = pressure_overlay(Path(data_dir()) / "sources")
+    assert set(overlay) == {"H282", "H283", "H284"}
+    # the class's other codes are identical in Rev.7 and must not be overlaid
+    assert set(unchanged) == {"P376", "P378", "P370+P378", "P410+P403"}
+    assert not set(overlay) & set(unchanged)
+
+
+def test_osha_uses_rev8_only_for_the_pressure_class():
+    key = load_key("us_osha", "en")
+    by_code = key.by_code()
+    if "H284" in by_code:
+        assert "Rev.8" in by_code["H284"].source_ref
+    # everything else must still cite Rev.7
+    assert "Rev.7" in by_code["H225"].source_ref
+    assert "Rev.8" not in by_code["H225"].source_ref
+
+
+def test_osha_notes_record_the_unverifiable_rendering_cases():
+    key = load_key("us_osha", "en")
+    assert key.status is Status.PARTIAL
+    assert any("graphics" in n for n in key.notes), "the eCFR finding must be recorded"
