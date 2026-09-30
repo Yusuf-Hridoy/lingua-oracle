@@ -18,6 +18,7 @@ from lingua_oracle.checks import (  # noqa: F401
     c12_valid_for_regulation,
     c13_revision,
     c14_required_languages,
+    c15_newer_ghs,
 )
 from lingua_oracle.checks.base import (
     CheckContext,

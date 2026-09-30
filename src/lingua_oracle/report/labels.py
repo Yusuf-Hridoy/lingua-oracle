@@ -39,8 +39,8 @@ SEVERITY: dict[Severity, Label] = {
 
 #: A code we had no official text for. Not a verdict on the document.
 NOT_CHECKED = Label("Not checked", "?", "unver",
-                    "We hold no official wording for this code, so we could not "
-                    "compare it.")
+                    "Our records hold no official wording for this code, so we "
+                    "could not compare it. This is our gap, not the sheet's.")
 
 #: Where the wording we compared against came from.
 SOURCE: dict[Tier, Label] = {
@@ -66,6 +66,11 @@ COLUMNS = {
     "expected": "Official wording",
     "found": "Your document",
 }
+
+#: C-15 shows the regulation's nearest published statement in the "Official
+#: wording" column. It is a pointer, not the wording the sheet should have had,
+#: so the column gets its own heading there.
+NEWER_GHS_EXPECTED_COLUMN = "Closest official statement"
 
 TILES = {
     "fail": "Wrong wording",

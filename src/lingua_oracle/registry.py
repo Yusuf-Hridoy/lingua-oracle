@@ -5,6 +5,7 @@ from __future__ import annotations
 import functools
 import re
 from pathlib import Path
+from typing import Literal
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
@@ -36,6 +37,11 @@ class Regulation(BaseModel):
     #: a document that supplies one has not changed the wording. Set for
     #: us_osha only; see the note in data/regulations.yaml.
     statements_lack_terminal_punctuation: bool = False
+    #: How to report a code this regulation has not adopted but a later GHS
+    #: edition defines (check C-15). Whether a sheet may run ahead of the
+    #: regulation it cites is a compliance decision, not a technical one, so it
+    #: is set per regulation rather than assumed.
+    newer_ghs_wording: Literal["warn", "info", "fail"] = "warn"
     source_url: str | None = None
     source_note: str | None = None
     detect_patterns: list[str] = Field(default_factory=list)

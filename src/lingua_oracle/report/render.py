@@ -94,6 +94,9 @@ def _grouped(report: Report) -> list[dict]:
             {
                 "check_id": check_id,
                 "title": title_of(check_id),
+                "expected_column": (labels.NEWER_GHS_EXPECTED_COLUMN
+                                    if check_id == "C-15"
+                                    else labels.COLUMNS["expected"]),
                 "rows": rows,
                 "fails": sum(1 for f in findings if f.severity == Severity.FAIL and not f.unverified),
                 "warns": sum(1 for f in findings if f.severity == Severity.WARN and not f.unverified),

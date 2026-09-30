@@ -1,0 +1,1200 @@
+{
+ "editions": [
+  "GHS Rev.7",
+  "GHS Rev.8",
+  "GHS Rev.11"
+ ],
+ "codes": {
+  "H200": {
+   "GHS Rev.7": "Unstable explosive",
+   "GHS Rev.8": "Unstable explosive"
+  },
+  "H201": {
+   "GHS Rev.7": "Explosive; mass explosion hazard",
+   "GHS Rev.8": "Explosive; mass explosion hazard"
+  },
+  "H202": {
+   "GHS Rev.7": "Explosive; severe projection hazard",
+   "GHS Rev.8": "Explosive; severe projection hazard"
+  },
+  "H203": {
+   "GHS Rev.7": "Explosive; fire, blast or projection hazard",
+   "GHS Rev.8": "Explosive; fire, blast or projection hazard"
+  },
+  "H204": {
+   "GHS Rev.7": "Fire or projection hazard",
+   "GHS Rev.8": "Fire or projection hazard",
+   "GHS Rev.11": "Fire or projection hazard"
+  },
+  "H205": {
+   "GHS Rev.7": "May mass explode in fire",
+   "GHS Rev.8": "May mass explode in fire"
+  },
+  "H206": {
+   "GHS Rev.7": "Fire, blast or projection hazard; increased risk of explosion if desensitizing agent is reduced",
+   "GHS Rev.8": "Fire, blast or projection hazard; increased risk of explosion if desensitizing agent is reduced",
+   "GHS Rev.11": "Fire, blast or projection hazard; increased risk of explosion if desensitizing agent is reduced"
+  },
+  "H207": {
+   "GHS Rev.7": "Fire or projection hazard; increased risk of explosion if desensitizing agent is reduced",
+   "GHS Rev.8": "Fire or projection hazard; increased risk of explosion if desensitizing agent is reduced",
+   "GHS Rev.11": "Fire or projection hazard; increased risk of explosion if desensitizing agent is reduced"
+  },
+  "H208": {
+   "GHS Rev.7": "Fire hazard; increased risk of explosion if desensitizing agent is reduced",
+   "GHS Rev.8": "Fire hazard; increased risk of explosion if desensitizing agent is reduced",
+   "GHS Rev.11": "Fire hazard; increased risk of explosion if desensitizing agent is reduced"
+  },
+  "H209": {
+   "GHS Rev.11": "Explosive"
+  },
+  "H210": {
+   "GHS Rev.11": "Very sensitive"
+  },
+  "H211": {
+   "GHS Rev.11": "May be sensitive"
+  },
+  "H220": {
+   "GHS Rev.7": "Extremely flammable gas",
+   "GHS Rev.8": "Extremely flammable gas",
+   "GHS Rev.11": "Extremely flammable gas"
+  },
+  "H221": {
+   "GHS Rev.7": "Flammable gas",
+   "GHS Rev.8": "Flammable gas",
+   "GHS Rev.11": "Flammable gas"
+  },
+  "H222": {
+   "GHS Rev.7": "Extremely flammable aerosol",
+   "GHS Rev.8": "Extremely flammable aerosol",
+   "GHS Rev.11": "Extremely flammable aerosol"
+  },
+  "H223": {
+   "GHS Rev.7": "Flammable aerosol",
+   "GHS Rev.8": "Flammable aerosol",
+   "GHS Rev.11": "Flammable aerosol"
+  },
+  "H224": {
+   "GHS Rev.7": "Extremely flammable liquid and vapour",
+   "GHS Rev.8": "Extremely flammable liquid and vapour",
+   "GHS Rev.11": "Extremely flammable liquid and vapour"
+  },
+  "H225": {
+   "GHS Rev.7": "Highly flammable liquid and vapour",
+   "GHS Rev.8": "Highly flammable liquid and vapour",
+   "GHS Rev.11": "Highly flammable liquid and vapour"
+  },
+  "H226": {
+   "GHS Rev.7": "Flammable liquid and vapour",
+   "GHS Rev.8": "Flammable liquid and vapour",
+   "GHS Rev.11": "Flammable liquid and vapour"
+  },
+  "H227": {
+   "GHS Rev.7": "Combustible liquid",
+   "GHS Rev.8": "Combustible liquid",
+   "GHS Rev.11": "Combustible liquid"
+  },
+  "H228": {
+   "GHS Rev.7": "Flammable solid",
+   "GHS Rev.8": "Flammable solid",
+   "GHS Rev.11": "Flammable solid"
+  },
+  "H229": {
+   "GHS Rev.7": "Pressurized container: may burst if heated",
+   "GHS Rev.8": "Pressurized container: may burst if heated",
+   "GHS Rev.11": "Pressurized container: may burst if heated"
+  },
+  "H230": {
+   "GHS Rev.7": "May react explosively even in the absence of air",
+   "GHS Rev.8": "May react explosively even in the absence of air",
+   "GHS Rev.11": "May react explosively even in the absence of air"
+  },
+  "H231": {
+   "GHS Rev.7": "May react explosively even in the absence of air at elevated pressure and/or temperature",
+   "GHS Rev.8": "May react explosively even in the absence of air at elevated pressure and/or temperature",
+   "GHS Rev.11": "May react explosively even in the absence of air at elevated pressure and/or temperature"
+  },
+  "H232": {
+   "GHS Rev.7": "May ignite spontaneously if exposed to air",
+   "GHS Rev.8": "May ignite spontaneously if exposed to air",
+   "GHS Rev.11": "May ignite spontaneously if exposed to air"
+  },
+  "H240": {
+   "GHS Rev.7": "Heating may cause an explosion",
+   "GHS Rev.8": "Heating may cause an explosion",
+   "GHS Rev.11": "Heating may cause an explosion"
+  },
+  "H241": {
+   "GHS Rev.7": "Heating may cause a fire or explosion",
+   "GHS Rev.8": "Heating may cause a fire or explosion",
+   "GHS Rev.11": "Heating may cause a fire or explosion"
+  },
+  "H242": {
+   "GHS Rev.7": "Heating may cause a fire",
+   "GHS Rev.8": "Heating may cause a fire",
+   "GHS Rev.11": "Heating may cause a fire"
+  },
+  "H250": {
+   "GHS Rev.7": "Catches fire spontaneously if exposed to air",
+   "GHS Rev.8": "Catches fire spontaneously if exposed to air",
+   "GHS Rev.11": "Catches fire spontaneously if exposed to air"
+  },
+  "H251": {
+   "GHS Rev.7": "Self-heating; may catch fire",
+   "GHS Rev.8": "Self-heating; may catch fire",
+   "GHS Rev.11": "Self-heating; may catch fire"
+  },
+  "H252": {
+   "GHS Rev.7": "Self-heating in large quantities; may catch fire",
+   "GHS Rev.8": "Self-heating in large quantities; may catch fire",
+   "GHS Rev.11": "Self-heating in large quantities; may catch fire"
+  },
+  "H260": {
+   "GHS Rev.7": "In contact with water releases flammable gases which may ignite spontaneously",
+   "GHS Rev.8": "In contact with water releases flammable gases which may ignite spontaneously",
+   "GHS Rev.11": "In contact with water releases flammable gases which may ignite spontaneously"
+  },
+  "H261": {
+   "GHS Rev.7": "In contact with water releases flammable gas",
+   "GHS Rev.8": "In contact with water releases flammable gas",
+   "GHS Rev.11": "In contact with water releases flammable gas"
+  },
+  "H270": {
+   "GHS Rev.7": "May cause or intensify fire; oxidizer",
+   "GHS Rev.8": "May cause or intensify fire; oxidizer",
+   "GHS Rev.11": "May cause or intensify fire; oxidizer"
+  },
+  "H271": {
+   "GHS Rev.7": "May cause fire or explosion; strong oxidizer",
+   "GHS Rev.8": "May cause fire or explosion; strong oxidizer",
+   "GHS Rev.11": "May cause fire or explosion; strong oxidizer"
+  },
+  "H272": {
+   "GHS Rev.7": "May intensify fire; oxidizer",
+   "GHS Rev.8": "May intensify fire; oxidizer",
+   "GHS Rev.11": "May intensify fire; oxidizer"
+  },
+  "H280": {
+   "GHS Rev.7": "Contains gas under pressure; may explode if heated",
+   "GHS Rev.8": "Contains gas under pressure; may explode if heated",
+   "GHS Rev.11": "Contains gas under pressure; may explode if heated"
+  },
+  "H281": {
+   "GHS Rev.7": "Contains refrigerated gas; may cause cryogenic burns or injury",
+   "GHS Rev.8": "Contains refrigerated gas; may cause cryogenic burns or injury",
+   "GHS Rev.11": "Contains refrigerated gas; may cause cryogenic burns or injury"
+  },
+  "H282": {
+   "GHS Rev.8": "Extremely flammable chemical under pressure: May explode if heated",
+   "GHS Rev.11": "Extremely flammable chemical under pressure: May explode if heated"
+  },
+  "H283": {
+   "GHS Rev.8": "Flammable chemical under pressure: May explode if heated",
+   "GHS Rev.11": "Flammable chemical under pressure: May explode if heated"
+  },
+  "H284": {
+   "GHS Rev.8": "Chemical under pressure: May explode if heated",
+   "GHS Rev.11": "Chemical under pressure: May explode if heated"
+  },
+  "H290": {
+   "GHS Rev.7": "May be corrosive to metals",
+   "GHS Rev.8": "May be corrosive to metals",
+   "GHS Rev.11": "May be corrosive to metals"
+  },
+  "H300": {
+   "GHS Rev.7": "Fatal if swallowed",
+   "GHS Rev.8": "Fatal if swallowed",
+   "GHS Rev.11": "Fatal if swallowed"
+  },
+  "H300+H310": {
+   "GHS Rev.7": "Fatal if swallowed or in contact with skin",
+   "GHS Rev.8": "Fatal if swallowed or in contact with skin",
+   "GHS Rev.11": "Fatal if swallowed or in contact with skin"
+  },
+  "H300+H310+H330": {
+   "GHS Rev.7": "Fatal if swallowed, in contact with skin or if inhaled",
+   "GHS Rev.8": "Fatal if swallowed, in contact with skin or if inhaled",
+   "GHS Rev.11": "Fatal if swallowed, in contact with skin or if inhaled"
+  },
+  "H300+H330": {
+   "GHS Rev.7": "Fatal if swallowed or if inhaled",
+   "GHS Rev.8": "Fatal if swallowed or if inhaled",
+   "GHS Rev.11": "Fatal if swallowed or if inhaled"
+  },
+  "H301": {
+   "GHS Rev.7": "Toxic if swallowed",
+   "GHS Rev.8": "Toxic if swallowed",
+   "GHS Rev.11": "Toxic if swallowed"
+  },
+  "H301+H311": {
+   "GHS Rev.7": "Toxic if swallowed or in contact with skin",
+   "GHS Rev.8": "Toxic if swallowed or in contact with skin",
+   "GHS Rev.11": "Toxic if swallowed or in contact with skin"
+  },
+  "H301+H311+H331": {
+   "GHS Rev.7": "Toxic if swallowed, in contact with skin or if inhaled",
+   "GHS Rev.8": "Toxic if swallowed, in contact with skin or if inhaled",
+   "GHS Rev.11": "Toxic if swallowed, in contact with skin or if inhaled"
+  },
+  "H301+H331": {
+   "GHS Rev.7": "Toxic if swallowed or if inhaled",
+   "GHS Rev.8": "Toxic if swallowed or if inhaled",
+   "GHS Rev.11": "Toxic if swallowed or if inhaled"
+  },
+  "H302": {
+   "GHS Rev.7": "Harmful if swallowed",
+   "GHS Rev.8": "Harmful if swallowed",
+   "GHS Rev.11": "Harmful if swallowed"
+  },
+  "H302+H312": {
+   "GHS Rev.7": "Harmful if swallowed or in contact with skin",
+   "GHS Rev.8": "Harmful if swallowed or in contact with skin",
+   "GHS Rev.11": "Harmful if swallowed or in contact with skin"
+  },
+  "H302+H312+H332": {
+   "GHS Rev.7": "Harmful if swallowed, in contact with skin or if inhaled",
+   "GHS Rev.8": "Harmful if swallowed, in contact with skin or if inhaled",
+   "GHS Rev.11": "Harmful if swallowed, in contact with skin or if inhaled"
+  },
+  "H302+H332": {
+   "GHS Rev.7": "Harmful if swallowed or if inhaled",
+   "GHS Rev.8": "Harmful if swallowed or if inhaled",
+   "GHS Rev.11": "Harmful if swallowed or if inhaled"
+  },
+  "H303": {
+   "GHS Rev.7": "May be harmful if swallowed",
+   "GHS Rev.8": "May be harmful if swallowed",
+   "GHS Rev.11": "May be harmful if swallowed"
+  },
+  "H303+H313": {
+   "GHS Rev.7": "May be harmful if swallowed or in contact with skin",
+   "GHS Rev.8": "May be harmful if swallowed or in contact with skin",
+   "GHS Rev.11": "May be harmful if swallowed or in contact with skin"
+  },
+  "H303+H313+H333": {
+   "GHS Rev.7": "May be harmful if swallowed, in contact with skin or if inhaled",
+   "GHS Rev.8": "May be harmful if swallowed, in contact with skin or if inhaled",
+   "GHS Rev.11": "May be harmful if swallowed, in contact with skin or if inhaled"
+  },
+  "H303+H333": {
+   "GHS Rev.7": "May be harmful if swallowed or if inhaled",
+   "GHS Rev.8": "May be harmful if swallowed or if inhaled",
+   "GHS Rev.11": "May be harmful if swallowed or if inhaled"
+  },
+  "H304": {
+   "GHS Rev.7": "May be fatal if swallowed and enters airways",
+   "GHS Rev.8": "May be fatal if swallowed and enters airways",
+   "GHS Rev.11": "May be fatal if swallowed and enters airways"
+  },
+  "H305": {
+   "GHS Rev.7": "May be harmful if swallowed and enters airways",
+   "GHS Rev.8": "May be harmful if swallowed and enters airways",
+   "GHS Rev.11": "May be harmful if swallowed and enters airways"
+  },
+  "H310": {
+   "GHS Rev.7": "Fatal in contact with skin",
+   "GHS Rev.8": "Fatal in contact with skin",
+   "GHS Rev.11": "Fatal in contact with skin"
+  },
+  "H310+H330": {
+   "GHS Rev.7": "Fatal in contact with skin or if inhaled",
+   "GHS Rev.8": "Fatal in contact with skin or if inhaled",
+   "GHS Rev.11": "Fatal in contact with skin or if inhaled"
+  },
+  "H311": {
+   "GHS Rev.7": "Toxic in contact with skin",
+   "GHS Rev.8": "Toxic in contact with skin",
+   "GHS Rev.11": "Toxic in contact with skin"
+  },
+  "H311+H331": {
+   "GHS Rev.7": "Toxic in contact with skin or if inhaled",
+   "GHS Rev.8": "Toxic in contact with skin or if inhaled",
+   "GHS Rev.11": "Toxic in contact with skin or if inhaled"
+  },
+  "H312": {
+   "GHS Rev.7": "Harmful in contact with skin",
+   "GHS Rev.8": "Harmful in contact with skin",
+   "GHS Rev.11": "Harmful in contact with skin"
+  },
+  "H312+H332": {
+   "GHS Rev.7": "Harmful in contact with skin or if inhaled",
+   "GHS Rev.8": "Harmful in contact with skin or if inhaled",
+   "GHS Rev.11": "Harmful in contact with skin or if inhaled"
+  },
+  "H313": {
+   "GHS Rev.7": "May be harmful in contact with skin",
+   "GHS Rev.8": "May be harmful in contact with skin",
+   "GHS Rev.11": "May be harmful in contact with skin"
+  },
+  "H313+H333": {
+   "GHS Rev.7": "May be harmful in contact with skin or if inhaled",
+   "GHS Rev.8": "May be harmful in contact with skin or if inhaled",
+   "GHS Rev.11": "May be harmful in contact with skin or if inhaled"
+  },
+  "H314": {
+   "GHS Rev.7": "Causes severe skin burns and eye damage",
+   "GHS Rev.8": "Causes severe skin burns and eye damage",
+   "GHS Rev.11": "Causes severe skin burns and eye damage"
+  },
+  "H315": {
+   "GHS Rev.7": "Causes skin irritation",
+   "GHS Rev.8": "Causes skin irritation",
+   "GHS Rev.11": "Causes skin irritation"
+  },
+  "H315+H319": {
+   "GHS Rev.11": "Causes skin irritation and serious eye irritation a"
+  },
+  "H315+H320": {
+   "GHS Rev.7": "Causes skin and eye irritation",
+   "GHS Rev.8": "Causes skin and eye irritation",
+   "GHS Rev.11": "Causes skin and eye irritation a"
+  },
+  "H316": {
+   "GHS Rev.7": "Causes mild skin irritation",
+   "GHS Rev.8": "Causes mild skin irritation",
+   "GHS Rev.11": "Causes mild skin irritation"
+  },
+  "H317": {
+   "GHS Rev.7": "May cause an allergic skin reaction",
+   "GHS Rev.8": "May cause an allergic skin reaction",
+   "GHS Rev.11": "May cause an allergic skin reaction"
+  },
+  "H318": {
+   "GHS Rev.7": "Causes serious eye damage",
+   "GHS Rev.8": "Causes serious eye damage",
+   "GHS Rev.11": "Causes serious eye damage"
+  },
+  "H319": {
+   "GHS Rev.7": "Causes serious eye irritation",
+   "GHS Rev.8": "Causes serious eye irritation",
+   "GHS Rev.11": "Causes serious eye irritation"
+  },
+  "H320": {
+   "GHS Rev.7": "Causes eye irritation",
+   "GHS Rev.8": "Causes eye irritation",
+   "GHS Rev.11": "Causes eye irritation"
+  },
+  "H330": {
+   "GHS Rev.7": "Fatal if inhaled",
+   "GHS Rev.8": "Fatal if inhaled",
+   "GHS Rev.11": "Fatal if inhaled"
+  },
+  "H331": {
+   "GHS Rev.7": "Toxic if inhaled",
+   "GHS Rev.8": "Toxic if inhaled",
+   "GHS Rev.11": "Toxic if inhaled"
+  },
+  "H332": {
+   "GHS Rev.7": "Harmful if inhaled",
+   "GHS Rev.8": "Harmful if inhaled",
+   "GHS Rev.11": "Harmful if inhaled"
+  },
+  "H333": {
+   "GHS Rev.7": "May be harmful if inhaled",
+   "GHS Rev.8": "May be harmful if inhaled",
+   "GHS Rev.11": "May be harmful if inhaled"
+  },
+  "H334": {
+   "GHS Rev.7": "May cause allergy or asthma symptoms or breathing difficulties if inhaled",
+   "GHS Rev.8": "May cause allergy or asthma symptoms or breathing difficulties if inhaled",
+   "GHS Rev.11": "May cause allergy or asthma symptoms or breathing difficulties if inhaled"
+  },
+  "H335": {
+   "GHS Rev.7": "May cause respiratory irritation",
+   "GHS Rev.8": "May cause respiratory irritation",
+   "GHS Rev.11": "May cause respiratory irritation"
+  },
+  "H336": {
+   "GHS Rev.7": "May cause drowsiness or dizziness",
+   "GHS Rev.8": "May cause drowsiness or dizziness",
+   "GHS Rev.11": "May cause drowsiness or dizziness"
+  },
+  "H340": {
+   "GHS Rev.7": "May cause genetic defects (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "May cause genetic defects (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "May cause genetic defects (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H341": {
+   "GHS Rev.7": "Suspected of causing genetic defects (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "Suspected of causing genetic defects (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "Suspected of causing genetic defects (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H350": {
+   "GHS Rev.7": "May cause cancer (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "May cause cancer (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "May cause cancer (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H351": {
+   "GHS Rev.7": "Suspected of causing cancer (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "Suspected of causing cancer (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "Suspected of causing cancer (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H360": {
+   "GHS Rev.7": "May damage fertility or the unborn child (state specific effect if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "May damage fertility or the unborn child (state specific effect if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "May damage fertility or the unborn child (state specific effect if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H361": {
+   "GHS Rev.7": "Suspected of damaging fertility or the unborn child (state specific effect if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "Suspected of damaging fertility or the unborn child (state specific effect if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "Suspected of damaging fertility or the unborn child (state specific effect if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H362": {
+   "GHS Rev.7": "May cause harm to breast-fed children",
+   "GHS Rev.8": "May cause harm to breast-fed children",
+   "GHS Rev.11": "May cause harm to breast-fed children"
+  },
+  "H370": {
+   "GHS Rev.7": "Causes damage to organs (or state all organs affected, if known) (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "Causes damage to organs (or state all organs affected, if known) (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "Causes damage to organs (or state all organs affected, if known) (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H371": {
+   "GHS Rev.7": "May cause damage to organs (or state all organs affected, if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "May cause damage to organs (or state all organs affected, if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "May cause damage to organs (or state all organs affected, if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H372": {
+   "GHS Rev.7": "Causes damage to organs ( state all organs affected, if known) through prolonged or repeated exposure (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "Causes damage to organs ( state all organs affected, if known) through prolonged or repeated exposure (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "Causes damage to organs (state all organs affected, if known) through prolonged or repeated exposure (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H373": {
+   "GHS Rev.7": "May cause damage to organs ( state all organs affected, if known) through prolonged or repeated exposure (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.8": "May cause damage to organs ( state all organs affected, if known) through prolonged or repeated exposure (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+   "GHS Rev.11": "May cause damage to organs (state all organs affected, if known) through prolonged or repeated exposure (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)"
+  },
+  "H400": {
+   "GHS Rev.7": "Very toxic to aquatic life",
+   "GHS Rev.8": "Very toxic to aquatic life",
+   "GHS Rev.11": "Very toxic to aquatic life"
+  },
+  "H401": {
+   "GHS Rev.7": "Toxic to aquatic life",
+   "GHS Rev.8": "Toxic to aquatic life",
+   "GHS Rev.11": "Toxic to aquatic life"
+  },
+  "H402": {
+   "GHS Rev.7": "Harmful to aquatic life",
+   "GHS Rev.8": "Harmful to aquatic life",
+   "GHS Rev.11": "Harmful to aquatic life"
+  },
+  "H410": {
+   "GHS Rev.7": "Very toxic to aquatic life with long lasting effects",
+   "GHS Rev.8": "Very toxic to aquatic life with long lasting effects",
+   "GHS Rev.11": "Very toxic to aquatic life with long lasting effects"
+  },
+  "H411": {
+   "GHS Rev.7": "Toxic to aquatic life with long lasting effects",
+   "GHS Rev.8": "Toxic to aquatic life with long lasting effects",
+   "GHS Rev.11": "Toxic to aquatic life with long lasting effects"
+  },
+  "H412": {
+   "GHS Rev.7": "Harmful to aquatic life with long lasting effects",
+   "GHS Rev.8": "Harmful to aquatic life with long lasting effects",
+   "GHS Rev.11": "Harmful to aquatic life with long lasting effects"
+  },
+  "H413": {
+   "GHS Rev.7": "May cause long lasting harmful effects to aquatic life",
+   "GHS Rev.8": "May cause long lasting harmful effects to aquatic life",
+   "GHS Rev.11": "May cause long lasting harmful effects to aquatic life"
+  },
+  "H420": {
+   "GHS Rev.7": "Harms public health and the environment by destroying ozone in the upper atmosphere",
+   "GHS Rev.8": "Harms public health and the environment by destroying ozone in the upper atmosphere",
+   "GHS Rev.11": "Harms public health and the environment by destroying ozone in the upper atmosphere"
+  },
+  "H421": {
+   "GHS Rev.11": "Harms public health and the environment by contributing to global warming"
+  },
+  "P101": {
+   "GHS Rev.7": "If medical advice is needed, have product container or label at hand.",
+   "GHS Rev.8": "If medical advice is needed, have product container or label at hand.",
+   "GHS Rev.11": "If medical advice is needed, have product container or label at hand."
+  },
+  "P102": {
+   "GHS Rev.7": "Keep out of reach of children.",
+   "GHS Rev.8": "Keep out of reach of children.",
+   "GHS Rev.11": "Keep out of reach of children."
+  },
+  "P103": {
+   "GHS Rev.7": "Read carefully and follow all instructions.",
+   "GHS Rev.8": "Read carefully and follow all instructions.",
+   "GHS Rev.11": "Read carefully and follow all instructions."
+  },
+  "P201": {
+   "GHS Rev.7": "Obtain special instructions before use."
+  },
+  "P202": {
+   "GHS Rev.7": "Do not handle until all safety precautions have been read and understood."
+  },
+  "P203": {
+   "GHS Rev.8": "Obtain, read and follow all safety instructions before use.",
+   "GHS Rev.11": "Obtain, read and follow all safety instructions before use."
+  },
+  "P210": {
+   "GHS Rev.7": "Keep away from heat, hot surfaces, sparks, open flames and other ignition sources. No smoking.",
+   "GHS Rev.8": "Keep away from heat, hot surfaces, sparks, open flames and other ignition sources. No smoking.",
+   "GHS Rev.11": "Keep away from heat, hot surfaces, sparks, open flames and other ignition sources. No smoking."
+  },
+  "P211": {
+   "GHS Rev.7": "Do not spray on an open flame or other ignition source.",
+   "GHS Rev.8": "Do not spray on an open flame or other ignition source.",
+   "GHS Rev.11": "Do not spray on an open flame or other ignition source."
+  },
+  "P212": {
+   "GHS Rev.7": "Avoid heating under confinement or reduction of the desensitized agent",
+   "GHS Rev.8": "Avoid heating under confinement or reduction of the desensitizing agent",
+   "GHS Rev.11": "Avoid heating under confinement or reduction of the desensitizing agent"
+  },
+  "P220": {
+   "GHS Rev.7": "Keep away from clothing and other combustible materials.",
+   "GHS Rev.8": "Keep away from clothing and other combustible materials.",
+   "GHS Rev.11": "Keep away from clothing and other combustible materials."
+  },
+  "P222": {
+   "GHS Rev.7": "Do not allow contact with air.",
+   "GHS Rev.8": "Do not allow contact with air.",
+   "GHS Rev.11": "Do not allow contact with air."
+  },
+  "P223": {
+   "GHS Rev.7": "Do not allow contact with water.",
+   "GHS Rev.8": "Do not allow contact with water.",
+   "GHS Rev.11": "Do not allow contact with water."
+  },
+  "P230": {
+   "GHS Rev.7": "Keep wetted with …",
+   "GHS Rev.8": "Keep wetted with …",
+   "GHS Rev.11": "Keep diluted with …"
+  },
+  "P231": {
+   "GHS Rev.7": "Handle and store contents under inert gas/…",
+   "GHS Rev.8": "Handle and store contents under inert gas/…",
+   "GHS Rev.11": "Handle and store contents under inert gas/…"
+  },
+  "P231+P232": {
+   "GHS Rev.7": "Handle and store contents under inert gas/…. Protect from moisture.",
+   "GHS Rev.8": "Handle and store contents under inert gas/…. Protect from moisture.",
+   "GHS Rev.11": "Handle and store contents under inert gas/…. Protect from moisture."
+  },
+  "P232": {
+   "GHS Rev.7": "Protect from moisture.",
+   "GHS Rev.8": "Protect from moisture.",
+   "GHS Rev.11": "Protect from moisture."
+  },
+  "P233": {
+   "GHS Rev.7": "Keep container tightly closed.",
+   "GHS Rev.8": "Keep container tightly closed.",
+   "GHS Rev.11": "Keep container tightly closed."
+  },
+  "P234": {
+   "GHS Rev.7": "Keep only in original packaging.",
+   "GHS Rev.8": "Keep only in original packaging.",
+   "GHS Rev.11": "Keep only in original packaging."
+  },
+  "P235": {
+   "GHS Rev.7": "Keep cool.",
+   "GHS Rev.8": "Keep cool.",
+   "GHS Rev.11": "Keep cool."
+  },
+  "P236": {
+   "GHS Rev.11": "Keep only in original packaging; Division … in the transport configuration."
+  },
+  "P240": {
+   "GHS Rev.7": "Ground and bond container and receiving equipment.",
+   "GHS Rev.8": "Ground and bond container and receiving equipment.",
+   "GHS Rev.11": "Ground and bond container and receiving equipment."
+  },
+  "P241": {
+   "GHS Rev.7": "Use explosion-proof [electrical/ventilating/lighting/…] equipment.",
+   "GHS Rev.8": "Use explosion-proof [electrical/ventilating/lighting/…] equipment.",
+   "GHS Rev.11": "Use explosion-proof [electrical/ventilating/lighting/…] equipment."
+  },
+  "P242": {
+   "GHS Rev.7": "Use non-sparking tools.",
+   "GHS Rev.8": "Use non-sparking tools.",
+   "GHS Rev.11": "Use non-sparking tools."
+  },
+  "P243": {
+   "GHS Rev.7": "Take action to prevent static discharges.",
+   "GHS Rev.8": "Take action to prevent static discharges.",
+   "GHS Rev.11": "Take action to prevent static discharges."
+  },
+  "P244": {
+   "GHS Rev.7": "Keep valves and fittings free from oil and grease.",
+   "GHS Rev.8": "Keep valves and fittings free from oil and grease.",
+   "GHS Rev.11": "Keep valves and fittings free from oil and grease."
+  },
+  "P250": {
+   "GHS Rev.7": "Do not subject to grinding/shock/friction/….",
+   "GHS Rev.8": "Do not subject to grinding/shock/friction/….",
+   "GHS Rev.11": "Do not subject to grinding/shock/friction/…."
+  },
+  "P251": {
+   "GHS Rev.7": "Do not pierce or burn, even after use.",
+   "GHS Rev.8": "Do not pierce or burn, even after use.",
+   "GHS Rev.11": "Do not pierce or burn, even after use."
+  },
+  "P260": {
+   "GHS Rev.7": "Do not breathe dust/fume/gas/mist/vapours/spray.",
+   "GHS Rev.8": "Do not breathe dust/fume/gas/mist/vapours/spray.",
+   "GHS Rev.11": "Do not breathe dust/fume/gas/mist/vapours/spray."
+  },
+  "P261": {
+   "GHS Rev.7": "Avoid breathing dust/fume/gas/mist/vapours/spray.",
+   "GHS Rev.8": "Avoid breathing dust/fume/gas/mist/vapours/spray.",
+   "GHS Rev.11": "Avoid breathing dust/fume/gas/mist/vapours/spray."
+  },
+  "P262": {
+   "GHS Rev.7": "Do not get in eyes, on skin, or on clothing.",
+   "GHS Rev.8": "Do not get in eyes, on skin, or on clothing.",
+   "GHS Rev.11": "Do not get in eyes, on skin, or on clothing."
+  },
+  "P263": {
+   "GHS Rev.7": "Avoid contact during pregnancy and while nursing.",
+   "GHS Rev.8": "Avoid contact during pregnancy and while nursing.",
+   "GHS Rev.11": "Avoid contact during pregnancy and while nursing."
+  },
+  "P264": {
+   "GHS Rev.7": "Wash … thoroughly after handling.",
+   "GHS Rev.8": "Wash … thoroughly after handling.",
+   "GHS Rev.11": "Wash hands [and …] thoroughly after handling."
+  },
+  "P264+P265": {
+   "GHS Rev.11": "Wash hands [and…] thoroughly after handling. Do not touch eyes."
+  },
+  "P265": {
+   "GHS Rev.11": "Do not touch eyes."
+  },
+  "P270": {
+   "GHS Rev.7": "Do not eat, drink or smoke when using this product.",
+   "GHS Rev.8": "Do not eat, drink or smoke when using this product.",
+   "GHS Rev.11": "Do not eat, drink or smoke when using this product."
+  },
+  "P271": {
+   "GHS Rev.7": "Use only outdoors or in a well-ventilated area.",
+   "GHS Rev.8": "Use only outdoors or in a well-ventilated area.",
+   "GHS Rev.11": "Use only outdoors or with adequate ventilation."
+  },
+  "P272": {
+   "GHS Rev.7": "Contaminated work clothing should not be allowed out of the workplace.",
+   "GHS Rev.8": "Contaminated work clothing should not be allowed out of the workplace.",
+   "GHS Rev.11": "Contaminated work clothing should not be allowed out of the workplace."
+  },
+  "P273": {
+   "GHS Rev.7": "Avoid release to the environment.",
+   "GHS Rev.8": "Avoid release to the environment.",
+   "GHS Rev.11": "Avoid release to the environment."
+  },
+  "P280": {
+   "GHS Rev.7": "Wear protective gloves/protective clothing/eye protection/face protection/hearing protection/…",
+   "GHS Rev.8": "Wear protective gloves/protective clothing/eye protection/face protection/hearing protection/…",
+   "GHS Rev.11": "Wear protective gloves/protective clothing/eye protection/face protection/hearing protection/…"
+  },
+  "P282": {
+   "GHS Rev.7": "Wear cold insulating gloves and either face shield or eye protection.",
+   "GHS Rev.8": "Wear cold insulating gloves and either face shield or eye protection.",
+   "GHS Rev.11": "Wear cold insulating gloves and either face shield or eye protection."
+  },
+  "P283": {
+   "GHS Rev.7": "Wear fire resistant or flame retardant clothing.",
+   "GHS Rev.8": "Wear fire resistant or flame retardant clothing.",
+   "GHS Rev.11": "Wear fire resistant or flame-retardant clothing."
+  },
+  "P284": {
+   "GHS Rev.7": "[In case of inadequate ventilation] wear respiratory protection.",
+   "GHS Rev.8": "[In case of inadequate ventilation] wear respiratory protection.",
+   "GHS Rev.11": "In case of inadequate ventilation wear respiratory protection."
+  },
+  "P301": {
+   "GHS Rev.7": "IF SWALLOWED:",
+   "GHS Rev.8": "IF SWALLOWED:",
+   "GHS Rev.11": "IF SWALLOWED:"
+  },
+  "P301+P310": {
+   "GHS Rev.7": "IF SWALLOWED: Immediately call a POISON CENTER/doctor/…"
+  },
+  "P301+P312": {
+   "GHS Rev.7": "IF SWALLOWED: Call a POISON CENTER/doctor/…if you feel unwell."
+  },
+  "P301+P316": {
+   "GHS Rev.8": "IF SWALLOWED: Get emergency medical help immediately.",
+   "GHS Rev.11": "IF SWALLOWED: Get emergency medical help immediately."
+  },
+  "P301+P317": {
+   "GHS Rev.8": "IF SWALLOWED: Get medical help.",
+   "GHS Rev.11": "IF SWALLOWED: Get medical help."
+  },
+  "P301+P330+P331": {
+   "GHS Rev.7": "IF SWALLOWED: Rinse mouth. Do NOT induce vomiting.",
+   "GHS Rev.8": "IF SWALLOWED: Rinse mouth. Do NOT induce vomiting.",
+   "GHS Rev.11": "IF SWALLOWED: Rinse mouth. Do NOT induce vomiting."
+  },
+  "P302": {
+   "GHS Rev.7": "IF ON SKIN:",
+   "GHS Rev.8": "IF ON SKIN:",
+   "GHS Rev.11": "IF ON SKIN:"
+  },
+  "P302+P334": {
+   "GHS Rev.7": "IF ON SKIN: Immerse in cool water or wrap in wet bandages.",
+   "GHS Rev.8": "IF ON SKIN: Immerse in cool water or wrap in wet bandages.",
+   "GHS Rev.11": "IF ON SKIN: Immerse in cool water or wrap in wet bandages."
+  },
+  "P302+P335+P334": {
+   "GHS Rev.8": "IF ON SKIN: Brush off loose particles from skin. Immerse in cool water [or wrap in wet bandages].",
+   "GHS Rev.11": "IF ON SKIN: Brush off loose particles from skin and immerse in cool water [or wrap in wet bandages]."
+  },
+  "P302+P352": {
+   "GHS Rev.7": "IF ON SKIN: Wash with plenty of water/…",
+   "GHS Rev.8": "IF ON SKIN: Wash with plenty of water/…",
+   "GHS Rev.11": "IF ON SKIN: Wash with plenty of water/…"
+  },
+  "P302+P361+P354": {
+   "GHS Rev.11": "IF ON SKIN: Take off immediately all contaminated clothing. Immediately rinse with water for several minutes."
+  },
+  "P303": {
+   "GHS Rev.7": "IF ON SKIN (or hair):",
+   "GHS Rev.8": "IF ON SKIN (or hair):",
+   "GHS Rev.11": "IF ON SKIN (or hair):"
+  },
+  "P303+P361+P353": {
+   "GHS Rev.7": "IF ON SKIN (or hair): Take off immediately all contaminated clothing. Rinse skin with water [or shower].",
+   "GHS Rev.8": "IF ON SKIN (or hair): Take off immediately all contaminated clothing. Rinse affected areas with water [or shower].",
+   "GHS Rev.11": "IF ON SKIN (or hair): Take off immediately all contaminated clothing. Rinse affected areas with water [or shower]."
+  },
+  "P304": {
+   "GHS Rev.7": "IF INHALED:",
+   "GHS Rev.8": "IF INHALED:",
+   "GHS Rev.11": "IF INHALED:"
+  },
+  "P304+P312": {
+   "GHS Rev.7": "IF INHALED: Call a POISON CENTER/doctor/…if you feel unwell."
+  },
+  "P304+P317": {
+   "GHS Rev.8": "IF INHALED: Get medical help."
+  },
+  "P304+P340": {
+   "GHS Rev.7": "IF INHALED: Remove person to fresh air and keep comfortable for breathing.",
+   "GHS Rev.8": "IF INHALED: Remove person to fresh air and keep comfortable for breathing.",
+   "GHS Rev.11": "IF INHALED: Remove person to fresh air and keep comfortable for breathing."
+  },
+  "P305": {
+   "GHS Rev.7": "IF IN EYES:",
+   "GHS Rev.8": "IF IN EYES:",
+   "GHS Rev.11": "IF IN EYES:"
+  },
+  "P305+P351+P338": {
+   "GHS Rev.7": "IF IN EYES: Rinse cautiously with water for several minutes. Remove contact lenses, if present and easy to do. Continue rinsing.",
+   "GHS Rev.8": "IF IN EYES: Rinse cautiously with water for several minutes. Remove contact lenses, if present and easy to do. Continue rinsing.",
+   "GHS Rev.11": "IF IN EYES: Rinse cautiously with water for several minutes. Remove contact lenses, if present and easy to do. Continue rinsing."
+  },
+  "P305+P354+P338": {
+   "GHS Rev.8": "IF IN EYES: Immediately rinse with water for several minutes. Remove contact lenses, if present and easy to do. Continue rinsing.",
+   "GHS Rev.11": "IF IN EYES: Immediately rinse with water for several minutes. Remove contact lenses, if present and easy to do. Continue rinsing."
+  },
+  "P306": {
+   "GHS Rev.7": "IF ON CLOTHING:",
+   "GHS Rev.8": "IF ON CLOTHING:",
+   "GHS Rev.11": "IF ON CLOTHING:"
+  },
+  "P306+P360": {
+   "GHS Rev.7": "IF ON CLOTHING: Rinse immediately contaminated clothing and skin with plenty of water before removing clothes.",
+   "GHS Rev.8": "IF ON CLOTHING: Rinse immediately contaminated clothing and skin with plenty of water before removing clothes.",
+   "GHS Rev.11": "IF ON CLOTHING: Rinse immediately contaminated clothing and skin with plenty of water before removing clothes."
+  },
+  "P308": {
+   "GHS Rev.7": "IF exposed or concerned:",
+   "GHS Rev.8": "IF exposed or concerned:",
+   "GHS Rev.11": "IF exposed or concerned:"
+  },
+  "P308+P311": {
+   "GHS Rev.7": "IF exposed or concerned: Call a POISON CENTER/doctor/…"
+  },
+  "P308+P313": {
+   "GHS Rev.7": "IF exposed or concerned: Get medical advice/attention."
+  },
+  "P308+P316": {
+   "GHS Rev.8": "IF exposed or concerned: Get emergency medical help immediately.",
+   "GHS Rev.11": "IF exposed or concerned: Get emergency medical help immediately."
+  },
+  "P310": {
+   "GHS Rev.7": "Immediately call a POISON CENTER/doctor/…"
+  },
+  "P311": {
+   "GHS Rev.7": "Call a POISON CENTER/doctor/…"
+  },
+  "P312": {
+   "GHS Rev.7": "Call a POISON CENTER/doctor/…if you feel unwell."
+  },
+  "P313": {
+   "GHS Rev.7": "Get medical advice/attention."
+  },
+  "P314": {
+   "GHS Rev.7": "Get medical advice/attention if you feel unwell."
+  },
+  "P315": {
+   "GHS Rev.7": "Get immediate medical advice/attention."
+  },
+  "P316": {
+   "GHS Rev.8": "Get emergency medical help immediately.",
+   "GHS Rev.11": "Get emergency medical help immediately."
+  },
+  "P317": {
+   "GHS Rev.8": "Get medical help.",
+   "GHS Rev.11": "Get medical help."
+  },
+  "P318": {
+   "GHS Rev.8": "IF exposed or concerned, get medical advice.",
+   "GHS Rev.11": "IF exposed or concerned, get medical advice."
+  },
+  "P319": {
+   "GHS Rev.8": "Get medical help if you feel unwell.",
+   "GHS Rev.11": "Get medical help if you feel unwell."
+  },
+  "P320": {
+   "GHS Rev.7": "Specific treatment is urgent (see … on this label).",
+   "GHS Rev.8": "Specific treatment is urgent (see … on this label).",
+   "GHS Rev.11": "Specific treatment is urgent (see information on this label and safety data sheet)."
+  },
+  "P321": {
+   "GHS Rev.7": "Specific treatment (see … on this label).",
+   "GHS Rev.8": "Specific treatment (see … on this label).",
+   "GHS Rev.11": "Specific treatment (see information on this label and safety data sheet)."
+  },
+  "P322": {
+   "GHS Rev.11": "Specific treatment is urgent (see information on the safety data sheet)."
+  },
+  "P323": {
+   "GHS Rev.11": "Specific treatment (see information on the safety data sheet)."
+  },
+  "P330": {
+   "GHS Rev.7": "Rinse mouth.",
+   "GHS Rev.8": "Rinse mouth.",
+   "GHS Rev.11": "Rinse mouth."
+  },
+  "P331": {
+   "GHS Rev.7": "Do NOT induce vomiting.",
+   "GHS Rev.8": "Do NOT induce vomiting.",
+   "GHS Rev.11": "Do NOT induce vomiting."
+  },
+  "P332": {
+   "GHS Rev.7": "If skin irritation occurs:",
+   "GHS Rev.8": "If skin irritation occurs:",
+   "GHS Rev.11": "If skin irritation occurs:"
+  },
+  "P332+P313": {
+   "GHS Rev.7": "If skin irritation occurs: Get medical advice/attention."
+  },
+  "P332+P317": {
+   "GHS Rev.8": "If skin irritation occurs: Get medical help.",
+   "GHS Rev.11": "If skin irritation occurs: Get medical help."
+  },
+  "P333": {
+   "GHS Rev.7": "If skin irritation or rash occurs:",
+   "GHS Rev.8": "If skin irritation or rash occurs:",
+   "GHS Rev.11": "If skin irritation or rash occurs:"
+  },
+  "P333+P313": {
+   "GHS Rev.7": "If skin irritation or rash occurs: Get medical advice/attention."
+  },
+  "P333+P317": {
+   "GHS Rev.8": "If skin irritation or rash occurs: Get medical help.",
+   "GHS Rev.11": "If skin irritation or rash occurs: Get medical help."
+  },
+  "P334": {
+   "GHS Rev.7": "Immerse in cool water [or wrap in wet bandages].",
+   "GHS Rev.8": "Immerse in cool water [or wrap in wet bandages].",
+   "GHS Rev.11": "Immerse in cool water [or wrap in wet bandages]."
+  },
+  "P335": {
+   "GHS Rev.7": "Brush off loose particles from skin.",
+   "GHS Rev.8": "Brush off loose particles from skin.",
+   "GHS Rev.11": "Brush off loose particles from skin."
+  },
+  "P336": {
+   "GHS Rev.7": "Thaw frosted parts with lukewarm water. Do not rub affected area.",
+   "GHS Rev.8": "Immediately thaw frosted parts with lukewarm water. Do not rub affected area.",
+   "GHS Rev.11": "Immediately thaw frosted parts with lukewarm water. Do not rub affected area."
+  },
+  "P336+P315": {
+   "GHS Rev.7": "Thaw frosted parts with lukewarm water. Do not rub affected area. Get immediate medical advice/attention"
+  },
+  "P336+P317": {
+   "GHS Rev.8": "Immediately thaw frosted parts with lukewarm water. Do not rub affected area. Get medical help.",
+   "GHS Rev.11": "Immediately thaw frosted parts with lukewarm water. Do not rub affected area. Get medical help."
+  },
+  "P337": {
+   "GHS Rev.7": "If eye irritation persists:",
+   "GHS Rev.8": "If eye irritation persists:",
+   "GHS Rev.11": "If eye irritation persists:"
+  },
+  "P337+P313": {
+   "GHS Rev.7": "If eye irritation persists: Get medical advice/attention."
+  },
+  "P337+P317": {
+   "GHS Rev.8": "If eye irritation persists: Get medical help.",
+   "GHS Rev.11": "If eye irritation persists: Get medical help."
+  },
+  "P338": {
+   "GHS Rev.7": "Remove contact lenses, if present and easy to do. Continue rinsing.",
+   "GHS Rev.8": "Remove contact lenses, if present and easy to do. Continue rinsing.",
+   "GHS Rev.11": "Remove contact lenses, if present and easy to do. Continue rinsing."
+  },
+  "P340": {
+   "GHS Rev.7": "Remove person to fresh air and keep comfortable for breathing.",
+   "GHS Rev.8": "Remove person to fresh air and keep comfortable for breathing.",
+   "GHS Rev.11": "Remove person to fresh air and keep comfortable for breathing."
+  },
+  "P342": {
+   "GHS Rev.7": "If experiencing respiratory symptoms:",
+   "GHS Rev.8": "If experiencing respiratory symptoms:",
+   "GHS Rev.11": "If experiencing respiratory symptoms:"
+  },
+  "P342+P311": {
+   "GHS Rev.7": "If experiencing respiratory symptoms: Call a POISON CENTER/doctor/…"
+  },
+  "P342+P316": {
+   "GHS Rev.8": "If experiencing respiratory symptoms: Get emergency medical help immediately.",
+   "GHS Rev.11": "If experiencing respiratory symptoms: Get emergency medical help immediately."
+  },
+  "P351": {
+   "GHS Rev.7": "Rinse cautiously with water for several minutes.",
+   "GHS Rev.8": "Rinse cautiously with water for several minutes.",
+   "GHS Rev.11": "Rinse cautiously with water for several minutes."
+  },
+  "P352": {
+   "GHS Rev.7": "Wash with plenty of water/…",
+   "GHS Rev.8": "Wash with plenty of water/…",
+   "GHS Rev.11": "Wash with plenty of water/…"
+  },
+  "P353": {
+   "GHS Rev.7": "Rinse skin with water [or shower].",
+   "GHS Rev.8": "Rinse affected areas with water [or shower].",
+   "GHS Rev.11": "Rinse affected areas with water [or shower]."
+  },
+  "P354": {
+   "GHS Rev.8": "Immediately rinse with water for several minutes.",
+   "GHS Rev.11": "Immediately rinse with water for several minutes."
+  },
+  "P360": {
+   "GHS Rev.7": "Rinse immediately contaminated clothing and skin with plenty of water before removing clothes.",
+   "GHS Rev.8": "Rinse immediately contaminated clothing and skin with plenty of water before removing clothes.",
+   "GHS Rev.11": "Rinse immediately contaminated clothing and skin with plenty of water before removing clothes."
+  },
+  "P361": {
+   "GHS Rev.7": "Take off immediately all contaminated clothing.",
+   "GHS Rev.8": "Take off immediately all contaminated clothing.",
+   "GHS Rev.11": "Take off immediately all contaminated clothing."
+  },
+  "P361+P364": {
+   "GHS Rev.7": "Take off immediately all contaminated clothing and wash it before reuse.",
+   "GHS Rev.8": "Take off immediately all contaminated clothing and wash it before reuse.",
+   "GHS Rev.11": "Take off immediately all contaminated clothing and wash it before reuse."
+  },
+  "P362": {
+   "GHS Rev.7": "Take off contaminated clothing.",
+   "GHS Rev.8": "Take off contaminated clothing.",
+   "GHS Rev.11": "Take off contaminated clothing."
+  },
+  "P362+P364": {
+   "GHS Rev.7": "Take off contaminated clothing and wash it before reuse.",
+   "GHS Rev.8": "Take off contaminated clothing and wash it before reuse.",
+   "GHS Rev.11": "Take off contaminated clothing and wash it before reuse."
+  },
+  "P363": {
+   "GHS Rev.7": "Wash contaminated clothing before reuse.",
+   "GHS Rev.8": "Wash contaminated clothing before reuse.",
+   "GHS Rev.11": "Wash contaminated clothing before reuse."
+  },
+  "P364": {
+   "GHS Rev.7": "And wash it before reuse.",
+   "GHS Rev.8": "And wash it before reuse.",
+   "GHS Rev.11": "And wash it before reuse."
+  },
+  "P370": {
+   "GHS Rev.7": "In case of fire:",
+   "GHS Rev.8": "In case of fire:",
+   "GHS Rev.11": "In case of fire:"
+  },
+  "P370+P372+P380+P373": {
+   "GHS Rev.7": "In case of fire: Explosion risk. Evacuate area. DO NOT fight fire when fire reaches explosives.",
+   "GHS Rev.8": "In case of fire: Explosion risk. Evacuate area. DO NOT fight fire when fire reaches explosives.",
+   "GHS Rev.11": "In case of fire: Explosion risk. Evacuate area. DO NOT fight fire when fire reaches explosives."
+  },
+  "P370+P376": {
+   "GHS Rev.7": "In case of fire: Stop leak if safe to do so.",
+   "GHS Rev.8": "In case of fire: Stop leak if safe to do so.",
+   "GHS Rev.11": "In case of fire: Stop leak if safe to do so."
+  },
+  "P370+P378": {
+   "GHS Rev.7": "In case of fire: Use … to extinguish.",
+   "GHS Rev.8": "In case of fire: Use … to extinguish.",
+   "GHS Rev.11": "In case of fire: Use … to extinguish."
+  },
+  "P370+P380+P375": {
+   "GHS Rev.7": "In case of fire: Evacuate area. Fight fire remotely due to the risk of explosion.",
+   "GHS Rev.8": "In case of fire: Evacuate area. Fight fire remotely due to the risk of explosion.",
+   "GHS Rev.11": "In case of fire: Evacuate area. Fight fire remotely due to the risk of explosion."
+  },
+  "P371": {
+   "GHS Rev.7": "In case of major fire and large quantities:",
+   "GHS Rev.8": "In case of major fire and large quantities:",
+   "GHS Rev.11": "In case of major fire and large quantities:"
+  },
+  "P371+P380+P375": {
+   "GHS Rev.7": "In case of major fire and large quantities: Evacuate area. Fight fire remotely due to the risk of explosion.",
+   "GHS Rev.8": "In case of major fire and large quantities: Evacuate area. Fight fire remotely due to the risk of explosion.",
+   "GHS Rev.11": "In case of major fire and large quantities: Evacuate area. Fight fire remotely due to the risk of explosion."
+  },
+  "P372": {
+   "GHS Rev.7": "Explosion risk.",
+   "GHS Rev.8": "Explosion risk.",
+   "GHS Rev.11": "Explosion risk."
+  },
+  "P373": {
+   "GHS Rev.7": "DO NOT fight fire when fire reaches explosives.",
+   "GHS Rev.8": "DO NOT fight fire when fire reaches explosives.",
+   "GHS Rev.11": "DO NOT fight fire when fire reaches explosives."
+  },
+  "P375": {
+   "GHS Rev.7": "Fight fire remotely due to the risk of explosion.",
+   "GHS Rev.8": "Fight fire remotely due to the risk of explosion.",
+   "GHS Rev.11": "Fight fire remotely due to the risk of explosion."
+  },
+  "P376": {
+   "GHS Rev.7": "Stop leak if safe to do so.",
+   "GHS Rev.8": "Stop leak if safe to do so.",
+   "GHS Rev.11": "Stop leak if safe to do so."
+  },
+  "P377": {
+   "GHS Rev.7": "Leaking gas fire: Do not extinguish, unless leak can be stopped safely.",
+   "GHS Rev.8": "Leaking gas fire: Do not extinguish, unless leak can be stopped safely.",
+   "GHS Rev.11": "Leaking gas fire: Do not extinguish, unless leak can be stopped safely."
+  },
+  "P378": {
+   "GHS Rev.7": "Use … to extinguish.",
+   "GHS Rev.8": "Use … to extinguish.",
+   "GHS Rev.11": "Use … to extinguish."
+  },
+  "P380": {
+   "GHS Rev.7": "Evacuate area.",
+   "GHS Rev.8": "Evacuate area.",
+   "GHS Rev.11": "Evacuate area."
+  },
+  "P381": {
+   "GHS Rev.7": "In case of leakage, eliminate all ignition sources.",
+   "GHS Rev.8": "In case of leakage, eliminate all ignition sources.",
+   "GHS Rev.11": "In case of leakage, eliminate all ignition sources."
+  },
+  "P390": {
+   "GHS Rev.7": "Absorb spillage to prevent material damage.",
+   "GHS Rev.8": "Absorb spillage to prevent material damage.",
+   "GHS Rev.11": "Absorb spillage to prevent material damage."
+  },
+  "P391": {
+   "GHS Rev.7": "Collect spillage.",
+   "GHS Rev.8": "Collect spillage.",
+   "GHS Rev.11": "Collect spillage."
+  },
+  "P401": {
+   "GHS Rev.7": "Store in accordance with…",
+   "GHS Rev.8": "Store in accordance with…",
+   "GHS Rev.11": "Store in accordance with…"
+  },
+  "P402": {
+   "GHS Rev.7": "Store in a dry place.",
+   "GHS Rev.8": "Store in a dry place.",
+   "GHS Rev.11": "Store in a dry place."
+  },
+  "P402+P404": {
+   "GHS Rev.7": "Store in a dry place. Store in a closed container.",
+   "GHS Rev.8": "Store in a dry place. Store in a closed container.",
+   "GHS Rev.11": "Store in a dry place. Store in a closed container."
+  },
+  "P403": {
+   "GHS Rev.7": "Store in a well-ventilated place.",
+   "GHS Rev.8": "Store in a well-ventilated place.",
+   "GHS Rev.11": "Store in a well-ventilated place."
+  },
+  "P403+P233": {
+   "GHS Rev.7": "Store in a well-ventilated place. Keep container tightly closed.",
+   "GHS Rev.8": "Store in a well-ventilated place. Keep container tightly closed.",
+   "GHS Rev.11": "Store in a well-ventilated place. Keep container tightly closed."
+  },
+  "P403+P235": {
+   "GHS Rev.7": "Store in a well-ventilated place. Keep cool.",
+   "GHS Rev.8": "Store in a well-ventilated place. Keep cool.",
+   "GHS Rev.11": "Store in a well-ventilated place. Keep cool."
+  },
+  "P404": {
+   "GHS Rev.7": "Store in a closed container.",
+   "GHS Rev.8": "Store in a closed container.",
+   "GHS Rev.11": "Store in a closed container."
+  },
+  "P405": {
+   "GHS Rev.7": "Store locked up.",
+   "GHS Rev.8": "Store locked up.",
+   "GHS Rev.11": "Store locked up."
+  },
+  "P406": {
+   "GHS Rev.7": "Store in a corrosion resistant/…container with a resistant inner liner.",
+   "GHS Rev.8": "Store in a corrosion resistant/…container with a resistant inner liner.",
+   "GHS Rev.11": "Store in a corrosion resistant/…container with a resistant inner liner."
+  },
+  "P407": {
+   "GHS Rev.7": "Maintain air gap between stacks or pallets.",
+   "GHS Rev.8": "Maintain air gap between stacks or pallets.",
+   "GHS Rev.11": "Maintain air gap between stacks or pallets."
+  },
+  "P410": {
+   "GHS Rev.7": "Protect from sunlight.",
+   "GHS Rev.8": "Protect from sunlight.",
+   "GHS Rev.11": "Protect from sunlight."
+  },
+  "P410+P403": {
+   "GHS Rev.7": "Protect from sunlight. Store in a well-ventilated place.",
+   "GHS Rev.8": "Protect from sunlight. Store in a well-ventilated place.",
+   "GHS Rev.11": "Protect from sunlight. Store in a well-ventilated place."
+  },
+  "P410+P412": {
+   "GHS Rev.7": "Protect from sunlight. Do not expose to temperatures exceeding 50 °C/122 °F.",
+   "GHS Rev.8": "Protect from sunlight. Do not expose to temperatures exceeding 50 °C/122 °F.",
+   "GHS Rev.11": "Protect from sunlight. Do not expose to temperatures exceeding 50°C/122°F."
+  },
+  "P411": {
+   "GHS Rev.7": "Store at temperatures not exceeding …°C/…°F.",
+   "GHS Rev.8": "Store at temperatures not exceeding …°C/…°F.",
+   "GHS Rev.11": "Store at temperatures not exceeding …°C/…°F."
+  },
+  "P412": {
+   "GHS Rev.7": "Do not expose to temperatures exceeding 50 °C/122 °F.",
+   "GHS Rev.8": "Do not expose to temperatures exceeding 50 °C/122 °F.",
+   "GHS Rev.11": "Do not expose to temperatures exceeding 50°C/122 °F."
+  },
+  "P413": {
+   "GHS Rev.7": "Store bulk masses greater than … kg/…lbs at temperatures not exceeding …°C/…°F.",
+   "GHS Rev.8": "Store bulk masses greater than … kg/…lbs at temperatures not exceeding …°C/…°F.",
+   "GHS Rev.11": "Store bulk masses greater than … kg/…lbs at temperatures not exceeding …°C/…°F."
+  },
+  "P420": {
+   "GHS Rev.7": "Store separately.",
+   "GHS Rev.8": "Store separately.",
+   "GHS Rev.11": "Store separately."
+  },
+  "P501": {
+   "GHS Rev.7": "Dispose of contents/container to …",
+   "GHS Rev.8": "Dispose of contents/container to …",
+   "GHS Rev.11": "Dispose of contents/container to …"
+  },
+  "P502": {
+   "GHS Rev.7": "Refer to manufacturer or supplier for information on recovery or recycling.",
+   "GHS Rev.8": "Refer to manufacturer or supplier for information on recovery or recycling.",
+   "GHS Rev.11": "Refer to manufacturer or supplier for information on recovery or recycling."
+  },
+  "P503": {
+   "GHS Rev.7": "Refer to manufacturer/supplier… for information on disposal/recovery/recycling.",
+   "GHS Rev.8": "Refer to manufacturer/supplier… for information on disposal/recovery/recycling.",
+   "GHS Rev.11": "Refer to manufacturer/supplier… for information on disposal/recovery/recycling."
+  }
+ }
+}

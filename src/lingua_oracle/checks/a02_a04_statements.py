@@ -11,6 +11,7 @@ are recorded as unverified and left to the consistency check C-02.
 from __future__ import annotations
 
 from lingua_oracle.checks.base import CheckContext, register
+from lingua_oracle.checks.missing_source import Reason, classify
 from lingua_oracle.match.template import MatchKind, match
 from lingua_oracle.models import Finding, Severity, Tier
 
@@ -35,15 +36,24 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
         entry = ctx.entry(hit.code)
         section = ctx.section_for(hit)
         if entry is None:
+            # Three reasons a code has no reference text, and only one of them
+            # is ours. C-15 owns the other two - a code from a later GHS
+            # edition, and a code that exists nowhere - so reporting them here
+            # as well would say the same thing twice in different words.
+            missing = classify(hit.code, ctx.reference.key_status,
+                               ctx.reference.entries)
+            if missing.reason is not Reason.NOT_ON_FILE:
+                continue
             findings.append(
                 Finding(
                     check_id=check_id, severity=Severity.WARN, section=section,
                     page=hit.page, code=hit.code, found=hit.text, tier=Tier.C,
                     unverified=True,
                     message=(
-                        f"We hold no official {ctx.regulation.display_name} "
-                        f"wording for {hit.code} in '{ctx.language}', so this "
-                        "statement could not be checked."
+                        f"Not checked: we hold no official "
+                        f"{ctx.regulation.display_name} wording for {hit.code} "
+                        f"in '{ctx.language}'. Our records are incomplete for "
+                        "this regulation; this is not a finding about the sheet."
                     ),
                 )
             )

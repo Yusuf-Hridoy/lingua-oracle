@@ -116,6 +116,15 @@ CASES: tuple[Case, ...] = (
                "English and French.",
          should_show="C-14 fails, saying the French version is required."),
 
+    Case("defect_c15_newer_ghs", regulation="",
+         expect_language="en",
+         expect=(("C-15", "warn", "P317"), ("C-15", "fail", "P999")),
+         plain="An EU CLP sheet citing P317 and P332+P317 - wording from GHS "
+               "Rev.8, which CLP has not adopted - and a made-up code, P999.",
+         should_show="C-15 warns for the two Rev.8 codes, naming the edition "
+                     "and the closest statement CLP does publish, and fails "
+                     "P999 as not a code at all."),
+
     # -- false alarms that were fixed; these must stay clean ------------------
     Case("pattern_negative_declaration", regulation="",
          expect_language="en", clean=True,

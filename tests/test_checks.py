@@ -53,8 +53,10 @@ def _fired(report, severity: Severity) -> set[str]:
     }
 
 
-def test_fifteen_checks_are_registered():
-    assert len(all_checks()) == 15
+def test_every_check_is_registered():
+    """Importing lingua_oracle.checks is what registers them; a module left out
+    of that package's import list disappears silently."""
+    assert len(all_checks()) == 16
 
 
 @pytest.mark.parametrize(("name", "regulation", "language"), CLEAN)
@@ -138,3 +140,56 @@ def test_coverage_is_reported():
     assert report.coverage.codes_found > 0
     assert report.coverage.codes_checked == report.coverage.codes_found
     assert report.coverage.percent == 100.0
+
+
+# -- C-15: newer GHS wording, and codes that are not codes --------------------
+
+
+def test_c15_reports_a_code_the_regulation_has_not_adopted():
+    report = check_pdf(pdf("defect_c15_newer_ghs"), "eu_clp")
+    rows = {f.code: f for f in report.findings if f.check_id == "C-15"}
+    assert "P317" in rows, "P317 is GHS Rev.8 wording; EU CLP has no P317"
+    assert rows["P317"].severity is Severity.WARN
+    assert "GHS Rev.8" in rows["P317"].message
+    # The regulation's own nearest statement is offered, quoted from the key.
+    assert rows["P317"].expected, "no closest official statement was offered"
+    assert "P313" in rows["P317"].message
+
+
+def test_c15_points_a_combined_code_at_its_own_family():
+    report = check_pdf(pdf("defect_c15_newer_ghs"), "eu_clp")
+    row = next(f for f in report.findings
+               if f.check_id == "C-15" and f.code == "P332+P317")
+    assert "P332+P313" in row.message, row.message
+
+
+def test_c15_fails_a_code_that_exists_nowhere():
+    report = check_pdf(pdf("defect_c15_newer_ghs"), "eu_clp")
+    row = next(f for f in report.findings
+               if f.check_id == "C-15" and f.code == "P999")
+    assert row.severity is Severity.FAIL
+    assert "typo" in row.message.lower()
+
+
+def test_newer_ghs_codes_are_not_also_reported_as_not_checked():
+    """One code, one explanation. A-03 must not repeat what C-15 said."""
+    report = check_pdf(pdf("defect_c15_newer_ghs"), "eu_clp")
+    unverified = {f.code for f in report.findings if f.unverified}
+    assert "P317" not in unverified and "P332+P317" not in unverified
+
+
+def test_an_incomplete_key_never_claims_a_code_is_newer_or_unknown():
+    """us_osha's key is knowingly partial, so a gap there is ours to own."""
+    from lingua_oracle.checks.missing_source import Reason, classify
+    from lingua_oracle.keys.tierb import resolve
+
+    osha = resolve("us_osha", "en")
+    assert osha.key_status != "ok"
+    for code in ("P319", "ZZZ999", "P241"):
+        assert classify(code, osha.key_status, osha.entries).reason is Reason.NOT_ON_FILE
+
+
+def test_severity_of_newer_wording_comes_from_the_registry():
+    from lingua_oracle.registry import load_registry
+
+    assert load_registry().get("eu_clp").newer_ghs_wording == "warn"

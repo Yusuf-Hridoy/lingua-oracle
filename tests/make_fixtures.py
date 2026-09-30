@@ -287,6 +287,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "defect_c14_english_only.pdf"))
 
     # Patterns found on real documents, reproduced with fictional data.
+    add("defect_c15_newer_ghs", _newer_ghs_codes(
+        FIXTURES / "defect_c15_newer_ghs.pdf"))
     add("pattern_language_outside_regulation", _language_outside_the_regulation(
         FIXTURES / "pattern_language_outside_regulation.pdf"))
     add("pattern_spacing_variant", _spacing_variant(
@@ -434,6 +436,53 @@ def _language_outside_the_regulation(path: Path) -> Path:
     sheet.blank()
     sheet.line(head["16"], bold=True, size=11)
     for code in codes[0]:
+        sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
+
+
+
+def _newer_ghs_codes(path: Path) -> Path:
+    """An EU CLP sheet citing P317-family codes, which CLP has not adopted.
+
+    The statements are GHS Rev.8's own wording, read from the committed GHS
+    index rather than typed out. A made-up code is included too, so the fixture
+    covers both halves of C-15: ahead of the regulation, and not a code at all.
+    """
+    from lingua_oracle.keys import ghs_index
+
+    newer = {}
+    for code in ("P317", "P332+P317"):
+        text = ghs_index.text_in(code, "GHS Rev.8")
+        if not text:
+            raise SystemExit(f"C-15 fixture: {code} is not in the GHS index")
+        newer[code] = text
+
+    head = HEADINGS["en"]
+    official = texts("eu_clp", "en", ["H225", "H319", "P210"])
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.line("Classified under Regulation (EC) No 1272/2008 (CLP)")
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line(f"{head['signal']}: {signal_text('eu_clp', 'en', True)}")
+    sheet.blank()
+    sheet.line(head["haz"], bold=True)
+    for code in ("H225", "H319"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["prec"], bold=True)
+    sheet.line(f"P210 {official['P210']}")
+    for code, text in newer.items():
+        sheet.line(f"{code} {text}")
+    sheet.line("P999 Consult the imaginary appendix before use.")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in ("H225", "H319"):
         sheet.line(f"{code} {official[code]}")
     sheet.save()
     return path

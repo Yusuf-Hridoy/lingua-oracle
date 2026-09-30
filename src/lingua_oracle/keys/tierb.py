@@ -30,6 +30,10 @@ class Borrowed:
     entries: dict[str, AnswerKeyEntry]
     borrowed_codes: set[str]
     tier_c_codes: set[str]
+    #: Status of the regulation's own key. A code missing from a key that only
+    #: parsed part of its source is our gap; one missing from a key that parsed
+    #: the whole source is genuinely absent from the regulation.
+    key_status: str = "pending_source"
 
 
 def resolve(regulation: str, language: str) -> Borrowed:
@@ -39,18 +43,21 @@ def resolve(regulation: str, language: str) -> Borrowed:
     the English texts agree; anything left is tier C.
     """
     own = load_key(regulation, language)
+    status = own.status.value if own else "pending_source"
     entries: dict[str, AnswerKeyEntry] = dict(own.by_code()) if own else {}
     borrowed: set[str] = set()
     tier_c: set[str] = set()
 
     if regulation == EU:
-        return Borrowed(entries=entries, borrowed_codes=borrowed, tier_c_codes=tier_c)
+        return Borrowed(entries=entries, borrowed_codes=borrowed, tier_c_codes=tier_c,
+                        key_status=status)
 
     own_en = load_key(regulation, "en")
     eu_en = load_key(EU, "en")
     eu_l = load_key(EU, language)
     if not own_en or not eu_en or not eu_l:
-        return Borrowed(entries=entries, borrowed_codes=borrowed, tier_c_codes=tier_c)
+        return Borrowed(entries=entries, borrowed_codes=borrowed, tier_c_codes=tier_c,
+                        key_status=status)
 
     own_en_by_code = own_en.by_code()
     eu_en_by_code = eu_en.by_code()
@@ -79,7 +86,8 @@ def resolve(regulation: str, language: str) -> Borrowed:
         )
         borrowed.add(code)
 
-    return Borrowed(entries=entries, borrowed_codes=borrowed, tier_c_codes=tier_c)
+    return Borrowed(entries=entries, borrowed_codes=borrowed, tier_c_codes=tier_c,
+                        key_status=status)
 
 
 def reference_key(regulation: str, language: str) -> AnswerKey:
