@@ -333,3 +333,58 @@ def test_official_languages_only_break_a_tie():
     assert detect_language(danish, None, None)[0] == "da"
     # A flag still wins outright.
     assert detect_language(danish, "en", un_ghs_languages) == ("en", "flag")
+
+
+# -- finding #10: a statement swallowed the glossary printed after it ----------
+
+
+def test_a_statement_stops_where_it_stops():
+    """Section 16 ends with a legend; the statement must not absorb it."""
+    report = check_pdf(pdf("pattern_legend_after_statement"), "ca_whmis")
+    wording = [f for f in report.findings
+               if f.check_id in ("A-02", "A-03") and not f.unverified
+               and f.severity in (Severity.FAIL, Severity.WARN)]
+    assert wording == [], [f"{f.check_id} {f.code}: {f.found!r}" for f in wording]
+
+
+def test_no_finding_quotes_the_glossary():
+    report = check_pdf(pdf("pattern_legend_after_statement"), "ca_whmis")
+    for f in report.findings:
+        assert "ACGIH" not in (f.found or ""), f"{f.check_id} swallowed the legend"
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("May cause damage to organs. ACGIH = American Conference",
+         "May cause damage to organs."),
+        ("May cause damage to organs. Abbreviation legend: ACGIH = x",
+         "May cause damage to organs."),
+        ("May cause damage to organs. * indicates a revised section",
+         "May cause damage to organs."),
+        ("May cause damage to organs. Prepared by: Regulatory Affairs",
+         "May cause damage to organs."),
+        # A statement that merely contains a capitalised lead-in is untouched.
+        ("IF SWALLOWED: Rinse mouth. Do NOT induce vomiting.",
+         "IF SWALLOWED: Rinse mouth. Do NOT induce vomiting."),
+        ("IF IN EYES: Rinse cautiously with water. Continue rinsing.",
+         "IF IN EYES: Rinse cautiously with water. Continue rinsing."),
+    ],
+)
+def test_cut_at_new_item(text, expected):
+    from lingua_oracle.extract.rejoin import cut_at_new_item
+
+    assert cut_at_new_item(text) == expected
+
+
+def test_the_cut_truncates_no_official_statement():
+    """The guard that matters: 7500+ official texts, none shortened."""
+    from lingua_oracle.extract.rejoin import cut_at_new_item
+    from lingua_oracle.keys.store import iter_all_keys
+
+    for key in iter_all_keys():
+        for entry in key.entries:
+            if entry.text:
+                assert cut_at_new_item(entry.text) == entry.text, (
+                    f"{key.regulation}/{key.language} {entry.code}"
+                )

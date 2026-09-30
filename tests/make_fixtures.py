@@ -287,6 +287,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "defect_c14_english_only.pdf"))
 
     # Patterns found on real documents, reproduced with fictional data.
+    add("pattern_legend_after_statement", _legend_after_statement(
+        FIXTURES / "pattern_legend_after_statement.pdf"))
     add("defect_c15_newer_ghs", _newer_ghs_codes(
         FIXTURES / "defect_c15_newer_ghs.pdf"))
     add("defect_c15_osha_partial_key", _newer_ghs_on_osha(
@@ -537,6 +539,48 @@ def _newer_ghs_on_osha(path: Path) -> Path:
     sheet.line(head["16"], bold=True, size=11)
     for code in ("H225", "H319"):
         sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
+
+
+
+def _legend_after_statement(path: Path) -> Path:
+    """A WHMIS sheet whose Section 16 puts a glossary right after a statement.
+
+    Real sheets end Section 16 with an abbreviation legend, a footnote marker
+    and a revision note. The statement must stop where it stops; swallowing the
+    glossary makes it fail against wording it never claimed.
+    """
+    head = HEADINGS["en"]
+    codes = ["H302", "H373"]
+    official = texts("ca_whmis", "en", codes + ["P264", "P270"])
+
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.line("Prepared under the Hazardous Products Regulations (WHMIS 2015)")
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line(f"{head['signal']}: {signal_text('ca_whmis', 'en', False)}")
+    sheet.blank()
+    sheet.line(head["haz"], bold=True)
+    for code in codes:
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["prec"], bold=True)
+    for code in ("P264", "P270"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in codes:
+        sheet.line(f"{code} {official[code]}")
+    # The shapes that leaked into the statement above.
+    sheet.line("Abbreviation legend: ACGIH = American Conference of Governmental")
+    sheet.line("Industrial Hygienists; TWA = Time Weighted Average")
+    sheet.line("* indicates a section revised since the previous issue")
     sheet.save()
     return path
 

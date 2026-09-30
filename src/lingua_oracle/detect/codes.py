@@ -6,7 +6,11 @@ import re
 from dataclasses import dataclass
 
 from lingua_oracle.extract.base import Document, Line
-from lingua_oracle.extract.rejoin import is_continuation, starts_new_block
+from lingua_oracle.extract.rejoin import (
+    cut_at_new_item,
+    is_continuation,
+    starts_new_block,
+)
 from lingua_oracle.match.normalize import normalize
 
 # A single code: prefix + 3 digits, optional trailing letter (H350i, EUH201A),
@@ -51,8 +55,13 @@ def find_codes_in_text(text: str) -> list[tuple[str, int, int]]:
 
 
 def _clean_phrase(text: str) -> str:
-    """Trim separators that sit between a code and its statement."""
-    out = text.strip()
+    """Trim separators, and stop where the statement stops.
+
+    A statement running to the end of its line is followed on real sheets by
+    whatever comes next in the section - a glossary, a footnote, a revision
+    note. `cut_at_new_item` ends the phrase there.
+    """
+    out = cut_at_new_item(text).strip()
     out = re.sub(r"^[\s:\-\u2013\u2014.,;)\]]+", "", out)
     out = re.sub(r"[\s;,]+$", "", out)
     return normalize(out)
