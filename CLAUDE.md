@@ -87,15 +87,18 @@ the A→B→C resolution and returns the `Borrowed` object the checks read from.
 committed. Check time only reads them.
 
 Current coverage: EU CLP 24 languages (240 each), UN GHS Rev.11 en/es/fr (248
-each), UK GB CLP en (238), Australia en (238), Canada en (229, `ok`) and fr (226,
-`partial`), US OSHA en (126, `partial`). Japan and UN GHS ar/ru/zh are
+each), UK GB CLP en (238), Australia en (238), Canada en/fr (229/230, `ok`),
+US OSHA en (126, `partial`). Japan and UN GHS ar/ru/zh are
 `pending_source`. Every entry is tier A.
 
 **Editions are chosen by the regulation's own words**, not by recency. The HPR
 states "GHS means ... Seventh Revised Edition" and points chemicals under pressure
 at the Eighth, so `keys/builders/ghs_editions.py` overlays exactly H282/H283/H284
 from Rev.8 and leaves everything else on Rev.7 - including the class's other codes
-(P376, P378, P370+P378, P410+P403), which are identical in both editions.
+(P376, P378, P370+P378, P410+P403), which are identical in both editions. The
+overlay is language-aware: the *set* of codes is decided from the English Rev.8
+(its hazard-class column names the class in a matchable form), but the text always
+comes from the requested language's own edition, so no wording crosses languages.
 
 A key's `status` is `ok`, `partial` (built but knowingly incomplete) or
 `pending_source` (empty). `status_reason` carries a machine-readable why:
@@ -155,7 +158,12 @@ Two source facts that drive the design and are easy to re-discover the hard way:
 - **Table extraction truncates some code cells**: a row for "P332 + P317" arrives
   as bare "P332" and collides with the standalone code. `combined_codes_on_page`
   repairs it from the page's running text, and only when the bare code appears
-  nowhere standalone on that page.
+  nowhere standalone on that page. Count occurrences on the **spaced** text -
+  stripping spaces glues the code to the word before it ("supplementaireP332") and
+  kills the word boundary, which once made every repair on such a page silently
+  no-op. Some cells are damaged past repair (GHS Rev.7 English renders one as
+  literally "P302 +"); those stay out rather than being inferred from another
+  edition, and `UNRECOVERABLE_IN_ENGLISH` in tests/test_keys.py pins the list.
 - **The Japanese PDF cannot be read at all**: its font carries no ToUnicode CMap,
   so neither PyMuPDF nor pdfplumber can recover characters. Do not "fix" this with
   a decoding heuristic; only OCR would work, and it needs the user's approval.
