@@ -217,14 +217,19 @@ def test_osha_sheet_may_end_its_sentences():
     assert wording == [], [f"{f.check_id} {f.code}: {f.message}" for f in wording]
 
 
-def test_the_licence_is_scoped_to_the_regulation_that_needs_it():
-    """Only a regulation whose own text lacks the terminator gets the licence."""
+def test_the_licence_is_scoped_to_the_keys_that_need_it():
+    """Only regulations whose own published text lacks the terminator.
+
+    The four built from the GHS Annex 3 tables, which print statements without
+    a closing full stop. EU CLP and GB CLP publish theirs with one, so they get
+    no licence and a missing full stop there is still reported.
+    """
     from lingua_oracle.registry import load_registry
 
     registry = load_registry()
     relaxed = {k for k, r in registry.regulations.items()
                if r.statements_lack_terminal_punctuation}
-    assert relaxed == {"us_osha"}, relaxed
+    assert relaxed == {"us_osha", "ca_whmis", "au_whs", "un_ghs"}, relaxed
 
 
 @pytest.mark.parametrize(
@@ -388,3 +393,54 @@ def test_the_cut_truncates_no_official_statement():
                 assert cut_at_new_item(entry.text) == entry.text, (
                     f"{key.regulation}/{key.language} {entry.code}"
                 )
+
+
+# -- finding #11: conditional slots, and a full stop the GHS tables omit -------
+
+
+def test_conditional_slots_may_be_left_out():
+    """H373's slots say "if known" and "if it is conclusively proven"."""
+    report = check_pdf(pdf("pattern_conditional_slots"), "ca_whmis")
+    wording = [f for f in report.findings
+               if f.check_id in ("A-02", "A-03") and not f.unverified
+               and f.severity in (Severity.FAIL, Severity.WARN)]
+    assert wording == [], [f"{f.check_id} {f.code}: {f.message}" for f in wording]
+
+
+def test_nothing_needs_a_person_when_nothing_was_filled_in():
+    report = check_pdf(pdf("pattern_conditional_slots"), "ca_whmis")
+    filled = [f for f in report.findings if "filled in" in f.message.lower()]
+    assert filled == [], [f.message for f in filled]
+
+
+def test_a_filled_conditional_slot_is_reported_for_review():
+    from lingua_oracle.keys.store import load_key
+    from lingua_oracle.match.template import match
+
+    template = load_key("ca_whmis", "en").by_code()["H373"].text
+    result = match(
+        "May cause damage to organs (liver) through prolonged or repeated exposure.",
+        template, optional_terminator=True,
+    )
+    assert result.matched and "(liver)" in result.fillins
+
+
+@pytest.mark.parametrize("regulation", ["ca_whmis", "au_whs", "un_ghs", "eu_clp"])
+def test_h373_passes_without_its_conditional_parts(regulation):
+    from lingua_oracle.keys.store import load_key
+    from lingua_oracle.match.template import match
+    from lingua_oracle.registry import load_registry
+
+    entry = load_key(regulation, "en").by_code()["H373"]
+    loose = load_registry().get(regulation).statements_lack_terminal_punctuation
+    result = match("May cause damage to organs through prolonged or repeated exposure.",
+                   entry.text, optional_terminator=loose)
+    assert result.is_clean, f"{regulation}: {result.kind} {result.message}"
+
+
+def test_a_mandatory_slot_is_still_mandatory():
+    """Only "if known" / "if it is conclusively proven" slots became optional."""
+    from lingua_oracle.match.template import match
+
+    template = "Contains <name of sensitising substance>. May produce an allergic reaction."
+    assert not match("Contains. May produce an allergic reaction.", template).matched

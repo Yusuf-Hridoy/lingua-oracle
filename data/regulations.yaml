@@ -68,6 +68,10 @@ regulations:
     required_languages: [en, fr]
     supplemental_prefixes: []
     allowed_prefixes: [H, P]
+    # Built from the GHS Annex 3 tables, which print the statements without a
+    # closing full stop: fewer than half of them carry one. A sheet that writes
+    # the sentence normally has not changed the wording.
+    statements_lack_terminal_punctuation: true
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
     source_url: "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2015-17/FullText.html"
     detect_patterns:
@@ -84,6 +88,10 @@ regulations:
     required_languages: []
     supplemental_prefixes: []
     allowed_prefixes: [H, P]
+    # Built from the GHS Annex 3 tables, which print the statements without a
+    # closing full stop: fewer than half of them carry one. A sheet that writes
+    # the sentence normally has not changed the wording.
+    statements_lack_terminal_punctuation: true
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
     source_url: "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025"
     # "Globally Harmonized System" on its own is not a signal: practically every
@@ -103,6 +111,10 @@ regulations:
     required_languages: []
     supplemental_prefixes: [AUH]
     allowed_prefixes: [H, P, AUH]
+    # Built from the GHS Annex 3 tables, which print the statements without a
+    # closing full stop: fewer than half of them carry one. A sheet that writes
+    # the sentence normally has not changed the wording.
+    statements_lack_terminal_punctuation: true
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
     source_url: "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals"
     detect_patterns:
