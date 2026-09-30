@@ -106,3 +106,46 @@ def test_every_official_text_matches_itself(language):
     assert key is not None and key.entries
     for entry in key.entries:
         assert match(entry.text, entry.text).matched, f"{language} {entry.code}"
+
+
+# -- a template must never compile to "anything at all" -----------------------
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "IF ON SKIN: Wash with plenty of water/…",
+        "Dispose of contents/container to…",
+        "Wear protective gloves/protective clothing/eye protection/face protection.",
+        "Use explosion-proof [electrical/ventilating/lighting/…] equipment.",
+        "Store in a well-ventilated place. Keep container tightly closed.",
+    ],
+)
+def test_no_template_matches_unrelated_text(template):
+    """Found in Phase 1.5: some templates matched every sentence ever written.
+
+    Splitting "a/b" into alternatives could cut the leading literal away and
+    then pick a subset that was nothing but the fill-in, leaving a bare `.*?`
+    between the anchors. A-03 could not fail a wrong statement for any code
+    whose official text ends in "/…".
+    """
+    from lingua_oracle.match.template import match
+
+    for unrelated in ("Completely unrelated sentence here.",
+                      "The quick brown fox jumps over the lazy dog.",
+                      "Section 4: First aid measures"):
+        assert not match(unrelated, template).matched, (
+            f"{template!r} matched unrelated text {unrelated!r}"
+        )
+
+
+def test_every_official_text_still_matches_itself_after_the_guard():
+    """The guard must not drop a variant a real statement needs."""
+    from lingua_oracle.keys.store import load_key
+    from lingua_oracle.match.template import match
+
+    for reg, lang in (("eu_clp", "en"), ("un_ghs", "en"), ("us_osha", "en")):
+        for entry in load_key(reg, lang).entries:
+            if not entry.text:
+                continue
+            assert match(entry.text, entry.text).matched, f"{reg}/{entry.code}"

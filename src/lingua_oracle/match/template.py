@@ -192,7 +192,7 @@ def _optional_brackets(pattern_text: str) -> str:
     return pattern_text
 
 
-def _compile_variants(template: str) -> list[re.Pattern[str]]:
+def _compile_variants(template: str, *, ignore_case: bool = True) -> list[re.Pattern[str]]:
     """Compile every plausible reading of a template into an anchored regex."""
     tpl = normalize(template)
     variants: list[str] = []
@@ -234,20 +234,37 @@ def _compile_variants(template: str) -> list[re.Pattern[str]]:
         if v in seen:
             continue
         seen.add(v)
+        flags = re.IGNORECASE if ignore_case else 0
         try:
-            compiled.append(re.compile(r"^\s*" + _optional_brackets(v) + r"\s*$", re.IGNORECASE))
+            pattern = re.compile(r"^\s*" + _optional_brackets(v) + r"\s*$", flags)
         except re.error:
             continue
+        if pattern.match(_CATCHALL_PROBE):
+            # This reading reduced to "anything at all". It happens when the
+            # leading literal is cut away AND the chosen subset of alternatives
+            # is nothing but a fill-in, leaving a bare `.*?` between anchors -
+            # e.g. "IF ON SKIN: Wash with plenty of water/…" once compiled that
+            # way matched every sentence ever written, so A-03 could not fail a
+            # wrong statement for any code whose text ends in "/…".
+            # A variant that matches the probe carries no literal to check
+            # against and can only ever produce false passes.
+            continue
+        compiled.append(pattern)
     return compiled
 
 
-_CACHE: dict[str, list[re.Pattern[str]]] = {}
+# Text sharing no word with any official statement. A compiled variant that
+# matches it is a catch-all, not a reading of the template.
+_CATCHALL_PROBE = "zzq unrelated probe text zzq"
+
+_CACHE: dict[tuple[str, bool], list[re.Pattern[str]]] = {}
 
 
-def compile_template(template: str) -> list[re.Pattern[str]]:
-    if template not in _CACHE:
-        _CACHE[template] = _compile_variants(template)
-    return _CACHE[template]
+def compile_template(template: str, *, ignore_case: bool = True) -> list[re.Pattern[str]]:
+    key = (template, ignore_case)
+    if key not in _CACHE:
+        _CACHE[key] = _compile_variants(template, ignore_case=ignore_case)
+    return _CACHE[key]
 
 
 # --------------------------------------------------------------------------
@@ -283,14 +300,26 @@ def match(found: str, template: str, *, optional_terminator: bool = False) -> Ma
         unfilled = ["…"] if "…" in f and _FILLIN_RE.search(t) else []
         return MatchResult(True, MatchKind.EXACT, fillins=unfilled)
     if f.casefold() == t.casefold():
-        return MatchResult(True, MatchKind.CASE, message="differs only in letter case")
+        return MatchResult(True, MatchKind.CASE, message="differs only in capitalisation")
 
+    def _fillins(m: re.Match[str]) -> list[str]:
+        return [v for k, v in (m.groupdict() or {}).items()
+                if k.startswith("fill_") and v and v.strip()]
+
+    # Case-sensitive first. The permissive pass below exists so a capitalisation
+    # difference is REPORTED rather than passed over: matching the template
+    # case-insensitively and returning a clean result would make "Rinse SKIN"
+    # indistinguishable from "Rinse skin", which is the one outcome that must
+    # not happen - never a fail, never silent.
+    for pattern in compile_template(t, ignore_case=False):
+        m = pattern.match(f)
+        if m:
+            return MatchResult(True, MatchKind.TEMPLATE, fillins=_fillins(m))
     for pattern in compile_template(t):
         m = pattern.match(f)
         if m:
-            fillins = [v for k, v in (m.groupdict() or {}).items()
-                       if k.startswith("fill_") and v and v.strip()]
-            return MatchResult(True, MatchKind.TEMPLATE, fillins=fillins)
+            return MatchResult(True, MatchKind.CASE, fillins=_fillins(m),
+                               message="differs only in capitalisation")
 
     if strip_punctuation(f) == strip_punctuation(t):
         return MatchResult(True, MatchKind.PUNCTUATION, message="differs only in punctuation")
