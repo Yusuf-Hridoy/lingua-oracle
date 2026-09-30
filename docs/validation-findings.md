@@ -11,6 +11,12 @@ reproductions in `tests/`.
 | 1 | Language detection restricted to the regulation's official languages | false_alarm (tool bug) | **fixed** |
 | 2 | A negative declaration read as a signal word | false_alarm (tool bug) | **fixed** |
 | 3 | `XXXX` in a REACH registration number read as a placeholder | false_alarm (tool bug) | **fixed** |
+| 4 | Spacing beside a fill-in or a unit reported as a difference | false_alarm (tool bug) | **fixed** |
+| 5 | A fill-in nested in an optional group could not be filled | false_alarm (tool bug) | **fixed** |
+| 6 | A closing full stop OSHA's own rendering omits | false_alarm (tool bug) | **fixed** |
+| 7 | Capitalisation could pass in silence | false_alarm (tool bug) | **fixed** |
+| 8 | A template that matched **any** text at all | tool bug, found in passing | **fixed** |
+| 9 | Wrapped table cells gained a space in the keys | extraction_error | **fixed** |
 
 ---
 
@@ -150,3 +156,132 @@ is still flagged — `test_only_the_reach_shape_is_exempt` pins both directions,
 including a near-miss (`Batch 12-345-XXXX`) that must still be caught.
 
 **Reproduction:** `tests/fixtures/pattern_reach_registration.pdf`, fictional data.
+
+
+---
+
+## Finding #4 — spacing beside a fill-in or a unit
+
+**Class:** `false_alarm`. **Status:** fixed.
+
+Sheets write `Use … to extinguish` where the key has `Use…`, and `50 °C` where
+the key has `50°C`. Neither is something a regulation legislates.
+
+Only those two shapes are collapsed, **not whitespace generally**. French
+typography puts a space before `:` `;` `!` `?`, and the licence to ignore that
+was granted for comparing *editions of a source*, never for judging a document.
+The first attempt used a blanket rule and broke
+`test_edition_proof_spacing_licence_is_not_used_by_the_matcher`, which is
+exactly what that test is for.
+
+A clean pass here still reports an ellipsis the author never filled, so
+tolerating the spacing cannot swallow an unfinished statement.
+
+**Reproduction:** `tests/fixtures/pattern_spacing_variant.pdf`.
+
+---
+
+## Finding #5 — a fill-in nested in an optional group
+
+**Class:** `false_alarm`. **Status:** fixed.
+
+`P264+P265` is `Wash hands [and…] thoroughly after handling.` — a fill-in inside
+an optional group. The compiled pattern required the value to start immediately
+after `and`, so an author who kept the group and wrote `and other specified body
+parts` failed, while *dropping* the group passed. The fill-in group now tolerates
+leading whitespace; it still requires a non-empty value.
+
+**Reproduction:** `tests/fixtures/pattern_optional_fillin.pdf`.
+
+---
+
+## Finding #6 — a closing full stop OSHA's own rendering omits
+
+**Class:** `false_alarm`. **Status:** fixed.
+
+The official CFR publishes Appendix C as graphics; the osha.gov HTML is the only
+text rendering, and it prints the statements with no closing full stop. A sheet
+that writes the sentence normally was failing A-03 on the period alone.
+
+The licence is a **registry flag**, not a rule in the matcher, so it applies to
+`us_osha` and nothing else — a test pins that the set stays `{us_osha}`. It runs
+one way: dropping a terminator the official text *has* is still reported.
+
+**Reproduction:** `tests/fixtures/pattern_osha_terminator.pdf`.
+
+---
+
+## Finding #7 — capitalisation could pass in silence
+
+**Class:** `false_alarm`. **Status:** fixed.
+
+Authoring tools that substitute values mid-sentence emit `Take off Immediately`
+and `Rinse SKIN`. The words are the official words, so this was never a wording
+*failure* — but the compiled template patterns were case-insensitive and returned
+a **clean** match, so a capitalisation difference could disappear entirely.
+
+Templates are now tried case-sensitively first; the case-insensitive pass is kept
+only so the difference can be reported. Never a fail, never silent. A-01 is
+unchanged and stays case-sensitive — the signal word is a prescribed token.
+
+**Reproduction:** `tests/fixtures/pattern_capitalisation.pdf`.
+
+---
+
+## Finding #8 — a template that matched any text at all
+
+**Class:** tool bug. **Status:** fixed. **Severity: the worst one here.**
+
+Found while working on finding #7, and it predates Phase 1.5. The template for
+`P302+P352` compiled a variant that matched **every sentence ever written**:
+
+```
+IF ON SKIN: Wash with plenty of water/…   matched   "Completely unrelated sentence here."
+```
+
+The matcher compiles every plausible reading of a template and passes if any
+matches — deliberately permissive. One of those readings cut the leading literal
+away *and* picked a subset of alternatives that was nothing but the fill-in,
+leaving a bare wildcard between the anchors. For any code whose official text
+ends in a slash followed by a fill-in, **A-03 could not fail a wrong statement**.
+
+Rather than reason about which splits can degenerate, each compiled variant is
+now tried against text sharing no word with any statement; one that matches
+carries no literal to check against and is discarded. Every official text in
+`eu_clp`, `un_ghs` and `us_osha` is asserted to still match itself.
+
+**Residual, not fixed, needs a decision:** the matcher is still lenient enough
+that `IF ON SKIN: Rinse with plenty of beer` passes against that template — the
+reading "everything after the colon is the fill-in alternative" survives.
+Tightening it means rejecting subsets that are *only* a fill-in, which would also
+reject the legitimate `IF ON SKIN: Wash with plenty of soap`. That trade-off is a
+judgement call and has been left open rather than decided unilaterally.
+
+---
+
+## Finding #9 — wrapped table cells gained a space in the keys
+
+**Class:** `extraction_error`. **Status:** fixed.
+
+A cell that breaks straight after a slash is a wrapped list of alternatives, not
+a spaced one. Turning each break into a space put
+
+```
+Avoid breathing dust/fume/gas/ mist/vapours/ spray.
+```
+
+in the `uk_clp` key, which then failed against every document that writes the
+list normally. Twelve `uk_clp` entries were affected, and the same artifact was
+in `au_whs`, `ca_whmis` and `un_ghs`. A compound wrapped across lines is rejoined
+the same way, keeping the hyphen (`Use non- sparking tools.`).
+
+The hyphen rule needed a guard: a **suspended** hyphen — `Spreng- und
+Wurfstücke`, `Brand- eller eksplosionsfare` — has a real space after it, and the
+first attempt closed those up. What follows a suspended hyphen is a conjunction,
+so the join is skipped when the next line starts with one. That list is the whole
+guard, and a suspended hyphen followed by a non-conjunction and falling exactly
+on a line end would still be joined wrongly.
+
+Only PDF-sourced keys go through this. `eu_clp` comes from CELLAR XHTML and
+`us_osha` from osha.gov HTML; neither wraps, so a space beside a slash there is
+the source's own typography and is left alone.
