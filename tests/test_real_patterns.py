@@ -241,3 +241,52 @@ def test_terminator_licence_is_one_way_and_narrow(template, found, with_flag, wi
 
     assert match(found, template, optional_terminator=True).is_clean is with_flag
     assert match(found, template).is_clean is without_flag
+
+
+# -- finding #7: capitalisation is a warning, never a pass and never a fail ----
+
+
+def test_odd_capitalisation_warns():
+    report = check_pdf(pdf("pattern_capitalisation"), "eu_clp")
+    hits = [f for f in report.findings if f.code == "P303+P361+P353"]
+    assert hits, "a capitalisation difference was passed over silently"
+    assert all(f.severity is Severity.WARN for f in hits), [
+        (f.severity.value, f.message) for f in hits
+    ]
+    assert any("capitalisation" in f.message for f in hits), [f.message for f in hits]
+
+
+def test_odd_capitalisation_is_never_a_failure():
+    report = check_pdf(pdf("pattern_capitalisation"), "eu_clp")
+    fails = [f for f in report.findings
+             if f.severity is Severity.FAIL and not f.unverified]
+    assert fails == [], [f"{f.check_id} {f.code}: {f.message}" for f in fails]
+
+
+def test_a01_still_reports_a_miscapitalised_signal_word():
+    """A-01 stays case-sensitive: the signal word is a prescribed token."""
+    from lingua_oracle.keys.store import load_key
+    from lingua_oracle.match.template import match
+    from lingua_oracle.models import SIGNAL_DANGER
+
+    official = load_key("eu_clp", "en").by_code()[SIGNAL_DANGER].text
+    result = match(official.lower(), official)
+    assert result.matched and not result.is_clean, (
+        "a lower-case signal word must still be reported"
+    )
+
+
+def test_a_capitalisation_match_cannot_be_clean():
+    """Whatever route it takes, a case difference must not report as clean."""
+    from lingua_oracle.match.template import match
+
+    pairs = [
+        ("IF ON SKIN (or hair): Take off immediately all contaminated clothing.",
+         "IF ON SKIN (or hair): Take off Immediately all contaminated clothing."),
+        ("Keep away from heat.", "keep away from heat."),
+        ("Wash hands thoroughly after handling.", "WASH HANDS THOROUGHLY AFTER HANDLING."),
+    ]
+    for template, found in pairs:
+        result = match(found, template)
+        assert result.matched, f"{found!r} should still match {template!r}"
+        assert not result.is_clean, f"{found!r} passed silently against {template!r}"

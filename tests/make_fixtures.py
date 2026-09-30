@@ -293,6 +293,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "pattern_optional_fillin.pdf"))
     add("pattern_osha_terminator", _osha_terminator(
         FIXTURES / "pattern_osha_terminator.pdf"))
+    add("pattern_capitalisation", _odd_capitalisation(
+        FIXTURES / "pattern_capitalisation.pdf"))
     add("pattern_negative_declaration", _negative_declaration(
         FIXTURES / "pattern_negative_declaration.pdf"))
     add("pattern_reach_registration", _reach_registration_number(
@@ -368,6 +370,27 @@ def _osha_terminator(path: Path) -> Path:
     return write_sds(
         path, regulation="us_osha", language="en",
         h_codes=["H225", "H319"], p_codes=codes, overrides=overrides,
+    )
+
+
+
+def _odd_capitalisation(path: Path) -> Path:
+    """A sheet whose wording is right but whose capitals are not.
+
+    Authoring tools that substitute values mid-sentence produce things like
+    "Take off Immediately" and "Rinse SKIN". The words are the official words,
+    so this is not a wording failure - but it is not nothing either, and it
+    must never pass silently.
+    """
+    code = "P303+P361+P353"
+    official = texts("eu_clp", "en", [code])[code]
+    odd = official.replace(" immediately", " Immediately").replace("Rinse skin", "Rinse SKIN")
+    if odd == official:
+        raise SystemExit("capitalisation fixture: the key text no longer has the expected shape")
+    return write_sds(
+        path, regulation="eu_clp", language="en",
+        h_codes=["H225", "H319"], p_codes=["P210", code],
+        overrides={code: odd},
     )
 
 
