@@ -43,6 +43,7 @@ class CaseResult:
     case: Case
     report: Report | None = None
     error: str = ""
+    unconfirmed: bool = False
     expected: set[str] = field(default_factory=set)
     found: set[str] = field(default_factory=set)
     missed: set[str] = field(default_factory=set)
@@ -69,6 +70,11 @@ def run_case(case: Case, root: Path, triage: TriageFile) -> CaseResult:
     from lingua_oracle.pipeline import check_pdf
 
     result = CaseResult(case=case, expected=case.normalised_expected())
+    if not case.confirmed:
+        # Drafted but not yet checked against the authoring UI. Running the
+        # checker would produce numbers that look like a result and are not one.
+        result.unconfirmed = True
+        return result
     path = root / case.file
     if not path.exists():
         result.error = f"file not found: {path}"
@@ -146,11 +152,20 @@ class Summary:
 
     # -- metrics ----------------------------------------------------------
     @property
+    def scored(self) -> list[CaseResult]:
+        """Cases a human has confirmed. Only these count towards the targets."""
+        return [r for r in self.results if not r.unconfirmed]
+
+    @property
+    def unconfirmed(self) -> list[CaseResult]:
+        return [r for r in self.results if r.unconfirmed]
+
+    @property
     def code_recall(self) -> float | None:
-        expected = sum(len(r.expected) for r in self.results)
+        expected = sum(len(r.expected) for r in self.scored)
         if not expected:
             return None
-        hit = sum(len(r.expected & r.found) for r in self.results)
+        hit = sum(len(r.expected & r.found) for r in self.scored)
         return hit / expected
 
     @property
@@ -161,7 +176,7 @@ class Summary:
         believed correct is a false alarm until someone shows otherwise.
         """
         out = []
-        for r in self.results:
+        for r in self.scored:
             if not r.case.known_good:
                 continue
             for f in r.findings:
@@ -173,11 +188,11 @@ class Summary:
 
     @property
     def defects_expected(self) -> int:
-        return sum(len(r.case.known_defects) for r in self.results)
+        return sum(len(r.case.known_defects) for r in self.scored)
 
     @property
     def defects_caught(self) -> int:
-        return sum(len(r.defects_caught) for r in self.results)
+        return sum(len(r.defects_caught) for r in self.scored)
 
     @property
     def defect_rate(self) -> float | None:
@@ -186,7 +201,7 @@ class Summary:
     @property
     def triage_counts(self) -> dict[str, int]:
         counts: dict[str, int] = {"unclassified": 0}
-        for r in self.results:
+        for r in self.scored:
             for f in r.findings:
                 key = f["classification"] or "unclassified"
                 counts[key] = counts.get(key, 0) + 1
@@ -233,13 +248,15 @@ class Summary:
 
     @property
     def passed(self) -> bool:
-        """Overall pass requires every target to be measured AND met.
+        """Overall pass requires every case confirmed, and every target met.
 
         A target that could not be measured - no expected_codes given, or the
         answer-key spot check not done - is deliberately NOT treated as a pass.
         The definition of done is that every target shows PASS, and "not measured"
         is not the same as "met".
         """
+        if self.unconfirmed:
+            return False
         return all(t["passed"] and not t["skipped"] for t in self.targets())
 
 

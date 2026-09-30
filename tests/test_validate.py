@@ -34,9 +34,11 @@ def valdir(tmp_path, monkeypatch):
     return tmp_path
 
 
-def write_cases(valdir, cases):
+def write_cases(valdir, cases, *, confirmed=True):
+    """Write a case file. Cases are confirmed unless a test says otherwise."""
+    payload = [{"confirmed": confirmed, **c} for c in cases]
     (valdir / "cases.yaml").write_text(
-        yaml.safe_dump({"cases": cases}, allow_unicode=True), encoding="utf-8"
+        yaml.safe_dump({"cases": payload}, allow_unicode=True), encoding="utf-8"
     )
 
 
@@ -189,3 +191,41 @@ def test_example_template_parses_as_a_case_file():
     cases = load_cases(template_path())
     assert len(cases.cases) >= 2
     assert any(c.known_defects for c in cases.cases)
+
+
+def test_unconfirmed_cases_are_not_scored(valdir):
+    """A case the tool drafted is not evidence until a human checks it."""
+    write_cases(valdir, [
+        {"file": "clean_eu_da.pdf", "regulation": "eu_clp", "language": "da",
+         "known_good": True, "expected_codes": ["H225", "H400"]},
+    ], confirmed=False)
+    summary = run()
+    assert len(summary.unconfirmed) == 1
+    assert summary.scored == []
+    # the missed H400 must NOT drag recall down, because nothing was scored
+    assert summary.code_recall is None
+    assert summary.false_alarms == []
+    assert summary.passed is False, "an unconfirmed case must withhold the pass"
+
+
+def test_confirming_a_case_makes_it_count(valdir):
+    case = {"file": "clean_eu_da.pdf", "regulation": "eu_clp", "language": "da",
+            "known_good": True, "expected_codes": ["H225"]}
+    write_cases(valdir, [case], confirmed=False)
+    assert run().code_recall is None
+    write_cases(valdir, [case], confirmed=True)
+    assert run().code_recall == 1.0
+
+
+def test_a_mixed_file_scores_only_the_confirmed_cases(valdir):
+    (valdir / "cases.yaml").write_text(yaml.safe_dump({"cases": [
+        {"file": "clean_eu_da.pdf", "regulation": "eu_clp", "language": "da",
+         "confirmed": True, "known_good": True, "expected_codes": ["H225"]},
+        {"file": "clean_osha_en.pdf", "regulation": "us_osha", "language": "en",
+         "confirmed": False, "known_good": True, "expected_codes": ["H999"]},
+    ]}), encoding="utf-8")
+    summary = run()
+    assert len(summary.scored) == 1
+    assert len(summary.unconfirmed) == 1
+    assert summary.code_recall == 1.0      # the bogus H999 is not counted
+    assert summary.passed is False

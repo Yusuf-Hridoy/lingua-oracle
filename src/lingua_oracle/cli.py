@@ -364,8 +364,23 @@ def validate_main(ctx: typer.Context) -> None:
         typer.secho(f"  [{mark}] {t['name']:<40} target {t['target']:<7} actual {t['actual']}",
                     fg=colour)
 
+    if summary.unconfirmed:
+        typer.secho(
+            f"\n{len(summary.unconfirmed)} case(s) NOT SCORED - awaiting confirmation",
+            fg=typer.colors.YELLOW, bold=True,
+        )
+        for r in summary.unconfirmed:
+            typer.echo(f"    {r.case.file}")
+        typer.secho(
+            "    These were drafted by the tool. Check each against the authoring UI, "
+            "then set confirmed: true in cases.yaml.",
+            fg=typer.colors.YELLOW,
+        )
+
     typer.secho("\nDOCUMENTS", bold=True)
     for r in summary.results:
+        if r.unconfirmed:
+            continue
         if r.error:
             typer.secho(f"  ERROR {r.case.file}: {r.error}", fg=typer.colors.RED)
             continue

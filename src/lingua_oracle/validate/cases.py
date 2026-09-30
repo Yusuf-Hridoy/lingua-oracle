@@ -62,6 +62,11 @@ class Case(BaseModel):
     file: str
     regulation: str | None = None
     language: str | None = None
+    #: A drafted case is scored only once a human has checked it against the
+    #: authoring UI. Everything the tool detects by itself is a guess about what
+    #: the document *should* contain, and scoring against a guess measures
+    #: nothing. `lingua validate` refuses to score a case while this is false.
+    confirmed: bool = False
     known_good: bool = False
     expected_codes: list[str] = Field(default_factory=list)
     known_defects: list[KnownDefect] = Field(default_factory=list)

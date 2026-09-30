@@ -20,6 +20,7 @@ def to_dict(summary: Summary) -> dict:
             "reviewed": summary.spot_check_reviewed,
             "correct": summary.spot_check_correct,
         },
+        "unconfirmed": [r.case.file for r in summary.unconfirmed],
         "documents": [
             {
                 "file": r.case.file,
@@ -37,7 +38,7 @@ def to_dict(summary: Summary) -> dict:
                 "known_defects_missed": r.defects_missed,
                 "findings": r.findings,
             }
-            for r in summary.results
+            for r in summary.scored
         ],
     }
 
@@ -123,6 +124,14 @@ def render_html(summary: Summary) -> str:
         docs.append(f"<div class='card {cls}'>{head}<div class='chips'>{chips}</div>"
                     f"{missed}{extra}{defects}{table}</div>")
 
+    pending = data.get("unconfirmed") or []
+    pending_block = (
+        "<div class='card err'><h3>Not scored — awaiting confirmation</h3>"
+        f"<p>{len(pending)} case(s) were drafted by the tool and have not been "
+        "checked against the authoring UI. They are excluded from every target.</p>"
+        "<ul>" + "".join(f"<li>{e(f)}</li>" for f in pending) + "</ul></div>"
+        if pending else ""
+    )
     triage = "".join(
         f"<span class='chip'>{e(k)}: {v}</span>" for k, v in sorted(data["triage_counts"].items())
     )
@@ -164,6 +173,7 @@ def render_html(summary: Summary) -> str:
 <div class="sub" style="color:var(--muted)">{e(data['created_at'])} ·
 {len(data['documents'])} document(s)</div>
 
+{pending_block}
 <div class="card"><h3>Targets</h3><div class="scroll"><table>
 <thead><tr><th>Metric</th><th>Target</th><th>Actual</th><th></th></tr></thead>
 <tbody>{''.join(rows)}</tbody></table></div></div>
