@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
-  "retrieved_at": "2026-09-30T07:27:15.205414Z",
+  "retrieved_at": "2026-09-30T09:50:53.461366Z",
   "notes": [],
   "entries": [
     {
@@ -1889,13 +1889,13 @@
       "language": "es",
       "code": "P241",
       "kind": "precautionary",
-      "text": "Utilizar material [eléctrico/ de ventilación/iluminación/…]antideflagrante.",
+      "text": "Utilizar material [eléctrico/de ventilación/iluminación/…]antideflagrante.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
       "source_ref": "GHS Rev.11 Annex 3, table row for P241 (GHS_Rev11_es.pdf, p344)",
-      "retrieved_at": "2026-09-30T07:27:15.205414Z",
+      "retrieved_at": "2026-09-30T09:50:53.461366Z",
       "status": "ok"
     },
     {
@@ -1979,13 +1979,13 @@
       "language": "es",
       "code": "P260",
       "kind": "precautionary",
-      "text": "No respirar polvos/humos/gases/ nieblas/vapores/aerosoles.",
+      "text": "No respirar polvos/humos/gases/nieblas/vapores/aerosoles.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
       "source_ref": "GHS Rev.11 Annex 3, table row for P260 (GHS_Rev11_es.pdf, p345)",
-      "retrieved_at": "2026-09-30T07:27:15.205414Z",
+      "retrieved_at": "2026-09-30T09:50:53.461366Z",
       "status": "ok"
     },
     {
@@ -1994,13 +1994,13 @@
       "language": "es",
       "code": "P261",
       "kind": "precautionary",
-      "text": "Evitar respirar polvos/humos/gases/ nieblas/vapores/aerosoles.",
+      "text": "Evitar respirar polvos/humos/gases/nieblas/vapores/aerosoles.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
       "source_ref": "GHS Rev.11 Annex 3, table row for P261 (GHS_Rev11_es.pdf, p345)",
-      "retrieved_at": "2026-09-30T07:27:15.205414Z",
+      "retrieved_at": "2026-09-30T09:50:53.461366Z",
       "status": "ok"
     },
     {

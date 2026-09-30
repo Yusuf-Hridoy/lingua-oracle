@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
-  "retrieved_at": "2026-09-30T07:27:15.205414Z",
+  "retrieved_at": "2026-09-30T09:50:53.461366Z",
   "notes": [],
   "entries": [
     {
@@ -3614,13 +3614,13 @@
       "language": "en",
       "code": "P412",
       "kind": "precautionary",
-      "text": "Do not expose to temperatures exceeding 50°C/ 122 °F.",
+      "text": "Do not expose to temperatures exceeding 50°C/122 °F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
       "source_ref": "GHS Rev.11 Annex 3, table row for P412 (GHS_Rev11_en.pdf, p335)",
-      "retrieved_at": "2026-09-30T07:27:15.205414Z",
+      "retrieved_at": "2026-09-30T09:50:53.461366Z",
       "status": "ok"
     },
     {

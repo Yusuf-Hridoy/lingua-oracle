@@ -106,9 +106,9 @@ def harvest_multilingual(
                     if not row or len(row) < 3:
                         continue
                     issues.rows_seen += 1
-                    c0 = strip_amendment((row[0] or "").replace("\n", " "))
-                    c1 = (row[1] or "").replace("\n", " ").strip()
-                    c2 = (row[2] or "").replace("\n", " ")
+                    c0 = strip_amendment(flatten_cell(row[0]))
+                    c1 = flatten_cell(row[1]).strip()
+                    c2 = flatten_cell(row[2])
                     match = CODE_CELL_RE.match(c0)
                     if match and c1.lower() == "language":
                         current = normalise_code(match.group(1))
@@ -232,7 +232,7 @@ def harvest_inline(
                 for row in table.extract():
                     for cell in row or []:
                         issues.rows_seen += 1
-                        match = _INLINE_RE.match((cell or "").replace("\n", " ").strip())
+                        match = _INLINE_RE.match(flatten_cell(cell).strip())
                         if not match:
                             continue
                         code = normalise_code(match.group(1))
@@ -251,8 +251,71 @@ def harvest_inline(
     return out, issues
 
 
+
+_SLASH_WRAP_RE = re.compile(r"/[ \t]*\n[ \t]*")
+# A suspended hyphen - German "Spreng- und Wurfstuecke", Danish "Brand- eller
+# eksplosionsfare" - is two words and the space after the hyphen is real. What
+# follows it is a conjunction, so a wrapped hyphen is only closed up when the
+# next line does NOT start with one.
+_CONJUNCTIONS = (
+    "and", "or",                      # en
+    "et", "ou",                       # fr
+    "y", "o", "u", "e",               # es, pt, it
+    "und", "oder",                    # de
+    "en", "of",                       # nl
+    "og", "eller", "och",             # da, no, sv
+    "ja", "tai", "või",               # fi, et
+    "i", "lub", "oraz",               # pl
+    "a", "nebo", "alebo", "vagy",     # cs, sk, hu
+    "ir", "arba", "un", "vai",        # lt, lv
+    "jew",                            # mt
+)
+_HYPHEN_WRAP_RE = re.compile(
+    r"(?<=\w)-[ \t]*\n[ \t]*"
+    r"(?!(?:" + "|".join(_CONJUNCTIONS) + r")\b)"
+    r"(?=[a-z\u00e0-\u00ff])"
+)
+
+
+def flatten_cell(text: str) -> str:
+    """Flatten a table cell onto one line, keeping wrapped alternatives intact.
+
+    A cell that breaks straight after a '/' is a list of alternatives wrapped by
+    the layout engine:
+
+        dust/fume/gas/
+        mist/vapours/
+        spray.
+
+    Turning each break into a space put "gas/ mist/vapours/ spray" in the key,
+    which then failed against every document that writes the list normally. The
+    break is layout, not a space.
+
+    A source that genuinely spaces its slashes - several EU languages print
+    "CENTRE ANTIPOISON / medecin" - puts the space *before* the '/' as well, on
+    the same line, so that typography is untouched here.
+
+    A compound broken across lines - "non-" then "sparking" - is rejoined for
+    the same reason, keeping the hyphen: the key held "Use non- sparking tools."
+
+    The risk in that second rule is a *suspended* hyphen, where the space is
+    real: Danish "Brand- eller eksplosionsfare", German "Spreng- und
+    Wurfstuecke". What follows a suspended hyphen is a conjunction, so the join
+    is skipped when the next line starts with one. That list is the guard, and
+    it is the whole guard: a suspended hyphen followed by something that is not
+    a conjunction, and falling exactly on a line end, would still be closed up
+    wrongly. No entry in any key is in that position today, and two tests pin
+    both directions.
+    """
+    if not text:
+        return ""
+    out = _SLASH_WRAP_RE.sub("/", text)
+    out = _HYPHEN_WRAP_RE.sub("-", out)
+    return out.replace("\n", " ")
+
+
 def clean_statement(text: str) -> str:
-    out = (text or "").replace("\n", " ")
+    out = flatten_cell(text)
     out = _FOOTNOTE_RE.sub("", out)
     return normalize(out)
 
@@ -337,7 +400,8 @@ def harvest(
                 "stat": [Path(path).stat().st_size, int(Path(path).stat().st_mtime)],
                 "range": [first_page, last_page, statement_column],
                 "pages": pages,
-                "v": 6,
+                # v8: cell flattening keeps slash- and hyphen-wrapped text together
+                "v": 9,
             },
             sort_keys=True,
         ).encode()
@@ -364,7 +428,7 @@ def harvest(
                     if not row or len(row) <= statement_column:
                         continue
                     issues.rows_seen += 1
-                    cell = strip_amendment((row[0] or "").replace("\n", " "))
+                    cell = strip_amendment(flatten_cell(row[0]))
                     match = CODE_CELL_RE.match(cell)
                     if not match:
                         continue

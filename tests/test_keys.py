@@ -549,3 +549,57 @@ def test_whmis_both_languages_are_ok_and_carry_the_rev8_overlay():
     assert load_key("ca_whmis", "en").by_code()["H284"].text != (
         load_key("ca_whmis", "fr").by_code()["H284"].text
     )
+
+
+# -- wrapped cells must not reach the key ------------------------------------
+
+#: Keys parsed out of PDF table cells, where the layout engine wraps lines.
+#: eu_clp is read from CELLAR XHTML and us_osha from osha.gov HTML; neither
+#: wraps, so a space beside a slash there is the source's own typography.
+_PDF_SOURCED_KEYS = [("uk_clp", "en"), ("au_whs", "en"),
+                     ("ca_whmis", "en"), ("ca_whmis", "fr"),
+                     ("un_ghs", "en"), ("un_ghs", "es"), ("un_ghs", "fr")]
+
+
+@pytest.mark.parametrize(("reg", "lang"), _PDF_SOURCED_KEYS)
+def test_no_key_holds_a_wrapped_alternative(reg, lang):
+    """"dust/fume/gas/\\nmist" must not land in the key as "gas/ mist"."""
+    from lingua_oracle.keys.store import load_key
+
+    import re
+
+    bad = [(e.code, e.text) for e in load_key(reg, lang).entries
+           if re.search(r"/\s+\S", e.text)]
+    assert bad == [], bad
+
+
+@pytest.mark.parametrize(("reg", "lang"), _PDF_SOURCED_KEYS)
+def test_no_key_holds_a_wrapped_hyphen(reg, lang):
+    """"non-\\nsparking" must not land in the key as "non- sparking"."""
+    from lingua_oracle.keys.store import load_key
+
+    import re
+
+    bad = [(e.code, e.text) for e in load_key(reg, lang).entries
+           if re.search(r"\w-\s+\w", e.text)]
+    assert bad == [], bad
+
+
+def test_flatten_cell_leaves_a_suspended_hyphen_alone():
+    """German "Spreng- und Wurfstuecke" is two words, not one wrapped one."""
+    from lingua_oracle.keys.builders.pdf_tables import flatten_cell
+
+    assert flatten_cell("Spreng-\nund Wurfstücke") == "Spreng- und Wurfstücke"
+    assert flatten_cell("Brand-\neller eksplosionsfare") == "Brand- eller eksplosionsfare"
+    # ... while a wrapped compound is rejoined.
+    assert flatten_cell("Use non-\nsparking tools.") == "Use non-sparking tools."
+
+
+def test_flatten_cell_keeps_real_slash_spacing():
+    """Several EU languages genuinely print "A / B"; only the wrap is repaired."""
+    from lingua_oracle.keys.builders.pdf_tables import flatten_cell
+
+    assert flatten_cell("dust/fume/gas/\nmist/vapours/\nspray.") == \
+        "dust/fume/gas/mist/vapours/spray."
+    assert flatten_cell("CENTRE ANTIPOISON / médecin") == "CENTRE ANTIPOISON / médecin"
+    assert flatten_cell("CENTRE ANTIPOISON /\nmédecin") == "CENTRE ANTIPOISON /médecin"

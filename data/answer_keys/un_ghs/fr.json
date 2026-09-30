@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
-  "retrieved_at": "2026-09-30T07:27:15.205414Z",
+  "retrieved_at": "2026-09-30T09:50:53.461366Z",
   "notes": [],
   "entries": [
     {
@@ -1979,13 +1979,13 @@
       "language": "fr",
       "code": "P260",
       "kind": "precautionary",
-      "text": "Ne pas respirer les poussières/fumées/gaz/brouillards/vapeurs/ aérosols.",
+      "text": "Ne pas respirer les poussières/fumées/gaz/brouillards/vapeurs/aérosols.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
       "source_ref": "GHS Rev.11 Annex 3, table row for P260 (GHS_Rev11_fr.pdf, p341)",
-      "retrieved_at": "2026-09-30T07:27:15.205414Z",
+      "retrieved_at": "2026-09-30T09:50:53.461366Z",
       "status": "ok"
     },
     {
@@ -1994,13 +1994,13 @@
       "language": "fr",
       "code": "P261",
       "kind": "precautionary",
-      "text": "Éviter de respirer les poussières/fumées/gaz/brouillards/ vapeurs/aérosols.",
+      "text": "Éviter de respirer les poussières/fumées/gaz/brouillards/vapeurs/aérosols.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
       "source_ref": "GHS Rev.11 Annex 3, table row for P261 (GHS_Rev11_fr.pdf, p341)",
-      "retrieved_at": "2026-09-30T07:27:15.205414Z",
+      "retrieved_at": "2026-09-30T09:50:53.461366Z",
       "status": "ok"
     },
     {

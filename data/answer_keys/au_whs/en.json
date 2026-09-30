@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals",
-  "retrieved_at": "2026-09-30T09:00:55.195159Z",
+  "retrieved_at": "2026-09-30T09:49:42.946177Z",
   "notes": [],
   "entries": [
     {
@@ -2054,13 +2054,13 @@
       "language": "en",
       "code": "P301+P312",
       "kind": "precautionary",
-      "text": "IF SWALLOWED: Call a POISON CENTER/ doctor/…if you feel unwell.",
+      "text": "IF SWALLOWED: Call a POISON CENTER/doctor/…if you feel unwell.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
       "source_ref": "GHS Rev.7 Annex 3 row for P301+P312 (GHS_Rev7_en.pdf, p298)",
-      "retrieved_at": "2026-09-30T07:24:18.209031Z",
+      "retrieved_at": "2026-09-30T09:49:42.946177Z",
       "status": "ok"
     },
     {
@@ -2294,13 +2294,13 @@
       "language": "en",
       "code": "P308+P313",
       "kind": "precautionary",
-      "text": "IF exposed or concerned: Get medical advice/ attention.",
+      "text": "IF exposed or concerned: Get medical advice/attention.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
       "source_ref": "GHS Rev.7 Annex 3 row for P308+P313 (GHS_Rev7_en.pdf, p298)",
-      "retrieved_at": "2026-09-30T07:24:18.209031Z",
+      "retrieved_at": "2026-09-30T09:49:42.946177Z",
       "status": "ok"
     },
     {
@@ -3284,13 +3284,13 @@
       "language": "en",
       "code": "P412",
       "kind": "precautionary",
-      "text": "Do not expose to temperatures exceeding 50 °C/ 122 °F.",
+      "text": "Do not expose to temperatures exceeding 50 °C/122 °F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev7-2017",
       "source_ref": "GHS Rev.7 Annex 3 row for P412 (GHS_Rev7_en.pdf, p303)",
-      "retrieved_at": "2026-09-30T07:24:18.209031Z",
+      "retrieved_at": "2026-09-30T09:49:42.946177Z",
       "status": "ok"
     },
     {
