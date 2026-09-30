@@ -35,6 +35,23 @@ from lingua_oracle.match.normalize import normalize, strip_punctuation
 # readable value instead of an arbitrary split across the two.
 _FILLIN_RE = re.compile(r"(?:<[^<>]*>|…)(?:\s*(?:<[^<>]*>|…))*")
 _SENTENCE_END_RE = re.compile(r"(?<=[.!?])\s")
+# Two places where PDF producers move a space and nothing is meant by it:
+# beside a fill-in ellipsis ("Use… to" / "Use … to"), and between a number and
+# the symbol that qualifies it ("50°C" / "50 °C", "50%" / "50 %").
+#
+# This is deliberately NOT a general "ignore all whitespace" rule. French
+# typography puts a space before ':' ';' '!' '?', and the user ruled that
+# document-vs-key matching stays exact there - a licence granted for comparing
+# editions of a source, never for judging a document. Widening this to every
+# space would silently revoke that decision, and
+# test_edition_proof_spacing_licence_is_not_used_by_the_matcher pins it.
+_FILLIN_SPACE_RE = re.compile(r"\s*…\s*")
+_UNIT_SPACE_RE = re.compile(r"(?<=\d)\s+(?=[^\w\s])")
+
+
+def _spacing_key(text: str) -> str:
+    """Text with only the two non-significant spacings collapsed."""
+    return _UNIT_SPACE_RE.sub("", _FILLIN_SPACE_RE.sub("…", text))
 _MAX_ALTS = 8  # official texts never exceed this; caps subset enumeration
 
 
@@ -244,6 +261,12 @@ def match(found: str, template: str) -> MatchResult:
 
     if f == t:
         return MatchResult(True, MatchKind.EXACT)
+    if _spacing_key(f) == _spacing_key(t):
+        # Spacing only. If the template has a fill-in, the document reproduced
+        # it verbatim rather than filling it, so report the value for review -
+        # a clean pass here must not silently swallow an unfilled slot.
+        unfilled = ["…"] if "…" in f and _FILLIN_RE.search(t) else []
+        return MatchResult(True, MatchKind.EXACT, fillins=unfilled)
     if f.casefold() == t.casefold():
         return MatchResult(True, MatchKind.CASE, message="differs only in letter case")
 

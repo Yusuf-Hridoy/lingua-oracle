@@ -287,6 +287,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "defect_c14_english_only.pdf"))
 
     # Patterns found on real documents, reproduced with fictional data.
+    add("pattern_spacing_variant", _spacing_variant(
+        FIXTURES / "pattern_spacing_variant.pdf"))
     add("pattern_negative_declaration", _negative_declaration(
         FIXTURES / "pattern_negative_declaration.pdf"))
     add("pattern_reach_registration", _reach_registration_number(
@@ -299,6 +301,29 @@ def build_all() -> dict[str, Path]:
         extra_lines_s16=[f"H336 {texts('eu_clp','da',['H336'])['H336'].rstrip('.')} i hovedet."]))
 
     return built
+
+
+
+def _spacing_variant(path: Path) -> Path:
+    """A sheet whose statements differ from the key only in where spaces fall.
+
+    Real authoring tools and PDF producers move spaces around: a space appears
+    before an ellipsis, or between a number and its unit. The wording is the
+    official wording, so none of this may be reported as a wording defect.
+
+    The variants are derived from the key rather than typed out, so they cannot
+    drift from it - only the whitespace is changed.
+    """
+    official = texts("un_ghs", "en", ["P370+P378", "P410+P412"])
+    fire = official["P370+P378"].replace(" …", "…")        # space removed
+    heat = official["P410+P412"].replace("50°C", "50 °C")  # space added
+    if fire == official["P370+P378"] or heat == official["P410+P412"]:
+        raise SystemExit("spacing fixture: the key text no longer has the expected shape")
+    return write_sds(
+        path, regulation="un_ghs", language="en",
+        h_codes=["H225", "H319"], p_codes=["P210", "P370+P378", "P410+P412"],
+        overrides={"P370+P378": fire, "P410+P412": heat},
+    )
 
 
 def _negative_declaration(path: Path) -> Path:

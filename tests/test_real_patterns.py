@@ -111,3 +111,54 @@ def test_a06_still_catches_a_real_placeholder():
     report = check_pdf(pdf("defect_a06_placeholder"), "eu_clp")
     fired = {f.check_id for f in report.findings if f.severity is Severity.FAIL}
     assert "A-06" in fired
+
+
+# -- finding #4: a spacing-only difference reported as a wording defect --------
+
+
+def test_spacing_only_difference_is_not_a_wording_defect():
+    """Where the spaces fall is not something a regulation legislates."""
+    report = check_pdf(pdf("pattern_spacing_variant"), "un_ghs")
+    wording = [f for f in report.findings
+               if f.check_id in ("A-02", "A-03", "A-04")
+               and f.severity in (Severity.FAIL, Severity.WARN)
+               and not f.unverified]
+    assert wording == [], [f"{f.check_id} {f.code}: {f.message}" for f in wording]
+
+
+def test_an_unfilled_ellipsis_is_still_reported():
+    """A clean spacing pass must not swallow a fill-in the author never filled."""
+    report = check_pdf(pdf("pattern_spacing_variant"), "un_ghs")
+    fillin = [f for f in report.findings
+              if f.code == "P370+P378" and "fill-in" in f.message.lower()]
+    assert fillin, "the unfilled '…' in P370+P378 was reported nowhere"
+
+
+@pytest.mark.parametrize(
+    ("template", "found", "should_match"),
+    [
+        ("In case of fire: Use… to extinguish.",
+         "In case of fire: Use … to extinguish.", True),
+        ("Protect from sunlight. Do not expose to temperatures exceeding 50°C/122°F.",
+         "Protect from sunlight. Do not expose to temperatures exceeding 50 °C/122°F.", True),
+        # Spacing tolerance must not reach further than spacing.
+        ("Do not breathe dust/fume/gas/mist/vapours/spray.",
+         "Do not breathe dust/fume/gas/mist/vapors/spray.", False),
+        ("Keep away from heat, hot surfaces, sparks.",
+         "Keep away from heat, hot surface, sparks.", False),
+        ("Wash … thoroughly after handling.",
+         "Wash thoroughly after handling.", False),
+        # French puts a space before ':'. That licence is for comparing editions
+        # of a source, never for judging a document, so it must not match here.
+        ("EN CAS DE CONTACT AVEC LA PEAU : Rincer.",
+         "EN CAS DE CONTACT AVEC LA PEAU: Rincer.", "not-exact"),
+    ],
+)
+def test_spacing_tolerance_stops_at_spacing(template, found, should_match):
+    from lingua_oracle.match.template import MatchKind, match
+
+    result = match(found, template)
+    if should_match == "not-exact":
+        assert result.kind is not MatchKind.EXACT
+    else:
+        assert result.matched is should_match
