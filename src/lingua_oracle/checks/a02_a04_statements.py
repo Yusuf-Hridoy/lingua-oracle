@@ -68,16 +68,26 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                         )
                     )
                     break
-        if result.kind in (MatchKind.EXACT, MatchKind.TEMPLATE) and result.matched:
-            for value in result.fillins:
-                findings.append(
-                    Finding(
-                        check_id=check_id, severity=Severity.INFO, section=section,
-                        page=hit.page, code=hit.code, expected=entry.text,
-                        found=hit.text, tier=entry.tier,
-                        message=f"Fill-in value '{value}' needs human review.",
-                    )
+        # A filled-in slot is always shown, whatever else the comparison said.
+        # The official text only says a value belongs here, never which value is
+        # right, so no automatic verdict can cover it and it must not be hidden
+        # behind a clean pass.
+        for value in result.fillins:
+            blank = value.strip() in ("…", "...")
+            findings.append(
+                Finding(
+                    check_id=check_id, severity=Severity.WARN if blank else Severity.INFO,
+                    section=section, page=hit.page, code=hit.code, expected=entry.text,
+                    found=hit.text, tier=entry.tier,
+                    message=(
+                        "Not filled in - the document still shows '…' where a value "
+                        "belongs."
+                        if blank
+                        else f"Filled in: '{value}' - check it is appropriate."
+                    ),
                 )
+            )
+        if result.kind in (MatchKind.EXACT, MatchKind.TEMPLATE) and result.matched:
             continue
         if result.matched:
             findings.append(

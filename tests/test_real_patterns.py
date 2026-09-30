@@ -122,7 +122,10 @@ def test_spacing_only_difference_is_not_a_wording_defect():
     wording = [f for f in report.findings
                if f.check_id in ("A-02", "A-03", "A-04")
                and f.severity in (Severity.FAIL, Severity.WARN)
-               and not f.unverified]
+               and not f.unverified
+               # The fixture deliberately leaves P370+P378's slot empty; that
+               # warning is correct and belongs to the fill-in tests below.
+               and "not filled in" not in f.message.lower()]
     assert wording == [], [f"{f.check_id} {f.code}: {f.message}" for f in wording]
 
 
@@ -130,7 +133,7 @@ def test_an_unfilled_ellipsis_is_still_reported():
     """A clean spacing pass must not swallow a fill-in the author never filled."""
     report = check_pdf(pdf("pattern_spacing_variant"), "un_ghs")
     fillin = [f for f in report.findings
-              if f.code == "P370+P378" and "fill-in" in f.message.lower()]
+              if f.code == "P370+P378" and "not filled in" in f.message.lower()]
     assert fillin, "the unfilled '…' in P370+P378 was reported nowhere"
 
 
@@ -179,7 +182,7 @@ def test_filled_optional_group_matches():
 def test_the_supplied_value_is_reported_for_review():
     report = check_pdf(pdf("pattern_optional_fillin"), "un_ghs")
     values = [f.message for f in report.findings
-              if f.code == "P264+P265" and "fill-in" in f.message.lower()]
+              if f.code == "P264+P265" and "filled in:" in f.message.lower()]
     assert values, "the value supplied for the optional fill-in was not reported"
 
 
