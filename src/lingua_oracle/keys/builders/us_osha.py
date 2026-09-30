@@ -89,7 +89,10 @@ REFERENCE_FILE = "ghs-rev7/GHS_Rev7_en.pdf"
 REFERENCE_NAME = "UN GHS Rev.7 Annex 3 (English)"
 _PRECAUTIONARY_COLUMNS = {"prevention", "response", "storage", "disposal"}
 # Cells that are only fill-in scaffolding, not a statement.
-_SCAFFOLD_RE = re.compile(r"^[\s<>…(){}\[\].,;:]*$")
+#: Cells that carry no statement: empty, punctuation only, or the table's own
+#: way of saying there is nothing here.
+_SCAFFOLD_RE = re.compile(r"^(?:[\s<>…(){}\[\].,;:]*|none\s+assigned\.?)$",
+                          re.IGNORECASE)
 # A fill-in. The three sources write the same slot three different ways: OSHA uses
 # "<…>" and doubles it as "<<…>>", CLP uses "<state route of exposure …>", and GHS
 # Rev.7 uses parentheses, "(state route of exposure …)".
@@ -112,8 +115,16 @@ _FILLIN_RE = re.compile(rf"{_FILLIN_ATOM}(?:\s*{_FILLIN_ATOM})*", re.IGNORECASE)
 # on when to apply the statement, not part of its text. Only a trailing "if"
 # clause introduced by a dash, or following a full stop, is stripped - so
 # "...\u2026/ if you feel unwell." keeps its clause.
+# A usage condition: a note to the labeller saying when the statement applies.
+# Appendix C attaches these after a dash - "- if inhalable particles ...",
+# "- for flammable liquids Category 1", "- may be omitted if storage
+# temperatures are listed", "- except for temperature controlled ...". The
+# opening words are listed rather than matching any dash, because a statement
+# may legitimately contain one.
 _CONDITION_RE = re.compile(
-    r"(?:\s*[-\u2013\u2014]\s*if\b.*$)|(?<=\.)\s*if\b.*$",
+    r"(?:\s*[-\u2013\u2014]\s*"
+    r"(?:if|for|except|unless|when|where|may\s+be\s+omitted|text\s+in)\b.*$)"
+    r"|(?<=\.)\s*if\b.*$",
     re.IGNORECASE | re.DOTALL,
 )
 
@@ -133,7 +144,48 @@ def _node_text(element) -> str:
     "when<i>fire</i> reaches" comes out as "whenfire reaches". Joining on
     itertext() keeps the words apart.
     """
-    return " ".join(" ".join(element.itertext()).split())
+    return repair_wrapping(" ".join(" ".join(element.itertext()).split()))
+
+
+#: Appendix C's HTML carries the line breaks of the printed page: a slash list
+#: broken across lines arrives as "dust/fume/gas/mist/ vapors/spray", and a
+#: parenthesis broken after the bracket as "( see … on this label)". English
+#: GHS never spaces either, so both are layout and neither is wording - but
+#: comparison here is exact, so both cost a code.
+_WRAP_AFTER_SLASH_RE = re.compile(r"/[ \t]+(?=\w)")
+_WRAP_AFTER_PAREN_RE = re.compile(r"\([ \t]+(?=\w)")
+
+
+def repair_wrapping(text: str) -> str:
+    out = _WRAP_AFTER_SLASH_RE.sub("/", text or "")
+    return _WRAP_AFTER_PAREN_RE.sub("(", out)
+
+
+#: Guidance addressed to whoever writes the label, printed inside the same
+#: paragraph as the statement it qualifies:
+#:
+#:     If on skin: Wash with plenty of water/… … Chemical manufacturer,
+#:     importer, or distributor may specify a cleansing agent if appropriate …
+#:
+#: `_is_statement` rejects a paragraph containing this, which threw the
+#: statement away with it. Cutting at the marker keeps the statement and drops
+#: only what follows.
+#: "Refer to manufacturer, importer, or distributor … for information on
+#: disposal" is a statement, not guidance, so a bare "manufacturer, importer"
+#: only counts when it opens the segment or follows the ellipsis that
+#: introduces a note.
+_GUIDANCE_START_RE = re.compile(
+    r"\s*\u2026?\s*chemical manufacturers?,?\s*importers?"
+    r"|(?:^|\u2026)\s*manufacturers?,?\s*importers?,?\s*or\s*distributors?"
+    r"|\s*\u2026\s*reference to supplemental\b",
+    re.IGNORECASE,
+)
+
+
+def strip_guidance(text: str) -> str:
+    """The statement, with any labeller guidance that follows it removed."""
+    match = _GUIDANCE_START_RE.search(text or "")
+    return (text[: match.start()] if match else (text or "")).strip()
 
 
 #: Appendix C lists alternative statements and the connector leaks into the cell,
@@ -225,7 +277,7 @@ def parse_appendix_c(
 
             if hazard_cols and len(values) > max(hazard_cols):
                 signal = values[hazard_cols[0]].strip()
-                statement = strip_condition(values[hazard_cols[1]].strip())
+                statement = strip_condition(strip_guidance(values[hazard_cols[1]]))
                 if signal in ("Danger", "Warning"):
                     signals.add(signal)
                 if _is_statement(statement):
@@ -245,7 +297,7 @@ def parse_appendix_c(
                         else [values[index]]
                     )
                     for chunk in chunks:
-                        text = strip_condition(chunk.strip())
+                        text = strip_condition(strip_guidance(chunk))
                         if _is_statement(text):
                             precautionary.add(text)
     return hazard, precautionary, signals, categories

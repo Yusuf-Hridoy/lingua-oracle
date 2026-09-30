@@ -603,3 +603,50 @@ def test_flatten_cell_keeps_real_slash_spacing():
         "dust/fume/gas/mist/vapours/spray."
     assert flatten_cell("CENTRE ANTIPOISON / médecin") == "CENTRE ANTIPOISON / médecin"
     assert flatten_cell("CENTRE ANTIPOISON /\nmédecin") == "CENTRE ANTIPOISON /médecin"
+
+
+# -- OSHA statements that were dropped by the parser, not by the regulation ---
+
+
+@pytest.mark.parametrize(
+    ("code", "fragment"),
+    [
+        # A slash list wrapped across lines: "dust/fume/gas/mist/ vapors/spray".
+        ("P260", "Do not breathe"),
+        ("P261", "Avoid breathing"),
+        # Statement and labeller guidance in one paragraph, so the whole
+        # paragraph was rejected.
+        ("P302+P352", "Wash with plenty of water"),
+        # A parenthesis wrapped after the bracket: "( see … on this label)".
+        ("P321", "Specific treatment"),
+    ],
+)
+def test_osha_statements_recovered_from_the_source(code, fragment):
+    from lingua_oracle.keys.store import load_key
+
+    entry = load_key("us_osha", "en").by_code().get(code)
+    assert entry is not None, f"{code} is in Appendix C but missing from the key"
+    assert fragment.lower() in entry.text.lower()
+
+
+def test_osha_wrap_repair_leaves_real_spacing_alone():
+    from lingua_oracle.keys.builders.us_osha import repair_wrapping
+
+    assert repair_wrapping("dust/fume/gas/mist/ vapors/spray") == \
+        "dust/fume/gas/mist/vapors/spray"
+    assert repair_wrapping("( see … on this label)") == "(see … on this label)"
+    # A slash before a fill-in or at the end of a clause is not a wrap.
+    assert repair_wrapping("water/… …") == "water/… …"
+    assert repair_wrapping("and/or") == "and/or"
+
+
+def test_osha_guidance_is_cut_but_statements_are_not():
+    from lingua_oracle.keys.builders.us_osha import strip_guidance
+
+    assert strip_guidance(
+        "If on skin: Wash with plenty of water/… … Chemical manufacturer, "
+        "importer, or distributor may specify a cleansing agent."
+    ) == "If on skin: Wash with plenty of water/…"
+    # "Refer to manufacturer, importer ..." IS a statement and must survive.
+    kept = "Refer to manufacturer, importer, or distributor … for information on disposal."
+    assert strip_guidance(kept) == kept
