@@ -4,7 +4,14 @@ Collected from what the page actually renders, not from memory: the labels in
 `report.html.j2` and `index.html.j2`, the 15 check titles, and every distinct
 message shape produced across the fixture set.
 
-**Nothing has been changed.** This is a proposal for review.
+**Status: applied.** The vocabulary now lives in `src/lingua_oracle/report/labels.py`,
+which the template renders from and the browser tests assert against, so the two
+cannot drift. The tables below are kept as the record of what was changed and why.
+
+Two items went further than proposed: check titles were rewritten beyond the
+`key` → `official wording` swap, and the report notes lost their tier language
+too. One was not done: `/compare` still answers with JSON rather than landing on
+a report.
 
 Ordered by how likely it is to stop a reviewer, worst first.
 
@@ -53,9 +60,17 @@ blue. Worth a shape or icon for colour-blind reviewers.
 | `H336 is in this document but missing from da.` | **"H336 is in this document but not in the Danish one."** (use the language name) |
 | `Compare (returns JSON)` (upload page) | Users should not be shown a raw JSON page at all — **Compare** should land on a report like the single-document flow does. |
 
-## 5. One thing the page does not say at all
+## 5. One thing the page did not say at all — now fixed
 
-A reviewer cannot tell **what to do next**. Every finding states a difference;
-none states whether the document may ship. A one-line verdict at the top —
-*"3 statements do not match the official wording. This sheet should not be
-issued until they are corrected."* — would carry more than all six tiles.
+A reviewer could not tell **what to do next**. Every finding stated a difference;
+none said whether the document could ship. There is now a verdict banner at the
+top of every report, in one of three states:
+
+- **Wording problems found — fix before release** (any failure)
+- **Looks correct — some items need a person to check** (warnings or info only)
+- **All checked wording matches the official text** (clean)
+
+Every one of them carries *What this does not tell you* underneath: codes with no
+official wording on file, wording borrowed from EU CLP, coverage below 100%, and
+the standing limit that this checks wording and not classification. A green
+headline can never stand alone and overclaim.
