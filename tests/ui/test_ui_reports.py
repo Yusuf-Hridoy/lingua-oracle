@@ -9,7 +9,6 @@ Report object.
 
 from __future__ import annotations
 
-import json
 import re
 
 import pytest
@@ -55,11 +54,10 @@ def _compare(page, base: str, case: Case) -> None:
     page.select_option("#clang", case.language)
     page.set_input_files("input[name=file_a]", f"{FIXTURES}/{case.name}.pdf")
     page.set_input_files("input[name=file_b]", f"{FIXTURES}/{case.compare_with}.pdf")
-    with page.expect_navigation(wait_until="load"):
-        page.click("form[action='/compare'] button[type=submit]")
-    # /compare answers with JSON; the report itself is at /reports/<id>.
-    payload = json.loads(page.inner_text("body"))
-    page.goto(f"{base}/reports/{payload['id']}", wait_until="load")
+    # /compare redirects to the report, exactly like the single-document flow.
+    page.click("form[action='/compare'] button[type=submit]")
+    page.wait_for_url(re.compile(r"/reports/"), timeout=60_000)
+    page.wait_for_load_state("load")
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda c: c.name)

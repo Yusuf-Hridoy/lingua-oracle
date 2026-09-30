@@ -182,15 +182,33 @@ def test_non_pdf_upload_is_rejected(client):
     assert response.status_code == 400
 
 
-def test_compare_endpoint(client):
+def _post_compare(client, url):
     with open(pdf("compare_b11_a"), "rb") as a, open(pdf("compare_b11_b"), "rb") as b:
-        response = client.post(
-            "/compare",
+        return client.post(
+            url,
             files={
                 "file_a": ("a.pdf", a, "application/pdf"),
                 "file_b": ("b.pdf", b, "application/pdf"),
             },
             data={"regulation": "eu_clp"},
+            follow_redirects=False,
         )
+
+
+def test_compare_lands_on_a_report_page(client):
+    """The browser flow must reach a report, not a wall of JSON."""
+    response = _post_compare(client, "/compare")
+    assert response.status_code == 303
+    location = response.headers["location"]
+    assert location.startswith("/reports/")
+    page = client.get(location)
+    assert page.status_code == 200
+    assert "B-11" in page.text
+    # The comparison report gets the same verdict banner as any other.
+    assert "Wording problems found" in page.text
+
+
+def test_compare_json_still_serves_the_api(client):
+    response = _post_compare(client, "/compare.json")
     assert response.status_code == 200
     assert any(f["check_id"] == "B-11" for f in response.json()["findings"])

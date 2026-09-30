@@ -95,22 +95,45 @@ def check_html(
     return RedirectResponse(url=f"/reports/{report.id}", status_code=303)
 
 
+def _compare(file_a, file_b, regulation, language) -> Report:
+    path_a = _save_upload(file_a)
+    path_b = _save_upload(file_b)
+    try:
+        return _run(
+            compare_pdfs, str(path_a), str(path_b), regulation or None, language or None
+        )
+    finally:
+        shutil.rmtree(path_a.parent, ignore_errors=True)
+        shutil.rmtree(path_b.parent, ignore_errors=True)
+
+
 @app.post("/compare")
 def compare(
     file_a: UploadFile = File(...),
     file_b: UploadFile = File(...),
     regulation: str | None = Form(None),
     language: str | None = Form(None),
+) -> RedirectResponse:
+    """Browser form target: compare, then redirect to the HTML report.
+
+    This used to answer with raw JSON, so the one flow a person was most
+    likely to reach through the page was also the only one that dropped them
+    into a wall of machine output. The JSON is still available at
+    /compare.json for anything calling the API.
+    """
+    report = _compare(file_a, file_b, regulation, language)
+    save(report)
+    return RedirectResponse(url=f"/reports/{report.id}", status_code=303)
+
+
+@app.post("/compare.json")
+def compare_json(
+    file_a: UploadFile = File(...),
+    file_b: UploadFile = File(...),
+    regulation: str | None = Form(None),
+    language: str | None = Form(None),
 ) -> JSONResponse:
-    path_a = _save_upload(file_a)
-    path_b = _save_upload(file_b)
-    try:
-        report = _run(
-            compare_pdfs, str(path_a), str(path_b), regulation or None, language or None
-        )
-    finally:
-        shutil.rmtree(path_a.parent, ignore_errors=True)
-        shutil.rmtree(path_b.parent, ignore_errors=True)
+    report = _compare(file_a, file_b, regulation, language)
     save(report)
     return JSONResponse(report.model_dump(mode="json"))
 
