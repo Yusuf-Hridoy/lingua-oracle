@@ -16,6 +16,7 @@ Collapsing these lost the only one that was actually about the document.
 from __future__ import annotations
 
 import difflib
+import re
 from dataclasses import dataclass
 from enum import StrEnum
 
@@ -29,6 +30,19 @@ from lingua_oracle.match.normalize import normalize
 #: its wording to go on.
 _FAMILY_FLOOR = 0.40
 _LONE_FLOOR = 0.55
+
+#: A sub-lettered form of a code: H361D, H360FD, H350i. CLP Annex III lists the
+#: statement once, as H361, with the affected-organ options inside it; the
+#: letters are a labelling convention layered on top. So the sub-lettered form
+#: is a real code that we simply do not hold as its own entry - it is not an
+#: invented one, and calling it unknown would fail a correct sheet.
+_SUB_LETTERED_RE = re.compile(r"^([HP]\d{3})([A-Za-z]{1,3})$")
+
+
+def base_code(code: str) -> str:
+    """The code without its sub-letters, or "" if it has none."""
+    match = _SUB_LETTERED_RE.match(code or "")
+    return match.group(1) if match else ""
 
 
 class Reason(StrEnum):
@@ -84,6 +98,9 @@ def classify(code: str, key_status: str, entries) -> Missing:
         # An incomplete key cannot tell us a code does not exist, only that we
         # do not hold it.
         if key_status != "ok":
+            return Missing(Reason.NOT_ON_FILE)
+        base = base_code(code)
+        if base and (base in entries or ghs_index.known_anywhere(base)):
             return Missing(Reason.NOT_ON_FILE)
         return Missing(Reason.UNKNOWN)
 

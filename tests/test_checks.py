@@ -193,3 +193,20 @@ def test_severity_of_newer_wording_comes_from_the_registry():
     from lingua_oracle.registry import load_registry
 
     assert load_registry().get("eu_clp").newer_ghs_wording == "warn"
+
+
+def test_a_sub_lettered_code_is_not_called_unknown():
+    """H361D is H361 with CLP's affected-organ letters; it is a real code.
+
+    Annex III lists the statement once, as H361, with the options inside it, so
+    the key holds no H361D entry. Failing it as "not a code" would fail a
+    correct sheet - found on a real EU document during validation.
+    """
+    from lingua_oracle.checks.missing_source import Reason, classify
+    from lingua_oracle.keys.tierb import resolve
+
+    eu = resolve("eu_clp", "en")
+    for code in ("H361D", "H361d", "H360FD", "H350i"):
+        assert classify(code, eu.key_status, eu.entries).reason is Reason.NOT_ON_FILE
+    # A code that really is not one still fails.
+    assert classify("P999", eu.key_status, eu.entries).reason is Reason.UNKNOWN
