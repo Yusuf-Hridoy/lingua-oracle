@@ -736,3 +736,94 @@ def test_no_key_spells_the_degree_sign_as_a_letter():
            for k in iter_all_keys() for e in k.entries
            if pattern.search(e.text or "")]
     assert bad == [], bad
+
+
+# -- key integrity: five things no key may ever contain -----------------------
+#
+# Each was a real bug found by audit, and each generated false alarms on correct
+# sheets. They run over every committed key, so a rebuild that reintroduces one
+# fails here rather than in a customer's report.
+
+
+def _all_entries():
+    from lingua_oracle.keys.store import iter_all_keys
+
+    for key in iter_all_keys():
+        for entry in key.entries:
+            if entry.text:
+                yield key.regulation, key.language, entry
+
+
+def test_no_statement_is_only_a_deletion_marker():
+    from lingua_oracle.keys.builders.common import is_deleted_marker
+
+    bad = [(r, lang, e.code) for r, lang, e in _all_entries()
+           if is_deleted_marker(e.text)]
+    assert bad == [], bad
+
+
+def test_no_statement_carries_an_amendment_marker():
+    import re
+
+    bad = [(r, lang, e.code, e.text[:60]) for r, lang, e in _all_entries()
+           if re.search(r"\[[XF]\d", e.text)]
+    assert bad == [], bad
+
+
+def test_no_statement_spells_a_degree_sign_as_a_letter():
+    import re
+
+    pattern = re.compile(r"\bo[CF]\b|\d\s*o[CF]")
+    bad = [(r, lang, e.code) for r, lang, e in _all_entries()
+           if pattern.search(e.text)]
+    assert bad == [], bad
+
+
+def test_an_a_variant_never_repeats_its_base_code():
+    """EUH201A is not EUH201, and a shared table must not make them equal."""
+    from lingua_oracle.keys.store import iter_all_keys
+
+    bad = []
+    for key in iter_all_keys():
+        by_code = key.by_code()
+        for code, entry in by_code.items():
+            if not code.endswith("A") or not entry.text:
+                continue
+            base = by_code.get(code[:-1])
+            if base is not None and base.text and base.text == entry.text:
+                bad.append((key.regulation, key.language, code))
+    assert bad == [], bad
+
+
+def test_no_statement_is_two_statements_run_together():
+    """One cell holding two codes' statements is how EUH209 went wrong.
+
+    Asserted precisely: no statement may equal two other statements from the
+    same key joined together, unless the code is a combination and they are its
+    own components. A looser rule cannot be used - P305+P351+P338 IS exactly
+    its three parts run together, and that is correct.
+
+    This does NOT by itself catch the EUH209 shape that prompted it: there both
+    codes held the merged text, so neither half existed as an entry to match
+    against. test_an_a_variant_never_repeats_its_base_code is the guard for
+    that. This one catches the other half of the family - one code swallowing a
+    neighbour's statement while the neighbour stays correct.
+    """
+    from lingua_oracle.keys.store import iter_all_keys
+
+    bad = []
+    for key in iter_all_keys():
+        texts = {e.code: " ".join(e.text.split())
+                 for e in key.entries if e.text and len(e.text) > 20}
+        for code, text in texts.items():
+            parts = set(code.split("+")) if "+" in code else set()
+            for other, other_text in texts.items():
+                if other == code or other in parts:
+                    continue
+                if not text.startswith(other_text):
+                    continue
+                rest = text[len(other_text):].strip()
+                if rest and rest in set(texts.values()):
+                    bad.append((key.regulation, key.language, code, other))
+                    break
+    assert bad == [], bad[:10]
