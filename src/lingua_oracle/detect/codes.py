@@ -6,6 +6,7 @@ import re
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
+from lingua_oracle.detect.hazard_classes import is_hazard_class
 from lingua_oracle.extract.base import Document, Line
 from lingua_oracle.extract.rejoin import (
     cut_at_new_item,
@@ -99,9 +100,17 @@ def plausible_statement(text: str, candidates: Sequence[str]) -> bool:
     to be caught, and "Ground/bond container" shares five words with "Ground and
     bond container" while saying something different.
 
+    A hazard class is rejected before any of that. The class shares its
+    vocabulary with the statement it classifies - "Skin Irrit. 2" and "Causes
+    skin irritation." both say "skin", "Aquatic Chronic 3" and "Harmful to
+    aquatic life" both say "aquatic" - so word overlap cannot separate them and
+    four such classes passed this guard until it did.
+
     With nothing to compare against, the text is kept: silence about a code we
     hold no wording for is worse than a reported difference.
     """
+    if is_hazard_class(text):
+        return False
     if not candidates:
         return True
     words = _significant(text)

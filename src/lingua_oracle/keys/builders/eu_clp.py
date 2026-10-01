@@ -19,7 +19,9 @@ Two passes:
 from __future__ import annotations
 
 import collections
+import json
 import re
+from pathlib import Path
 
 from lxml import html as LH
 
@@ -41,6 +43,7 @@ from lingua_oracle.models import (
     Status,
     Tier,
 )
+from lingua_oracle.registry import data_dir
 
 # Languages whose act text was unavailable, so signal words could not be read.
 MISSING_SIGNAL_WORDS: set[str] = set()
@@ -126,6 +129,51 @@ def _expand_code(raw_code: str) -> list[str]:
     for r in rest:
         out.append(r if re.match(r"^[A-Z]", r) else f"{prefix.group(1) if prefix else ''}{r}")
     return [normalise_code(c) for c in out if c]
+
+
+#: A footnote marker attached to a class code, e.g. "Press. Gas (*1)".
+_CLASS_FOOTNOTE_RE = re.compile(r"\s*\(\*?\d+\)\s*$")
+
+
+def hazard_class_codes(doc) -> list[str]:
+    """CLP's hazard class and category codes, from Annex VI Table 1.1.
+
+    "Skin Irrit. 2", "Aquatic Chronic 3", "Flam. Liq. 2" - what a sheet puts in
+    the classification column beside the H code. Read from the source rather
+    than typed out, because a list from memory is exactly the thing this
+    project does not allow.
+
+    Some cells name several categories at once - "Resp. Sens. 1, 1A, 1B" - and
+    are expanded into one code each.
+    """
+    out: list[str] = []
+    for table in doc.xpath("//table"):
+        rows = table.xpath(".//tr")
+        if not rows:
+            continue
+        head = _row_cells(rows[0])
+        if len(head) != 2 or "hazard class and category code" not in head[1].lower():
+            continue
+        for row in rows[1:]:
+            cells = row.xpath("./td|./th")
+            if len(cells) != 2:
+                continue
+            for raw in _cell_paragraphs(cells[1]):
+                text = _CLASS_FOOTNOTE_RE.sub("", strip_markers(raw)).strip()
+                if not text:
+                    continue
+                head_part, _, tail = text.partition(",")
+                out.append(head_part.strip())
+                if tail:
+                    # "Resp. Sens. 1, 1A, 1B": the stem is everything before
+                    # the final category token of the first entry.
+                    stem = head_part.rsplit(" ", 1)[0].strip()
+                    for extra in tail.split(","):
+                        extra = extra.strip()
+                        if extra:
+                            out.append(f"{stem} {extra}")
+        break
+    return sorted({c for c in out if c})
 
 
 def parse_statements(doc) -> dict[str, list[AnswerKeyEntry]]:
@@ -331,11 +379,26 @@ def _signal_words_for(lang, iso3, en_doc, positions, en_tables, entries, *, use_
     return words, note
 
 
+def write_hazard_classes(doc) -> Path:
+    """Commit the class list so check time needs no network and no parse."""
+    target = data_dir() / "hazard_classes" / "eu_clp.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        json.dumps({"source": CELEX, "codes": hazard_class_codes(doc)},
+                   ensure_ascii=False, indent=1),
+        encoding="utf-8",
+    )
+    return target
+
+
 def build(languages: list[str] | None = None, *, use_cache: bool = True,
           with_signal_words: bool = True) -> list[AnswerKey]:
     """Build EU CLP answer keys. Returns one AnswerKey per language."""
     wanted = languages or list(LANGS)
     en_doc = _doc("eng", use_cache=use_cache)
+    # A sheet's classification column holds these, not statements; check time
+    # needs the list and must not parse the act to get it.
+    write_hazard_classes(en_doc)
     per_lang = parse_statements(en_doc)
     code_signals = hazard_signal_words(en_doc)
     positions = signal_word_positions(en_doc)

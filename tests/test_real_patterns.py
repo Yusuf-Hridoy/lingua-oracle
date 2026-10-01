@@ -539,3 +539,98 @@ def test_a_bare_reference_takes_its_verdict_from_another_occurrence():
              ["H225", "Flam. Liq. 2", "H225", "Highly flammable liquid and vapour."]]
     hits = extract_hits(lines, official)
     assert [h.text for h in hits] == ["", "Highly flammable liquid and vapour."]
+
+
+# -- finding #14: a class that shares its words with the statement -------------
+
+
+def _clp_class_codes() -> list[str]:
+    import json
+
+    from lingua_oracle.registry import data_dir
+
+    path = data_dir() / "hazard_classes" / "eu_clp.json"
+    return json.loads(path.read_text(encoding="utf-8"))["codes"]
+
+
+def test_the_class_list_comes_from_the_act():
+    """Read from Annex VI Table 1.1 at build time, not typed from memory."""
+    import json
+
+    from lingua_oracle.registry import data_dir
+
+    data = json.loads(
+        (data_dir() / "hazard_classes" / "eu_clp.json").read_text(encoding="utf-8")
+    )
+    assert data["source"].startswith("02008R1272")
+    assert len(data["codes"]) > 80
+    for code in ("Skin Irrit. 2", "Aquatic Chronic 3", "Flam. Liq. 2",
+                 "Acute Tox. 4", "STOT SE 3", "Skin Corr. 1B"):
+        assert code in data["codes"], code
+
+
+@pytest.mark.parametrize("code", _clp_class_codes())
+def test_no_clp_class_code_is_taken_as_a_statement(code):
+    """Every class in the act, against every statement we hold for any code."""
+    from lingua_oracle.detect.codes import plausible_statement
+    from lingua_oracle.keys.store import load_key
+
+    key = load_key("eu_clp", "en")
+    texts = [e.text for e in key.entries if e.text]
+    assert not plausible_statement(code, texts), code
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        # The four that passed the word-overlap guard, with the statement they
+        # share vocabulary with.
+        "Skin Irrit. 2", "Skin Sens. 1", "Aquatic Chronic 3", "Aquatic Acute 1",
+        # Long-form GHS/OSHA classes ending in a category.
+        "Skin corrosion/irritation Category 2",
+        "Acute toxicity, oral Category 4",
+        "Serious eye damage/eye irritation Category 1A",
+        "Specific target organ toxicity, single exposure Category 3",
+    ],
+)
+def test_a_hazard_class_is_never_a_statement(text):
+    from lingua_oracle.detect.hazard_classes import is_hazard_class
+
+    assert is_hazard_class(text), text
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Causes skin irritation.",
+        "May cause an allergic skin reaction.",
+        "Harmful to aquatic life with long lasting effects.",
+        "Very toxic to aquatic life.",
+        "Highly flammable liquid and vapour.",
+        "IF SWALLOWED: Rinse mouth. Do NOT induce vomiting.",
+        "Ground/bond container and receiving equipment.",
+        "May cause damage to organs through prolonged or repeated exposure.",
+    ],
+)
+def test_a_statement_is_never_a_hazard_class(text):
+    from lingua_oracle.detect.hazard_classes import is_hazard_class
+
+    assert not is_hazard_class(text), text
+
+
+def test_a_single_row_class_does_not_attach_but_the_statement_does():
+    """The shape the guard exists for: one row, class beside the code."""
+    from lingua_oracle.detect.codes import extract_hits
+    from lingua_oracle.extract.base import Line
+    from lingua_oracle.keys.store import load_key
+
+    key = load_key("eu_clp", "en").by_code()
+    official = {code: [key[code].text] for code in ("H315", "H317", "H412")}
+    lines = [Line(text=t, page=1) for t in [
+        "H315", "Skin Irrit. 2",
+        "H317", "Skin Sens. 1",
+        "H412", "Aquatic Chronic 3",
+        "H315", key["H315"].text,
+    ]]
+    hits = extract_hits(lines, official)
+    assert [h.text for h in hits] == ["", "", "", key["H315"].text]
