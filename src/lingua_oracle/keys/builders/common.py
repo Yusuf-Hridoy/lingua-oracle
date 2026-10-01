@@ -83,6 +83,50 @@ def repair_degree_sign(text: str) -> str:
     return _DEGREE_RE.sub(lambda m: f"{m.group(1)}\u00b0", text or "")
 
 
+#: What an edition prints where it has withdrawn a code. Three languages are on
+#: file; the marker is bracketed in all of them.
+_DELETED_RE = re.compile(
+    r"^\[?\s*(?:deleted|supprim\w*|suprimido|borrado)\s*\]?\.?$", re.IGNORECASE
+)
+
+
+def is_deleted_marker(text: str) -> bool:
+    """True when the cell says the code was withdrawn rather than giving text."""
+    return bool(_DELETED_RE.match((text or "").strip()))
+
+
+# legislation.gov.uk marks amended passages with "[X1 ... ]" and "[F1 ... ]".
+# The opening marker and its closing bracket are editorial apparatus, not part
+# of the statement: GB CLP's H351 read "[X1Suspected of causing cancer ...".
+_AMENDMENT_RE = re.compile(r"\[\s*[XF]\d+\s*")
+
+
+def strip_amendment_markers(text: str) -> str:
+    """Remove amendment markers, and the closing bracket each one opened.
+
+    Only an unmatched closing bracket is dropped. Official statements use
+    brackets for optional parts - "Rinse skin with water [or shower]" - and
+    those are balanced, so they survive.
+    """
+    out, removed = _AMENDMENT_RE.subn("", text or "")
+    if not removed:
+        return text or ""
+    kept: list[str] = []
+    depth = 0
+    for char in out:
+        if char == "[":
+            depth += 1
+        elif char == "]":
+            if depth == 0:
+                removed -= 1
+                if removed >= 0:
+                    continue
+            else:
+                depth -= 1
+        kept.append(char)
+    return " ".join("".join(kept).split())
+
+
 def normalise_code(code: str) -> str:
     """'EUH 066' -> 'EUH066'; 'P303 + P361 + P353' -> 'P303+P361+P353'."""
     c = strip_markers(code).upper()

@@ -70,6 +70,9 @@ class Reason(StrEnum):
     #: Category 5 acute toxicity, for instance. The wording can still be
     #: checked, against GHS, and saying so is more use than "not checked".
     OUTSIDE_SCOPE = "outside_scope"
+    #: The edition this regulation is built on has withdrawn the code. A sheet
+    #: still citing it is citing something that no longer exists.
+    DELETED = "deleted"
     UNKNOWN = "unknown"
 
 
@@ -135,7 +138,8 @@ def _nearest(code: str, target: str, entries) -> tuple[str, str]:
     return best if best_ratio >= floor else ("", "")
 
 
-def classify(code: str, key_status: str, entries, regulation: str = "") -> Missing:
+def classify(code: str, key_status: str, entries, regulation: str = "",
+             ghs_edition: str = "") -> Missing:
     """Decide why `code` has no reference text.
 
     The hard case is a regulation whose key is knowingly incomplete. Membership
@@ -149,6 +153,11 @@ def classify(code: str, key_status: str, entries, regulation: str = "") -> Missi
     Without such a search an incomplete key can only own the gap, which is the
     honest answer when we do not know.
     """
+    # Withdrawn by the very edition this regulation is built on: not a gap, not
+    # newer wording, not outside scope - the code is gone.
+    if ghs_edition and ghs_edition in ghs_index.deleted_in(code):
+        return Missing(Reason.DELETED, edition=ghs_edition)
+
     defining = ghs_index.editions_defining(code)
 
     if regulation and ghs_index.source_searched(regulation):

@@ -96,6 +96,7 @@ def build(sources_root: str | Path | None = None) -> Path:
     """Read every edition on file and write the index. Offline."""
     root = Path(sources_root or (data_dir() / "sources"))
     index: dict[str, dict[str, str]] = {}
+    deleted: dict[str, list[str]] = {}
     present: list[str] = []
     for label, relative in EDITIONS:
         source = root / relative
@@ -103,16 +104,23 @@ def build(sources_root: str | Path | None = None) -> Path:
             continue
         present.append(label)
         for code, text in annex3(str(source)).items():
+            if not text:
+                continue
             # A later edition prints "[Deleted]" where it has withdrawn a code.
             # That is a statement about the code, not a statement to put on a
-            # label, so the edition does not count as defining it.
-            if text and text.strip().lower() not in ("[deleted]", "deleted"):
-                index.setdefault(code, {})[label] = text
+            # label: the edition does not define it, and a sheet still citing
+            # it is using something the edition has withdrawn.
+            if text.strip().lower() in ("[deleted]", "deleted"):
+                deleted.setdefault(code, []).append(label)
+                continue
+            index.setdefault(code, {})[label] = text
 
     target = index_path()
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(
-        json.dumps({"editions": present, "codes": dict(sorted(index.items()))},
+        json.dumps({"editions": present,
+                    "codes": dict(sorted(index.items())),
+                    "deleted": dict(sorted(deleted.items()))},
                    ensure_ascii=False, indent=1),
         encoding="utf-8",
     )

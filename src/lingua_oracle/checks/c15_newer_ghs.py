@@ -37,7 +37,8 @@ def run(ctx: CheckContext) -> list[Finding]:
             continue  # a bare code reference carries no wording to judge
         seen.add(hit.code)
         missing = classify(hit.code, ctx.reference.key_status,
-                           ctx.reference.entries, ctx.regulation.id)
+                           ctx.reference.entries, ctx.regulation.id,
+                           ctx.regulation.ghs_edition)
         section = ctx.section_for(hit)
 
         if missing.reason is Reason.UNKNOWN:
@@ -56,6 +57,27 @@ def run(ctx: CheckContext) -> list[Finding]:
                 code=hit.code, status="wrong", found=hit.text or hit.code,
                 why="This is not a code in any GHS edition on file, nor in "
                     "this regulation.",
+                section=section, page=hit.page,
+            ))
+            continue
+
+        if missing.reason is Reason.DELETED:
+            findings.append(
+                Finding(
+                    check_id=CHECK_ID, severity=Severity.FAIL, section=section,
+                    page=hit.page, code=hit.code, found=hit.text or hit.code,
+                    tier=Tier.C,
+                    message=(
+                        f"{hit.code} was deleted in {missing.edition}. "
+                        f"{ctx.regulation.display_name} no longer has this code."
+                    ),
+                )
+            )
+            ctx.record(StatementVerdict(
+                code=hit.code, status="wrong", found=hit.text or "",
+                source=f"{missing.edition} Annex 3",
+                why=f"{hit.code} was deleted in {missing.edition}; "
+                    f"{ctx.regulation.display_name} no longer has this code.",
                 section=section, page=hit.page,
             ))
             continue

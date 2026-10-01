@@ -42,6 +42,11 @@ class Regulation(BaseModel):
     #: regulation it cites is a compliance decision, not a technical one, so it
     #: is set per regulation rather than assumed.
     newer_ghs_wording: Literal["warn", "info", "fail"] = "warn"
+    #: The GHS edition this regulation's statements are taken from, as the GHS
+    #: index labels it. Set only where that is a fact of the build, never
+    #: inferred - it decides whether a code this edition has withdrawn should be
+    #: reported as deleted.
+    ghs_edition: str = ""
     source_url: str | None = None
     source_note: str | None = None
     detect_patterns: list[str] = Field(default_factory=list)

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from lingua_oracle.keys.builders.common import SourceUnavailable, now
+from lingua_oracle.keys.builders.common import SourceUnavailable, is_deleted_marker, now
 from lingua_oracle.keys.builders.pdf_tables import (
     ParseIssues,
     annex_page_range,
@@ -98,8 +98,18 @@ def build(
                 retrieved_at=ts, status=Status.OK,
             )
             for code, text in sorted(found.items())
-            if code[0] in "HP"
+            if code[0] in "HP" and not is_deleted_marker(text)
         ]
+        withdrawn = sorted(c for c, t in found.items()
+                           if c[0] in "HP" and is_deleted_marker(t))
+        if withdrawn:
+            # "[Deleted]" is what the edition says ABOUT a code, not a statement
+            # to put on a label. Storing it made the key assert that a sheet
+            # should print the word "[Deleted]".
+            issues.notes.append(
+                f"withdrawn in {REVISION}, not stored as statements "
+                f"({len(withdrawn)}): " + ", ".join(withdrawn)
+            )
         # English states the words outright; the other editions are aligned to the
         # English tables by their H codes, which are identical in every language.
         english_path = root / FILES["en"]

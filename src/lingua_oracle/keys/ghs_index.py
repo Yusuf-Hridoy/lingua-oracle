@@ -40,6 +40,12 @@ def known_anywhere(code: str) -> bool:
     return bool(_index().get("codes", {}).get(code))
 
 
+def deleted_in(code: str) -> list[str]:
+    """Editions that print "[Deleted]" for this code, oldest first."""
+    found = _index().get("deleted", {}).get(code, [])
+    return [label for label in editions() if label in found]
+
+
 def oldest_edition_defines(code: str) -> bool:
     """True when the oldest edition on file already gives this code a statement.
 

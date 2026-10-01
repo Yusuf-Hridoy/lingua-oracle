@@ -189,6 +189,8 @@ def action_for(finding, regulation_display: str = "") -> str:
     if "differs only in capitalisation" in message:
         return "Match the capitalisation of the official text, or confirm it does not matter."
     if finding.check_id == "C-15":
+        if "was deleted in" in message:
+            return "Remove this code; it no longer exists in this revision."
         if "not a code" in message:
             return "Check this code for a typo."
         where = regulation_display or "this regulation"

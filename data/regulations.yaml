@@ -47,6 +47,7 @@ regulations:
     required_languages: []
     supplemental_prefixes: []
     allowed_prefixes: [H, P]
+    ghs_edition: "GHS Rev.7"
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
     # Appendix C is published as graphics in the official CFR; the osha.gov
     # HTML is the only text rendering and it prints the statements without a
@@ -72,6 +73,7 @@ regulations:
     # closing full stop: fewer than half of them carry one. A sheet that writes
     # the sentence normally has not changed the wording.
     statements_lack_terminal_punctuation: true
+    ghs_edition: "GHS Rev.7"
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
     source_url: "https://laws-lois.justice.gc.ca/eng/regulations/SOR-2015-17/FullText.html"
     detect_patterns:
@@ -92,6 +94,7 @@ regulations:
     # closing full stop: fewer than half of them carry one. A sheet that writes
     # the sentence normally has not changed the wording.
     statements_lack_terminal_punctuation: true
+    ghs_edition: "GHS Rev.11"
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
     source_url: "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025"
     # "Globally Harmonized System" on its own is not a signal: practically every
@@ -115,6 +118,7 @@ regulations:
     # closing full stop: fewer than half of them carry one. A sheet that writes
     # the sentence normally has not changed the wording.
     statements_lack_terminal_punctuation: true
+    ghs_edition: "GHS Rev.7"
     signal_words: [SIGNAL_DANGER, SIGNAL_WARNING]
     source_url: "https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals"
     detect_patterns:

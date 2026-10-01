@@ -1196,5 +1196,52 @@
    "GHS Rev.8": "Refer to manufacturer/supplier… for information on disposal/recovery/recycling.",
    "GHS Rev.11": "Refer to manufacturer/supplier… for information on disposal/recovery/recycling."
   }
+ },
+ "deleted": {
+  "H200": [
+   "GHS Rev.11"
+  ],
+  "H201": [
+   "GHS Rev.11"
+  ],
+  "H202": [
+   "GHS Rev.11"
+  ],
+  "H203": [
+   "GHS Rev.11"
+  ],
+  "H205": [
+   "GHS Rev.11"
+  ],
+  "P201": [
+   "GHS Rev.11"
+  ],
+  "P202": [
+   "GHS Rev.11"
+  ],
+  "P302+P317": [
+   "GHS Rev.11"
+  ],
+  "P304+P317": [
+   "GHS Rev.11"
+  ],
+  "P310": [
+   "GHS Rev.11"
+  ],
+  "P311": [
+   "GHS Rev.11"
+  ],
+  "P312": [
+   "GHS Rev.11"
+  ],
+  "P313": [
+   "GHS Rev.11"
+  ],
+  "P314": [
+   "GHS Rev.11"
+  ],
+  "P315": [
+   "GHS Rev.11"
+  ]
  }
 }
