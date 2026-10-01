@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-09-29T12:09:09.535682Z",
+  "retrieved_at": "2026-10-01T06:42:47.182483Z",
   "notes": [],
   "entries": [
     {
@@ -3269,13 +3269,13 @@
       "language": "hu",
       "code": "EUH201",
       "kind": "supplemental",
-      "text": "Ólmot tartalmaz. Tilos olyan felületeken használni, amelyeket gyermekek szájukba vehetnek. Figyelem! Ólmot tartalmaz.",
+      "text": "Ólmot tartalmaz. Tilos olyan felületeken használni, amelyeket gyermekek szájukba vehetnek.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH201",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3284,13 +3284,13 @@
       "language": "hu",
       "code": "EUH201A",
       "kind": "supplemental",
-      "text": "Ólmot tartalmaz. Tilos olyan felületeken használni, amelyeket gyermekek szájukba vehetnek. Figyelem! Ólmot tartalmaz.",
+      "text": "Figyelem! Ólmot tartalmaz.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH201A",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3404,13 +3404,13 @@
       "language": "hu",
       "code": "EUH209",
       "kind": "supplemental",
-      "text": "A használat során fokozottan tűzveszélyessé válhat. A használat során tűzveszélyessé válhat.",
+      "text": "A használat során fokozottan tűzveszélyessé válhat.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH209",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3419,13 +3419,13 @@
       "language": "hu",
       "code": "EUH209A",
       "kind": "supplemental",
-      "text": "A használat során fokozottan tűzveszélyessé válhat. A használat során tűzveszélyessé válhat.",
+      "text": "A használat során tűzveszélyessé válhat.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH209A",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {

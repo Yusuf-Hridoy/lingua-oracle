@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-09-29T12:09:09.535682Z",
+  "retrieved_at": "2026-10-01T06:42:47.182483Z",
   "notes": [],
   "entries": [
     {
@@ -3269,13 +3269,13 @@
       "language": "sl",
       "code": "EUH201",
       "kind": "supplemental",
-      "text": "Vsebuje svinec. Ne sme se nanašati na površine, ki bi jih lahko žvečili ali sesali otroci. Pozor! Vsebuje svinec.",
+      "text": "Vsebuje svinec. Ne sme se nanašati na površine, ki bi jih lahko žvečili ali sesali otroci.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH201",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3284,13 +3284,13 @@
       "language": "sl",
       "code": "EUH201A",
       "kind": "supplemental",
-      "text": "Vsebuje svinec. Ne sme se nanašati na površine, ki bi jih lahko žvečili ali sesali otroci. Pozor! Vsebuje svinec.",
+      "text": "Pozor! Vsebuje svinec.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH201A",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3404,13 +3404,13 @@
       "language": "sl",
       "code": "EUH209",
       "kind": "supplemental",
-      "text": "Med uporabo utegne postati lahko vnetljivo. Med uporabo utegne postati vnetljivo.",
+      "text": "Med uporabo utegne postati lahko vnetljivo.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH209",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3419,13 +3419,13 @@
       "language": "sl",
       "code": "EUH209A",
       "kind": "supplemental",
-      "text": "Med uporabo utegne postati lahko vnetljivo. Med uporabo utegne postati vnetljivo.",
+      "text": "Med uporabo utegne postati vnetljivo.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH209A",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {

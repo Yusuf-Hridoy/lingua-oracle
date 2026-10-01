@@ -650,3 +650,51 @@ def test_osha_guidance_is_cut_but_statements_are_not():
     # "Refer to manufacturer, importer ..." IS a statement and must survive.
     kept = "Refer to manufacturer, importer, or distributor … for information on disposal."
     assert strip_guidance(kept) == kept
+
+
+# -- one cell, two codes, two statements --------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("base", "variant"),
+    [("EUH201", "EUH201A"), ("EUH209", "EUH209A")],
+)
+def test_an_a_variant_differs_from_its_base_code(base, variant):
+    """CLP heads one table "EUH 209/ 209A" and puts a statement per code in it.
+
+    The cell's two paragraphs were flattened into one string and handed to both
+    codes, so every sheet citing either got the other's wording appended.
+    """
+    from lingua_oracle.keys.store import available_languages, load_key
+
+    for language in available_languages("eu_clp"):
+        key = load_key("eu_clp", language).by_code()
+        assert key[base].text != key[variant].text, f"{language}: {base} == {variant}"
+        assert key[base].text and key[variant].text
+
+
+def test_the_a_variant_is_the_shorter_warning():
+    from lingua_oracle.keys.store import load_key
+
+    key = load_key("eu_clp", "en").by_code()
+    assert key["EUH201A"].text == "Warning! Contains lead."
+    assert key["EUH209A"].text == "Can become flammable in use."
+    assert key["EUH209"].text == "Can become highly flammable in use."
+
+
+def test_a_multi_code_cell_is_split_by_paragraph():
+    from lxml import html as LH
+
+    from lingua_oracle.keys.builders.eu_clp import _cell_paragraphs
+
+    cell = LH.fromstring(
+        '<td><p>Can become highly flammable in use.</p>'
+        '<p>Can become flammable in use.</p></td>'
+    )
+    assert _cell_paragraphs(cell) == [
+        "Can become highly flammable in use.",
+        "Can become flammable in use.",
+    ]
+    # A cell with no paragraphs still yields its whole text.
+    plain = LH.fromstring("<td>Contains lead.</td>")
+    assert _cell_paragraphs(plain) == ["Contains lead."]

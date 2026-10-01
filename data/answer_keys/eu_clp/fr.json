@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-09-29T12:09:09.535682Z",
+  "retrieved_at": "2026-10-01T06:42:47.182483Z",
   "notes": [],
   "entries": [
     {
@@ -3269,13 +3269,13 @@
       "language": "fr",
       "code": "EUH201",
       "kind": "supplemental",
-      "text": "Contient du plomb. Ne pas utiliser sur les objets susceptibles d'être mâchés ou sucés par des enfants. Attention! Contient du plomb.",
+      "text": "Contient du plomb. Ne pas utiliser sur les objets susceptibles d'être mâchés ou sucés par des enfants.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH201",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3284,13 +3284,13 @@
       "language": "fr",
       "code": "EUH201A",
       "kind": "supplemental",
-      "text": "Contient du plomb. Ne pas utiliser sur les objets susceptibles d'être mâchés ou sucés par des enfants. Attention! Contient du plomb.",
+      "text": "Attention! Contient du plomb.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH201A",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3404,13 +3404,13 @@
       "language": "fr",
       "code": "EUH209",
       "kind": "supplemental",
-      "text": "Peut devenir facilement inflammable en cours d'utilisation. Peut devenir inflammable en cours d'utilisation.",
+      "text": "Peut devenir facilement inflammable en cours d'utilisation.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH209",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3419,13 +3419,13 @@
       "language": "fr",
       "code": "EUH209A",
       "kind": "supplemental",
-      "text": "Peut devenir facilement inflammable en cours d'utilisation. Peut devenir inflammable en cours d'utilisation.",
+      "text": "Peut devenir inflammable en cours d'utilisation.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH209A",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {

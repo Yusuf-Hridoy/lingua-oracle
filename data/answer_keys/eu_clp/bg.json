@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-09-29T12:09:09.535682Z",
+  "retrieved_at": "2026-10-01T06:42:47.182483Z",
   "notes": [],
   "entries": [
     {
@@ -3269,13 +3269,13 @@
       "language": "bg",
       "code": "EUH201",
       "kind": "supplemental",
-      "text": "Съдържа олово. Да не се използва върху повърхност, която евентуално може да се дъвче или смуче от деца. Внимание! Съдържа олово.",
+      "text": "Съдържа олово. Да не се използва върху повърхност, която евентуално може да се дъвче или смуче от деца.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH201",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3284,13 +3284,13 @@
       "language": "bg",
       "code": "EUH201A",
       "kind": "supplemental",
-      "text": "Съдържа олово. Да не се използва върху повърхност, която евентуално може да се дъвче или смуче от деца. Внимание! Съдържа олово.",
+      "text": "Внимание! Съдържа олово.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH201A",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3404,13 +3404,13 @@
       "language": "bg",
       "code": "EUH209",
       "kind": "supplemental",
-      "text": "При употреба може да стане силно запалимо. При употреба може да стане запалимо.",
+      "text": "При употреба може да стане силно запалимо.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH209",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {
@@ -3419,13 +3419,13 @@
       "language": "bg",
       "code": "EUH209A",
       "kind": "supplemental",
-      "text": "При употреба може да стане силно запалимо. При употреба може да стане запалимо.",
+      "text": "При употреба може да стане запалимо.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for EUH209A",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:42:46.680082Z",
       "status": "ok"
     },
     {

@@ -99,8 +99,21 @@ def _kind_for(code: str) -> Kind:
     return Kind.PRECAUTIONARY
 
 
+def _cell_paragraphs(cell) -> list[str]:
+    """The cell's paragraphs, in order, as separate strings.
+
+    A header naming two codes - "EUH 209/ 209A" - has a cell holding two
+    statements, one per code, as two <p> elements. text_content() flattens
+    them into one string, which is how both codes came to hold
+    "Can become highly flammable in use. Can become flammable in use."
+    """
+    out = [" ".join(p.text_content().split()) for p in cell.xpath("./p")]
+    out = [t for t in out if t]
+    return out or [" ".join(cell.text_content().split())]
+
+
 def _expand_code(raw_code: str) -> list[str]:
-    """'EUH 201/ 201A' covers two codes that share one text."""
+    """'EUH 201/ 201A' names two codes, each with its own statement."""
     code = normalise_code(raw_code)
     if "/" not in code:
         return [code]
@@ -133,10 +146,22 @@ def parse_statements(doc) -> dict[str, list[AnswerKeyEntry]]:
             if len(cells) != 3:
                 continue  # amendment-marker row
             lang = COL_TO_BCP47.get(cells[1].strip().upper())
-            text = strip_markers(cells[2])
-            if not lang or not text:
+            # One paragraph per code when the counts line up; otherwise the
+            # whole cell for each, which is the old behaviour and is recorded
+            # as an issue rather than silently assumed.
+            paragraphs = _cell_paragraphs(row.xpath("./td|./th")[2])
+            if len(codes) > 1 and len(paragraphs) == len(codes):
+                texts = [strip_markers(t) for t in paragraphs]
+            else:
+                # Counts do not line up: fall back to the whole cell for each
+                # code. test_an_a_variant_differs_from_its_base_code fails if
+                # that ever produces two codes with identical text again.
+                texts = [strip_markers(cells[2])] * len(codes)
+            if not lang or not any(texts):
                 continue
-            for code in codes:
+            for code, text in zip(codes, texts, strict=True):
+                if not text:
+                    continue
                 if (lang, code) in seen:
                     continue
                 seen.add((lang, code))
