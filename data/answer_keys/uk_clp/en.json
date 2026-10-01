@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
-  "retrieved_at": "2026-09-30T09:48:15.953894Z",
+  "retrieved_at": "2026-10-01T06:44:53.936878Z",
   "notes": [],
   "entries": [
     {
@@ -3059,13 +3059,13 @@
       "language": "en",
       "code": "P410+P412",
       "kind": "precautionary",
-      "text": "Protect from sunlight. Do no expose to temperatures exceeding 50 oC/122oF.",
+      "text": "Protect from sunlight. Do no expose to temperatures exceeding 50 °C/122°F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
       "source_ref": "GB CLP (retained Reg. 1272/2008) Annex II/III/IV, row for P410+P412 (gb_clp_full.pdf, p442)",
-      "retrieved_at": "2026-09-30T07:29:07.555189Z",
+      "retrieved_at": "2026-10-01T06:44:53.936878Z",
       "status": "ok"
     },
     {
@@ -3074,13 +3074,13 @@
       "language": "en",
       "code": "P411",
       "kind": "precautionary",
-      "text": "Store at temperatures not exceeding … oC/…oF.",
+      "text": "Store at temperatures not exceeding … °C/…°F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
       "source_ref": "GB CLP (retained Reg. 1272/2008) Annex II/III/IV, row for P411 (gb_clp_full.pdf, p440)",
-      "retrieved_at": "2026-09-30T07:29:07.555189Z",
+      "retrieved_at": "2026-10-01T06:44:53.936878Z",
       "status": "ok"
     },
     {
@@ -3089,13 +3089,13 @@
       "language": "en",
       "code": "P412",
       "kind": "precautionary",
-      "text": "Do not expose to temperatures exceeding 50 oC/122oF.",
+      "text": "Do not expose to temperatures exceeding 50 °C/122°F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
       "source_ref": "GB CLP (retained Reg. 1272/2008) Annex II/III/IV, row for P412 (gb_clp_full.pdf, p441)",
-      "retrieved_at": "2026-09-30T07:29:07.555189Z",
+      "retrieved_at": "2026-10-01T06:44:53.936878Z",
       "status": "ok"
     },
     {

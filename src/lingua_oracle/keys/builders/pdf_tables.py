@@ -20,7 +20,7 @@ from pathlib import Path
 
 import pymupdf
 
-from lingua_oracle.keys.builders.common import cache_dir, normalise_code
+from lingua_oracle.keys.builders.common import cache_dir, normalise_code, repair_degree_sign
 from lingua_oracle.match.normalize import normalize
 
 _SINGLE = r"(?:EUH|AUH|H|P)\s?\d{3}[A-Za-z]?"
@@ -317,7 +317,7 @@ def flatten_cell(text: str) -> str:
 def clean_statement(text: str) -> str:
     out = flatten_cell(text)
     out = _FOOTNOTE_RE.sub("", out)
-    return normalize(out)
+    return repair_degree_sign(normalize(out))
 
 
 def find_pages(doc, pattern: str, *, limit: int | None = None) -> list[int]:

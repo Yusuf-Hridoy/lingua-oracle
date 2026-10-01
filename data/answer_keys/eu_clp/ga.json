@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-01T06:42:47.182483Z",
+  "retrieved_at": "2026-10-01T06:44:46.186269Z",
   "notes": [],
   "entries": [
     {
@@ -2984,13 +2984,13 @@
       "language": "ga",
       "code": "P410+P412",
       "kind": "precautionary",
-      "text": "Cosain ó sholas na gréine. Ná nocht do theocht níos airde ná 50 oC/122oF.",
+      "text": "Cosain ó sholas na gréine. Ná nocht do theocht níos airde ná 50 °C/122°F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for P410+P412",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:44:45.584011Z",
       "status": "ok"
     },
     {
@@ -2999,13 +2999,13 @@
       "language": "ga",
       "code": "P411",
       "kind": "precautionary",
-      "text": "Stóráil ag teocht nach airde ná … oC/…oF.",
+      "text": "Stóráil ag teocht nach airde ná … °C/…°F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for P411",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:44:45.584011Z",
       "status": "ok"
     },
     {
@@ -3014,13 +3014,13 @@
       "language": "ga",
       "code": "P412",
       "kind": "precautionary",
-      "text": "Ná nocht do theocht níos airde ná 50 oC/122oF.",
+      "text": "Ná nocht do theocht níos airde ná 50 °C/122°F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for P412",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:44:45.584011Z",
       "status": "ok"
     },
     {
@@ -3029,13 +3029,13 @@
       "language": "ga",
       "code": "P413",
       "kind": "precautionary",
-      "text": "Stóráil bulcmhaiseanna os cionn … kg/… lb ag teocht nach airde ná … oC/…oF.",
+      "text": "Stóráil bulcmhaiseanna os cionn … kg/… lb ag teocht nach airde ná … °C/…°F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for P413",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:44:45.584011Z",
       "status": "ok"
     },
     {

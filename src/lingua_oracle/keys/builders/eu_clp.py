@@ -28,6 +28,7 @@ from lingua_oracle.keys.builders.common import (
     fetch,
     normalise_code,
     now,
+    repair_degree_sign,
     strip_markers,
 )
 from lingua_oracle.keys.builders.signal_words import leading_word
@@ -88,7 +89,8 @@ def _doc(lang_iso3: str, *, use_cache: bool = True, url: str = BASE_URL):
 
 
 def _row_cells(row) -> list[str]:
-    return [" ".join(c.text_content().split()) for c in row.xpath("./td|./th")]
+    return [repair_degree_sign(" ".join(c.text_content().split()))
+            for c in row.xpath("./td|./th")]
 
 
 def _kind_for(code: str) -> Kind:
@@ -107,9 +109,10 @@ def _cell_paragraphs(cell) -> list[str]:
     them into one string, which is how both codes came to hold
     "Can become highly flammable in use. Can become flammable in use."
     """
-    out = [" ".join(p.text_content().split()) for p in cell.xpath("./p")]
+    out = [repair_degree_sign(" ".join(p.text_content().split()))
+           for p in cell.xpath("./p")]
     out = [t for t in out if t]
-    return out or [" ".join(cell.text_content().split())]
+    return out or [repair_degree_sign(" ".join(cell.text_content().split()))]
 
 
 def _expand_code(raw_code: str) -> list[str]:

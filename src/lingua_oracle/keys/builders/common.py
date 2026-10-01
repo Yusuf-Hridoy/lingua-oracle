@@ -66,6 +66,23 @@ def strip_markers(text: str) -> str:
     return " ".join(out.split())
 
 
+# The degree sign is not a character in either source. CELLAR marks it up as
+# <span class="superscript">o</span>, and the PDFs set it as a raised lower-case
+# "o"; both flatten to a bare "o" against the unit, giving "50 oC/122oF" where
+# the regulation prints "50 °C/122 °F". 99 entries carried it.
+#
+# Anchored tightly: the "o" must follow a number, a fill-in or the slash that
+# joins the two units, and be followed by C or F at a word boundary. That is the
+# only place this shape occurs - the Italian P413 reads "… °C/oF", with the
+# second fill-in missing, so the slash has to count as an anchor too. Nothing
+# where a word meaning "or" could stand matches: "or" is followed by "r".
+_DEGREE_RE = re.compile(r"(?<=[\d\u2026/])(\s*)o(?=[CF]\b)")
+
+
+def repair_degree_sign(text: str) -> str:
+    return _DEGREE_RE.sub(lambda m: f"{m.group(1)}\u00b0", text or "")
+
+
 def normalise_code(code: str) -> str:
     """'EUH 066' -> 'EUH066'; 'P303 + P361 + P353' -> 'P303+P361+P353'."""
     c = strip_markers(code).upper()

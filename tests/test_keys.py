@@ -698,3 +698,41 @@ def test_a_multi_code_cell_is_split_by_paragraph():
     # A cell with no paragraphs still yields its whole text.
     plain = LH.fromstring("<td>Contains lead.</td>")
     assert _cell_paragraphs(plain) == ["Contains lead."]
+
+
+# -- the degree sign ----------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("raw", "fixed"),
+    [
+        ("Do not expose to temperatures exceeding 50 oC/122oF.",
+         "Do not expose to temperatures exceeding 50 °C/122°F."),
+        ("Store at temperatures not exceeding … oC/…oF.",
+         "Store at temperatures not exceeding … °C/…°F."),
+        # Italian P413 loses the second fill-in, so the slash is the anchor.
+        ("a temperature non superiori a … °C/oF.",
+         "a temperature non superiori a … °C/°F."),
+        # Nothing where a word meaning "or" could stand is touched.
+        ("5 o 6 grados", "5 o 6 grados"),
+        ("Mezcla de oC no", "Mezcla de oC no"),
+        ("sucked or chewed", "sucked or chewed"),
+    ],
+)
+def test_degree_sign_repair(raw, fixed):
+    from lingua_oracle.keys.builders.common import repair_degree_sign
+
+    assert repair_degree_sign(raw) == fixed
+
+
+def test_no_key_spells_the_degree_sign_as_a_letter():
+    """CELLAR marks it up as a superscript "o"; the PDFs set it as a raised one."""
+    import re
+
+    from lingua_oracle.keys.store import iter_all_keys
+
+    pattern = re.compile(r"\bo[CF]\b|\d\s*o[CF]")
+    bad = [(k.regulation, k.language, e.code)
+           for k in iter_all_keys() for e in k.entries
+           if pattern.search(e.text or "")]
+    assert bad == [], bad

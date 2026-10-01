@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-01T06:42:47.182483Z",
+  "retrieved_at": "2026-10-01T06:44:46.186269Z",
   "notes": [],
   "entries": [
     {
@@ -2984,13 +2984,13 @@
       "language": "ro",
       "code": "P410+P412",
       "kind": "precautionary",
-      "text": "A se proteja de lumina solară. Nu expuneți la temperaturi care depășesc 50 oC/122 oF.",
+      "text": "A se proteja de lumina solară. Nu expuneți la temperaturi care depășesc 50 °C/122 °F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for P410+P412",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:44:45.584011Z",
       "status": "ok"
     },
     {
@@ -2999,13 +2999,13 @@
       "language": "ro",
       "code": "P411",
       "kind": "precautionary",
-      "text": "A se depozita la temperaturi care să nu depășească … oC/…oF.",
+      "text": "A se depozita la temperaturi care să nu depășească … °C/…°F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for P411",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:44:45.584011Z",
       "status": "ok"
     },
     {
@@ -3014,13 +3014,13 @@
       "language": "ro",
       "code": "P412",
       "kind": "precautionary",
-      "text": "Nu expuneți la temperaturi care depășesc 50 oC/122 oF.",
+      "text": "Nu expuneți la temperaturi care depășesc 50 °C/122 °F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for P412",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:44:45.584011Z",
       "status": "ok"
     },
     {
@@ -3029,13 +3029,13 @@
       "language": "ro",
       "code": "P413",
       "kind": "precautionary",
-      "text": "Depozitați cantitățile în vrac mai mari de … kg/… lbs la temperaturi care să nu depășească … oC/…oF.",
+      "text": "Depozitați cantitățile în vrac mai mari de … kg/… lbs la temperaturi care să nu depășească … °C/…°F.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
       "source_ref": "Annex III/IV table for P413",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "retrieved_at": "2026-10-01T06:44:45.584011Z",
       "status": "ok"
     },
     {
