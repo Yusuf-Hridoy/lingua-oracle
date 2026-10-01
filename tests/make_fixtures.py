@@ -287,6 +287,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "defect_c14_english_only.pdf"))
 
     # Patterns found on real documents, reproduced with fictional data.
+    add("pattern_out_of_scope", _out_of_scope(
+        FIXTURES / "pattern_out_of_scope.pdf"))
     add("pattern_unfilled_blanks", _unfilled_blanks(
         FIXTURES / "pattern_unfilled_blanks.pdf"))
     add("pattern_classification_table", _classification_table(
@@ -723,6 +725,49 @@ def _unfilled_blanks(path: Path) -> Path:
     sheet.line(head["16"], bold=True, size=11)
     for code in codes:
         sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
+
+
+
+def _out_of_scope(path: Path) -> Path:
+    """An OSHA sheet carrying codes OSHA does not cover.
+
+    H303 and P273 are GHS codes outside HazCom's scope - acute toxicity
+    Category 5 and environmental hazards. A sheet may carry them as extra
+    information, and correct GHS wording is not something to report. Wording
+    that does NOT match GHS still is, which is what P273 is here for.
+    """
+    from lingua_oracle.keys import ghs_index
+
+    head = HEADINGS["en"]
+    official = texts("us_osha", "en", ["H225", "P210"])
+    h303 = ghs_index.text_in("H303", "GHS Rev.7")
+    p273 = ghs_index.text_in("P273", "GHS Rev.7")
+    if not h303 or not p273:
+        raise SystemExit("out-of-scope fixture: H303/P273 missing from the GHS index")
+
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.line("Prepared under 29 CFR 1910.1200 (OSHA Hazard Communication)")
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line(f"{head['signal']}: {signal_text('us_osha', 'en', True)}")
+    sheet.blank()
+    sheet.line(head["haz"], bold=True)
+    sheet.line(f"H225 {official['H225']}")
+    sheet.line(f"H303 {h303}")                       # correct GHS wording
+    sheet.blank()
+    sheet.line(head["prec"], bold=True)
+    sheet.line(f"P210 {official['P210']}")
+    sheet.line("P273 Avoid release into the environment.")   # GHS says "to the"
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    sheet.line(f"H225 {official['H225']}")
     sheet.save()
     return path
 

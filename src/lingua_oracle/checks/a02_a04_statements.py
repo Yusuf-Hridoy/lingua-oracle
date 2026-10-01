@@ -104,7 +104,11 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
         # behind a clean pass.
         unfilled = False
         for value in result.fillins:
-            blank = value.strip() in ("…", "...")
+            # A slot still holding the placeholder is unfilled, whatever else
+            # was printed around it: "Wash hands [and …] thoroughly" captures
+            # "and …", which is the optional bracket printed as the act has it,
+            # not text an author wrote. "You filled in" is for real text only.
+            blank = "…" in value
             unfilled = unfilled or blank
             findings.append(
                 Finding(
@@ -137,7 +141,7 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                 found=hit.text, expected=entry.text, source=_source_of(ctx),
                 source_detail=entry.source_ref or "",
                 why=why, section=section, page=hit.page,
-                fillins=[v for v in result.fillins if v.strip() not in ("…", "...")],
+                fillins=[v for v in result.fillins if "…" not in v],
             ))
             continue
         if result.matched:

@@ -100,6 +100,22 @@ def run(ctx: CheckContext) -> list[Finding]:
         source = (f"{missing.edition}, Annex 3 — GHS wording, outside "
                   f"{where}'s scope" if outside
                   else f"{missing.edition}, Annex 3")
+        if result is not None and result.matched and outside:
+            # The regulation does not cover this code, and the sheet's wording
+            # is GHS's own. Extra information, correctly worded - not something
+            # anyone has to act on, so it belongs in the list of statements that
+            # match rather than in the issues or the what-to-do list.
+            ctx.record(StatementVerdict(
+                code=hit.code, status="correct", found=hit.text,
+                expected=against, source=f"{missing.edition}, Annex 3",
+                why=f"Matches {missing.edition} wording.",
+                match_note=(f"{missing.edition} wording; outside {where}'s "
+                            "scope, allowed as extra information"),
+                section=section, page=hit.page,
+                fillins=[v for v in result.fillins if "\u2026" not in v],
+            ))
+            continue
+
         if result is not None and result.matched:
             message = (
                 f"{hit.code} is correct {missing.edition} wording. "

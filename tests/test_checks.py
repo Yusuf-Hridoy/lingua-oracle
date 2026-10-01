@@ -437,3 +437,69 @@ def test_newer_ghs_wording_is_checked_against_its_own_edition():
     assert by_code["P317"].status == "check"
     assert by_code["P317"].checked, "a checkable code must count for coverage"
     assert "GHS Rev.8" in by_code["P317"].source
+
+
+# -- out-of-scope wording that is correct -------------------------------------
+
+
+def test_out_of_scope_wording_that_matches_ghs_is_correct():
+    """OSHA does not cover H303, but the sheet's wording is GHS's own.
+
+    Extra information, correctly worded. Nothing for anyone to act on, so it
+    belongs with the statements that match rather than in the issues.
+    """
+    report = check_pdf(pdf("defect_c15_osha_partial_key"), "us_osha")
+    report_eu = check_pdf(pdf("defect_c15_newer_ghs"), "eu_clp")
+    assert report and report_eu  # both render
+
+    from lingua_oracle.checks.missing_source import Reason, classify
+    from lingua_oracle.keys.tierb import resolve
+
+    osha = resolve("us_osha", "en")
+    assert classify("H303", osha.key_status, osha.entries,
+                    "us_osha").reason is Reason.OUTSIDE_SCOPE
+
+
+def test_an_out_of_scope_match_raises_no_finding_and_no_action():
+    from lingua_oracle.report import labels
+
+    report = check_pdf(pdf("pattern_out_of_scope"), "us_osha")
+    by_code = {v.code: v for v in report.statements}
+    assert by_code["H303"].status == "correct", by_code["H303"].why
+    assert "outside US OSHA HazCom's scope" in by_code["H303"].match_note
+    assert "allowed as extra information" in by_code["H303"].match_note
+    assert not [f for f in report.findings if f.code == "H303"]
+    actions = labels.actions_for(report, "US OSHA HazCom")
+    assert not any("H303" in text for text, _ in actions), actions
+
+
+def test_a_wording_mismatch_against_ghs_is_still_a_finding():
+    """Only the wording decides; being out of scope is not a free pass."""
+    report = check_pdf(pdf("pattern_out_of_scope"), "us_osha")
+    by_code = {v.code: v for v in report.statements}
+    assert by_code["P273"].status == "wrong", by_code["P273"].why
+
+
+# -- a printed bracket holding its blank is unfilled ---------------------------
+
+
+@pytest.mark.parametrize(
+    ("document", "unfilled", "filled_values"),
+    [
+        ("Wash hands [and …] thoroughly after handling. Do not touch eyes.", True, []),
+        ("Wash hands [and…] thoroughly after handling. Do not touch eyes.", True, []),
+        ("Wash hands and forearms thoroughly after handling. Do not touch eyes.",
+         False, ["forearms"]),
+        ("Wash hands thoroughly after handling. Do not touch eyes.", False, []),
+    ],
+)
+def test_a_bracket_holding_a_blank_is_not_filled_in(document, unfilled, filled_values):
+    from lingua_oracle.keys.store import load_key
+    from lingua_oracle.match.template import match
+
+    template = load_key("un_ghs", "en").by_code()["P264+P265"].text
+    result = match(document, template)
+    assert result.matched
+    blanks = [v for v in result.fillins if "…" in v]
+    assert bool(blanks) is unfilled
+    assert [v for v in result.fillins if "…" not in v] == filled_values
