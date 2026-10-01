@@ -127,6 +127,16 @@ CASES: tuple[Case, ...] = (
                      "and the closest statement CLP does publish, and fails "
                      "P999 as not a code at all."),
 
+    Case("pattern_unfilled_blanks", regulation="", expect_regulation="us_osha",
+         expect_language="en", clean=True, tags=("warnings",),
+         expect=(("A-03", "fix", "P501"),),
+         plain="An OSHA sheet issued with its placeholders still in it: P501 "
+               "ends in a blank for the disposal route and P280 in a slash "
+               "list with a trailing one.",
+         should_show="Both read Fix this, on one column rather than two - the "
+                     "wording is right, so there is no second version to "
+                     "compare against. Only the ellipsis is highlighted, and "
+                     "each card says what belongs in it."),
     Case("pattern_conditional_slots", regulation="", expect_regulation="ca_whmis",
          expect_language="en", clean=True, tags=("warnings",),
          expect=(("C-14", "warn", None),),

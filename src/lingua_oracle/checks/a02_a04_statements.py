@@ -26,10 +26,17 @@ def _prefix_of(code: str) -> str:
     return "other"
 
 
-def _source_of(ctx: CheckContext, entry) -> str:
-    """Where this wording came from, as a reader would cite it."""
-    where = entry.source_ref or ctx.regulation.authority or ""
-    return f"{ctx.regulation.display_name} — {where}" if where else ctx.regulation.display_name
+def _source_of(ctx: CheckContext) -> str:
+    """Where this wording came from, as a reader would cite it.
+
+    The regulation and the instrument, nothing else. How we came to hold the
+    text - which table it was read from, how the code was established - is
+    provenance, and belongs in technical details rather than on a card a
+    compliance reviewer is trying to act on.
+    """
+    authority = ctx.regulation.authority or ""
+    return (f"{ctx.regulation.display_name}, {authority}" if authority
+            else ctx.regulation.display_name)
 
 
 def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
@@ -126,7 +133,9 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
             ctx.record(StatementVerdict(
                 code=hit.code,
                 status="check" if result.fillins else "correct",
-                found=hit.text, expected=entry.text, source=_source_of(ctx, entry),
+                blank_unfilled=unfilled,
+                found=hit.text, expected=entry.text, source=_source_of(ctx),
+                source_detail=entry.source_ref or "",
                 why=why, section=section, page=hit.page,
                 fillins=[v for v in result.fillins if v.strip() not in ("…", "...")],
             ))
@@ -141,7 +150,7 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
             )
             ctx.record(StatementVerdict(
                 code=hit.code, status="check", found=hit.text, expected=entry.text,
-                source=_source_of(ctx, entry),
+                source=_source_of(ctx), source_detail=entry.source_ref or '',
                 why=f"The wording {result.message}.",
                 section=section, page=hit.page, fillins=list(result.fillins),
             ))
@@ -156,7 +165,7 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
         )
         ctx.record(StatementVerdict(
             code=hit.code, status="wrong", found=hit.text, expected=entry.text,
-            source=_source_of(ctx, entry),
+            source=_source_of(ctx), source_detail=entry.source_ref or '',
             why="This does not say what the official text says.",
             section=section, page=hit.page,
         ))

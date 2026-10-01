@@ -41,17 +41,25 @@ def reports_dir() -> Path:
     return d
 
 
-_TOKEN_RE = re.compile(r"\s+")
+#: A token is a run of non-space, or an ellipsis, each carrying any space that
+#: follows it so joining restores the original exactly. The ellipsis is split
+#: out on its own because "Use…" and "Use …" are the same statement written two
+#: ways: tokenising on whitespace alone made them differ, and the diff then
+#: highlighted a space.
+_TOKEN_RE = re.compile(r"…|[^\s…]+")
 
 
 def _tokens(text: str) -> list[str]:
-    """Words with their trailing space, so joining restores the original."""
     out, pos = [], 0
-    for match in _TOKEN_RE.finditer(text):
-        out.append(text[pos : match.end()])
+    for match in _TOKEN_RE.finditer(text or ""):
+        if match.start() > pos and out:
+            out[-1] += (text or "")[pos : match.start()]
+        elif match.start() > pos:
+            out.append((text or "")[pos : match.start()])
+        out.append(match.group(0))
         pos = match.end()
-    if pos < len(text):
-        out.append(text[pos:])
+    if pos < len(text or "") and out:
+        out[-1] += (text or "")[pos:]
     return out
 
 
@@ -149,6 +157,17 @@ def display_of(report: Report) -> str:
         return report.regulation
 
 
+def _highlight_blank(text: str) -> str:
+    """The document's own text with only the placeholder marked."""
+    out, pos = [], 0
+    for match in re.finditer(r"…", text or ""):
+        out.append(html.escape((text or "")[pos : match.start()]))
+        out.append('<mark class="diff">…</mark>')
+        pos = match.end()
+    out.append(html.escape((text or "")[pos:]))
+    return "".join(out)
+
+
 def _issue_status(verdict) -> str:
     """The word shown on the card.
 
@@ -167,8 +186,16 @@ def _statement_cards(report: Report) -> dict:
     rows = []
     for verdict in sorted(report.statements,
                           key=lambda v: (_STATUS_ORDER.get(v.status, 9), v.code)):
-        left, right = word_diff(verdict.expected, verdict.found)
         status = _issue_status(verdict)
+        # A blank nobody filled in needs one column, not two. The official text
+        # and the document's are the same statement; showing them side by side
+        # invites a reader to hunt for a difference that is not there, and the
+        # only thing that matters is the placeholder still sitting in it.
+        blank = status == "fix" and verdict.blank_unfilled
+        if blank:
+            left, right = "", _highlight_blank(verdict.found)
+        else:
+            left, right = word_diff(verdict.expected, verdict.found)
         rows.append({
             "v": verdict,
             "status": status,
@@ -176,7 +203,9 @@ def _statement_cards(report: Report) -> dict:
             "found_html": right,
             "expected_html": left,
             "action": labels.STATUS_ACTION.get(status, ""),
-            "single": not verdict.expected,
+            "single": blank or not verdict.expected,
+            "instruction": (labels.blank_instruction(verdict.code, verdict.expected)
+                            if blank else ""),
             "official_heading": (
                 f"Closest {display} statement · {verdict.nearest_code}"
                 if getattr(verdict, "nearest_code", "") else "Official wording"
@@ -222,8 +251,13 @@ def _statement_cards(report: Report) -> dict:
         "correct": len(correct),
         "not_checked": len(unchecked),
     }
+    # Where each wording came from, in full. Off the cards, which carry the
+    # regulation and the instrument only.
+    provenance = sorted(
+        {(v.code, v.source_detail) for v in report.statements if v.source_detail}
+    )
     return {"problems": problems, "correct": correct, "unchecked": unchecked,
-            "counts": counts}
+            "counts": counts, "provenance": provenance}
 
 
 def render_html(report: Report) -> str:

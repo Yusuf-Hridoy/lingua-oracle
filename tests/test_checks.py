@@ -37,7 +37,9 @@ DEFECTS = {
     "defect_c12_euh_on_osha": ("C-12", Severity.FAIL, set()),
     # A missing language is a question, not a verdict on the wording: the
     # French sheet may exist as a separate file. C-14 asks; it never fails.
-    "defect_c14_english_only": ("C-14", Severity.WARN, set()),
+    # The sheet carries P280, whose official text ends in a blank, and prints
+    # it unfilled - so A-03 legitimately asks for it to be completed too.
+    "defect_c14_english_only": ("C-14", Severity.WARN, {"A-03"}),
     "defect_c02_inconsistent": ("C-02", Severity.WARN, set()),
 }
 

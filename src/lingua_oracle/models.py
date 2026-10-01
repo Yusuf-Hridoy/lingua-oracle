@@ -170,6 +170,11 @@ class StatementVerdict(BaseModel):
     #: A line to show under the document's own text, e.g. that it matches a
     #: later GHS edition exactly.
     match_note: str = ""
+    #: How we came to hold this wording - which table, which file, how the code
+    #: was established. Belongs in technical details, not on the card.
+    source_detail: str = ""
+    #: True when the document still shows the placeholder where a value belongs.
+    blank_unfilled: bool = False
 
     @property
     def checked(self) -> bool:

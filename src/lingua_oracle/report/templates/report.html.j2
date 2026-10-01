@@ -100,6 +100,7 @@
       <div class="side">
         <h3>Your document</h3>
         <div class="txt">{% if row.v %}{{ row.found_html | safe }}{% else %}{{ row.finding.found or row.finding.message }}{% endif %}</div>
+        {% if row.instruction %}<p class="note instruct">{{ row.instruction }}</p>{% endif %}
         {% if row.match_note %}<p class="note">{{ row.match_note }}</p>{% endif %}
         {% if row.v %}{% for value in row.v.fillins %}
         <p class="note" style="color:var(--accent)">You filled in:
@@ -157,6 +158,10 @@
         {% for note in report.notes %}<dt>&nbsp;</dt><dd>{{ note }}</dd>{% endfor %}
         <dt>Checks that reported</dt>
         <dd>{% for cid in report.findings|map(attribute='check_id')|unique|sort %}{{ cid }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+        {% if cards.provenance %}
+        <dt>Where each wording came from</dt>
+        <dd>{% for code, detail in cards.provenance %}<b>{{ code }}</b>: {{ detail }}{% if not loop.last %}<br>{% endif %}{% endfor %}</dd>
+        {% endif %}
         <dt>Source of official text</dt>
         <dd>{% for tier, label in L.SOURCE.items() %}<b>{{ label.word }}</b>: {{ label.help }} {% endfor %}</dd>
       </dl>

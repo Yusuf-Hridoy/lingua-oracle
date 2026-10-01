@@ -386,3 +386,79 @@ def test_the_report_works_at_390px(page, server, shots_dir):
     columns = body.evaluate("el => getComputedStyle(el).gridTemplateColumns")
     assert len(columns.split()) == 1, columns
     page.screenshot(path=str(shots_dir / "_report_390.png"), full_page=True)
+
+
+# -- placeholder cards ---------------------------------------------------------
+
+
+def test_a_placeholder_card_has_one_column(page, server, shots_dir):
+    """The wording is right, so there is no second version to compare against."""
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_unfilled_blanks"])
+    for code in ("P501", "P280"):
+        card = _statement(page, code).first
+        expect(card).to_be_visible()
+        assert card.locator(".body.single").count() == 1, code
+        assert card.locator(".side").count() == 1, code
+        assert "Official wording" not in card.inner_text(), code
+
+
+def test_only_the_placeholder_is_highlighted(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_unfilled_blanks"])
+    for code in ("P501", "P280"):
+        marks = _statement(page, code).first.locator("mark")
+        assert marks.count() == 1, f"{code}: {marks.count()} highlights"
+        assert marks.first.inner_text().strip() == "…", code
+
+
+def test_a_placeholder_card_says_what_goes_in_the_blank(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_unfilled_blanks"])
+    p501 = _statement(page, "P501").first.inner_text()
+    assert "Name the disposal route" in p501, p501
+    p280 = _statement(page, "P280").first.inner_text()
+    assert "Keep only the protection that applies" in p280, p280
+    page.screenshot(path=str(shots_dir / "_placeholder_cards.png"), full_page=True)
+
+
+def test_a_spacing_difference_is_never_highlighted(page, server, shots_dir):
+    """"Use…" and "Use …" are the same statement written two ways."""
+    from lingua_oracle.report.render import word_diff
+
+    for official, document in [
+        ("In case of fire: Use … to extinguish", "In case of fire: Use… to extinguish"),
+        ("Dispose of contents/container to…", "Dispose of contents/container to …"),
+        ("Store at  50 °C", "Store at 50 °C"),
+    ]:
+        left, right = word_diff(official, document)
+        assert "<mark" not in left + right, (official, document)
+    # A real difference still shows.
+    left, right = word_diff("Ground and bond container.", "Ground/bond container.")
+    assert "<mark" in left and "<mark" in right
+
+
+@pytest.mark.parametrize("case_name", ["pattern_unfilled_blanks", "defect_a02_hazard",
+                                       "defect_c15_osha_partial_key"])
+def test_no_developer_wording_in_a_source_line(case_name, page, server, shots_dir):
+    """The card cites the regulation and the instrument, nothing else."""
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME[case_name])
+    jargon = ("code established", "split from a cell", "App. C;", "Annex 3 (English)",
+              "fill-ins collapsed", ".pdf,", "table row for")
+    for line in page.locator("article.issue .src").all_inner_texts():
+        for word in jargon:
+            assert word not in line, f"{word!r} in source line: {line}"
+
+
+def test_the_provenance_moved_to_technical_details(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_a02_hazard"])
+    # A closed <details> yields only its summary from inner_text().
+    tech = page.locator("details.block").last
+    assert "Where each wording came from" in (tech.text_content() or "")

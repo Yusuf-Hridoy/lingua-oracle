@@ -287,6 +287,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "defect_c14_english_only.pdf"))
 
     # Patterns found on real documents, reproduced with fictional data.
+    add("pattern_unfilled_blanks", _unfilled_blanks(
+        FIXTURES / "pattern_unfilled_blanks.pdf"))
     add("pattern_classification_table", _classification_table(
         FIXTURES / "pattern_classification_table.pdf"))
     add("pattern_conditional_slots", _conditional_slots(
@@ -557,7 +559,7 @@ def _legend_after_statement(path: Path) -> Path:
     """
     head = HEADINGS["en"]
     codes = ["H302", "H373"]
-    official = texts("ca_whmis", "en", codes + ["P264", "P270"])
+    official = texts("ca_whmis", "en", codes + ["P262", "P270"])
 
     sheet = Sheet(path)
     sheet.line(PRODUCT, bold=True, size=12)
@@ -572,7 +574,7 @@ def _legend_after_statement(path: Path) -> Path:
         sheet.line(f"{code} {official[code]}")
     sheet.blank()
     sheet.line(head["prec"], bold=True)
-    for code in ("P264", "P270"):
+    for code in ("P262", "P270"):
         sheet.line(f"{code} {official[code]}")
     sheet.blank()
     sheet.line(head["3"], bold=True, size=11)
@@ -600,7 +602,7 @@ def _conditional_slots(path: Path) -> Path:
     with a full stop, which the GHS tables do not print.
     """
     head = HEADINGS["en"]
-    official = texts("ca_whmis", "en", ["H302", "H373", "P264", "P270"])
+    official = texts("ca_whmis", "en", ["H302", "H373", "P262", "P270"])
     bare = "May cause damage to organs through prolonged or repeated exposure."
 
     sheet = Sheet(path)
@@ -616,7 +618,7 @@ def _conditional_slots(path: Path) -> Path:
     sheet.line(f"H373 {bare}")                       # both slots omitted
     sheet.blank()
     sheet.line(head["prec"], bold=True)
-    for code in ("P264", "P270"):
+    for code in ("P262", "P270"):
         sheet.line(f"{code} {official[code]}")
     sheet.blank()
     sheet.line(head["3"], bold=True, size=11)
@@ -673,6 +675,47 @@ def _classification_table(path: Path) -> Path:
     sheet.line(head["prec"], bold=True)
     sheet.line("P210")
     sheet.line(official["P210"])
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in codes:
+        sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
+
+
+
+def _unfilled_blanks(path: Path) -> Path:
+    """A sheet issued with its placeholders still in it.
+
+    P501 ends in a blank for the disposal route and P280 in a slash list with a
+    trailing one. Both are correct wording with something missing, which is a
+    different thing from wording that disagrees - and the card has to say what
+    goes in the blank rather than show the same sentence twice.
+    """
+    head = HEADINGS["en"]
+    codes = ["H225", "H319"]
+    official = texts("us_osha", "en", codes + ["P210", "P280", "P501"])
+
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.line("Prepared under 29 CFR 1910.1200 (OSHA Hazard Communication)")
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line(f"{head['signal']}: {signal_text('us_osha', 'en', True)}")
+    sheet.blank()
+    sheet.line(head["haz"], bold=True)
+    for code in codes:
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["prec"], bold=True)
+    sheet.line(f"P210 {official['P210']}")
+    # Both printed exactly as the official text has them: blanks and all.
+    sheet.line(f"P280 {official['P280']}")
+    sheet.line(f"P501 {official['P501']}")
     sheet.blank()
     sheet.line(head["3"], bold=True, size=11)
     sheet.line("Synthetic component A  CAS 000-00-0  30-60%")

@@ -10,6 +10,7 @@ The proposals behind these choices are in docs/ui-plain-language.md.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from lingua_oracle.models import Report, Severity, Tier
@@ -177,6 +178,40 @@ STATUS: dict[str, Label] = {
 
 #: Which filter pill an issue belongs to.
 MUST_FIX = ("wrong", "fix")
+
+#: Two statements whose blank needs more said about it than its shape reveals.
+#: Everything else is worked out from the statement itself.
+_BLANK_BY_CODE = {
+    "P501": "Name the disposal route, e.g. \u2018to an approved waste disposal "
+            "plant\u2019 or \u2018in accordance with local regulations\u2019.",
+    "P280": "Keep only the protection that applies to this product, and replace "
+            "or remove the trailing \u2018\u2026\u2019.",
+}
+
+
+def blank_instruction(code: str, official: str) -> str:
+    """What goes in the blank, in plain words.
+
+    Read from the statement's own shape wherever that is enough - a trailing
+    slash list, a bracketed option, a slot mid-sentence - so a code we have
+    never seen still gets useful guidance. Only P501 and P280 need wording of
+    their own, because what belongs in their blank is not something the
+    punctuation can say.
+    """
+    if code in _BLANK_BY_CODE:
+        return _BLANK_BY_CODE[code]
+    text = (official or "").strip()
+    if re.search(r"/\s*\u2026", text):
+        return ("Keep only the options that apply to this product, and replace "
+                "or remove the trailing \u2018\u2026\u2019.")
+    if re.search(r"\[[^\]]*\u2026[^\]]*\]", text):
+        return ("Complete the bracketed part if it applies to this product, or "
+                "remove it.")
+    if re.search(r"\(\s*\u2026\s*\)", text):
+        return "Name what the brackets refer to, or remove them."
+    return ("Replace \u2018\u2026\u2019 with the specific information for this "
+            "product.")
+
 
 #: What to do about one statement, in the imperative.
 STATUS_ACTION = {

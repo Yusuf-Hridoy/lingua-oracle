@@ -316,7 +316,11 @@ def match(found: str, template: str, *, optional_terminator: bool = False) -> Ma
         f = f[:-1].rstrip()
 
     if f == t:
-        return MatchResult(True, MatchKind.EXACT)
+        # Word for word the official text - placeholder and all. A sheet that
+        # ships the blank still in it is not finished, and matching exactly is
+        # exactly how that happens: the comparison never reaches the fill-in.
+        unfilled = ["…"] if "…" in f and _FILLIN_RE.search(t) else []
+        return MatchResult(True, MatchKind.EXACT, fillins=unfilled)
     if _spacing_key(f) == _spacing_key(t):
         # Spacing only. If the template has a fill-in, the document reproduced
         # it verbatim rather than filling it, so report the value for review -

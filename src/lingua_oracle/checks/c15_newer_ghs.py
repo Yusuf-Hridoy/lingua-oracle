@@ -97,9 +97,9 @@ def run(ctx: CheckContext) -> list[Finding]:
                        .statements_lack_terminal_punctuation) if hit.text and against else None
 
         where = ctx.regulation.display_name
-        source = (f"{missing.edition} Annex 3 — GHS wording, outside "
+        source = (f"{missing.edition}, Annex 3 — GHS wording, outside "
                   f"{where}'s scope" if outside
-                  else f"{missing.edition} Annex 3")
+                  else f"{missing.edition}, Annex 3")
         if result is not None and result.matched:
             message = (
                 f"{hit.code} is correct {missing.edition} wording. "
