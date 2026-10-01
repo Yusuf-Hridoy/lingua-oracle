@@ -98,6 +98,28 @@ def _clean_phrase(text: str) -> str:
     return normalize(out)
 
 
+def _repeated_column_values(lines: list[Line]) -> set[str]:
+    """Text that follows two or more different bare codes.
+
+    The classification table puts the hazard class beside the code - "EUH018 /
+    Supplemental / EUH066 / Supplemental" - and a class name is not a category
+    number, so listing the shapes to exclude does not reach it. But a statement
+    belongs to one code: anything sitting under several different codes is a
+    column value, whatever it says.
+    """
+    following: dict[str, set[str]] = {}
+    for idx, line in enumerate(lines):
+        found = find_codes_in_text(line.text)
+        if len(found) != 1 or line.text.strip() != found[0][0]:
+            continue
+        if idx + 1 >= len(lines) or lines[idx + 1].page != line.page:
+            continue
+        nxt = lines[idx + 1].text.strip()
+        if nxt and not find_codes_in_text(nxt):
+            following.setdefault(nxt, set()).add(found[0][0])
+    return {text for text, codes in following.items() if len(codes) > 1}
+
+
 def extract_hits(lines: list[Line]) -> list[CodeHit]:
     """Pull every code and the phrase that follows it, up to the next code.
 
@@ -105,6 +127,7 @@ def extract_hits(lines: list[Line]) -> list[CodeHit]:
     until the next code, a section heading, or a blank run.
     """
     hits: list[CodeHit] = []
+    column_values = _repeated_column_values(lines)
     for idx, line in enumerate(lines):
         found = find_codes_in_text(line.text)
         if not found:
@@ -124,6 +147,7 @@ def extract_hits(lines: list[Line]) -> list[CodeHit]:
                     # the table holds next.
                     nxt = lines[idx + 1] if idx + 1 < len(lines) else None
                     if (nxt is not None and nxt.page == line.page
+                            and nxt.text.strip() not in column_values
                             and statement_on_next_line(nxt.text)):
                         phrase = nxt.text
                         start_at = idx + 2

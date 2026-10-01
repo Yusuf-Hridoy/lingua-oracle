@@ -11,8 +11,11 @@ from pathlib import Path
 
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from lingua_oracle.api.coverage import key_coverage, recent_reports
+from lingua_oracle.detect.language import language_name
 from lingua_oracle.detect.regulation import RegulationUndetermined
 from lingua_oracle.models import Report
 from lingua_oracle.pipeline import check_pdf, compare_pdfs
@@ -21,16 +24,21 @@ from lingua_oracle.report.render import load as load_report
 from lingua_oracle.report.render import render_html, save
 
 TEMPLATES = Path(__file__).parent / "templates"
+STATIC = Path(__file__).resolve().parents[1] / "report" / "static"
 
 app = FastAPI(title="Lingua Oracle", version="0.1.0")
 templates = Jinja2Templates(directory=str(TEMPLATES))
+# One stylesheet for both pages. The upload page links it from here; the report
+# inlines it, because a saved report has to render as a single file.
+app.mount("/static", StaticFiles(directory=str(STATIC)), name="static")
 
 
-def _languages() -> list[str]:
+def _languages() -> list[tuple[str, str]]:
+    """Every language any regulation publishes in, as (tag, name)."""
     seen: set[str] = set()
     for reg in load_registry().regulations.values():
         seen.update(reg.official_languages)
-    return sorted(seen)
+    return [(tag, language_name(tag)) for tag in sorted(seen)]
 
 
 def _save_upload(upload: UploadFile) -> Path:
@@ -60,7 +68,31 @@ def index(request: Request) -> HTMLResponse:
                 (rid, registry.get(rid).display_name) for rid in registry.ids()
             ],
             "languages": _languages(),
+            "coverage": key_coverage(),
+            "recent": recent_reports(),
         },
+    )
+
+
+@app.get("/history", response_class=HTMLResponse)
+def history(request: Request) -> HTMLResponse:
+    """Placeholder: every saved report, newest first."""
+    return templates.TemplateResponse(
+        request=request, name="list.html.j2",
+        context={"title": "History", "nav": "history",
+                 "lede": "Every document checked on this installation.",
+                 "recent": recent_reports(limit=200), "coverage": None},
+    )
+
+
+@app.get("/coverage", response_class=HTMLResponse)
+def coverage(request: Request) -> HTMLResponse:
+    """Placeholder: which official texts are on file."""
+    return templates.TemplateResponse(
+        request=request, name="list.html.j2",
+        context={"title": "Coverage", "nav": "coverage",
+                 "lede": "The official texts this installation holds.",
+                 "recent": None, "coverage": key_coverage()},
     )
 
 

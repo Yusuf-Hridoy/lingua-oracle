@@ -73,8 +73,9 @@ SOURCE: dict[Tier, Label] = {
                   "No official wording available, so no wording verdict."),
 }
 
-#: How the regulation was decided.
-SET_BY = {"flag": "You chose it", "auto": "Read from the document"}
+#: How the regulation was decided, phrased to sit in a meta line:
+#: "Regulation read from the document".
+SET_BY = {"flag": "chosen by you", "auto": "read from the document"}
 
 #: Column and tile headings.
 COLUMNS = {
@@ -158,20 +159,29 @@ _ACTIONS: dict[str, str] = {
 }
 
 
-#: The statement card's own result words.
+#: The five words a reader meets on an issue card. "Fix this" and "Wrong
+#: wording" are both failures, kept apart because they need different work: one
+#: is a statement that disagrees with the official text, the other is something
+#: unfinished or missing that no official wording can settle.
 STATUS: dict[str, Label] = {
-    "wrong": Label("Wrong wording", "❌", "fail",
+    "wrong": Label("Wrong wording", "✕", "fix",
                    "This does not say what the official text says."),
-    "check": Label("Check this", "⚠", "warn",
+    "fix": Label("Fix this", "!", "fix",
+                 "Something here is unfinished or missing."),
+    "check": Label("Check this", "!", "check",
                    "A difference that may or may not matter."),
-    "correct": Label("Correct", "✅", "ok", "Matches the official wording."),
+    "correct": Label("Correct", "✓", "ok", "Matches the official wording."),
     "not_checked": Label("Not checked", "?", "unver",
                          "We hold no official wording for this code."),
 }
 
+#: Which filter pill an issue belongs to.
+MUST_FIX = ("wrong", "fix")
+
 #: What to do about one statement, in the imperative.
 STATUS_ACTION = {
     "wrong": "Replace it with the correct text.",
+    "fix": "Complete this before the sheet is issued.",
     "check": "Read both and decide whether the difference matters.",
     "not_checked": "No action; our tool has no official text for this.",
 }
@@ -217,7 +227,7 @@ class Verdict:
     #: The one line a reader acts on, in capitals at the top of the report.
     release: str
     headline: str
-    tone: str          # ok | warn | bad
+    tone: str          # ok | check | fix
     icon: str
     detail: str
     #: Grouped "what to do" lines, most urgent first, at most five.
@@ -225,9 +235,9 @@ class Verdict:
     caveats: list[str]
 
 
-READY = "READY TO RELEASE"
-REVIEW = "REVIEW BEFORE RELEASE"
-FIX = "FIX BEFORE RELEASE"
+READY = "Ready to release"
+REVIEW = "Review before release"
+FIX = "Fix before release"
 
 _MAX_ACTIONS = 5
 
@@ -319,7 +329,7 @@ def verdict_of(report: Report, regulation_display: str = "") -> Verdict:
             release=FIX,
             headline="Wording problems found — fix before release"
             if wording_fails else "Problems found — fix before release",
-            tone="bad", icon="✕", detail="; ".join(parts) + ".",
+            tone="fix", icon="✕", detail="; ".join(parts) + ".",
             actions=actions, caveats=_caveats(report),
         )
     if summary.warn or summary.info:
@@ -331,7 +341,7 @@ def verdict_of(report: Report, regulation_display: str = "") -> Verdict:
         return Verdict(
             release=REVIEW,
             headline="Looks correct — some items need a person to check",
-            tone="warn", icon="!",
+            tone="check", icon="!",
             detail="Nothing contradicts the official text. " + ", ".join(bits) + ".",
             actions=actions, caveats=_caveats(report),
         )

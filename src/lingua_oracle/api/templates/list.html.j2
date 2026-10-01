@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lingua Oracle &ndash; {{ title }}</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="17" height="17" rx="4" stroke="#1F4FB8" stroke-width="1.6"/>
+        <path d="M5.8 10.2l2.7 2.7 5.7-5.7" stroke="#1F4FB8" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Lingua Oracle
+    </a>
+    <nav class="nav">
+      <a href="/"{% if nav == 'check' %} aria-current="page"{% endif %}>Check</a>
+      <a href="/history"{% if nav == 'history' %} aria-current="page"{% endif %}>History</a>
+      <a href="/coverage"{% if nav == 'coverage' %} aria-current="page"{% endif %}>Coverage</a>
+    </nav>
+  </div>
+</div>
+<div class="wrap page">
+  <h1>{{ title }}</h1>
+  <p class="lede">{{ lede }}</p>
+  {% if recent is not none %}
+    {% if recent %}
+    <table class="recent">
+      <thead><tr><th>Document</th><th>Regulation</th><th>Result</th><th>Checked</th></tr></thead>
+      <tbody>
+        {% for row in recent %}
+        <tr>
+          <td><a href="/reports/{{ row.id }}">{{ row.file_name }}</a></td>
+          <td>{{ row.regulation }} &middot; {{ row.language }}</td>
+          <td><span class="pill {{ row.pill }}">{{ row.release }}</span></td>
+          <td class="muted">{{ row.created_at[:16].replace('T', ' ') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="card panel"><p class="muted" style="margin:0">Nothing checked yet.</p></div>
+    {% endif %}
+  {% endif %}
+  {% if coverage %}
+  <table class="recent">
+    <thead><tr><th>Regulation</th><th>Official texts on file</th></tr></thead>
+    <tbody>
+      {% for row in coverage %}
+      <tr>
+        <td>{{ row.name }}</td>
+        <td class="{{ 'pending' if row.pending else 'muted' }}">
+          {{ row.languages if not row.pending else 'Not yet available' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+</body>
+</html>

@@ -120,9 +120,16 @@ def run(ctx: CheckContext) -> list[Finding]:
                     found=hit.text, tier=Tier.C, message=message,
                 )
             )
+            # The right-hand column shows the regulation's own nearest
+            # statement where it has one - that is what a reader would use
+            # instead. The edition's text is what the sheet already matches, so
+            # it goes under the document's own text as a note.
             ctx.record(StatementVerdict(
                 code=hit.code, status="check", found=hit.text,
-                expected=against, source=source,
+                expected=missing.nearest_text or against,
+                nearest_code=missing.nearest_code,
+                match_note=f"Matches {missing.edition} wording exactly",
+                source=source,
                 why=(f"This is correct {missing.edition} wording. {where} "
                      f"does not cover this code, so it was checked against GHS."
                      if outside else

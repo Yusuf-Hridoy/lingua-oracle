@@ -163,6 +163,13 @@ class StatementVerdict(BaseModel):
     section: str | None = None
     page: int | None = None
     fillins: list[str] = Field(default_factory=list)
+    #: For a code the regulation has not adopted: the regulation's own nearest
+    #: published statement, so the "official wording" column can be honest
+    #: about what it is showing.
+    nearest_code: str = ""
+    #: A line to show under the document's own text, e.g. that it matches a
+    #: later GHS edition exactly.
+    match_note: str = ""
 
     @property
     def checked(self) -> bool:

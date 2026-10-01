@@ -4,99 +4,193 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lingua Oracle</title>
-<style>
-  :root { --bg:#f7f7f8; --card:#fff; --ink:#1b1b1f; --muted:#5f6368; --line:#e2e3e7;
-          --accent:#0b5cad; }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink);
-         font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-  .wrap { max-width:720px; margin:0 auto; padding:48px 20px 80px; }
-  h1 { font-size:24px; margin:0 0 6px; }
-  p.sub { color:var(--muted); margin:0 0 28px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
-          padding:24px; margin-bottom:20px; }
-  label { display:block; font-size:13px; font-weight:600; margin:0 0 6px; }
-  .row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px; }
-  select, input[type=file] { width:100%; padding:9px 10px; border:1px solid var(--line);
-          border-radius:8px; background:#fff; font-size:14px; }
-  .drop { border:2px dashed var(--line); border-radius:10px; padding:28px;
-          text-align:center; color:var(--muted); background:#fcfcfd; }
-  .drop.over { border-color:var(--accent); background:#eef5fd; color:var(--accent); }
-  .drop input { margin-top:12px; }
-  button { margin-top:20px; width:100%; padding:11px 16px; border:0; border-radius:8px;
-           background:var(--accent); color:#fff; font-size:15px; font-weight:600;
-           cursor:pointer; }
-  button:hover { background:#094a8c; }
-  .hint { font-size:12px; color:var(--muted); margin-top:10px; }
-  h2 { font-size:16px; margin:0 0 4px; }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/app.css">
 </head>
 <body>
-<div class="wrap">
-  <h1>Lingua Oracle</h1>
-  <p class="sub">Check an SDS or label PDF against the official wording for its regulation and language.</p>
 
-  <form class="card" method="post" action="/check/html" enctype="multipart/form-data">
-    <h2>Check one document</h2>
-    <div class="drop" id="drop">
-      Drop a PDF here, or choose a file
-      <input type="file" name="file" accept="application/pdf" required>
-    </div>
-    <div class="row">
-      <div>
-        <label for="regulation">Regulation</label>
-        <select id="regulation" name="regulation">
-          <option value="">Detect automatically</option>
-          {% for rid, name in regulations %}<option value="{{ rid }}">{{ name }}</option>{% endfor %}
-        </select>
-      </div>
-      <div>
-        <label for="language">Language</label>
-        <select id="language" name="language">
-          <option value="">Detect automatically</option>
-          {% for tag in languages %}<option value="{{ tag }}">{{ tag }}</option>{% endfor %}
-        </select>
-      </div>
-    </div>
-    <button type="submit">Check document</button>
-    <p class="hint">Leave both on &ldquo;detect automatically&rdquo; and the regulation is read from the document text. If it cannot be determined, you are asked to choose rather than given a guess.</p>
-  </form>
-
-  <form class="card" method="post" action="/compare" enctype="multipart/form-data">
-    <h2>Compare two documents</h2>
-    <div class="row">
-      <div><label for="a">Document A</label><input id="a" type="file" name="file_a" accept="application/pdf" required></div>
-      <div><label for="b">Document B</label><input id="b" type="file" name="file_b" accept="application/pdf" required></div>
-    </div>
-    <div class="row">
-      <div>
-        <label for="creg">Regulation</label>
-        <select id="creg" name="regulation">
-          <option value="">Detect automatically</option>
-          {% for rid, name in regulations %}<option value="{{ rid }}">{{ name }}</option>{% endfor %}
-        </select>
-      </div>
-      <div>
-        <label for="clang">Language</label>
-        <select id="clang" name="language">
-          <option value="">Detect automatically</option>
-          {% for tag in languages %}<option value="{{ tag }}">{{ tag }}</option>{% endfor %}
-        </select>
-      </div>
-    </div>
-    <button type="submit">Compare documents</button>
-  </form>
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="17" height="17" rx="4" stroke="#1F4FB8" stroke-width="1.6"/>
+        <path d="M5.8 10.2l2.7 2.7 5.7-5.7" stroke="#1F4FB8" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Lingua Oracle
+    </a>
+    <nav class="nav">
+      <a href="/" aria-current="page">Check</a>
+      <a href="/history">History</a>
+      <a href="/coverage">Coverage</a>
+    </nav>
+  </div>
 </div>
+
+<div class="wrap page">
+  <h1>Check a document</h1>
+  <p class="lede">Upload an SDS or label. Every hazard and precautionary
+    statement is compared with the official wording for its regulation and
+    language.</p>
+
+  <div class="cols">
+    <div class="card" style="padding:24px">
+      <div class="toggle" role="group" aria-label="What to check">
+        <button type="button" data-mode="one" aria-pressed="true">One document</button>
+        <button type="button" data-mode="two" aria-pressed="false">Compare two versions</button>
+      </div>
+
+      <form id="check-form" method="post" action="/check/html" enctype="multipart/form-data">
+        <div class="drop" id="drop">
+          <div class="icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <p><label for="file">Drop PDF files here, or browse</label></p>
+          <div class="hint">SDS or label &middot; PDF &middot; up to 20 files at once</div>
+          <input id="file" type="file" name="file" accept="application/pdf" multiple required>
+        </div>
+
+        <div class="fields">
+          <div>
+            <label class="field" for="regulation">Regulation</label>
+            <select id="regulation" name="regulation">
+              <option value="">Detect from document</option>
+              {% for rid, name in regulations %}<option value="{{ rid }}">{{ name }}</option>{% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="field" for="language">Language</label>
+            <select id="language" name="language">
+              <option value="">Detect from document</option>
+              {% for tag, name in languages %}<option value="{{ tag }}">{{ name }}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <span class="note">If the regulation can&rsquo;t be read from the document,
+            you&rsquo;ll be asked to choose.</span>
+          <button type="submit" class="primary">Check document</button>
+        </div>
+      </form>
+
+      <form id="compare-form" method="post" action="/compare" enctype="multipart/form-data" hidden>
+        <div class="fields">
+          <div>
+            <label class="field" for="file_a">Document A</label>
+            <input id="file_a" type="file" name="file_a" accept="application/pdf" required>
+          </div>
+          <div>
+            <label class="field" for="file_b">Document B</label>
+            <input id="file_b" type="file" name="file_b" accept="application/pdf" required>
+          </div>
+        </div>
+        <div class="fields">
+          <div>
+            <label class="field" for="creg">Regulation</label>
+            <select id="creg" name="regulation">
+              <option value="">Detect from document</option>
+              {% for rid, name in regulations %}<option value="{{ rid }}">{{ name }}</option>{% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="field" for="clang">Language</label>
+            <select id="clang" name="language">
+              <option value="">Detect from document</option>
+              {% for tag, name in languages %}<option value="{{ tag }}">{{ name }}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <span class="note">Both versions are checked, then compared for codes
+            that appear in one and not the other.</span>
+          <button type="submit" class="primary">Compare documents</button>
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <div class="card panel">
+        <h2>What gets checked</h2>
+        <ul>
+          <li><span class="tick" aria-hidden="true">&check;</span>
+            <span>Signal word, H and P statements against the official text</span></li>
+          <li><span class="tick" aria-hidden="true">&check;</span>
+            <span>Codes that don&rsquo;t belong to the regulation or its revision</span></li>
+          <li><span class="tick" aria-hidden="true">&check;</span>
+            <span>Sections 2, 3 and 16 agree with each other</span></li>
+          <li><span class="cross" aria-hidden="true">&times;</span>
+            <span class="muted">Not checked: whether the classification itself is right</span></li>
+        </ul>
+      </div>
+
+      <div class="card panel">
+        <h2>Official texts on file</h2>
+        <table class="rows">
+          <tbody>
+          {% for row in coverage %}
+          <tr>
+            <td>{{ row.name }}</td>
+            <td class="{{ 'pending' if row.pending else '' }}">
+              {{ row.languages if not row.pending else 'Not yet available' }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <p style="margin:14px 0 0"><a href="/coverage">See full coverage</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <h2>Recent checks</h2>
+    <a href="/history">View all</a>
+  </div>
+  {% if recent %}
+  <table class="recent">
+    <thead><tr><th>Document</th><th>Regulation</th><th>Result</th><th>Checked</th></tr></thead>
+    <tbody>
+      {% for row in recent %}
+      <tr>
+        <td><a href="/reports/{{ row.id }}">{{ row.file_name }}</a></td>
+        <td>{{ row.regulation }} &middot; {{ row.language }}</td>
+        <td><span class="pill {{ row.pill }}">{{ row.release }}</span></td>
+        <td class="muted">{{ row.created_at[:16].replace('T', ' ') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="card panel"><p class="muted" style="margin:0">No documents checked yet.</p></div>
+  {% endif %}
+</div>
+
 <script>
   const drop = document.getElementById('drop');
-  const input = drop.querySelector('input[type=file]');
-  ['dragenter','dragover'].forEach(e => drop.addEventListener(e, ev => {
-    ev.preventDefault(); drop.classList.add('over');
+  const input = document.getElementById('file');
+  ['dragenter', 'dragover'].forEach(name => drop.addEventListener(name, event => {
+    event.preventDefault(); drop.classList.add('over');
   }));
-  ['dragleave','drop'].forEach(e => drop.addEventListener(e, ev => {
-    ev.preventDefault(); drop.classList.remove('over');
+  ['dragleave', 'drop'].forEach(name => drop.addEventListener(name, event => {
+    event.preventDefault(); drop.classList.remove('over');
   }));
-  drop.addEventListener('drop', ev => { input.files = ev.dataTransfer.files; });
+  drop.addEventListener('drop', event => { input.files = event.dataTransfer.files; });
+
+  document.querySelectorAll('.toggle button').forEach(button => {
+    button.addEventListener('click', () => {
+      const two = button.dataset.mode === 'two';
+      document.querySelectorAll('.toggle button').forEach(b =>
+        b.setAttribute('aria-pressed', String(b === button)));
+      document.getElementById('check-form').hidden = two;
+      document.getElementById('compare-form').hidden = !two;
+    });
+  });
 </script>
 </body>
 </html>

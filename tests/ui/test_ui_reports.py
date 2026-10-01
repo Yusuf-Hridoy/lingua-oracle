@@ -30,12 +30,12 @@ def _tech(page, label: str) -> str:
 
 
 def _release(page) -> str:
-    return page.locator(".verdict .release").first.inner_text().strip()
+    return page.locator(".verdict .banner h2").first.inner_text().strip()
 
 
 def _statement(page, code: str):
-    """The card for one code."""
-    return page.locator(".stmt").filter(
+    """The issue card for one code."""
+    return page.locator("article.issue").filter(
         has=page.locator(f'.code:text-is("{code}")')
     )
 
@@ -47,18 +47,19 @@ def _upload(page, base: str, case: Case) -> None:
     page.set_input_files("input[name=file]", f"{FIXTURES}/{case.name}.pdf")
     # The form posts to /check/html, which answers 303 to /reports/<id>: two
     # navigations, so wait for the destination rather than for "a navigation".
-    page.click("form[action='/check/html'] button[type=submit]")
+    page.click("#check-form button[type=submit]")
     page.wait_for_url(re.compile(r"/reports/"), timeout=60_000)
     page.wait_for_load_state("load")
 
 
 def _compare(page, base: str, case: Case) -> None:
     page.goto(base + "/", wait_until="domcontentloaded")
+    page.click(".toggle button[data-mode=two]")
     page.select_option("#creg", case.regulation)
     page.select_option("#clang", case.language)
-    page.set_input_files("input[name=file_a]", f"{FIXTURES}/{case.name}.pdf")
-    page.set_input_files("input[name=file_b]", f"{FIXTURES}/{case.compare_with}.pdf")
-    page.click("form[action='/compare'] button[type=submit]")
+    page.set_input_files("#file_a", f"{FIXTURES}/{case.name}.pdf")
+    page.set_input_files("#file_b", f"{FIXTURES}/{case.compare_with}.pdf")
+    page.click("#compare-form button[type=submit]")
     page.wait_for_url(re.compile(r"/reports/"), timeout=60_000)
     page.wait_for_load_state("load")
 
@@ -102,7 +103,7 @@ def test_fixture_report_in_the_browser(case: Case, page, server, shots_dir):
             shown = " ".join(card.all_inner_texts())
         else:
             shown = page.inner_text("body")
-        wanted = {
+        wanted = {labels.STATUS[severity].word} if severity in labels.STATUS else {
             labels.STATUS["wrong" if severity == "fail" else "check"].word,
             labels.result_of(check_id, Severity(severity), False).word,
         }
@@ -129,10 +130,14 @@ def test_a_problem_card_shows_both_texts_and_a_copy_button(page, server, shots_d
     card = _statement(page, "H225").first
     expect(card).to_be_visible()
     text = card.inner_text()
-    assert "You have" in text and "Correct text" in text, text[:300]
-    button = card.locator("button.copy")
-    assert button.count() == 1, "no copy button on the card"
-    assert button.first.inner_text().strip() == "Copy correct text"
+    assert "YOUR DOCUMENT" in text.upper()
+    assert "OFFICIAL WORDING" in text.upper()
+    # Header: severity pill, code in mono, where it sits.
+    assert card.locator("header .pill").count() == 1
+    assert card.locator("header .code").count() == 1
+    assert card.locator("header .where").count() == 1
+    # The copy button sits on the official side, not the document's.
+    assert card.locator(".side.official button.copy").count() == 1
     assert "Source:" in text
 
 
@@ -142,7 +147,7 @@ def test_the_copy_button_carries_the_official_text(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
     official = load_key("eu_clp", "da").by_code()["H225"].text
-    button = _statement(page, "H225").first.locator("button.copy").first
+    button = _statement(page, "H225").first.locator(".side.official button.copy").first
     assert button.get_attribute("data-text") == official
 
 
@@ -150,7 +155,7 @@ def test_correct_statements_are_collapsed_into_one_line(page, server, shots_dir)
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["clean_eu_da"])
-    good = page.locator("details.allgood")
+    good = page.locator("details.block.good")
     assert good.count() == 1
     assert not good.first.evaluate("el => el.open"), "the correct list starts open"
     assert re.search(r"\d+ statements? match the official wording",
@@ -164,8 +169,8 @@ def test_correct_statements_get_no_card(page, server, shots_dir):
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["clean_eu_da"])
-    assert page.locator(".stmt").count() == 0, (
-        "a correct document should show no problem cards"
+    assert page.locator("article.issue").count() == 0, (
+        "a correct document should show no issue cards"
     )
 
 
@@ -173,11 +178,10 @@ def test_the_count_line_and_coverage_are_at_the_top(page, server, shots_dir):
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
-    banner = page.locator(".verdict").first.inner_text()
-    assert re.search(r"\d+ correct", banner), banner[:200]
-    assert re.search(r"\d+ wrong", banner), banner[:200]
-    assert re.search(r"\d+ to check", banner), banner[:200]
-    assert "% of the codes" in banner
+    stats = page.locator(".verdict .stats").first.inner_text()
+    for label in ("Wrong wording", "Fix this", "Check this", "Correct", "Codes checked"):
+        assert label in stats, stats[:300]
+    assert re.search(r"Codes checked \(\d+ of \d+\)", stats), stats[:300]
 
 
 def test_no_check_ids_outside_the_technical_block(page, server, shots_dir):
@@ -185,7 +189,7 @@ def test_no_check_ids_outside_the_technical_block(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
     above = page.locator(".verdict").inner_text() + " ".join(
-        page.locator(".stmt").all_inner_texts()
+        page.locator("article.issue").all_inner_texts()
     )
     assert not re.search(r"\b[ABC]-\d\d\b", above), above[:300]
 
@@ -203,9 +207,9 @@ def test_technical_details_are_collapsed_at_the_bottom(page, server, shots_dir):
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["clean_eu_da"])
-    tech = page.locator("details.tech")
-    assert tech.count() == 1
-    assert not tech.first.evaluate("el => el.open"), "technical block starts open"
+    tech = page.locator("details.block").last
+    assert "technical details" in tech.inner_text().lower()
+    assert not tech.evaluate("el => el.open"), "technical block starts open"
     assert "pymupdf" not in page.locator(".verdict").inner_text()
 
 
@@ -226,7 +230,11 @@ def test_whmis_sheet_reads_review_before_release(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["pattern_conditional_slots"])
     assert _release(page) == labels.REVIEW
-    assert "Wrong wording" not in page.inner_text("body")
+    # The stat cell is always labelled; what matters is that it counts nothing
+    # and no card claims wrong wording.
+    wrong = page.locator(".verdict .stats > div").first.inner_text()
+    assert wrong.startswith("0"), wrong
+    assert page.locator('article.issue[data-status="wrong"]').count() == 0
     assert "Confirm the French version of this SDS exists." in page.inner_text("body")
 
 
@@ -246,3 +254,135 @@ def test_json_still_carries_the_statements(page, server, shots_dir):
     payload = json.loads(page.inner_text("body"))
     assert payload["statements"], "no statement verdicts in the JSON"
     assert {"code", "status", "found", "expected"} <= set(payload["statements"][0])
+
+
+# -- the re-skinned pages ------------------------------------------------------
+
+
+def test_the_upload_page_has_the_shell(page, server, shots_dir):
+    page.goto(server + "/", wait_until="load")
+    assert page.locator(".topbar .brand").inner_text().strip() == "Lingua Oracle"
+    for name in ("Check", "History", "Coverage"):
+        assert page.locator(f'.nav a:text-is("{name}")').count() == 1
+    assert page.locator('.nav a[aria-current="page"]').inner_text().strip() == "Check"
+    assert page.locator("h1").inner_text().strip() == "Check a document"
+    assert page.locator(".drop").count() == 1
+    assert page.locator("#file").get_attribute("multiple") is not None
+    assert page.locator(".panel h2").first.inner_text().strip() == "What gets checked"
+    assert "Official texts on file" in page.inner_text("body")
+    assert "Recent checks" in page.inner_text("body")
+    page.screenshot(path=str(shots_dir / "_upload_page.png"), full_page=True)
+
+
+def test_the_toggle_switches_to_compare(page, server, shots_dir):
+    page.goto(server + "/", wait_until="load")
+    expect(page.locator("#check-form")).to_be_visible()
+    page.click('.toggle button[data-mode="two"]')
+    expect(page.locator("#compare-form")).to_be_visible()
+    expect(page.locator("#check-form")).to_be_hidden()
+    assert page.locator('.toggle button[data-mode="two"]').get_attribute(
+        "aria-pressed") == "true"
+
+
+def test_every_control_has_a_label(page, server, shots_dir):
+    """Real labels and real buttons, not styled divs."""
+    page.goto(server + "/", wait_until="load")
+    for selector in ("#regulation", "#language"):
+        field_id = selector.lstrip("#")
+        assert page.locator(f'label[for="{field_id}"]').count() == 1
+    assert page.locator("#check-form button[type=submit]").count() == 1
+    # Only buttons on screen; the hidden compare form measures zero. The filter
+    # pills on the report are deliberately smaller, so this covers the actions.
+    heights = page.evaluate(
+        "() => [...document.querySelectorAll('button')]"
+        ".filter(b => b.offsetParent !== null)"
+        ".map(b => b.getBoundingClientRect().height)"
+    )
+    assert heights and all(h >= 40 for h in heights), heights
+
+
+def test_the_verdict_bar_has_a_banner_and_five_stats(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_a02_hazard"])
+    verdict = page.locator(".verdict").first
+    assert verdict.locator(".banner h2").count() == 1
+    assert verdict.locator(".banner p").count() == 1
+    cells = verdict.locator(".stats > div")
+    assert cells.count() == 5, cells.count()
+    labels_shown = [cells.nth(i).inner_text().split("\n")[-1] for i in range(5)]
+    assert labels_shown[:4] == ["Wrong wording", "Fix this", "Check this", "Correct"]
+    assert labels_shown[4].startswith("Codes checked")
+
+
+def test_what_to_do_is_a_numbered_list_of_at_most_five(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_a02_hazard"])
+    todo = page.locator(".todo")
+    assert todo.count() == 1
+    assert todo.locator("h2").inner_text().strip() == "What to do"
+    items = todo.locator("ol li")
+    assert 1 <= items.count() <= 5, items.count()
+
+
+def test_the_issue_filters_hide_and_show_cards(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_c15_osha_partial_key"])
+    assert "Issues ·" in page.locator(".issues-head h2").inner_text()
+    total = page.locator("article.issue").count()
+    page.click('.filters button[data-filter="must"]')
+    visible = page.locator("article.issue:not([hidden])").count()
+    assert visible < total, "the Must fix filter hid nothing"
+    page.click('.filters button[data-filter="all"]')
+    assert page.locator("article.issue:not([hidden])").count() == total
+
+
+def test_a_newer_ghs_card_names_the_closest_statement(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_c15_newer_ghs"])
+    card = _statement(page, "P317").first
+    heading = card.locator(".side.official h3").inner_text()
+    assert heading.lower().startswith("closest"), heading
+    assert "Matches GHS Rev.8 wording exactly" in card.inner_text()
+
+
+def test_a_single_column_card_for_something_with_no_official_text(page, server,
+                                                                  shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_c14_english_only"])
+    card = page.locator("article.issue").first
+    assert card.locator(".body.single").count() == 1
+    assert card.locator(".side").count() == 1
+
+
+def test_both_collapsed_sections_are_present_and_shut(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_a02_hazard"])
+    good = page.locator("details.block.good")
+    tech = page.locator("details.block").last
+    assert good.count() == 1
+    assert "match the official wording" in good.inner_text()
+    assert not good.evaluate("el => el.open")
+    assert "Not checked" in tech.inner_text()
+    assert not tech.evaluate("el => el.open")
+
+
+def test_the_report_works_at_390px(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    page.set_viewport_size({"width": 390, "height": 844})
+    _upload(page, server, BY_NAME["defect_a02_hazard"])
+    overflow = page.evaluate(
+        "() => document.documentElement.scrollWidth - document.documentElement.clientWidth"
+    )
+    assert overflow <= 1, f"the page scrolls sideways by {overflow}px at 390px"
+    # The two columns stack rather than squeezing.
+    body = page.locator("article.issue .body").first
+    columns = body.evaluate("el => getComputedStyle(el).gridTemplateColumns")
+    assert len(columns.split()) == 1, columns
+    page.screenshot(path=str(shots_dir / "_report_390.png"), full_page=True)

@@ -4,296 +4,198 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lingua Oracle - {{ report.file_name }}</title>
-<style>
-  :root {
-    --bg:#f7f7f8; --card:#fff; --ink:#1b1b1f; --muted:#5f6368; --line:#e2e3e7;
-    --fail:#b3261e; --fail-bg:#fdecea; --warn:#8a5a00; --warn-bg:#fff5e0;
-    --info:#0b5cad; --info-bg:#e8f1fb; --ok:#1d6b3a; --ok-bg:#e7f5ec;
-    --del:#fbd5d0; --ins:#cdebd7;
-  }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink);
-         font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-  .wrap { max-width:1180px; margin:0 auto; padding:24px 20px 60px; }
-  h1 { font-size:20px; margin:0 0 4px; }
-  h2 { font-size:15px; margin:0; }
-  .sub { color:var(--muted); font-size:13px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:10px;
-          margin:16px 0; overflow:hidden; }
-  .card > header { padding:12px 16px; border-bottom:1px solid var(--line);
-                   display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-  .meta { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-          gap:12px; padding:16px; }
-  .meta div { font-size:13px; }
-  .meta dt { color:var(--muted); font-size:12px; }
-  .meta dd { margin:2px 0 0; font-weight:600; word-break:break-word; }
-  .tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-           gap:12px; padding:16px; }
-  .tile { border:1px solid var(--line); border-radius:8px; padding:12px; text-align:center; }
-  .tile .n { font-size:24px; font-weight:700; line-height:1.1; }
-  .tile .l { font-size:12px; color:var(--muted); text-transform:uppercase;
-             letter-spacing:.04em; }
-  .t-fail .n{color:var(--fail)} .t-warn .n{color:var(--warn)}
-  .t-info .n{color:var(--info)} .t-ok .n{color:var(--ok)}
-  .badge { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px;
-           border-radius:999px; text-transform:uppercase; letter-spacing:.03em; }
-  /* Severity is icon + word + colour. Colour alone is not a signal: it is
-     invisible in greyscale and to a reader with colour vision deficiency. */
-  .result { display:inline-flex; align-items:center; gap:6px; font-size:12px;
-            font-weight:700; padding:3px 10px 3px 5px; border-radius:999px;
-            white-space:nowrap; }
-  .result .ico { display:inline-flex; align-items:center; justify-content:center;
-                 width:16px; height:16px; border-radius:50%; font-size:11px;
-                 line-height:1; font-weight:800; color:#fff; }
-  .r-fail{background:var(--fail-bg);color:var(--fail)} .r-fail .ico{background:var(--fail)}
-  .r-warn{background:var(--warn-bg);color:var(--warn)} .r-warn .ico{background:var(--warn)}
-  .r-info{background:var(--info-bg);color:var(--info)} .r-info .ico{background:var(--info)}
-  .r-unver{background:#eceff1;color:#455a64} .r-unver .ico{background:#607d8b}
-  .src { display:inline-flex; align-items:center; gap:6px; font-size:12px;
-         white-space:nowrap; }
-  .src .k { display:inline-flex; align-items:center; justify-content:center;
-            width:18px; height:18px; border-radius:50%; font-size:10px;
-            font-weight:800; background:#eceff1; color:#37474f; }
-  .src-A .k{background:var(--ok-bg);color:var(--ok)}
-  .src-B .k{background:var(--info-bg);color:var(--info)}
-  .src-C .k{background:#eceff1;color:#546e7a}
-  .verdict { border-radius:10px; padding:18px 20px; margin:16px 0;
-             border:1px solid var(--line); background:var(--card); }
-  .verdict .head { display:flex; gap:12px; align-items:flex-start; }
-  .verdict .vico { flex:0 0 auto; width:28px; height:28px; border-radius:50%;
-                   display:flex; align-items:center; justify-content:center;
-                   color:#fff; font-weight:800; font-size:15px; }
-  .verdict h2 { font-size:18px; line-height:1.3; }
-  .verdict .detail { color:var(--muted); font-size:13px; margin-top:3px; }
-  .v-ok{background:var(--ok-bg);border-color:#bfe3cc}   .v-ok .vico{background:var(--ok)}
-  .v-warn{background:var(--warn-bg);border-color:#efdcb0} .v-warn .vico{background:var(--warn)}
-  .v-bad{background:var(--fail-bg);border-color:#f3c9c4}  .v-bad .vico{background:var(--fail)}
-  .caveats { margin:14px 0 0; padding:12px 14px; background:rgba(255,255,255,.65);
-             border:1px solid var(--line); border-radius:8px; }
-  .caveats .t { font-size:11px; font-weight:700; text-transform:uppercase;
-                letter-spacing:.05em; color:var(--muted); margin-bottom:6px; }
-  .caveats ul { margin:0; padding-left:18px; }
-  .caveats li { font-size:12.5px; color:var(--ink); margin:3px 0; }
-  .cid { font-size:12px; color:var(--muted); font-weight:500; }
-  .verdict .release { font-size:13px; font-weight:800; letter-spacing:.09em;
-                      text-transform:uppercase; margin-bottom:2px; }
-  .todo { margin:14px 0 0; padding:12px 14px 12px 16px; background:#fff;
-          border:1px solid var(--line); border-radius:8px; }
-  .todo .t { font-size:11px; font-weight:700; text-transform:uppercase;
-             letter-spacing:.05em; color:var(--muted); margin-bottom:6px; }
-  .todo ol { margin:0; padding-left:20px; }
-  .todo li { font-size:13.5px; margin:4px 0; }
-  .todo .times { color:var(--muted); font-size:12px; }
-  .todo-line { margin-top:4px; font-size:12px; color:#1b5e20; }
-  details.tech { margin-top:22px; border:1px solid var(--line); border-radius:10px;
-                 background:var(--card); }
-  details.tech > summary { cursor:pointer; padding:11px 16px; font-size:13px;
-                           color:var(--muted); font-weight:600; }
-  details.tech .body { padding:0 16px 14px; font-size:12px; color:var(--muted); }
-  details.tech dl { display:grid; grid-template-columns:200px 1fr; gap:4px 14px;
-                    margin:0; }
-  details.tech dt { font-weight:600; }
-  .stmt { background:var(--card); border:1px solid var(--line); border-left-width:4px;
-          border-radius:10px; margin:14px 0; padding:16px 18px; }
-  .stmt.s-fail { border-left-color:var(--fail); }
-  .stmt.s-warn { border-left-color:var(--warn); }
-  .stmt.s-unver { border-left-color:#90a4ae; }
-  .stmt > header { display:flex; gap:12px; align-items:baseline; flex-wrap:wrap;
-                   margin-bottom:10px; }
-  .stmt .code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-                font-size:15px; font-weight:700; }
-  .stmt .verdict-word { font-size:13px; font-weight:700; }
-  .s-fail .verdict-word { color:var(--fail); }
-  .s-warn .verdict-word { color:var(--warn); }
-  .s-unver .verdict-word { color:#455a64; }
-  .stmt .where { font-size:12px; color:var(--muted); margin-left:auto; }
-  dl.pair { display:grid; grid-template-columns:118px 1fr; gap:8px 14px; margin:0; }
-  dl.pair dt { font-size:12px; color:var(--muted); font-weight:600; padding-top:2px; }
-  dl.pair dd { margin:0; }
-  .stmt .txt { font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-               font-size:12.5px; line-height:1.6; word-break:break-word; }
-  .stmt .why { margin:12px 0 0; font-size:13px; }
-  .stmt .why.fill { color:var(--info); }
-  .stmt > footer { display:flex; gap:12px; align-items:center; margin-top:12px;
-                   flex-wrap:wrap; }
-  .src-note { font-size:11.5px; color:var(--muted); }
-  button.copy { margin-left:auto; padding:6px 12px; border:1px solid var(--line);
-                background:#fff; border-radius:7px; font-size:12.5px;
-                font-weight:600; cursor:pointer; color:var(--ink); }
-  button.copy:hover { background:#f2f4f7; }
-  button.copy.done { background:var(--ok-bg); border-color:#bfe3cc; color:var(--ok); }
-  details.allgood { background:var(--ok-bg); border:1px solid #bfe3cc;
-                    border-radius:10px; margin:18px 0; }
-  details.allgood > summary { cursor:pointer; padding:13px 18px; font-size:14px;
-                              font-weight:600; color:var(--ok); }
-  details.allgood ul { margin:0; padding:0 18px 14px 40px; }
-  details.allgood li { font-size:13px; margin:5px 0; }
-  details.allgood .code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-                          font-weight:700; margin-right:8px; }
-  .countline { font-size:14px; font-weight:600; margin:2px 0 1px; }
-  .b-fail{background:var(--fail-bg);color:var(--fail)}
-  .b-warn{background:var(--warn-bg);color:var(--warn)}
-  .b-info{background:var(--info-bg);color:var(--info)}
-  .b-unver{background:#eceff1;color:#455a64}
-  .tier { display:inline-block; width:20px; height:20px; line-height:20px;
-          text-align:center; border-radius:50%; font-size:11px; font-weight:700;
-          background:#eceff1; color:#37474f; }
-  .tier-A{background:var(--ok-bg);color:var(--ok)}
-  .tier-B{background:var(--info-bg);color:var(--info)}
-  .tier-C{background:#eceff1;color:#546e7a}
-  .scroll { overflow-x:auto; }
-  table { border-collapse:collapse; width:100%; font-size:13px; }
-  th,td { text-align:left; padding:9px 12px; border-top:1px solid var(--line);
-          vertical-align:top; }
-  th { background:#fafafb; font-size:12px; color:var(--muted); font-weight:600;
-       border-top:none; white-space:nowrap; }
-  td.code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; white-space:nowrap; }
-  .txt { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
-         line-height:1.55; word-break:break-word; max-width:420px; }
-  /* Only the differing words are marked, in both columns. Nothing is struck
-     through: the official wording is not wrong, and showing it crossed out
-     said the opposite of what that column means. */
-  mark.diff { background:#fff3a3; border-radius:3px; padding:0 1px; }
-  .msg { color:var(--muted); font-size:12px; margin-top:4px; }
-  .notes { padding:12px 16px; font-size:12px; color:var(--muted); }
-  .notes li { margin:3px 0; }
-  .empty { padding:24px 16px; color:var(--muted); }
-  .count { font-size:12px; color:var(--muted); margin-left:auto; }
-</style>
+{# The stylesheet is inlined rather than linked: a saved report is passed
+   around as a single file and has to render with no network. #}
+<style>{{ app_css }}</style>
 </head>
 <body>
-<div class="wrap">
 
-  <h1>Lingua Oracle report</h1>
-  <div class="sub">{{ report.file_name }}{% if report.compared_with %} &middot; compared with {{ report.compared_with }}{% endif %}</div>
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="17" height="17" rx="4" stroke="#1F4FB8" stroke-width="1.6"/>
+        <path d="M5.8 10.2l2.7 2.7 5.7-5.7" stroke="#1F4FB8" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Lingua Oracle
+    </a>
+    <nav class="nav">
+      <a href="/" aria-current="page">Check</a>
+      <a href="/history">History</a>
+      <a href="/coverage">Coverage</a>
+    </nav>
+  </div>
+</div>
 
-  <div class="verdict v-{{ verdict.tone }}" role="status" id="verdict">
-    <div class="head">
-      <span class="vico" aria-hidden="true">{{ verdict.icon }}</span>
-      <div>
-        <div class="release">{{ verdict.release }}</div>
-        <div class="countline">
-          {{ cards.counts.correct }} correct &middot;
-          {{ cards.counts.wrong }} wrong &middot;
-          {{ cards.counts.check }} to check
-          {%- if cards.counts.not_checked %} &middot;
-          {{ cards.counts.not_checked }} not checked{% endif %}
-        </div>
-        <div class="detail">{{ coverage_percent }}% of the codes in this
-          document were checked against official wording.</div>
+<div class="wrap page">
+  <a class="back" href="/">&larr; Check another document</a>
+
+  <div class="report-head">
+    <div>
+      <h1>{{ report.file_name }}</h1>
+      <div class="meta">
+        <span>{{ regulation_display }}</span>
+        <span>{{ language_name }}</span>
+        <span>Regulation {{ set_by }}</span>
+        <span>Checked {{ report.created_at.strftime('%-d %b %Y, %H:%M') }}</span>
+        {% if report.compared_with %}<span>compared with {{ report.compared_with }}</span>{% endif %}
       </div>
     </div>
-    {% if verdict.actions %}
-    <div class="todo">
-      <div class="t">What to do</div>
-      <ol>
-        {% for text, count in verdict.actions %}
-        <li>{{ text }}{% if count > 1 %} <span class="times">({{ count }} places)</span>{% endif %}</li>
-        {% endfor %}
-      </ol>
+    <div class="head-actions">
+      <button type="button" onclick="window.print()">Download PDF</button>
+      <button type="button" class="copy" data-text="">Copy link</button>
     </div>
-    {% endif %}
-    <div class="caveats">
-      <div class="t">What this does not tell you</div>
-      <ul>
-        {% for line in verdict.caveats %}<li>{{ line }}</li>{% endfor %}
-      </ul>
+  </div>
+
+  <div class="verdict v-{{ verdict.tone }}">
+    <div class="banner">
+      <span class="vico" aria-hidden="true">{{ verdict.icon }}</span>
+      <div>
+        <h2>{{ verdict.release }}</h2>
+        <p>{{ verdict.detail }}</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div><div class="n fix">{{ cards.counts.wrong }}</div><div class="l">Wrong wording</div></div>
+      <div><div class="n fix">{{ cards.counts.fix }}</div><div class="l">Fix this</div></div>
+      <div><div class="n check">{{ cards.counts.check }}</div><div class="l">Check this</div></div>
+      <div><div class="n ok">{{ cards.counts.correct }}</div><div class="l">Correct</div></div>
+      <div><div class="n">{{ coverage_percent }}%</div>
+           <div class="l">Codes checked ({{ report.coverage.codes_checked }} of {{ report.coverage.codes_found }})</div></div>
+    </div>
+  </div>
+
+  {% if verdict.actions %}
+  <div class="card todo">
+    <h2>What to do</h2>
+    <ol>
+      {% for text, count in verdict.actions %}
+      <li>{{ text }}{% if count > 1 %} <span class="muted">({{ count }} places)</span>{% endif %}</li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  <div class="issues-head">
+    <h2>Issues &middot; {{ cards.problems|length }}</h2>
+    <div class="filters" role="group" aria-label="Filter issues">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="must" aria-pressed="false">Must fix</button>
+      <button type="button" data-filter="check" aria-pressed="false">To check</button>
     </div>
   </div>
 
   {% for row in cards.problems %}
-  <div class="stmt s-{{ row.label.css }}">
+  <article class="issue" data-status="{{ row.status }}">
     <header>
-      <span class="code">{{ row.v.code }}</span>
-      <span class="verdict-word"><span aria-hidden="true">{{ row.label.icon }}</span> {{ row.label.word }}</span>
-      {% if row.v.section %}<span class="where">Section {{ row.v.section }}{% if row.v.page %}, page {{ row.v.page }}{% endif %}</span>{% endif %}
+      <span class="pill {{ row.label.css }}"><span aria-hidden="true">{{ row.label.icon }}</span> {{ row.label.word }}</span>
+      <span class="code">{{ L.code_label(row.v.code if row.v else row.finding.code) or "This document" }}</span>
+      {% set sec = (row.v.section if row.v else row.finding.section) %}
+      {% set pg = (row.v.page if row.v else row.finding.page) %}
+      {% if sec %}<span class="where">{{ L.section_label(sec) }}{% if pg %} &middot; page {{ pg }}{% endif %}</span>{% endif %}
     </header>
-    <dl class="pair">
-      <dt>You have</dt><dd class="txt">{{ row.found_html | safe }}</dd>
-      {% if row.v.expected %}
-      <dt>Correct text</dt><dd class="txt">{{ row.expected_html | safe }}</dd>
-      {% endif %}
-    </dl>
-    <p class="why">{{ row.v.why }}{% if row.action %} {{ row.action }}{% endif %}</p>
-    {% for value in row.v.fillins %}
-    <p class="why fill">You filled in: &ldquo;{{ value }}&rdquo; &mdash; check it fits this product.</p>
-    {% endfor %}
-    <footer>
-      {% if row.v.source %}<span class="src-note">Source: {{ row.v.source }}</span>{% endif %}
-      {% if row.v.expected %}
-      <button type="button" class="copy" data-text="{{ row.v.expected }}">Copy correct text</button>
-      {% endif %}
-    </footer>
-  </div>
-  {% endfor %}
 
-  {% for row in cards.others %}
-  <div class="stmt s-{{ row.label.css }}">
-    <header>
-      <span class="code">{{ L.code_label(row.finding.code) or "This document" }}</span>
-      <span class="verdict-word"><span aria-hidden="true">{{ row.label.icon }}</span> {{ row.label.word }}</span>
-      {% if row.finding.section %}<span class="where">Section {{ row.finding.section }}{% if row.finding.page %}, page {{ row.finding.page }}{% endif %}</span>{% endif %}
-    </header>
-    {% if row.finding.found %}
-    <dl class="pair"><dt>You have</dt><dd class="txt">{{ row.finding.found }}</dd></dl>
-    {% endif %}
-    <p class="why">{{ row.finding.message }}{% if row.action %} {{ row.action }}{% endif %}</p>
-  </div>
+    <div class="body{% if row.single %} single{% endif %}">
+      <div class="side">
+        <h3>Your document</h3>
+        <div class="txt">{% if row.v %}{{ row.found_html | safe }}{% else %}{{ row.finding.found or row.finding.message }}{% endif %}</div>
+        {% if row.match_note %}<p class="note">{{ row.match_note }}</p>{% endif %}
+        {% if row.v %}{% for value in row.v.fillins %}
+        <p class="note" style="color:var(--accent)">You filled in:
+          <mark class="fillin">{{ value }}</mark> &mdash; check it fits this product.</p>
+        {% endfor %}{% endif %}
+      </div>
+      {% if not row.single %}
+      <div class="side official">
+        <header>
+          <h3>{{ row.official_heading }}</h3>
+          <button type="button" class="copy" data-text="{{ row.v.expected }}">Copy</button>
+        </header>
+        <div class="txt">{{ row.expected_html | safe }}</div>
+      </div>
+      {% endif %}
+    </div>
+
+    <footer>
+      <span>{% if row.v %}{{ row.v.why }}{% endif %}{% if row.action %} {{ row.action }}{% endif %}</span>
+      {% if row.v and row.v.source %}<span class="src">Source: {{ row.v.source }}</span>{% endif %}
+    </footer>
+  </article>
   {% endfor %}
 
   {% if cards.correct %}
-  <details class="allgood">
-    <summary>&#9989; {{ cards.correct|length }} statement{{ '' if cards.correct|length == 1 else 's' }} match the official wording</summary>
-    <ul>
-      {% for row in cards.correct %}
-      <li><span class="code">{{ row.v.code }}</span> {{ row.v.found }}</li>
-      {% endfor %}
-    </ul>
+  <details class="block good">
+    <summary>{{ cards.correct|length }} statement{{ '' if cards.correct|length == 1 else 's' }} match the official wording</summary>
+    <div class="inner">
+      <ul class="statements">
+        {% for row in cards.correct %}
+        <li><span class="code">{{ row.v.code }}</span><span>{{ row.v.found }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
   </details>
   {% endif %}
 
-  <details class="tech">
-    <summary>Technical details</summary>
-    <div class="body">
-      <dl>
+  <details class="block">
+    <summary>Not checked ({{ cards.unchecked|length }}) and technical details</summary>
+    <div class="inner">
+      {% if cards.unchecked %}
+      <ul class="statements">
+        {% for row in cards.unchecked %}
+        <li><span class="code">{{ row.v.code }}</span><span>{{ row.v.why }}</span></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <dl class="tech">
+        {% for line in verdict.caveats %}<dt>&nbsp;</dt><dd>{{ line }}</dd>{% endfor %}
         <dt>{{ L.META.file }}</dt><dd>{{ report.file_name }}</dd>
         <dt>{{ L.META.regulation }}</dt><dd>{{ regulation_display }}</dd>
         <dt>{{ L.META.language }}</dt><dd>{{ report.language }}</dd>
         <dt>{{ L.META.set_by }}</dt><dd>{{ set_by }}</dd>
-        <dt>{{ L.META.created }}</dt><dd>{{ report.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</dd>
         <dt>{{ L.META.id }}</dt><dd>{{ report.id }}</dd>
-        {% for note in report.notes %}
-        <dt>&nbsp;</dt><dd>{{ note }}</dd>
-        {% endfor %}
+        {% for note in report.notes %}<dt>&nbsp;</dt><dd>{{ note }}</dd>{% endfor %}
         <dt>Checks that reported</dt>
         <dd>{% for cid in report.findings|map(attribute='check_id')|unique|sort %}{{ cid }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
         <dt>Source of official text</dt>
-        <dd>{% for tier, label in L.SOURCE.items() %}<b>{{ label.word }}</b>: {{ label.help }}{% if not loop.last %} {% endif %}{% endfor %}</dd>
+        <dd>{% for tier, label in L.SOURCE.items() %}<b>{{ label.word }}</b>: {{ label.help }} {% endfor %}</dd>
       </dl>
     </div>
   </details>
-
-
 </div>
+
 <script>
   document.addEventListener('click', function (event) {
-    const button = event.target.closest('button.copy');
-    if (!button) return;
-    const text = button.dataset.text || '';
-    const done = () => {
-      const was = button.textContent;
-      button.textContent = 'Copied';
-      button.classList.add('done');
-      setTimeout(() => { button.textContent = was; button.classList.remove('done'); }, 1500);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done, done);
-    } else {
-      const area = document.createElement('textarea');
-      area.value = text; document.body.appendChild(area); area.select();
-      try { document.execCommand('copy'); } catch (e) {}
-      area.remove(); done();
+    const copy = event.target.closest('button.copy');
+    if (copy) {
+      const text = copy.dataset.text || window.location.href;
+      const done = () => {
+        const was = copy.textContent;
+        copy.textContent = 'Copied';
+        setTimeout(() => { copy.textContent = was; }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        const area = document.createElement('textarea');
+        area.value = text; document.body.appendChild(area); area.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        area.remove(); done();
+      }
+      return;
     }
+    const filter = event.target.closest('.filters button');
+    if (!filter) return;
+    const want = filter.dataset.filter;
+    document.querySelectorAll('.filters button').forEach(b =>
+      b.setAttribute('aria-pressed', String(b === filter)));
+    document.querySelectorAll('.issue').forEach(card => {
+      const status = card.dataset.status;
+      const show = want === 'all'
+        || (want === 'must' && (status === 'wrong' || status === 'fix'))
+        || (want === 'check' && status === 'check');
+      card.hidden = !show;
+    });
   });
 </script>
 </body>

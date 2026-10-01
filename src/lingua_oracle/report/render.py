@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import difflib
+import functools
 import html
 import json
 import re
@@ -11,11 +12,23 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from lingua_oracle.checks import title_of
+from lingua_oracle.detect.language import language_name
 from lingua_oracle.models import Report, Severity
 from lingua_oracle.registry import load_registry
 from lingua_oracle.report import labels
 
 TEMPLATES = Path(__file__).parent / "templates"
+STATIC = Path(__file__).parent / "static"
+
+
+@functools.lru_cache(maxsize=1)
+def app_css() -> str:
+    """The design system, read once.
+
+    One file is the source of truth for both pages. The upload page links it;
+    the report inlines it, because a saved report travels as a single file.
+    """
+    return (STATIC / "app.css").read_text(encoding="utf-8")
 
 _SEVERITY_ORDER = {Severity.FAIL: 0, Severity.WARN: 1, Severity.INFO: 2}
 
@@ -136,46 +149,81 @@ def display_of(report: Report) -> str:
         return report.regulation
 
 
+def _issue_status(verdict) -> str:
+    """The word shown on the card.
+
+    A statement whose wording is right but whose blank was never filled is not
+    "check this" - there is nothing to weigh up, the sheet is unfinished. It
+    reads as "Fix this", alongside the placeholders and missing sections.
+    """
+    if verdict.status == "check" and "never filled in" in (verdict.why or ""):
+        return "fix"
+    return verdict.status
+
+
 def _statement_cards(report: Report) -> dict:
-    """The report as a reader wants it: what is wrong, then what is fine."""
+    """The report as a reader wants it: what to fix, then what is fine."""
+    display = display_of(report)
     rows = []
     for verdict in sorted(report.statements,
                           key=lambda v: (_STATUS_ORDER.get(v.status, 9), v.code)):
         left, right = word_diff(verdict.expected, verdict.found)
+        status = _issue_status(verdict)
         rows.append({
             "v": verdict,
-            "label": labels.STATUS.get(verdict.status, labels.NOT_CHECKED),
+            "status": status,
+            "label": labels.STATUS.get(status, labels.NOT_CHECKED),
             "found_html": right,
             "expected_html": left,
-            "action": labels.STATUS_ACTION.get(verdict.status, ""),
+            "action": labels.STATUS_ACTION.get(status, ""),
+            "single": not verdict.expected,
+            "official_heading": (
+                f"Closest {display} statement · {verdict.nearest_code}"
+                if getattr(verdict, "nearest_code", "") else "Official wording"
+            ),
+            "match_note": verdict.match_note,
         })
-    problems = [r for r in rows if r["v"].status != "correct"]
-    correct = [r for r in rows if r["v"].status == "correct"]
+    problems = [r for r in rows if r["status"] not in ("correct", "not_checked")]
+    correct = [r for r in rows if r["status"] == "correct"]
+    unchecked = [r for r in rows if r["status"] == "not_checked"]
 
-    # Findings that are not about one statement's wording - a missing
-    # language, a leftover placeholder, a code set that differs between two
-    # documents. Without these the report would simply lose them.
+    # Findings that are not about one statement's wording - a missing language,
+    # a leftover placeholder, a code set that differs between two documents.
+    # Without these the report would simply lose them.
     statement_checks = {"A-02", "A-03", "A-04", "C-15"}
-    others = []
     for finding in report.findings:
         if finding.check_id in statement_checks or finding.unverified:
             continue
         if finding.severity is Severity.INFO and finding.code:
             continue  # fill-in notes ride on their own statement card
-        others.append({
+        # A-01 compares the signal word against the official text, so its
+        # failure is wrong wording like any other; the rest are things to fix.
+        if finding.severity is not Severity.FAIL:
+            status = "check"
+        elif finding.check_id in labels.WORDING_CHECKS:
+            status = "wrong"
+        else:
+            status = "fix"
+        problems.append({
+            "v": None,
             "finding": finding,
-            "label": labels.result_of(finding.check_id, finding.severity, False),
-            "action": labels.action_for(finding, display_of(report)),
+            "status": status,
+            "label": labels.STATUS[status],
+            "single": True,
+            "action": labels.action_for(finding, display),
         })
-    others.sort(key=lambda o: _SEVERITY_ORDER.get(o["finding"].severity, 9))
 
-    return {"problems": problems, "correct": correct, "others": others,
-            "counts": {
-                "correct": len(correct),
-                "wrong": sum(1 for r in rows if r["v"].status == "wrong"),
-                "check": sum(1 for r in rows if r["v"].status == "check"),
-                "not_checked": sum(1 for r in rows if r["v"].status == "not_checked"),
-            }}
+    order = {"wrong": 0, "fix": 1, "check": 2}
+    problems.sort(key=lambda r: order.get(r["status"], 9))
+    counts = {
+        "wrong": sum(1 for r in problems if r["status"] == "wrong"),
+        "fix": sum(1 for r in problems if r["status"] == "fix"),
+        "check": sum(1 for r in problems if r["status"] == "check"),
+        "correct": len(correct),
+        "not_checked": len(unchecked),
+    }
+    return {"problems": problems, "correct": correct, "unchecked": unchecked,
+            "counts": counts}
 
 
 def render_html(report: Report) -> str:
@@ -191,6 +239,8 @@ def render_html(report: Report) -> str:
         regulation_display=display,
         coverage_percent=report.coverage.percent,
         verdict=labels.verdict_of(report, display),
+        app_css=app_css(),
+        language_name=language_name(report.language),
         cards=_statement_cards(report),
         L=labels,
         SEV=Severity,

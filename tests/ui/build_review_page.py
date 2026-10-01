@@ -194,6 +194,22 @@ def build() -> Path:
         cards.append(_card(case.name, case.name, tag, case.plain, case.should_show,
                            img, captured=(OUT / img).exists()))
 
+    # Page-level shots, named with a leading underscore so they sort apart from
+    # the per-fixture ones.
+    pages = sorted(OUT.glob("_*.png"))
+    if pages:
+        cards.insert(0, '<h2 class="sec">The pages themselves</h2>')
+        offset = 1
+        for png in pages:
+            key = png.stem.lstrip("_")
+            keys.append(key)
+            cards.insert(offset, _card(
+                key, key.replace("_", " "), "clean",
+                "The whole page as a reviewer first meets it.",
+                "Layout, spacing and wording match the approved design.",
+                png.name))
+            offset += 1
+
     real = sorted(REAL.glob("*.png")) if REAL.exists() else []
     if real:
         cards.append('<h2 class="sec">Real documents from the app</h2>')

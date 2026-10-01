@@ -62,7 +62,7 @@ def test_real_document_renders(rel, regulation, language, page, server, real_sho
     page.select_option("#regulation", regulation)
     page.select_option("#language", language)
     page.set_input_files("input[name=file]", str(validation_dir() / rel))
-    page.click("form[action='/check/html'] button[type=submit]")
+    page.click("#check-form button[type=submit]")
     page.wait_for_url(re.compile(r"/reports/"), timeout=60_000)
     page.wait_for_load_state("load")
 
@@ -76,8 +76,9 @@ def test_real_document_renders(rel, regulation, language, page, server, real_sho
     assert shown == display, f"regulation shown as {shown!r}, expected {display!r}"
 
     # The page must actually render a verdict, not an empty shell.
-    assert page.locator(".verdict .release").count() == 1
-    assert page.locator(".stmt").count() or page.locator("details.allgood").count(), \
-        "neither a problem card nor a list of correct statements"
+    assert page.locator(".verdict .banner h2").count() == 1
+    assert page.locator("article.issue").count() or \
+        page.locator("details.block.good").count(), \
+        "neither an issue card nor a list of correct statements"
 
     page.screenshot(path=str(real_shots_dir / f"{Path(rel).stem}.png"), full_page=True)

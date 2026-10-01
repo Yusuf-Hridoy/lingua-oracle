@@ -151,7 +151,7 @@ def test_cli_keys_stats_table(runner):
 def test_index_page_offers_regulations_and_languages(client):
     response = client.get("/")
     assert response.status_code == 200
-    assert "Detect automatically" in response.text
+    assert "Detect from document" in response.text
     assert "EU CLP" in response.text
 
 
@@ -218,10 +218,60 @@ def test_compare_lands_on_a_report_page(client):
     # The comparison report gets the same verdict banner as any other. B-11 is
     # not a wording check, so the headline says "Problems", not "Wording
     # problems" - the release line is the part a reader acts on.
-    assert "FIX BEFORE RELEASE" in page.text
+    assert "Fix before release" in page.text
 
 
 def test_compare_json_still_serves_the_api(client):
     response = _post_compare(client, "/compare.json")
     assert response.status_code == 200
     assert any(f["check_id"] == "B-11" for f in response.json()["findings"])
+
+
+# -- the re-skinned pages -----------------------------------------------------
+
+
+def test_the_stylesheet_is_served(client):
+    response = client.get("/static/app.css")
+    assert response.status_code == 200
+    assert "--accent" in response.text
+
+
+def test_the_report_inlines_the_stylesheet(client):
+    """A saved report travels as one file, so it cannot link anything."""
+    from lingua_oracle.report.render import app_css, render_html
+
+    html = render_html(check_pdf(pdf("defect_a02_hazard"), "eu_clp"))
+    assert "<link" not in html
+    assert "--accent" in html
+    assert app_css()[:40] in html
+
+
+def test_one_stylesheet_serves_both_pages(client):
+    """The upload page links the same file the report inlines."""
+    from lingua_oracle.report.render import app_css
+
+    assert '/static/app.css' in client.get("/").text
+    assert client.get("/static/app.css").text == app_css()
+
+
+@pytest.mark.parametrize("path", ["/history", "/coverage"])
+def test_the_nav_destinations_exist(client, path):
+    response = client.get(path)
+    assert response.status_code == 200
+    assert "Lingua Oracle" in response.text
+
+
+def test_the_upload_page_lists_the_keys_on_file(client):
+    text = client.get("/").text
+    assert "Official texts on file" in text
+    assert "24 languages" in text          # EU CLP
+    assert "Not yet available" in text     # Japan
+
+
+def test_recent_checks_show_a_result_pill(client):
+    with open(pdf("defect_a02_hazard"), "rb") as handle:
+        client.post("/check/html", files={"file": ("a.pdf", handle, "application/pdf")},
+                    data={"regulation": "eu_clp"}, follow_redirects=False)
+    text = client.get("/").text
+    assert "Recent checks" in text
+    assert "Fix before release" in text

@@ -171,7 +171,7 @@ CASES: tuple[Case, ...] = (
          tags=("regression",)),
     Case("pattern_spacing_variant", regulation="un_ghs",
          expect_regulation="un_ghs", expect_language="en", clean=True,
-         expect=(("A-03", "warn", "P370+P378"),),
+         expect=(("A-03", "fix", "P370+P378"),),
          plain="A sheet whose spacing differs from the official text: a space "
                "before an ellipsis, and '50 °C' instead of '50°C'. It also "
                "leaves one slot unfilled.",
