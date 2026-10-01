@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
 from lingua_oracle.extract.base import Document, Line
@@ -69,6 +70,46 @@ _NOT_A_STATEMENT_RE = re.compile(
 )
 
 
+#: Words too common to tell two statements apart.
+_STOPWORDS = frozenset({
+    "and", "the", "for", "with", "this", "that", "from", "into", "when",
+    "have", "been", "they", "them", "than", "then", "your", "which",
+})
+
+
+def _significant(text: str) -> set[str]:
+    """Words long enough to carry meaning, lower-cased."""
+    return {
+        word for word in re.findall(r"[^\W\d_]{4,}", (text or "").lower())
+        if word not in _STOPWORDS
+    }
+
+
+def plausible_statement(text: str, candidates: Sequence[str]) -> bool:
+    """True when `text` could be the statement for the code it sits under.
+
+    The classification table puts the hazard class beside the code - "H225 /
+    Flam. Liq. 2", "EUH018 / Supplemental" - and a class shares no wording with
+    the statement it classifies. The statements table a few lines down has the
+    real text, so rejecting the class here costs nothing: the code gets its
+    verdict from the occurrence that does carry wording.
+
+    Sharing one significant word is enough. The test is for "could this be the
+    statement", not "is it correct" - a sheet with the wrong wording still has
+    to be caught, and "Ground/bond container" shares five words with "Ground and
+    bond container" while saying something different.
+
+    With nothing to compare against, the text is kept: silence about a code we
+    hold no wording for is worse than a reported difference.
+    """
+    if not candidates:
+        return True
+    words = _significant(text)
+    if not words:
+        return False
+    return any(words & _significant(candidate) for candidate in candidates)
+
+
 def statement_on_next_line(text: str) -> bool:
     """True when a line following a bare code reads as that code's statement.
 
@@ -120,7 +161,9 @@ def _repeated_column_values(lines: list[Line]) -> set[str]:
     return {text for text, codes in following.items() if len(codes) > 1}
 
 
-def extract_hits(lines: list[Line]) -> list[CodeHit]:
+def extract_hits(
+    lines: list[Line], official: Mapping[str, Sequence[str]] | None = None
+) -> list[CodeHit]:
     """Pull every code and the phrase that follows it, up to the next code.
 
     A phrase may run past the end of its line; continuation lines are consumed
@@ -148,7 +191,9 @@ def extract_hits(lines: list[Line]) -> list[CodeHit]:
                     nxt = lines[idx + 1] if idx + 1 < len(lines) else None
                     if (nxt is not None and nxt.page == line.page
                             and nxt.text.strip() not in column_values
-                            and statement_on_next_line(nxt.text)):
+                            and statement_on_next_line(nxt.text)
+                            and plausible_statement(
+                                nxt.text, (official or {}).get(code, ()))):
                         phrase = nxt.text
                         start_at = idx + 2
                     else:
@@ -180,5 +225,7 @@ def extract_hits(lines: list[Line]) -> list[CodeHit]:
     return hits
 
 
-def extract_document_hits(doc: Document) -> list[CodeHit]:
-    return extract_hits(doc.lines)
+def extract_document_hits(
+    doc: Document, official: Mapping[str, Sequence[str]] | None = None
+) -> list[CodeHit]:
+    return extract_hits(doc.lines, official)

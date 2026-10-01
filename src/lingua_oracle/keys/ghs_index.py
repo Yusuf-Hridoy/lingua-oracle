@@ -36,6 +36,12 @@ def text_in(code: str, edition: str) -> str:
     return _index().get("codes", {}).get(code, {}).get(edition, "")
 
 
+def all_texts() -> dict[str, list[str]]:
+    """Every edition's wording for every code it defines."""
+    return {code: list(editions.values())
+            for code, editions in _index().get("codes", {}).items()}
+
+
 def known_anywhere(code: str) -> bool:
     return bool(_index().get("codes", {}).get(code))
 

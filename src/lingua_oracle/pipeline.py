@@ -17,6 +17,28 @@ from lingua_oracle.models import Coverage, Report, Tier
 from lingua_oracle.registry import load_registry
 
 
+def _official_texts(reg, language: str) -> dict[str, list[str]]:
+    """Every wording we hold for each code, for the plausibility check.
+
+    The regulation's own text in this language, the other languages it
+    requires, and the GHS editions on file. A code with nothing on file gets an
+    empty list, which the check reads as "keep whatever the document says".
+    """
+    from lingua_oracle.keys import ghs_index
+
+    out: dict[str, list[str]] = {}
+    references = [resolve(reg.id, language)]
+    references += [resolve(reg.id, other) for other in reg.required_languages
+                   if other != language]
+    for reference in references:
+        for code, entry in reference.entries.items():
+            if entry.text:
+                out.setdefault(code, []).append(entry.text)
+    for code, texts in ghs_index.all_texts().items():
+        out.setdefault(code, []).extend(texts)
+    return out
+
+
 def _prepare(path: str, regulation: str | None, language: str | None, backend: str | None):
     document = extract(path, backend=backend)
     detection = detect_regulation(document.normalized_text, regulation)
@@ -26,7 +48,7 @@ def _prepare(path: str, regulation: str | None, language: str | None, backend: s
     preferred = tuple(reg.official_languages) or None
     lang, lang_by = detect_language(document.normalized_text, language, preferred)
     spans = detect_sections(document, lang)
-    hits = extract_document_hits(document)
+    hits = extract_document_hits(document, _official_texts(reg, lang))
     for hit in hits:
         hit.section = section_of(spans, hit.line_index)
     return document, reg, lang, lang_by, spans, hits, detection

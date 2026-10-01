@@ -640,7 +640,7 @@ def _classification_table(path: Path) -> Path:
     wrong.
     """
     head = HEADINGS["en"]
-    codes = ["H225", "H319", "EUH018", "EUH066"]
+    codes = ["H225", "H319", "H336", "EUH018", "EUH066"]
     official = texts("eu_clp", "en", codes + ["P210"])
 
     sheet = Sheet(path)
@@ -659,6 +659,10 @@ def _classification_table(path: Path) -> Path:
     sheet.line("Supplemental")
     sheet.line("EUH066")
     sheet.line("Supplemental")
+    # One row whose class appears under no other code, so the repeated-value
+    # rule cannot help and only the plausibility check rejects it.
+    sheet.line("H336")
+    sheet.line("STOT SE 3")
     sheet.blank()
     # The statements table: code, then its wording, one per line.
     sheet.line(head["haz"], bold=True)

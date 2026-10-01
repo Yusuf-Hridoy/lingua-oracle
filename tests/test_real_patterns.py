@@ -478,3 +478,64 @@ def test_repeated_column_values_are_detected():
              ["EUH018", "Supplemental", "EUH066", "Supplemental",
               "H225", "Highly flammable liquid and vapour"]]
     assert _repeated_column_values(lines) == {"Supplemental"}
+
+
+# -- finding #13: a class that appears under only one code --------------------
+
+
+def test_a_class_under_a_single_code_is_not_a_statement():
+    """The repeated-value rule cannot see "H336 / STOT SE 3": one row only.
+
+    A class shares no wording with the statement it classifies, so the text is
+    only attached when it could plausibly be that code's statement.
+    """
+    report = check_pdf(pdf("pattern_classification_table"), "eu_clp")
+    by_code = {v.code: v for v in report.statements}
+    for code in ("H225", "H319", "H336", "EUH018", "EUH066"):
+        assert by_code[code].status == "correct", (
+            f"{code}: {by_code[code].status} {by_code[code].found!r}"
+        )
+    assert report.coverage.percent == 100.0
+
+
+@pytest.mark.parametrize(
+    ("text", "official", "attaches"),
+    [
+        # Hazard classes: no significant word in common with the statement.
+        ("Supplemental", "In use may form flammable/explosive vapour-air mixture.", False),
+        ("Flam. Liq. 2", "Highly flammable liquid and vapour.", False),
+        ("Eye Irrit. 2", "Causes serious eye irritation.", False),
+        ("STOT SE 3", "May cause drowsiness or dizziness.", False),
+        # A real statement attaches, however it is spelled.
+        ("Highly flammable liquid and vapour.", "Highly flammable liquid and vapour.", True),
+        ("Highly Flammable liquid and vapor", "Highly flammable liquid and vapour.", True),
+        # Wording that is WRONG must still attach, or it could never be caught.
+        ("Ground/bond container and receiving equipment.",
+         "Ground and bond container and receiving equipment.", True),
+        ("Take precautionary measures against static discharge.",
+         "Take action to prevent static discharges.", True),
+    ],
+)
+def test_plausible_statement(text, official, attaches):
+    from lingua_oracle.detect.codes import plausible_statement
+
+    assert plausible_statement(text, [official]) is attaches
+
+
+def test_with_nothing_on_file_the_text_is_kept():
+    """Silence about a code we hold no wording for is worse than a difference."""
+    from lingua_oracle.detect.codes import plausible_statement
+
+    assert plausible_statement("Anything at all here", []) is True
+
+
+def test_a_bare_reference_takes_its_verdict_from_another_occurrence():
+    """Section 2 lists the class; Section 16 writes the statement out."""
+    from lingua_oracle.detect.codes import extract_hits
+    from lingua_oracle.extract.base import Line
+
+    official = {"H225": ["Highly flammable liquid and vapour."]}
+    lines = [Line(text=t, page=1) for t in
+             ["H225", "Flam. Liq. 2", "H225", "Highly flammable liquid and vapour."]]
+    hits = extract_hits(lines, official)
+    assert [h.text for h in hits] == ["", "Highly flammable liquid and vapour."]
