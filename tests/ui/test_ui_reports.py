@@ -462,3 +462,77 @@ def test_the_provenance_moved_to_technical_details(page, server, shots_dir):
     # A closed <details> yields only its summary from inner_text().
     tech = page.locator("details.block").last
     assert "Where each wording came from" in (tech.text_content() or "")
+
+
+# -- what each card explains ---------------------------------------------------
+
+
+def test_out_of_scope_wording_sits_with_the_matches(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_out_of_scope"])
+    assert _statement(page, "H303").count() == 0, "H303 should raise no card"
+    good = page.locator("details.block.good")
+    good.locator("summary").click()
+    text = good.inner_text()
+    assert "H303" in text
+    assert "outside US OSHA HazCom's scope" in text
+    assert "allowed as extra information" in text
+    # And it is not something to do.
+    assert "H303" not in page.locator(".todo").inner_text()
+
+
+def test_a_newer_ghs_card_explains_itself(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_c15_osha_partial_key"])
+    with_closest = _statement(page, "P319").first.inner_text()
+    assert "Correct GHS Rev.8 wording" in with_closest
+    assert "has not adopted P319" in with_closest
+    assert "if not, use P314" in with_closest
+
+    without = _statement(page, "P317").first.inner_text()
+    assert "has no equivalent statement" in without
+    assert "Ask whether that’s accepted." in without
+
+
+def test_a_punctuation_card_explains_itself(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_capitalisation"])
+    card = _statement(page, "P303+P361+P353").first.inner_text()
+    assert "only punctuation or capital letters differ" in card
+    assert "Usually acceptable" in card
+
+
+def test_no_card_falls_back_to_the_generic_sentence(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    for name in ("defect_c15_osha_partial_key", "pattern_capitalisation",
+                 "pattern_unfilled_blanks"):
+        _upload(page, server, BY_NAME[name])
+        body = page.inner_text("body")
+        assert "Read both and decide whether the difference matters" not in body, name
+
+
+def test_the_placeholder_has_air_before_it(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_unfilled_blanks"])
+    shown = _statement(page, "P501").first.locator(".side .txt").inner_text()
+    assert "to …" in shown, shown
+    assert "to…" not in shown, shown
+
+
+def test_an_undetectable_regulation_shows_the_page(page, server, shots_dir):
+    """No raw JSON in the browser, ever."""
+    page.goto(server + "/", wait_until="domcontentloaded")
+    page.set_input_files("#file", f"{FIXTURES}/defect_a02_hazard.pdf")
+    page.click("#check-form button[type=submit]")
+    page.wait_for_load_state("load")
+    notice = page.locator(".notice")
+    expect(notice).to_be_visible()
+    assert "We couldn’t tell which regulation this sheet follows" in notice.inner_text()
+    assert page.locator("#check-form").count() == 1, "the form is gone"
+    assert page.evaluate("() => document.activeElement.id") == "regulation"
+    page.screenshot(path=str(shots_dir / "_error_page.png"), full_page=True)

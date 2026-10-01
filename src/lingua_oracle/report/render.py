@@ -161,7 +161,12 @@ def _highlight_blank(text: str) -> str:
     """The document's own text with only the placeholder marked."""
     out, pos = [], 0
     for match in re.finditer(r"…", text or ""):
-        out.append(html.escape((text or "")[pos : match.start()]))
+        before = (text or "")[pos : match.start()]
+        out.append(html.escape(before))
+        # The act writes "to…" with nothing between; the highlight needs air
+        # around it or it reads as part of the word before it.
+        if before and not before[-1].isspace():
+            out.append(" ")
         out.append('<mark class="diff">…</mark>')
         pos = match.end()
     out.append(html.escape((text or "")[pos:]))

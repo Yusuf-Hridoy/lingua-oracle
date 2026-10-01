@@ -131,7 +131,9 @@
     <div class="inner">
       <ul class="statements">
         {% for row in cards.correct %}
-        <li><span class="code">{{ row.v.code }}</span><span>{{ row.v.found }}</span></li>
+        <li><span class="code">{{ row.v.code }}</span>
+          <span>{{ row.v.found }}{% if row.v.match_note %}
+            <em class="note-inline">{{ row.v.match_note }}</em>{% endif %}</span></li>
         {% endfor %}
       </ul>
     </div>

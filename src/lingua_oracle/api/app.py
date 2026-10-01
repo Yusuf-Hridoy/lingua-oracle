@@ -50,19 +50,39 @@ def _save_upload(upload: UploadFile) -> Path:
     return tmp
 
 
+class _Explained(Exception):
+    """An error with something a person can read and act on."""
+
+    def __init__(self, message: str, *, focus: str = "") -> None:
+        super().__init__(message)
+        self.message = message
+        self.focus = focus
+
+
 def _run(fn, *args, **kwargs) -> Report:
     try:
         return fn(*args, **kwargs)
-    except RegulationUndetermined as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from None
+    except RegulationUndetermined:
+        # The detail on this exception names regulation ids and a CLI flag.
+        # Neither means anything in a browser.
+        raise _Explained(
+            "We couldn\u2019t tell which regulation this sheet follows. "
+            "Choose one and check again.",
+            focus="regulation",
+        ) from None
+    except Exception as exc:  # noqa: BLE001 - the page must never show a stack
+        raise _Explained(
+            f"We couldn\u2019t read that file: {exc}" if str(exc)
+            else "We couldn\u2019t read that file."
+        ) from None
 
 
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request) -> HTMLResponse:
+def _upload_page(request: Request, *, error: str = "", focus: str = "") -> HTMLResponse:
     registry = load_registry()
     return templates.TemplateResponse(
         request=request,
         name="index.html.j2",
+        status_code=422 if error else 200,
         context={
             "regulations": [
                 (rid, registry.get(rid).display_name) for rid in registry.ids()
@@ -70,8 +90,21 @@ def index(request: Request) -> HTMLResponse:
             "languages": _languages(),
             "coverage": key_coverage(),
             "recent": recent_reports(),
+            "error": error,
+            "focus": focus,
         },
     )
+
+
+@app.exception_handler(_Explained)
+def _explained_handler(request: Request, exc: _Explained) -> HTMLResponse:
+    """Every failure a person can hit comes back as the page, not as JSON."""
+    return _upload_page(request, error=exc.message, focus=exc.focus)
+
+
+@app.get("/", response_class=HTMLResponse)
+def index(request: Request) -> HTMLResponse:
+    return _upload_page(request)
 
 
 @app.get("/history", response_class=HTMLResponse)

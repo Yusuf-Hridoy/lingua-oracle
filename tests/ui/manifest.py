@@ -127,6 +127,15 @@ CASES: tuple[Case, ...] = (
                      "and the closest statement CLP does publish, and fails "
                      "P999 as not a code at all."),
 
+    Case("pattern_out_of_scope", regulation="", expect_regulation="us_osha",
+         expect_language="en",
+         expect=(("C-15", "wrong", "P273"),),
+         plain="An OSHA sheet carrying H303 and P273, which HazCom does not "
+               "cover. H303 is correct GHS wording; P273 is not.",
+         should_show="H303 counts as correct and sits in the list of "
+                     "statements that match, noted as GHS wording outside "
+                     "OSHA's scope. P273 is reported, because the wording "
+                     "does not match GHS either."),
     Case("pattern_unfilled_blanks", regulation="", expect_regulation="us_osha",
          expect_language="en", clean=True, tags=("warnings",),
          expect=(("A-03", "fix", "P501"),),

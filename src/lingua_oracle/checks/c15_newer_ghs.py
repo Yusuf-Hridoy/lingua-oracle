@@ -146,11 +146,15 @@ def run(ctx: CheckContext) -> list[Finding]:
                 nearest_code=missing.nearest_code,
                 match_note=f"Matches {missing.edition} wording exactly",
                 source=source,
-                why=(f"This is correct {missing.edition} wording. {where} "
-                     f"does not cover this code, so it was checked against GHS."
-                     if outside else
-                     f"This is correct {missing.edition} wording, but {where} "
-                     f"has not adopted this code."),
+                why=(
+                    f"Correct {missing.edition} wording, but {where} has not "
+                    f"adopted {hit.code}. Ask whether that\u2019s accepted; if "
+                    f"not, use {missing.nearest_code}."
+                    if missing.nearest_code else
+                    f"Correct {missing.edition} wording, but {where} has not "
+                    f"adopted {hit.code} and has no equivalent statement. "
+                    f"Ask whether that\u2019s accepted."
+                ),
                 section=section, page=hit.page, fillins=list(result.fillins),
             ))
             continue

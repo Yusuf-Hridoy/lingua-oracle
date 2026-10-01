@@ -35,6 +35,13 @@
     statement is compared with the official wording for its regulation and
     language.</p>
 
+  {% if error %}
+  <div class="notice" role="alert">
+    <span aria-hidden="true">!</span>
+    <p>{{ error }}</p>
+  </div>
+  {% endif %}
+
   <div class="cols">
     <div class="card" style="padding:24px">
       <div class="toggle" role="group" aria-label="What to check">
@@ -181,6 +188,11 @@
     event.preventDefault(); drop.classList.remove('over');
   }));
   drop.addEventListener('drop', event => { input.files = event.dataTransfer.files; });
+
+  {% if focus == 'regulation' %}
+  const field = document.getElementById('regulation');
+  if (field) { field.focus(); }
+  {% endif %}
 
   document.querySelectorAll('.toggle button').forEach(button => {
     button.addEventListener('click', () => {

@@ -61,6 +61,12 @@ h2 { font-size: 17px; margin: 0; }
 .lede { color: var(--muted); margin: 0 0 28px; max-width: 62ch; }
 .card { background: var(--card); border: 1px solid var(--border);
         border-radius: var(--radius); }
+.notice { display: flex; gap: 12px; align-items: flex-start; margin: 0 0 22px;
+          padding: 14px 18px; border-radius: var(--radius);
+          background: var(--chk-bg); border: 1px solid #F0DCB0;
+          color: var(--chk-text); }
+.notice span { font-weight: 800; }
+.notice p { margin: 0; font-size: 14.5px; }
 .mono { font-family: var(--mono); }
 .muted { color: var(--muted); }
 
@@ -231,6 +237,9 @@ details.block ul.statements li { display: flex; gap: 12px; padding: 7px 0;
                                  border-top: 1px solid var(--border); font-size: 13.5px; }
 details.block ul.statements .code { font-family: var(--mono); font-weight: 600;
                                     min-width: 116px; }
+details.block ul.statements .note-inline { display: block; font-style: normal;
+                                           color: var(--muted); font-size: 12.5px;
+                                           margin-top: 2px; }
 dl.tech { display: grid; grid-template-columns: 210px 1fr; gap: 6px 16px; margin: 0;
           font-size: 13px; color: var(--muted); }
 dl.tech dt { font-weight: 600; }

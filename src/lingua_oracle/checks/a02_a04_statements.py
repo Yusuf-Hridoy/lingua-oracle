@@ -154,8 +154,12 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
             )
             ctx.record(StatementVerdict(
                 code=hit.code, status="check", found=hit.text, expected=entry.text,
-                source=_source_of(ctx), source_detail=entry.source_ref or '',
-                why=f"The wording {result.message}.",
+                source=_source_of(ctx), source_detail=entry.source_ref or "",
+                why=("Same words; only punctuation or capital letters differ. "
+                     "Usually acceptable \u2014 align with the official text if "
+                     "you are editing anyway."
+                     if result.kind in (MatchKind.PUNCTUATION, MatchKind.CASE)
+                     else f"The wording {result.message}."),
                 section=section, page=hit.page, fillins=list(result.fillins),
             ))
             continue

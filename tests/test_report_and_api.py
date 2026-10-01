@@ -275,3 +275,55 @@ def test_recent_checks_show_a_result_pill(client):
     text = client.get("/").text
     assert "Recent checks" in text
     assert "Fix before release" in text
+
+
+# -- errors a person can read -------------------------------------------------
+
+
+def _post_undetectable(client):
+    """defect_a02_hazard carries no governing statement, so detection fails."""
+    with open(pdf("defect_a02_hazard"), "rb") as handle:
+        return client.post(
+            "/check/html",
+            files={"file": ("a.pdf", handle, "application/pdf")},
+            data={"regulation": ""},
+            follow_redirects=False,
+        )
+
+
+def test_an_undetectable_regulation_returns_the_page_not_json(client):
+    response = _post_undetectable(client)
+    assert response.headers["content-type"].startswith("text/html")
+    assert response.text.lstrip().startswith("<!doctype html>")
+    assert "We couldn’t tell which regulation this sheet follows" in response.text
+    assert "Choose one and check again" in response.text
+
+
+def test_the_error_page_names_no_ids_or_cli_flags(client):
+    import re
+
+    text = _post_undetectable(client).text
+    # The select needs ids as option values; nothing a reader sees may use them.
+    visible = re.sub(r'value="[^"]*"', "", text)
+    for token in ("us_osha", "eu_clp", "un_ghs", "--regulation", "Re-run with"):
+        assert token not in visible, token
+    assert "US OSHA HazCom" in text
+
+
+def test_the_error_page_keeps_the_form_and_focuses_the_regulation(client):
+    text = _post_undetectable(client).text
+    assert 'id="check-form"' in text
+    assert "getElementById('regulation')" in text
+
+
+def test_any_other_failure_is_a_plain_message(client):
+    """A file we cannot read must not produce a stack or a JSON body."""
+    response = client.post(
+        "/check/html",
+        files={"file": ("broken.pdf", b"not a pdf at all", "application/pdf")},
+        data={"regulation": "eu_clp"},
+        follow_redirects=False,
+    )
+    assert response.headers["content-type"].startswith("text/html")
+    assert "We couldn’t read that file" in response.text
+    assert "Traceback" not in response.text

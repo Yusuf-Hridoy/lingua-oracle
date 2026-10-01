@@ -217,7 +217,6 @@ def blank_instruction(code: str, official: str) -> str:
 STATUS_ACTION = {
     "wrong": "Replace it with the correct text.",
     "fix": "Complete this before the sheet is issued.",
-    "check": "Read both and decide whether the difference matters.",
     "not_checked": "No action; our tool has no official text for this.",
 }
 
