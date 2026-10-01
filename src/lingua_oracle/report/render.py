@@ -211,6 +211,10 @@ def _statement_cards(report: Report) -> dict:
             "single": blank or not verdict.expected,
             "instruction": (labels.blank_instruction(verdict.code, verdict.expected)
                             if blank else ""),
+            # On a placeholder card the official wording is a reference, not
+            # something to compare against - the document already says it. One
+            # line, no diff, so nobody goes looking for a difference.
+            "reference": verdict.expected if blank else "",
             "official_heading": (
                 f"Closest {display} statement · {verdict.nearest_code}"
                 if getattr(verdict, "nearest_code", "") else "Official wording"

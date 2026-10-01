@@ -211,6 +211,9 @@ table.recent td:first-child { font-weight: 600; }
 .issue .side .txt { font-size: 14px; line-height: 1.6; word-break: break-word; }
 .issue .side .note { margin: 8px 0 0; font-size: 13px; color: var(--ok-text); }
 .issue .side .note.instruct { color: var(--chk-text); }
+.issue .side .reference { margin: 10px 0 0; padding-top: 10px; font-size: 13px;
+                          color: var(--muted); border-top: 1px solid var(--border); }
+.issue .side .reference > span:first-child { font-weight: 600; color: var(--text); }
 .issue .side header { display: flex; align-items: flex-start; gap: 10px; }
 .issue .side header h3 { flex: 1; }
 .issue .side button { min-height: 32px; padding: 0 12px; font-size: 12.5px; }

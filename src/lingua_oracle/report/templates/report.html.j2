@@ -101,6 +101,10 @@
         <h3>Your document</h3>
         <div class="txt">{% if row.v %}{{ row.found_html | safe }}{% else %}{{ row.finding.found or row.finding.message }}{% endif %}</div>
         {% if row.instruction %}<p class="note instruct">{{ row.instruction }}</p>{% endif %}
+        {% if row.reference %}
+        <p class="reference"><span>Official wording:</span> {{ row.reference }}
+          <span class="muted">(the &lsquo;&hellip;&rsquo; is the blank to fill in)</span></p>
+        {% endif %}
         {% if row.match_note %}<p class="note">{{ row.match_note }}</p>{% endif %}
         {% if row.v %}{% for value in row.v.fillins %}
         <p class="note" style="color:var(--accent)">You filled in:

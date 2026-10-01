@@ -401,7 +401,9 @@ def test_a_placeholder_card_has_one_column(page, server, shots_dir):
         expect(card).to_be_visible()
         assert card.locator(".body.single").count() == 1, code
         assert card.locator(".side").count() == 1, code
-        assert "Official wording" not in card.inner_text(), code
+        # The official text appears as a reference line, never as a second
+        # column to compare against.
+        assert card.locator(".side.official").count() == 0, code
 
 
 def test_only_the_placeholder_is_highlighted(page, server, shots_dir):
@@ -536,3 +538,29 @@ def test_an_undetectable_regulation_shows_the_page(page, server, shots_dir):
     assert page.locator("#check-form").count() == 1, "the form is gone"
     assert page.evaluate("() => document.activeElement.id") == "regulation"
     page.screenshot(path=str(shots_dir / "_error_page.png"), full_page=True)
+
+
+def test_a_placeholder_card_shows_the_official_wording_as_reference(page, server,
+                                                                    shots_dir):
+    """One column still, with the official text as a reference line.
+
+    It is not something to compare against - the document already says it - so
+    it carries no highlighting and sits under the instruction.
+    """
+    from lingua_oracle.keys.store import load_key
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_unfilled_blanks"])
+    official = load_key("us_osha", "en").by_code()["P501"].text
+    card = _statement(page, "P501").first
+    assert card.locator(".body.single").count() == 1
+    reference = card.locator(".reference")
+    assert reference.count() == 1
+    text = reference.inner_text()
+    assert text.startswith("Official wording:")
+    assert official in text
+    assert "is the blank to fill in" in text
+    # The reference carries no diff marks; only the document's own placeholder
+    # is highlighted, once.
+    assert reference.locator("mark").count() == 0
+    assert card.locator("mark").count() == 1
