@@ -444,3 +444,37 @@ def test_a_mandatory_slot_is_still_mandatory():
 
     template = "Contains <name of sensitising substance>. May produce an allergic reaction."
     assert not match("Contains. May produce an allergic reaction.", template).matched
+
+
+# -- finding #12: a hazard class read as the statement beside it ---------------
+
+
+def test_a_class_repeated_under_several_codes_is_not_a_statement():
+    """"EUH018 / Supplemental / EUH066 / Supplemental" - the class, not wording.
+
+    Found on a real EU sheet, which reported five "Wrong wording" cards quoting
+    the word "Supplemental".
+    """
+    report = check_pdf(pdf("pattern_classification_table"), "eu_clp")
+    by_code = {v.code: v for v in report.statements}
+    for code in ("EUH018", "EUH066"):
+        assert by_code[code].status == "correct", (
+            f"{code}: {by_code[code].status} {by_code[code].found!r}"
+        )
+        assert "Supplemental" not in by_code[code].found
+
+
+def test_no_finding_quotes_the_hazard_class():
+    report = check_pdf(pdf("pattern_classification_table"), "eu_clp")
+    for finding in report.findings:
+        assert "Supplemental" not in (finding.found or ""), finding.message
+
+
+def test_repeated_column_values_are_detected():
+    from lingua_oracle.detect.codes import _repeated_column_values
+    from lingua_oracle.extract.base import Line
+
+    lines = [Line(text=t, page=1) for t in
+             ["EUH018", "Supplemental", "EUH066", "Supplemental",
+              "H225", "Highly flammable liquid and vapour"]]
+    assert _repeated_column_values(lines) == {"Supplemental"}

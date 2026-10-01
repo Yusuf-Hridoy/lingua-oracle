@@ -287,6 +287,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "defect_c14_english_only.pdf"))
 
     # Patterns found on real documents, reproduced with fictional data.
+    add("pattern_classification_table", _classification_table(
+        FIXTURES / "pattern_classification_table.pdf"))
     add("pattern_conditional_slots", _conditional_slots(
         FIXTURES / "pattern_conditional_slots.pdf"))
     add("pattern_legend_after_statement", _legend_after_statement(
@@ -623,6 +625,57 @@ def _conditional_slots(path: Path) -> Path:
     sheet.line(head["16"], bold=True, size=11)
     sheet.line(f"H302 {official['H302']}.")
     sheet.line(f"H373 {bare}")
+    sheet.save()
+    return path
+
+
+
+def _classification_table(path: Path) -> Path:
+    """A sheet whose Section 2 lists codes beside their hazard class.
+
+    Real sheets lay the classification out as a table, so the code lands on one
+    line and the CLASS on the next - "EUH018 / Supplemental" - while the
+    statements table a few lines down has the code and its actual wording. The
+    class is not a statement, and attaching it reported correct sheets as
+    wrong.
+    """
+    head = HEADINGS["en"]
+    codes = ["H225", "H319", "EUH018", "EUH066"]
+    official = texts("eu_clp", "en", codes + ["P210"])
+
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.line("Classified under Regulation (EC) No 1272/2008 (CLP)")
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("Classification")
+    # The classification table: code, then its class, one per line.
+    sheet.line("H225")
+    sheet.line("Flam. Liq. 2")
+    sheet.line("H319")
+    sheet.line("Eye Irrit. 2")
+    sheet.line("EUH018")
+    sheet.line("Supplemental")
+    sheet.line("EUH066")
+    sheet.line("Supplemental")
+    sheet.blank()
+    # The statements table: code, then its wording, one per line.
+    sheet.line(head["haz"], bold=True)
+    for code in codes:
+        sheet.line(code)
+        sheet.line(official[code])
+    sheet.blank()
+    sheet.line(head["prec"], bold=True)
+    sheet.line("P210")
+    sheet.line(official["P210"])
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in codes:
+        sheet.line(f"{code} {official[code]}")
     sheet.save()
     return path
 
