@@ -146,6 +146,13 @@ def check_pdf(
         + (", ".join(sorted({span.name for span in spans})) or "none")
     )
     report.notes.append(f"PDF text read with {document.backend}.")
+    if detection.detected_by == "flag":
+        report.notes.append("Regulation chosen by you, not read from the sheet.")
+    elif detection.evidence.get(reg.id):
+        report.notes.append(
+            "Regulation read from the sheet's own words: "
+            + ", ".join(detection.evidence[reg.id])
+        )
     return report
 
 

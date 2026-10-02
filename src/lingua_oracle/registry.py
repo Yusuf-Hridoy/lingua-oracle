@@ -21,6 +21,15 @@ def data_dir() -> Path:
     return Path(__file__).resolve().parents[2] / "data"
 
 
+class Marker(BaseModel):
+    """One way a sheet can name the regulation it follows."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    pattern: str
+    weight: int = 1
+
+
 class Regulation(BaseModel):
     model_config = ConfigDict(extra="allow")
 
@@ -49,11 +58,19 @@ class Regulation(BaseModel):
     ghs_edition: str = ""
     source_url: str | None = None
     source_note: str | None = None
-    detect_patterns: list[str] = Field(default_factory=list)
+    #: Weighted markers that identify this regulation in a sheet's own words.
+    #: Weight 3 names an instrument and can only mean one regulation; weight 1
+    #: is context that supports a reading without making it.
+    detect_markers: list[Marker] = Field(default_factory=list)
 
-    def matches(self, text: str) -> int:
-        """Number of detect patterns present in `text`."""
-        return sum(1 for p in self.detect_patterns if re.search(p, text, re.IGNORECASE))
+    def found_markers(self, text: str) -> list[tuple[str, int]]:
+        """(what was found, weight) for every marker present, as written."""
+        out: list[tuple[str, int]] = []
+        for marker in self.detect_markers:
+            match = re.search(marker.pattern, text, re.IGNORECASE)
+            if match:
+                out.append((" ".join(match.group(0).split()), marker.weight))
+        return out
 
 
 class Registry(BaseModel):
