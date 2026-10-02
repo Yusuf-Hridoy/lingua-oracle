@@ -599,3 +599,35 @@ def test_a_report_page_requests_no_font_at_all(page, server, shots_dir):
     page.reload(wait_until="load")
     assert [u for u in requests if u.endswith(".woff2")] == []
     assert [u for u in requests if not u.startswith(server)] == []
+
+
+def test_the_ask_screen_preselects_the_suggestion(page, server, shots_dir):
+    """A suggestion is somewhere to start. The reader still presses the button."""
+    page.goto(server + "/", wait_until="load")
+    page.set_input_files("#file", f"{FIXTURES}/pattern_only_says_ghs.pdf")
+    page.click("#check-form button[type=submit]")
+    page.wait_for_load_state("load")
+
+    notice = page.locator(".notice")
+    expect(notice).to_be_visible()
+    text = notice.inner_text()
+    assert "only says ‘GHS’" in text
+    assert "Australia WHS" in text
+    assert "+61 phone" in text
+
+    assert page.locator("#regulation").input_value() == "au_whs"
+    assert page.evaluate("() => document.activeElement.id") == "regulation"
+    assert "/reports/" not in page.url, "it checked without being asked"
+    page.screenshot(path=str(shots_dir / "_ask_screen.png"), full_page=True)
+
+
+def test_confirming_the_suggestion_runs_the_check(page, server, shots_dir):
+    page.goto(server + "/", wait_until="load")
+    page.set_input_files("#file", f"{FIXTURES}/pattern_only_says_ghs.pdf")
+    page.click("#check-form button[type=submit]")
+    page.wait_for_load_state("load")
+    # The file has to be chosen again; the browser will not let a page refill it.
+    page.set_input_files("#file", f"{FIXTURES}/pattern_only_says_ghs.pdf")
+    page.click("#check-form button[type=submit]")
+    page.wait_for_url(re.compile(r"/reports/"), timeout=60_000)
+    assert "Australia WHS" in page.inner_text("body")

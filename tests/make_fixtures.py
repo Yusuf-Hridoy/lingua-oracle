@@ -287,6 +287,8 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "defect_c14_english_only.pdf"))
 
     # Patterns found on real documents, reproduced with fictional data.
+    add("pattern_only_says_ghs", _only_says_ghs(
+        FIXTURES / "pattern_only_says_ghs.pdf"))
     add("pattern_out_of_scope", _out_of_scope(
         FIXTURES / "pattern_out_of_scope.pdf"))
     add("pattern_unfilled_blanks", _unfilled_blanks(
@@ -768,6 +770,40 @@ def _out_of_scope(path: Path) -> Path:
     sheet.blank()
     sheet.line(head["16"], bold=True, size=11)
     sheet.line(f"H225 {official['H225']}")
+    sheet.save()
+    return path
+
+
+
+def _only_says_ghs(path: Path) -> Path:
+    """A sheet that names no regulation, from an address that suggests one.
+
+    "GHS Classification" is what a great many supplier sheets say and it
+    identifies nothing. The address and telephone number place the supplier in
+    Australia, which is somewhere to start - not an answer.
+    """
+    from lingua_oracle.keys import ghs_index
+
+    head = HEADINGS["en"]
+    h225 = ghs_index.text_in("H225", "GHS Rev.7")
+    h319 = ghs_index.text_in("H319", "GHS Rev.7")
+
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line("Nonexistent Chemicals Pty Ltd")
+    sheet.line("Level 1, 11 Imaginary Road, MACQUARIE PARK NSW 2113, AUSTRALIA")
+    sheet.line("Telephone: +61 1800 000 000")
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("GHS Classification")
+    sheet.line(f"{head['signal']}: Danger")
+    sheet.blank()
+    sheet.line(head["haz"], bold=True)
+    sheet.line(f"H225 {h225}")
+    sheet.line(f"H319 {h319}")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
     sheet.save()
     return path
 

@@ -117,7 +117,6 @@ MARKER_SHEETS = {
     # UN GHS
     "un_rev": ("un_ghs", "Classified to GHS Rev. 11."),
     "un_long": ("un_ghs", "United Nations Globally Harmonized System of classification."),
-    "un_bare": ("un_ghs", "Classified according to GHS."),
 }
 
 
@@ -131,16 +130,87 @@ def test_a_marker_identifies_its_regulation(name, expected, text):
     assert result.evidence.get(expected), name
 
 
+def test_bare_ghs_is_not_a_regulation():
+    """Nearly every sheet says "GHS". On its own it identifies nothing.
+
+    Taking it for the UN text sent Australian and Canadian sheets to the wrong
+    key, where every statement was then compared against the wrong wording.
+    """
+    from lingua_oracle.detect.regulation import (
+        RegulationUndetermined,
+        detect_regulation,
+    )
+
+    with pytest.raises(RegulationUndetermined) as raised:
+        detect_regulation("Classified according to GHS.")
+    assert raised.value.only_says_ghs
+
+    # Named outright, it is the UN text.
+    assert detect_regulation("Classified to GHS Rev. 11.").regulation == "un_ghs"
+    assert detect_regulation(
+        "United Nations Globally Harmonized System."
+    ).regulation == "un_ghs"
+
+
 def test_bare_ghs_loses_to_anything_more_specific():
-    """Every sheet mentions GHS; it names the UN text only on its own."""
     from lingua_oracle.detect.regulation import detect_regulation
 
-    assert detect_regulation("Classified according to GHS.").regulation == "un_ghs"
     mixed = detect_regulation(
         "Classified according to GHS and Regulation (EC) No 1272/2008."
     )
     assert mixed.regulation == "eu_clp"
     assert "GHS" not in mixed.evidence.get("un_ghs", [])
+
+
+# -- a suggestion is offered, never applied -----------------------------------
+
+
+@pytest.mark.parametrize(
+    ("text", "suggested", "because"),
+    [
+        ("GHS Classification. MACQUARIE PARK NSW 2113 AUSTRALIA. Tel +61 1800 800 097",
+         "au_whs", "+61 phone"),
+        ("GHS Classification. 20 King St, Toronto, Canada.", "ca_whmis", "address"),
+        ("GHS Classification. Manchester, United Kingdom. Tel +44 161 555 0100",
+         "uk_clp", "+44 phone"),
+        ("GHS Classification. Darmstadt, Germany. Tel +49 6151 72 0", "eu_clp",
+         "+49 phone"),
+    ],
+)
+def test_the_country_suggests_a_regulation(text, suggested, because):
+    from lingua_oracle.detect.regulation import (
+        RegulationUndetermined,
+        detect_regulation,
+    )
+
+    with pytest.raises(RegulationUndetermined) as raised:
+        detect_regulation(text)
+    assert raised.value.suggestion == suggested
+    assert because in raised.value.reason
+
+
+def test_no_country_evidence_means_no_suggestion():
+    from lingua_oracle.detect.regulation import (
+        RegulationUndetermined,
+        detect_regulation,
+    )
+
+    with pytest.raises(RegulationUndetermined) as raised:
+        detect_regulation("Classified according to GHS. Nothing else at all.")
+    assert raised.value.suggestion == ""
+
+
+def test_two_countries_mean_we_know_less_not_more():
+    from lingua_oracle.detect.country import country_hint
+
+    assert country_hint("Offices in Australia and Canada.") is None
+
+
+def test_a_us_or_canada_phone_prefix_suggests_nothing():
+    """"+1" cannot tell OSHA from WHMIS, so it is no help in choosing."""
+    from lingua_oracle.detect.country import country_hint
+
+    assert country_hint("Tel +1 416 555 0100") is None
 
 
 def test_euh_codes_only_support_uk_with_a_gb_marker():

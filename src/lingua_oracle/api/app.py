@@ -53,22 +53,25 @@ def _save_upload(upload: UploadFile) -> Path:
 class _Explained(Exception):
     """An error with something a person can read and act on."""
 
-    def __init__(self, message: str, *, focus: str = "") -> None:
+    def __init__(self, message: str, *, focus: str = "", suggest: str = "") -> None:
         super().__init__(message)
         self.message = message
         self.focus = focus
+        #: A regulation to preselect. Offered, never applied: the reader has to
+        #: press the button before anything is checked against it.
+        self.suggest = suggest
 
 
 def _run(fn, *args, **kwargs) -> Report:
     try:
         return fn(*args, **kwargs)
-    except RegulationUndetermined:
+    except RegulationUndetermined as undetermined:
         # The detail on this exception names regulation ids and a CLI flag.
         # Neither means anything in a browser.
         raise _Explained(
-            "We couldn\u2019t tell which regulation this sheet follows. "
-            "Choose one and check again.",
+            _ask_message(undetermined),
             focus="regulation",
+            suggest=undetermined.suggestion,
         ) from None
     except Exception as exc:  # noqa: BLE001 - the page must never show a stack
         raise _Explained(
@@ -77,7 +80,28 @@ def _run(fn, *args, **kwargs) -> Report:
         ) from None
 
 
-def _upload_page(request: Request, *, error: str = "", focus: str = "") -> HTMLResponse:
+def _ask_message(undetermined: RegulationUndetermined) -> str:
+    """What to tell a reader when the sheet does not say which regulation.
+
+    Where the address points somewhere, say so and say it is the address
+    talking - the reader can then confirm or correct it in one look.
+    """
+    if undetermined.only_says_ghs:
+        opening = "This sheet only says \u2018GHS\u2019, which every sheet does."
+    else:
+        opening = "We couldn\u2019t tell which regulation this sheet follows."
+    if not undetermined.suggestion:
+        return f"{opening} Choose one and check again."
+    try:
+        name = load_registry().get(undetermined.suggestion).display_name
+    except KeyError:
+        return f"{opening} Choose one and check again."
+    return (f"{opening} It looks like {name} "
+            f"({undetermined.reason}). Confirm the regulation and check again.")
+
+
+def _upload_page(request: Request, *, error: str = "", focus: str = "",
+                 suggest: str = "") -> HTMLResponse:
     registry = load_registry()
     return templates.TemplateResponse(
         request=request,
@@ -92,6 +116,7 @@ def _upload_page(request: Request, *, error: str = "", focus: str = "") -> HTMLR
             "recent": recent_reports(),
             "error": error,
             "focus": focus,
+            "suggest": suggest,
         },
     )
 
@@ -99,7 +124,8 @@ def _upload_page(request: Request, *, error: str = "", focus: str = "") -> HTMLR
 @app.exception_handler(_Explained)
 def _explained_handler(request: Request, exc: _Explained) -> HTMLResponse:
     """Every failure a person can hit comes back as the page, not as JSON."""
-    return _upload_page(request, error=exc.message, focus=exc.focus)
+    return _upload_page(request, error=exc.message, focus=exc.focus,
+                        suggest=exc.suggest)
 
 
 @app.get("/", response_class=HTMLResponse)

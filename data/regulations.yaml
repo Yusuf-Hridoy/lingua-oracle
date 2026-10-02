@@ -167,7 +167,7 @@ regulations:
     - pattern: \b(?:UN|United\s+Nations)\s+Globally\s+Harmoni[sz]ed\s+System\b
       weight: 2
     - pattern: \bGHS\b
-      weight: 2
+      weight: 1
   au_whs:
     display_name: Australia WHS (GHS Rev.7 + AUH)
     revision: GHS-Rev7-AU

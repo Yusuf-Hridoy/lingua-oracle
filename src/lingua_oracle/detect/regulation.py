@@ -12,6 +12,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+from lingua_oracle.detect.country import country_hint
 from lingua_oracle.registry import load_registry
 
 #: How far ahead the leader has to be. One weight-3 marker against another
@@ -38,10 +39,19 @@ _ENGLISH_SECTION_RE = re.compile(
 
 
 class RegulationUndetermined(RuntimeError):
-    """Raised when no regulation can be determined from the document."""
+    """Raised when no regulation can be determined from the document.
 
-    def __init__(self, candidates: list[str]):
+    May carry a suggestion drawn from where the sheet appears to come from.
+    A suggestion is somewhere to start, never an answer: the caller offers it
+    and the reader confirms it.
+    """
+
+    def __init__(self, candidates: list[str], *, suggestion: str = "",
+                 reason: str = "", only_says_ghs: bool = False):
         self.candidates = candidates
+        self.suggestion = suggestion
+        self.reason = reason
+        self.only_says_ghs = only_says_ghs
         super().__init__(
             "Could not determine the regulation from the document. "
             "Re-run with --regulation set to one of: " + ", ".join(candidates)
@@ -116,8 +126,21 @@ def detect_regulation(text: str, flag: str | None = None) -> RegulationDetection
 
     ranked = sorted(scores.items(), key=lambda kv: (-kv[1], kv[0]))
     best, best_score = ranked[0]
-    if best_score == 0:
-        raise RegulationUndetermined(registry.ids())
+
+    # "GHS" on its own is not a regulation. Nearly every sheet in the world
+    # says it, and taking it for the UN text sent Australian and Canadian
+    # sheets to the wrong key. Where it is all we have, ask - and offer the
+    # country the sheet seems to come from as somewhere to start.
+    said = {what.strip().upper() for found in evidence.values() for what, _ in found}
+    only_ghs = said == {"GHS"}
+    if best_score == 0 or only_ghs:
+        hint = country_hint(text)
+        raise RegulationUndetermined(
+            registry.ids(),
+            suggestion=hint.regulation if hint else "",
+            reason=hint.reason if hint else "",
+            only_says_ghs=only_ghs,
+        )
 
     # A sheet that names one instrument and no other has said which regulation
     # it follows. Codes and languages are weaker evidence - an EU supplemental
@@ -132,6 +155,11 @@ def detect_regulation(text: str, flag: str | None = None) -> RegulationDetection
     runner_up = ranked[1][1] if len(ranked) > 1 else 0
     if best_score - runner_up < _MARGIN:
         close = [rid for rid, s in ranked if best_score - s < _MARGIN]
-        raise RegulationUndetermined(close)
+        hint = country_hint(text)
+        raise RegulationUndetermined(
+            close,
+            suggestion=hint.regulation if hint and hint.regulation in close else "",
+            reason=hint.reason if hint else "",
+        )
     return RegulationDetection(regulation=best, detected_by="auto",
                                scores=scores, evidence=shown)

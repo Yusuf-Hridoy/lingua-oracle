@@ -68,7 +68,7 @@
             <label class="field" for="regulation">Regulation</label>
             <select id="regulation" name="regulation">
               <option value="">Detect from document</option>
-              {% for rid, name in regulations %}<option value="{{ rid }}">{{ name }}</option>{% endfor %}
+              {% for rid, name in regulations %}<option value="{{ rid }}"{% if suggest == rid %} selected{% endif %}>{{ name }}</option>{% endfor %}
             </select>
           </div>
           <div>

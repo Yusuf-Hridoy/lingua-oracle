@@ -391,3 +391,63 @@ def test_the_fonts_are_dropped_rather_than_left_dangling():
     # The licence attribution stays; it is a comment, not a request.
     assert "SIL Open Font License" in stripped
     assert "--accent" in stripped, "the rest of the stylesheet must survive"
+
+
+# -- the ask screen suggests, it does not decide -------------------------------
+
+
+def _post_only_ghs(client):
+    with open(pdf("pattern_only_says_ghs"), "rb") as handle:
+        return client.post(
+            "/check/html",
+            files={"file": ("a.pdf", handle, "application/pdf")},
+            data={"regulation": ""},
+            follow_redirects=False,
+        )
+
+
+def test_a_sheet_that_only_says_ghs_asks(client):
+    response = _post_only_ghs(client)
+    assert response.headers["content-type"].startswith("text/html")
+    assert "only says ‘GHS’" in response.text
+    assert "which every sheet does" in response.text
+
+
+def test_the_ask_screen_names_the_country_evidence(client):
+    text = _post_only_ghs(client).text
+    assert "It looks like Australia WHS" in text
+    assert "address" in text and "+61 phone" in text
+    assert "Confirm the regulation" in text
+
+
+def test_the_suggestion_is_preselected_but_nothing_is_checked(client):
+    import re
+
+    response = _post_only_ghs(client)
+    selected = re.findall(r'<option value="(\w+)" selected>', response.text)
+    assert selected == ["au_whs"], selected
+    # Nothing was checked: no report, and the page is the upload page.
+    assert "/reports/" not in response.headers.get("location", "")
+    assert 'id="check-form"' in response.text
+
+
+def test_un_ghs_is_never_chosen_from_the_word_alone(client):
+    """It is chosen when the sheet names it, or when the reader picks it."""
+    from lingua_oracle.detect.regulation import detect_regulation
+
+    assert "un_ghs" not in _post_only_ghs(client).headers.get("location", "")
+    named = detect_regulation("Classified to UN GHS Rev. 11.")
+    assert named.regulation == "un_ghs"
+
+
+def test_picking_the_suggestion_then_checks_against_it(client):
+    with open(pdf("pattern_only_says_ghs"), "rb") as handle:
+        response = client.post(
+            "/check/html",
+            files={"file": ("a.pdf", handle, "application/pdf")},
+            data={"regulation": "au_whs"},
+            follow_redirects=False,
+        )
+    assert response.status_code == 303
+    page = client.get(response.headers["location"])
+    assert "Australia WHS" in page.text
