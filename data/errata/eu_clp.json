@@ -1,0 +1,16 @@
+{
+  "regulation": "eu_clp",
+  "note": "Reviewed corrections to typographical errors in the consolidated act's own text. Each one is a difference between the two places the act states the same statement, where one of them is plainly a typing error and the other is the sentence the regulation intends. Applied per code and per language, and only when the stored text still matches `wrong` exactly - if the source is corrected upstream, the erratum stops applying rather than overwriting the new text.",
+  "corrections": [
+    {
+      "code": "P336",
+      "language": "en",
+      "wrong": "Thaw frosted parts with lukewarm water. Do no rub affected area.",
+      "corrected": "Thaw frosted parts with lukewarm water. Do not rub affected area.",
+      "reason": "\"Do no rub\" is not a sentence. The same act prints \"Do not rub\" where it selects the statement.",
+      "evidence": "Annex IV Part 1, Table 6.3 (Precautionary statements - Response), row P336, block ▼B: \"Thaw frosted parts with lukewarm water. Do not rub affected area.\" Part 2's English column of the same consolidation drops the \"t\".",
+      "evidence_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
+      "reviewed_on": "2026-10-02"
+    }
+  ]
+}

@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from lingua_oracle.keys.errata import Erratum, correct
 from lingua_oracle.keys.store import load_key
 from lingua_oracle.match.normalize import normalize
 from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Status, Tier
@@ -34,6 +35,9 @@ class Borrowed:
     #: parsed part of its source is our gap; one missing from a key that parsed
     #: the whole source is genuinely absent from the regulation.
     key_status: str = "pending_source"
+    #: Reviewed corrections applied to the source's own typing errors. Every
+    #: entry they touched says so in its source_ref, which the report prints.
+    errata: tuple[Erratum, ...] = ()
 
 
 def resolve(regulation: str, language: str) -> Borrowed:
@@ -44,10 +48,11 @@ def resolve(regulation: str, language: str) -> Borrowed:
     """
     own = load_key(regulation, language)
     status = own.status.value if own else "pending_source"
+    corrected, applied = correct(own)
     # An entry marked not_on_file holds text the law has replaced, kept only so
     # the gap is on the record. It must never reach a comparison.
     entries: dict[str, AnswerKeyEntry] = {
-        code: entry for code, entry in (own.by_code() if own else {}).items()
+        code: entry for code, entry in corrected.items()
         if entry.status is not Status.NOT_ON_FILE
     }
     borrowed: set[str] = set()
@@ -55,18 +60,20 @@ def resolve(regulation: str, language: str) -> Borrowed:
 
     if regulation == EU:
         return Borrowed(entries=entries, borrowed_codes=borrowed, tier_c_codes=tier_c,
-                        key_status=status)
+                        key_status=status, errata=tuple(applied))
 
     own_en = load_key(regulation, "en")
     eu_en = load_key(EU, "en")
     eu_l = load_key(EU, language)
     if not own_en or not eu_en or not eu_l:
         return Borrowed(entries=entries, borrowed_codes=borrowed, tier_c_codes=tier_c,
-                        key_status=status)
+                        key_status=status, errata=tuple(applied))
 
     own_en_by_code = own_en.by_code()
-    eu_en_by_code = eu_en.by_code()
-    eu_l_by_code = eu_l.by_code()
+    # Borrowed text goes through the same errata as text used directly: a
+    # typing error in the EU source is a typing error wherever it is read.
+    eu_en_by_code, eu_en_errata = correct(eu_en)
+    eu_l_by_code, eu_l_errata = correct(eu_l)
 
     for code, own_entry in own_en_by_code.items():
         if code in entries:
@@ -91,8 +98,11 @@ def resolve(regulation: str, language: str) -> Borrowed:
         )
         borrowed.add(code)
 
+    used = tuple(applied) + tuple(
+        e for e in (*eu_en_errata, *eu_l_errata) if e.code in borrowed
+    )
     return Borrowed(entries=entries, borrowed_codes=borrowed, tier_c_codes=tier_c,
-                        key_status=status)
+                    key_status=status, errata=used)
 
 
 def reference_key(regulation: str, language: str) -> AnswerKey:
