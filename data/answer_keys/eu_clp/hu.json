@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-02T08:59:00.221694Z",
+  "retrieved_at": "2026-10-02T11:22:17.587208Z",
   "notes": [],
   "entries": [
     {
@@ -1204,8 +1204,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P103; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
+      "source_ref": "Annex III/IV table for P103; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1394,13 +1394,13 @@
       "language": "hu",
       "code": "P233",
       "kind": "precautionary",
-      "text": "Az edény szorosan lezárva tartandó.",
+      "text": "Az eredeti edényzetben tárolja.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P233",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P233; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1684,8 +1684,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P280; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
+      "source_ref": "Annex III/IV table for P280; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2729,13 +2729,13 @@
       "language": "hu",
       "code": "P378",
       "kind": "precautionary",
-      "text": "Oltásra …használandó.",
+      "text": "Az oltáshoz … használandó.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P378",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P378; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {

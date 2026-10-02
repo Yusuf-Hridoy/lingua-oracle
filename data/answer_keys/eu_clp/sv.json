@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-02T08:59:00.221694Z",
+  "retrieved_at": "2026-10-02T11:29:02.537429Z",
   "notes": [],
   "entries": [
     {
@@ -1204,9 +1204,9 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P103; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
-      "status": "ok"
+      "source_ref": "Annex III/IV table for P103; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019, but the sentence ends ',' where the other Part ends it with a full stop - the act prints it that way too, so it cannot be corrected from the act - not used for a verdict",
+      "retrieved_at": "2026-10-02T11:29:01.932916Z",
+      "status": "not_on_file"
     },
     {
       "regulation": "eu_clp",
@@ -1229,13 +1229,13 @@
       "language": "sv",
       "code": "P202",
       "kind": "precautionary",
-      "text": "Använd inte produkten innan du har läst och förstått säkerhetsanvisningarna",
+      "text": "Använd inte produkten innan du har läst och förstått skyddsanvisningarna.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P202",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P202; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1244,13 +1244,13 @@
       "language": "sv",
       "code": "P210",
       "kind": "precautionary",
-      "text": "Får inte utsättas för värme, heta ytor, gnistor, öppen låga eller andra antändningskällor. Rökning förbjuden.",
+      "text": "Får inte utsättas för värme, heta ytor, gnistor, öppna lågor och andra antändningskällor. Rökning förbjuden.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P210",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P210; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1559,13 +1559,13 @@
       "language": "sv",
       "code": "P261",
       "kind": "precautionary",
-      "text": "Undvik att inandas damm/rök/gaser/dimma/ångor/sprej.",
+      "text": "Undvik att andas in damm/rök/gaser/dimma/ångor/sprej.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P261",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P261; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1684,8 +1684,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P280; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
+      "source_ref": "Annex III/IV table for P280; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -3059,14 +3059,14 @@
       "language": "sv",
       "code": "P501",
       "kind": "precautionary",
-      "text": "Innehållet/behållaren lämnas till…",
+      "text": "Innehållet/behållaren lämnas till",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P501",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
-      "status": "ok"
+      "source_ref": "Annex III/IV table for P501; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019, but 1 fill-in(s) fewer than the same sentence has in the other Part - the act prints it that way too, so it cannot be corrected from the act - not used for a verdict",
+      "retrieved_at": "2026-10-02T11:29:01.932916Z",
+      "status": "not_on_file"
     },
     {
       "regulation": "eu_clp",

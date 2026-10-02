@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-02T08:59:00.221694Z",
+  "retrieved_at": "2026-10-02T11:29:02.537429Z",
   "notes": [],
   "entries": [
     {
@@ -1204,9 +1204,9 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P103; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
-      "status": "ok"
+      "source_ref": "Annex III/IV table for P103; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019, but the sentence ends 'p' where the other Part ends it with a full stop - the act prints it that way too, so it cannot be corrected from the act - not used for a verdict",
+      "retrieved_at": "2026-10-02T11:29:01.932916Z",
+      "status": "not_on_file"
     },
     {
       "regulation": "eu_clp",
@@ -1214,13 +1214,13 @@
       "language": "nl",
       "code": "P201",
       "kind": "precautionary",
-      "text": "Alvorens te gebruiken de speciale aanwijzingen raadplegen.",
+      "text": "Vóór gebruik speciale aanwijzingen raadplegen.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P201",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P201; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1259,13 +1259,13 @@
       "language": "nl",
       "code": "P211",
       "kind": "precautionary",
-      "text": "Niet in een open vuur of op andere ontstekingsbronnen spuiten.",
+      "text": "Niet in open vuur of op andere ontstekingsbronnen spuiten.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P211",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P211; Annex IV Part 1, in force under COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1304,13 +1304,13 @@
       "language": "nl",
       "code": "P222",
       "kind": "precautionary",
-      "text": "Contact met de lucht vermijden.",
+      "text": "Blootstelling aan lucht vermijden.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P222",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P222; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1559,13 +1559,13 @@
       "language": "nl",
       "code": "P261",
       "kind": "precautionary",
-      "text": "Inademing van stof/rook/gas/nevel/damp/spuitnevel vermijden.",
+      "text": "Inademing van stof/rook/gas/nevel/dampen/spuitnevel vermijden.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P261",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P261; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1684,8 +1684,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P280; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
+      "source_ref": "Annex III/IV table for P280; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2684,13 +2684,13 @@
       "language": "nl",
       "code": "P375",
       "kind": "precautionary",
-      "text": "Op afstand blussen omwille van ontploffingsgevaar.",
+      "text": "Op afstand blussen in verband met ontploffingsgevaar.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P375",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P375; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -3029,13 +3029,13 @@
       "language": "nl",
       "code": "P413",
       "kind": "precautionary",
-      "text": "Bulkmateriaal, indien meer dan … kg/… lbs, bij temperaturen van maximaal … °C bewaren.",
+      "text": "Bulkmateriaal, indien meer dan … kg, bij temperaturen van maximaal …°C/…°F bewaren.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P413",
-      "retrieved_at": "2026-10-01T06:44:45.584011Z",
+      "source_ref": "Annex III/IV table for P413; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {

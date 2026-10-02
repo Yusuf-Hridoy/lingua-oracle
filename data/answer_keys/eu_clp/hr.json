@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-02T08:59:00.221694Z",
+  "retrieved_at": "2026-10-02T11:29:02.537429Z",
   "notes": [],
   "entries": [
     {
@@ -1204,8 +1204,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P103; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
+      "source_ref": "Annex III/IV table for P103; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1244,13 +1244,13 @@
       "language": "hr",
       "code": "P210",
       "kind": "precautionary",
-      "text": "Čuvati odvojeno od topline, vrućih površina, iskri, otvorenih plamena i ostalih izvora paljenja. Ne pušiti.",
+      "text": "Čuvati odvojeno od topline, vrućih površina, iskri, otvorenog plamena i drugih izvora paljenja. Ne pušiti.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P210",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P210; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1559,13 +1559,13 @@
       "language": "hr",
       "code": "P261",
       "kind": "precautionary",
-      "text": "Izbjegavati udisanje prašine/dima/plina/magle/pare/aerosola.",
+      "text": "Izbjegavati udisanje prašine/dima/plina/magle/para/aerosola.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P261",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P261; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1684,8 +1684,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P280; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
+      "source_ref": "Annex III/IV table for P280; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:29:01.932916Z",
       "status": "ok"
     },
     {
@@ -1724,13 +1724,13 @@
       "language": "hr",
       "code": "P284",
       "kind": "precautionary",
-      "text": "[U slučaju nedovoljne ventilacije] nositi sredstva za zaštitu dišnog sustava.",
+      "text": "[U slučaju nedovoljnog prozračivanja] nositi sredstva za zaštitu dišnog sustava.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P284",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P284; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2114,13 +2114,13 @@
       "language": "hr",
       "code": "P320",
       "kind": "precautionary",
-      "text": "Hitno je potrebna posebna liječnička obrada (vidi … na ovoj naljepnici).",
+      "text": "Hitno je potrebna posebna liječnička obrada (vidjeti … na ovoj naljepnici).",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P320",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P320; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2129,13 +2129,13 @@
       "language": "hr",
       "code": "P321",
       "kind": "precautionary",
-      "text": "Potrebna je posebna liječnička obrada (vidi … na ovoj naljepnici).",
+      "text": "Posebna liječnička obrada (vidjeti … na ovoj naljepnici).",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P321",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P321; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2174,13 +2174,13 @@
       "language": "hr",
       "code": "P332",
       "kind": "precautionary",
-      "text": "U slučaju nadražaja kože:",
+      "text": "U slučaju nadraživanja kože:",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P332",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P332; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2354,13 +2354,13 @@
       "language": "hr",
       "code": "P342",
       "kind": "precautionary",
-      "text": "Pri otežanom disanju:",
+      "text": "U slučaju respiratornih simptoma:",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P342",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P342; Annex IV Part 1, in force under COMMISSION REGULATION (EU) No 286/2011 of 10 March 2011",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2669,13 +2669,13 @@
       "language": "hr",
       "code": "P373",
       "kind": "precautionary",
-      "text": "NE gasiti vatru kada plamen može zahvatiti eksplozive.",
+      "text": "NE gasiti vatru kada plamen zahvati eksplozive.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P373",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P373; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {

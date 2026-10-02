@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-02T08:59:00.221694Z",
+  "retrieved_at": "2026-10-02T11:29:02.537429Z",
   "notes": [],
   "entries": [
     {
@@ -1199,13 +1199,13 @@
       "language": "el",
       "code": "P103",
       "kind": "precautionary",
-      "text": "Διαβάστε προσεκτικά και ακολουθήστε όλες τις οδηγίες",
+      "text": "Διαβάστε την ετικέτα πριν από τη χρήση.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P103; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
+      "source_ref": "Annex III/IV table for P103",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1244,13 +1244,13 @@
       "language": "el",
       "code": "P210",
       "kind": "precautionary",
-      "text": "Μακριά από θερμότητα, θερμές επιφάνειες, σπινθήρες, γυμνές φλόγες και άλλες πηγές ανάφλεξης. Μην καπνίζετε.",
+      "text": "Μακριά από θερμότητα, θερμές επιφάνειες, σπινθήρες, γυμνή φλόγα και άλλες πηγές ανάφλεξης. Μην καπνίζετε.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P210",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P210; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1259,13 +1259,13 @@
       "language": "el",
       "code": "P211",
       "kind": "precautionary",
-      "text": "Μην ψεκάζετε κοντά σε γυμνή φλόγα ή άλλη πηγή ανάφλεξης.",
+      "text": "Μην ψεκάζετε κοντά σε φλόγα ή άλλη πηγή ανάφλεξης.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P211",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P211; Annex IV Part 1, in force under COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1319,13 +1319,13 @@
       "language": "el",
       "code": "P223",
       "kind": "precautionary",
-      "text": "Μην επιτρέπετε την επαφή με το νερό.",
+      "text": "Να μην έρθει σε επαφή με το νερό.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P223",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P223; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1549,9 +1549,9 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P260",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
-      "status": "ok"
+      "source_ref": "Annex III/IV table for P260; Annex IV Part 2, in force under REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1), but the sentence ends 'α' where the other Part ends it with a full stop - not used for a verdict",
+      "retrieved_at": "2026-10-02T11:29:01.932916Z",
+      "status": "not_on_file"
     },
     {
       "regulation": "eu_clp",
@@ -1564,9 +1564,9 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P261",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
-      "status": "ok"
+      "source_ref": "Annex III/IV table for P261; Annex IV Part 2, in force under Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217), but a greek sentence containing the latin character 'A' (U+0041) in 'Aποφεύγετε' - not used for a verdict",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
+      "status": "not_on_file"
     },
     {
       "regulation": "eu_clp",
@@ -1679,13 +1679,13 @@
       "language": "el",
       "code": "P280",
       "kind": "precautionary",
-      "text": "Να φοράτε προστατευτικά γάντια/προστατευτικά ενδύματα/μέσα ατομικής προστασίας για τα μάτια/το πρόσωπο/τα αυτιά/…",
+      "text": "Να φοράτε προστατευτικά γάντια/προστατευτικά ενδύματα/μέσα ατομικής προστασίας για τα μάτια/πρόσωπο.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P280; Part 1 text, amended after Part 2",
-      "retrieved_at": "2026-10-02T08:58:59.635532Z",
+      "source_ref": "Annex III/IV table for P280",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1724,13 +1724,13 @@
       "language": "el",
       "code": "P284",
       "kind": "precautionary",
-      "text": "[Σε περίπτωση ανεπαρκούς αερισμού] χρησιμοποιείστε μέσα ατομικής προστασίας της αναπνοής.",
+      "text": "[Σε περίπτωση ανεπαρκούς αερισμού] να φοράτε μέσα ατομικής προστασίας της αναπνοής.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P284",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P284; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -1979,13 +1979,13 @@
       "language": "el",
       "code": "P308",
       "kind": "precautionary",
-      "text": "ΣΕ ΠΕΡΙΠΤΩΣΗ έκθεσης ή πιθανής έκθεσης:",
+      "text": "Σε περίπτωση έκθεσης ή πιθανής έκθεσης:",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P308",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P308; Annex IV Part 1, in force under COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2504,13 +2504,13 @@
       "language": "el",
       "code": "P363",
       "kind": "precautionary",
-      "text": "Πλύνετε τα μολυσμένα ενδύματα πριν τα ξαναχρησιμοποιήσετε.",
+      "text": "Πλύντε τα μολυσμένα ρούχα πριν τα ξαναχρησιμοποιήσετε.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P363",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P363; Annex IV Part 1, in force under COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2669,13 +2669,13 @@
       "language": "el",
       "code": "P373",
       "kind": "precautionary",
-      "text": "ΜΗΝ προσπαθείτε να σβήσετε την πυρκαγιά, όταν η φωτιά πλησιάζει σε εκρηκτικά.",
+      "text": "ΜΗΝ προσπαθείτε να κατασβέσετε την πυρκαγιά, όταν η φωτιά πλησιάζει σε εκρηκτικά.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P373",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P373; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {
@@ -2729,13 +2729,13 @@
       "language": "el",
       "code": "P378",
       "kind": "precautionary",
-      "text": "Χρησιμοποιείστε… για να κατασβήσετε.",
+      "text": "Χρησιμοποιήστε… για την κατάσβεση.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P378",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P378; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+      "retrieved_at": "2026-10-02T11:22:16.998344Z",
       "status": "ok"
     },
     {

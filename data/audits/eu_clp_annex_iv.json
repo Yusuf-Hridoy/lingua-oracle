@@ -1,108 +1,3619 @@
 {
  "source": "02008R1272-20260701",
- "note": "Annex IV Part 1 text used where Part 2 was not amended",
- "amended": {
-  "P103": [
-   "bg",
-   "cs",
-   "da",
-   "de",
-   "el",
-   "en",
-   "es",
-   "et",
-   "fi",
-   "fr",
-   "hr",
-   "hu",
-   "it",
-   "lt",
-   "lv",
-   "mt",
-   "nl",
-   "pl",
-   "pt",
-   "ro",
-   "sk",
-   "sl",
-   "sv"
-  ],
-  "P280": [
-   "bg",
-   "cs",
-   "da",
-   "de",
-   "el",
-   "en",
-   "es",
-   "et",
-   "fi",
-   "fr",
-   "hr",
-   "hu",
-   "it",
-   "lt",
-   "lv",
-   "mt",
-   "nl",
-   "pl",
-   "pt",
-   "ro",
-   "sk",
-   "sl",
-   "sv"
-  ]
- },
- "text": {
+ "note": "Which Part of Annex IV holds the text in force, per code and per language. Decided by the latest amending act to touch each Part, corroborated by the consolidation's own markers. Only codes whose two Parts differ are listed.",
+ "decisions": {
+  "P101": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Εάν ζητήσετε ιατρική συμβουλή, να έχετε μαζί σας τον περιέκτη του προϊόντος ή την ετικέτα.",
+     "superseded": "Εάν ζητήσετε ιατρική συμβουλή, να έχετε μαζί σας τον περιέκτη του προϊόντος.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Jei reikalinga gydytojo konsultacija, su savimi turėkite produkto talpyklą ar jo etiketę.",
+     "superseded": "Jeigu reikalinga gydytojo konsultacija, su savimi turėkite produkto talpyklą ar jo etiketę.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Bij het inwinnen van medisch advies, de verpakking of het etiket ter beschikking houden.",
+     "superseded": "Bij het inwinnen van medisch advies de verpakking of het etiket meenemen.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P102": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "nl": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Buiten het bereik van kinderen houden.",
+     "superseded": "Buiten bereik van kinderen houden.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
   "P103": {
-   "bg": "Прочетете внимателно и следвайте всички инструкции.",
-   "cs": "Pečlivě si přečtěte všechny pokyny a řiďte se jimi.",
-   "da": "Læs og følg alle instrukser.",
-   "de": "Lesen Sie sämtliche Anweisungen aufmerksam und befolgen Sie diese.",
-   "el": "Διαβάστε προσεκτικά και ακολουθήστε όλες τις οδηγίες",
-   "en": "Read carefully and follow all instructions.",
-   "es": "Leer atentamente y seguir todas las instrucciones.",
-   "et": "Lugeda tähelepanelikult ja järgida kõiki juhiseid.",
-   "fi": "Lue huolellisesti ja noudata kaikkia ohjeita",
-   "fr": "Lire attentivement et bien respecter toutes les instructions.",
-   "hr": "Pažljivo pročitajte i slijedite upute.",
-   "hu": "Olvassa el figyelmesen és kövesse az összes utasítást.",
-   "it": "Leggere attentamente e seguire tutte le istruzioni.",
-   "lt": "Atidžiai perskaitykite ir vadovaukitės visomis instrukcijomis.",
-   "lv": "Uzmanīgi izlasiet visas instrukcijas un ievērojiet tās",
-   "mt": "Aqra sew u segwi l-istruzzjonijiet kollha.",
-   "nl": "Lees aandachtig en volg alle instructies op",
-   "pl": "Uważnie przeczytać wszystkie instrukcje i zastosować się do nich",
-   "pt": "Ler atentamente e seguir todas as instruções",
-   "ro": "Citiți cu atenție și urmați toate instrucțiunile.",
-   "sk": "Pozorne si prečítajte všetky pokyny a dodržiavajte ich",
-   "sl": "Pozorno preberite in upoštevajte vsa navodila.",
-   "sv": "Läs noggrant och följ alla instruktioner,"
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "bg": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Прочетете внимателно и следвайте всички инструкции.",
+     "superseded": "Преди употреба прочетете етикета.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "cs": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Pečlivě si přečtěte všechny pokyny a řiďte se jimi.",
+     "superseded": "Před použitím si přečtěte údaje na štítku.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "da": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Læs og følg alle instrukser.",
+     "superseded": "Læs etiketten før brug.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "de": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Lesen Sie sämtliche Anweisungen aufmerksam und befolgen Sie diese.",
+     "superseded": "Vor Gebrauch Kennzeichnungsetikett lesen.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Διαβάστε την ετικέτα πριν από τη χρήση.",
+     "superseded": "Διαβάστε προσεκτικά και ακολουθήστε όλες τις οδηγίες",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "en": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Read carefully and follow all instructions.",
+     "superseded": "Read label before use.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "es": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Leer atentamente y seguir todas las instrucciones.",
+     "superseded": "Leer la etiqueta antes del uso.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Lugeda tähelepanelikult ja järgida kõiki juhiseid.",
+     "superseded": "Enne kasutamist tutvuda etiketil oleva infoga.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "fi": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Lue huolellisesti ja noudata kaikkia ohjeita",
+     "superseded": "Lue merkinnät ennen käyttöä.",
+     "defects": [
+      "the sentence ends 'a' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "fr": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Lire attentivement et bien respecter toutes les instructions.",
+     "superseded": "Lire l’étiquette avant utilisation.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Léigh an lipéad roimh úsáid.",
+     "superseded": "Léigh an lipéad roimh úsáid.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Pažljivo pročitajte i slijedite upute.",
+     "superseded": "Prije uporabe pročitati naljepnicu.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hu": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Olvassa el figyelmesen és kövesse az összes utasítást.",
+     "superseded": "Használat előtt olvassa el a címkén közölt információkat.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Leggere attentamente e seguire tutte le istruzioni.",
+     "superseded": "Leggere l’etichetta prima dell’uso.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Atidžiai perskaitykite ir vadovaukitės visomis instrukcijomis.",
+     "superseded": "Prieš naudojimą perskaityti etiketę.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Uzmanīgi izlasiet visas instrukcijas un ievērojiet tās",
+     "superseded": "Pirms izmantošanas izlasīt etiķeti.",
+     "defects": [
+      "the sentence ends 's' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Aqra sew u segwi l-istruzzjonijiet kollha.",
+     "superseded": "Aqra t-tikketta qabel l-użu.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Lees aandachtig en volg alle instructies op",
+     "superseded": "Alvorens te gebruiken, het etiket lezen.",
+     "defects": [
+      "the sentence ends 'p' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "pl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Uważnie przeczytać wszystkie instrukcje i zastosować się do nich",
+     "superseded": "Przed użyciem przeczytać etykietę.",
+     "defects": [
+      "the sentence ends 'h' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "pt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Ler atentamente e seguir todas as instruções",
+     "superseded": "Ler o rótulo antes da utilização.",
+     "defects": [
+      "the sentence ends 's' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Citiți cu atenție și urmați toate instrucțiunile.",
+     "superseded": "Citiți eticheta înainte de utilizare.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Pozorne si prečítajte všetky pokyny a dodržiavajte ich",
+     "superseded": "Pred použitím si prečítajte etiketu.",
+     "defects": [
+      "the sentence ends 'h' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "sl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Pozorno preberite in upoštevajte vsa navodila.",
+     "superseded": "Pred uporabo preberite etiketo.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Läs noggrant och följ alla instruktioner,",
+     "superseded": "Läs etiketten före användning.",
+     "defects": [
+      "the sentence ends ',' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    }
+   }
+  },
+  "P201": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "fr": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Se procurer les instructions avant utilisation.",
+     "superseded": "Se procurer les instructions spéciales avant utilisation.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Faigh treoracha speisialta roimh úsáid.",
+     "superseded": "Faigh treoracha speisialta roimh úsáid.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Procurarsi le istruzioni prima dell'uso.",
+     "superseded": "Procurarsi istruzioni specifiche prima dell’uso.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Vóór gebruik speciale aanwijzingen raadplegen.",
+     "superseded": "Alvorens te gebruiken de speciale aanwijzingen raadplegen.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Obțineți instrucțiuni speciale înainte de utilizare.",
+     "superseded": "Procurați instrucțiuni speciale înainte de utilizare.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P202": {
+   "part": "Part 2",
+   "act": "C5",
+   "act_title": "Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217)",
+   "note": "acts and markers disagree (Part 1: act M19 vs marker M19; Part 2: act B vs marker C5) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Μην το χρησιμοποιήσετε πριν διαβάσετε και κατανοήσετε τις οδηγίες προφύλαξης.",
+     "superseded": "Μην το χρησιμοποιήσετε πριν διαβάσετε και κατανοήσετε όλες τις οδηγίες προφύλαξης.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Ná láimhsigh go dtí go léifear agus go dtuigfear gach ráiteas réamhchúraim sábháilteachta.",
+     "superseded": "Ná láimhsigh go dtí go léifear agus go dtuigfear gach ráiteas réamhchúraim sábháilteachta.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Nenaudoti, jeigu neperskaityti ir nesuprasti visi saugos įspėjimai.",
+     "superseded": "Nenaudoti, jeigu neperskaityti ar nesuprasti visi saugos įspėjimai.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Neizmantot, pirms nav izlasīti un saprasti visi brīdinājumi par drošības pasākumiem.",
+     "superseded": "Neizmantot pirms nav izlasīti un saprasti visi apzīmējumi.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Tmissux qabel ma tkun qrajt u fhimt il-prekwazjonijiet kollha tas-sikurezza",
+     "superseded": "Tmissux qabel ma tkun qrajt u fhimt l-istruzzjonijiet kollha ta' prekawzjoni.",
+     "defects": [
+      "the sentence ends 'a' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Nepoužívajte, kým si neprečítate všetky bezpečnostné opatrenia a neporozumiete im.",
+     "superseded": "Nepoužívajte, kým si neprečítate a nepochopíte všetky bezpečnostné opatrenia.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Använd inte produkten innan du har läst och förstått skyddsanvisningarna.",
+     "superseded": "Använd inte produkten innan du har läst och förstått säkerhetsanvisningarna",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P210": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by M4",
+   "corroborated": true,
+   "languages": {
+    "cs": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Chraňte před teplem, horkými povrchy, jiskrami, otevřeným plamenem a jinými zdroji zapálení. Zákaz kouření.",
+     "superseded": "Chraňte před teplem, horkými povrchy, jiskrami, otevřeným ohněm a jinými zdroji zapálení. Zákaz kouření.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "de": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Von Hitze, heißen Oberflächen, Funken, offenen Flammen und anderen Zündquellen fernhalten. Nicht rauchen.",
+     "superseded": "Von Hitze, heißen Oberflächen, Funken, offenen Flammen sowie anderen Zündquellenarten fernhalten. Nicht rauchen.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "el": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Μακριά από θερμότητα, θερμές επιφάνειες, σπινθήρες, γυμνή φλόγα και άλλες πηγές ανάφλεξης. Μην καπνίζετε.",
+     "superseded": "Μακριά από θερμότητα, θερμές επιφάνειες, σπινθήρες, γυμνές φλόγες και άλλες πηγές ανάφλεξης. Μην καπνίζετε.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Coimeád ó theas, dromchlaí te, splancacha, lasair gan chosaint agus foinsí eile adhainte. Ná caitear tobac.",
+     "superseded": "Coimeád ó theas, dromchlaí te, splancacha, lasair gan chosaint agus foinsí eile adhainte. Ná caitear tobac.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Čuvati odvojeno od topline, vrućih površina, iskri, otvorenog plamena i drugih izvora paljenja. Ne pušiti.",
+     "superseded": "Čuvati odvojeno od topline, vrućih površina, iskri, otvorenih plamena i ostalih izvora paljenja. Ne pušiti.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Tenere lontano da fonti di calore, superfici riscaldate, scintille, fiamme e altre fonti di innesco. Vietato fumare.",
+     "superseded": "Tenere lontano da fonti di calore, superfici calde, scintille, fiamme libere o altre fonti di accensione. Non fumare.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Laikyti atokiau nuo šilumos šaltinių, karštų paviršių, žiežirbų, atviros liepsnos ir kitų uždegimo šaltinių. Nerūkyti.",
+     "superseded": "Laikyti atokiau nuo šilumos šaltinių, karštų paviršių, žiežirbų, atviros liepsnos arba kitų degimo šaltinių. Nerūkyti.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Turēt pietiekamā attālumā no karstuma avotiem, karstām virsmām, dzirkstelēm, atklātas liesmas un citiem aizdegšanās avotiem. Nesmēķēt.",
+     "superseded": "Sargāt no karstuma, karstām virsmām, dzirkstelēm, atklātas uguns un citiem aizdegšanās avotiem. Nesmēķēt.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Żomm 'il bogħod mis-sħana, uċuħ jaħarqu, xrar tan-nar, fjammi mikxufa u sorsi oħra li jaqbdu. Tpejjipx.",
+     "superseded": "Biegħed mis-sħana, uċuħ jaħarqu, xrar tan-nar, fjammi miftuħa u sorsi oħra li jaqbdu. Tpejjipx.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Przechowywać z dala od źródeł ciepła, gorących powierzchni, iskrzenia, otwartego ognia i innych źródeł zapłonu. Palenie wzbronione.",
+     "superseded": "Przechowywać z dala od źródeł ciepła, gorących powierzchni, źródeł iskrzenia, otwartego ognia i innych źródeł zapłonu. Nie palić.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Manter afastado do calor, superfícies quentes, faíscas, chamas abertas e outras fontes de ignição. Não fumar.",
+     "superseded": "Manter afastado do calor, superfícies quentes, faísca, chama aberta e outras fontes de ignição. Não fumar.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "A se păstra departe de surse de căldură, suprafețe încinse, scântei, flăcări deschise sau alte surse de aprindere. Fumatul interzis.",
+     "superseded": "A se păstra departe de surse de căldură, suprafețe fierbinți, scântei, flăcări și alte surse de aprindere. Fumatul interzis.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Uchovávajte mimo dosahu tepla, horúcich povrchov, iskier, otvoreného ohňa a iných zdrojov vznietenia. Zákaz fajčenia",
+     "superseded": "Uchovávajte mimo dosahu tepla, horúcich povrchov, iskier, otvoreného ohňa a iných zdrojov zapálenia. Nefajčite.",
+     "defects": [
+      "the sentence ends 'a' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "sv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Får inte utsättas för värme, heta ytor, gnistor, öppna lågor och andra antändningskällor. Rökning förbjuden.",
+     "superseded": "Får inte utsättas för värme, heta ytor, gnistor, öppen låga eller andra antändningskällor. Rökning förbjuden.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P211": {
+   "part": "Part 1",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "Part 1 was last amended by M4, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Μην ψεκάζετε κοντά σε φλόγα ή άλλη πηγή ανάφλεξης.",
+     "superseded": "Μην ψεκάζετε κοντά σε γυμνή φλόγα ή άλλη πηγή ανάφλεξης.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "not_on_file",
+     "text": "Ná spraeáil ar lasair gan chosaint ná ar fhoinse eile adhainte.",
+     "superseded": "Ná spraeáil ar lasair gan chosaint ná ar fhoinse eile adhainte.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Tisprejjahx fuq fjamma miftuħa jew sors ieħor li jqabbad in-nar.",
+     "superseded": "Tisprejjax fuq fjamma mikxufa jew sors ieħor li jaqbad.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Niet in open vuur of op andere ontstekingsbronnen spuiten.",
+     "superseded": "Niet in een open vuur of op andere ontstekingsbronnen spuiten.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Nestriekajte na otvorený oheň ani iný zdroj vznietenia.",
+     "superseded": "Nestriekajte na otvorený oheň ani iný zdroj zapálenia.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P212": {
+   "part": "Part 2",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "both Parts come from the same act (M19)",
+   "corroborated": true,
+   "languages": {
+    "fr": {
+     "part": "Part 2",
+     "act": "M19",
+     "status": "ok",
+     "text": "Éviter d'échauffer en milieu confiné ou en cas de diminution de la quantité d'agent désensibilisateur.",
+     "superseded": "Éviter d'échauffer en milieu confiné ou en cas de diminution la quantité d'agent désensibilisateur.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 2",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "A se evita încălzirea în mediu confinat sau în caz de scădere a agentului de desensibilizare",
+     "superseded": "Evitați încălzirea în caz de izolare sau de reducere a agentului de desensibilizare.",
+     "defects": [
+      "the sentence ends 'e' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P222": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "bg": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Не допускайте контакт с въздух.",
+     "superseded": "Не допускайте конктакт с въздух.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Ná ceadaigh teagmháil le haer.",
+     "superseded": "Ná ceadaigh teagmháil le haer.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Nepieļaut saskari ar gaisu.",
+     "superseded": "Nepieļaut kontaktu ar gaisu.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Tħallihx imiss mal-arja.",
+     "superseded": "Tħallix li jkun hemm kuntatt ma' l-arja.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Blootstelling aan lucht vermijden.",
+     "superseded": "Contact met de lucht vermijden.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P223": {
+   "part": "Part 1",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "Part 1 was last amended by M12, Part 2 by M4",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Να μην έρθει σε επαφή με το νερό.",
+     "superseded": "Μην επιτρέπετε την επαφή με το νερό.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Ná bíodh aon teagmháil le huisce.",
+     "superseded": "Ná bíodh aon teagmháil le huisce.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Saugoti nuo kontakto su vandeniu.",
+     "superseded": "Saugoti nuo sąlyčio su vandeniu.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P230": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "da": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Holdes fugtet med ...",
+     "superseded": "Holdes befugtet med…",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "fr": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Maintenir humide avec …",
+     "superseded": "Maintenir humidifié avec…",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Coimeád fliuchta le…",
+     "superseded": "Coimeád fliuchta le…",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Laikyti sudrėkintą … (kuo)",
+     "superseded": "Laikyti sudrėkintą (kuo)",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Żomm imxarrab bi ...",
+     "superseded": "Żommu mxarrab bi …",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Hraniti prepojeno s/z …",
+     "superseded": "Hraniti prepojeno z …",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P231": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "bg": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Да се използва и съхранява съдържанието под инертен газ/…",
+     "superseded": "Съдържанието да се използва и съхранява под инертен газ/…",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P232": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Προστετέψτε από την υγρασία.",
+     "superseded": "Προστασία από την υγρασία.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P233": {
+   "part": "Part 2",
+   "act": "C5",
+   "act_title": "Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217)",
+   "note": "acts and markers disagree (Part 1: act M19 vs marker M19; Part 2: act B vs marker C5) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Να διατηρείται ο περιέκτης ερμητικά κλειστός.",
+     "superseded": "Ο περιέκτης διατηρείται ερμητικά κλειστός.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "fr": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Maintenir le récipient hermétiquement fermé.",
+     "superseded": "Maintenir le récipient fermé de manière étanche.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Coimeád an coimeádán dúnta go docht.",
+     "superseded": "Coimeád an coimeádán dúnta go docht.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hu": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Az eredeti edényzetben tárolja.",
+     "superseded": "Az edény szorosan lezárva tartandó.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Tvertni turēt cieši noslēgtu.",
+     "superseded": "Tvertni stingri noslēgt.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "A se păstra recipientul închis etanș.",
+     "superseded": "Păstrați recipientul închis etanș.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P234": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "cs": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Uchovávejte pouze v původním balení.",
+     "superseded": "Uchovávejte pouze v původním obalu.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Laikyti tik originalioje pakuotėje.",
+     "superseded": "Laikyti tik originalioje talpykloje.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P235": {
+   "part": "Part 1",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "Part 1 was last amended by M12, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "es": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Mantener fresco.",
+     "superseded": "Mantener en lugar fresco.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Coimeád fionnuar é",
+     "superseded": "Coimeád fionnuar é",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Tenere in luogo fresco.",
+     "superseded": "Conservare in luogo fresco.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Żomm għall-frisk.",
+     "superseded": "Żomm frisk.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P240": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "cs": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Uzemněte a upevněte obal a odběrové zařízení.",
+     "superseded": "Uzemněte a pospojujte obal a odběrové zařízení.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P242": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "it": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Utilizzare utensili antiscintillamento.",
+     "superseded": "Usare utensili antiscintillamento.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P244": {
+   "part": "Part 2",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "both Parts come from the same act (M4)",
+   "corroborated": true,
+   "languages": {
+    "cs": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Udržujte ventily i příslušenství čisté — bez olejů a maziv.",
+     "superseded": "Udržujte ventily a příslušenství bez oleje a maziva.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "es": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Mantener las valvulas y los racores libres de aceite y grasa.",
+     "superseded": "Mantener las válvulas y los racores libres de aceite y grasa.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Spriječiti dodir ventila i spojnica s uljem i masti.",
+     "superseded": "Spriječiti dodir redukcijskih ventila s masti i uljem.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Mantenere le valvole e i raccordi liberi da olio e grasso.",
+     "superseded": "Mantenere le valvole e i raccordi liberi da grasso e olio.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Saugoti, kad ant vožtuvų ir jungiamųjų detalių nepatektų alyvos ir tepalų.",
+     "superseded": "Saugoti, kad ant redukcinių vožtuvų nepatektų riebalų ir tepalų.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pt": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Manter válvulas e conexões isentas de óleo e gordura.",
+     "superseded": "Manter válvulas e acessórios isentos de óleo e gordura.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P250": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "lt": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Nešlifuoti/netrankyti/…/netrinti.",
+     "superseded": "Nešlifuoti/netrankyti/netrinti…",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "A nu se supune la abraziuni/șocuri/frecare/… .",
+     "superseded": "A nu supune la abraziuni/șocuri/frecare/…",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P251": {
+   "part": "Part 2",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "both Parts come from the same act (M4)",
+   "corroborated": true,
+   "languages": {
+    "sk": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Neprepichujte alebo nespaľujte ju, a to ani po spotrebovaní obsahu.",
+     "superseded": "Neprepichujte alebo nespaľujte, a to ani po spotrebovaní obsahu.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P260": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "not_on_file",
+     "text": "Μην αναπνέετε σκόνη/αναθυμιάσεις/αέρια/σταγονίδια/ατμούς/εκνεφώματα",
+     "superseded": "Μην αναπνέετε σκόνη/αναθυμιάσεις/αέρια/συγκεντρώσεις σταγονιδίων/ατμούς/εκνεφώματα.",
+     "defects": [
+      "the sentence ends 'α' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Neieelpot putekļus/tvaikus/gāzi/dūmus/izgarojumus/smidzinājumu.",
+     "superseded": "Neieelpot putekļus/dūmus/gāzi/miglu/izgarojumus/smidzinājumu.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P261": {
+   "part": "Part 2",
+   "act": "C5",
+   "act_title": "Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217)",
+   "note": "acts and markers disagree (Part 1: act M12 vs marker M12; Part 2: act B vs marker C5) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "not_on_file",
+     "text": "Aποφεύγετε να αναπνέετε σκόνη/αναθυμιάσεις/αέρια/σταγονίδια/ατμούς/εκνεφώματα.",
+     "superseded": "Αποφεύγετε να αναπνέετε σκόνη/αναθυμιάσεις/αέρια/συγκεντρώσεις σταγονιδίων/ατμούς/εκνεφώματα.",
+     "defects": [
+      "a greek sentence containing the latin character 'A' (U+0041) in 'Aποφεύγετε'"
+     ],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Seachain deannach/múch/gás/ceo/gala/sprae a análú.",
+     "superseded": "Seachain deannach/múch/gás/ceo/gala/sprae a análú.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Izbjegavati udisanje prašine/dima/plina/magle/para/aerosola.",
+     "superseded": "Izbjegavati udisanje prašine/dima/plina/magle/pare/aerosola.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Izvairīties no putekļu/dūmu/gāzes/miglas/tvaiku/smidzinājuma ieelpošanas.",
+     "superseded": "Izvairīties ieelpot putekļus/tvaikus/gāzi/dūmus/izgarojumus/smidzinājumu.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Inademing van stof/rook/gas/nevel/dampen/spuitnevel vermijden.",
+     "superseded": "Inademing van stof/rook/gas/nevel/damp/spuitnevel vermijden.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pt": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Evitar respirar poeiras/fumos/gases/névoas/vapores/aerossóis.",
+     "superseded": "Evitar respirar as poeiras/fumos/gases/névoas/vapores/aerossóis.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sl": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Preprečiti vdihavanje prahu/dima/plina/meglice/hlapov/razpršila.",
+     "superseded": "Ne vdihavati prahu/dima/plina/meglice/hlapov/razpršila.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sv": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Undvik att andas in damm/rök/gaser/dimma/ångor/sprej.",
+     "superseded": "Undvik att inandas damm/rök/gaser/dimma/ångor/sprej.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P262": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "et": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Vältida silma, nahale või rõivastele sattumist.",
+     "superseded": "Vältida aine sattumist silma, nahale või riietele.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Nepieļaut nokļūšanu acīs, uz ādas vai uz drēbēm.",
+     "superseded": "Nepieļaut iekļūšanu acīs, uz ādas vai uz apģērba.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Contact met de ogen, de huid of de kleding vermijden.",
+     "superseded": "Mag niet in de ogen, op de huid of op de kleding komen.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P263": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "lt": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Vengti kontakto nėštumo metu/maitinant krūtimi.",
+     "superseded": "Vengti kontakto nėštumo metu ir maitinant krūtimi.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P264": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Πλύνετε … σχολαστικά μετά το χειρισμό.",
+     "superseded": "Πλένετε … σχολαστικά μετά το χειρισμό.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Pēc izmantošanas … kārtīgi nomazgāt.",
+     "superseded": "Pēc rīkošanās … kārtīgi nomazgāt.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Aħsel … sew wara li timmaniġġjah.",
+     "superseded": "Aħsel… sewwa wara li timmaniġġjah.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P270": {
+   "part": "Part 2",
+   "act": "C5",
+   "act_title": "Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217)",
+   "note": "acts and markers disagree (Part 1: act B vs marker B; Part 2: act B vs marker C5) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Μην τρώτε, πίνετε ή καπνίζετε, όταν χρησιμοποιείτε αυτό το προϊόν.",
+     "superseded": "Μην τρώτε, μην πίνετε, μην καπνίζετε, όταν χρησιμοποιείτε αυτό το προϊόν.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "fr": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ne pas manger, boire ou fumer en manipulant ce produit.",
+     "superseded": "Ne pas manger, boire ou fumer en manipulant le produit",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pl": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Nie jeść, nie pić i nie palić podczas używania produktu.",
+     "superseded": "Nie jeść, nie pić ani nie palić podczas używania produktu.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P271": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "bg": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Да се използва само на открито или на добре проветривомясто.",
+     "superseded": "Да се използва само на открито или на добре проветриво място.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P272": {
+   "part": "Part 2",
+   "act": "C5",
+   "act_title": "Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217)",
+   "note": "acts and markers disagree (Part 1: act M2 vs marker M2; Part 2: act B vs marker C5) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Τα μολυσμένα ενδύματα εργασίας δεν πρέπει να βγαίνουν από το χώρο εργασίας.",
+     "superseded": "Τα μολυσμένα ενδύματα εργασίας δεν πρέπει να βγαίνουν από τον χώρο εργασίας.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "not_on_file",
+     "text": "Níor chóir éadaí éillithe oibre a ligean amach as an láthair oibre.",
+     "superseded": "Níor chóir éadaí éillithe oibre a ligean amach as an láthair oibre.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "Ilbies tax-xogħol kontaminat ma għandux jitħalla joħroġ mill-post tax-xogħol.",
+     "superseded": "Ilbies tax-xogħol kontaminat m’għandux jitħalla joħroġ mill-post tax-xogħol.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pt": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "A roupa de trabalho contaminada não deve sair do local de trabalho.",
+     "superseded": "A roupa de trabalho contaminada não pode sair do local de trabalho.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
   },
   "P280": {
-   "bg": "Използвайте предпазни ръкавици/предпазно облекло/предпазни очила/предпазна маска за лице/предпазни средства за защита на слуха/...",
-   "cs": "Používejte ochranné rukavice/ochranný oděv/ochranné brýle/obličejový štít/chrániče sluchu/…",
-   "da": "Bær beskyttelseshandsker/beskyttelsestøj/øjenbeskyttelse/ansigtsbeskyttelse/høreværn/…",
-   "de": "Schutzhandschuhe/Schutzkleidung/Augenschutz/Gesichtsschutz/Gehörschutz/… tragen",
-   "el": "Να φοράτε προστατευτικά γάντια/προστατευτικά ενδύματα/μέσα ατομικής προστασίας για τα μάτια/το πρόσωπο/τα αυτιά/…",
-   "en": "Wear protective gloves/protective clothing/eye protection/face protection/hearing protection/…",
-   "es": "Llevar guantes/ropa de protección/equipo de protección para los ojos/la cara/los oídos/...",
-   "et": "Kanda kaitsekindaid/kaitserõivastust/kaitseprille/kaitsemaski/kuulmiskaitsevahendeid",
-   "fi": "Käytä suojakäsineitä/suojavaatetusta/silmiensuojainta/kasvonsuojainta/kuulonsuojainta/…",
-   "fr": "Porter des gants de protection/des vêtements de protection/un équipement de protection des yeux/du visage/une protection auditive/…",
-   "hr": "Nositi zaštitne rukavice/zaštitno odijelo/zaštitu za oči/zaštitu za lice/zaštitu sluha/…",
-   "hu": "Védőkesztyű/védőruha/szemvédő/arcvédő/hallásvédelem/... használata kötelező.",
-   "it": "Indossare guanti/indumenti protettivi/proteggere gli occhi/proteggere il viso/proteggere l'udito/...",
-   "lt": "Mūvėti apsaugines pirštines/dėvėti apsauginius drabužius/naudoti akių (veido) apsaugos priemones/naudoti klausos apsaugos priemones/…",
-   "lv": "Izmantot aizsargcimdus/aizsargapģērbu/acu aizsargus/sejas aizsargus.",
-   "mt": "Ilbes ingwanti protettivi/ilbies protettiv/protezzjoni għall-għajnejn/protezzjoni għall-wiċċ/protezzjoni għas-smigħ/…",
-   "nl": "Draag beschermende handschoenen/beschermende kleding/oogbescherming/gelaatsbescherming/gehoorbescherming ...",
-   "pl": "Stosować rękawice ochronne/odzież ochronną/ochronę oczu/ochronę twarzy/ochronę słuchu/…",
-   "pt": "Usar luvas de proteção/vestuário de proteção/proteção ocular/proteção facial/proteção auditiva/…",
-   "ro": "A se purta mănuși de protecție/îmbrăcăminte de protecție/echipament de protecție a ochilor/echipament de protecție a feței/protecție a auzului/…",
-   "sk": "Noste ochranné rukavice/ochranný odev/ochranné okuliare/ochranu tváre/prostriedky na ochranu sluchu/…",
-   "sl": "Nositi zaščitne rokavice/zaščitno obleko/zaščito za oči/zaščito za obraz/opremo za varovanje sluha/…",
-   "sv": "Använd skyddshandskar/skyddskläder/ögonskydd/ansiktsskydd/hörselskydd/..."
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "bg": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Използвайте предпазни ръкавици/предпазно облекло/предпазни очила/предпазна маска за лице/предпазни средства за защита на слуха/...",
+     "superseded": "Използвайте предпазни ръкавици/предпазно облекло/предпазни очила/предпазна маска за лице.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "cs": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Používejte ochranné rukavice/ochranný oděv/ochranné brýle/obličejový štít/chrániče sluchu/…",
+     "superseded": "Používejte ochranné rukavice/ochranný oděv/ochranné brýle/obličejový štít.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "da": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Bær beskyttelseshandsker/beskyttelsestøj/øjenbeskyttelse/ansigtsbeskyttelse/høreværn/…",
+     "superseded": "Bær beskyttelseshandsker/beskyttelsestøj/øjenbeskyttelse/ansigtsbeskyttelse",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "de": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Schutzhandschuhe/Schutzkleidung/Augenschutz/Gesichtsschutz/Gehörschutz/… tragen",
+     "superseded": "Schutzhandschuhe/Schutzkleidung/Augenschutz/Gesichtsschutz tragen.",
+     "defects": [
+      "the sentence ends 'n' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Να φοράτε προστατευτικά γάντια/προστατευτικά ενδύματα/μέσα ατομικής προστασίας για τα μάτια/πρόσωπο.",
+     "superseded": "Να φοράτε προστατευτικά γάντια/προστατευτικά ενδύματα/μέσα ατομικής προστασίας για τα μάτια/το πρόσωπο/τα αυτιά/…",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "en": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Wear protective gloves/protective clothing/eye protection/face protection/hearing protection/…",
+     "superseded": "Wear protective gloves/protective clothing/eye protection/face protection.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "es": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Llevar guantes/ropa de protección/equipo de protección para los ojos/la cara/los oídos/...",
+     "superseded": "Llevar guantes/prendas/gafas/máscara de protección.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Kanda kaitsekindaid/kaitserõivastust/kaitseprille/kaitsemaski/kuulmiskaitsevahendeid",
+     "superseded": "Kanda kaitsekindaid/kaitserõivastust/kaitseprille/kaitsemaski.",
+     "defects": [
+      "the sentence ends 'd' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "fi": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Käytä suojakäsineitä/suojavaatetusta/silmiensuojainta/kasvonsuojainta/kuulonsuojainta/…",
+     "superseded": "Käytä suojakäsineitä/suojavaatetusta/silmiensuojainta/kasvonsuojainta.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "fr": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Porter des gants de protection/des vêtements de protection/un équipement de protection des yeux/du visage/une protection auditive/…",
+     "superseded": "Porter des gants de protection/des vêtements de protection/un équipement de protection des yeux/du visage.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Caith lámhainní cosanta/éadaí cosanta/cosaint súile/cosaint aghaidhe.",
+     "superseded": "Caith lámhainní cosanta/éadaí cosanta/cosaint súile/cosaint aghaidhe.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Nositi zaštitne rukavice/zaštitno odijelo/zaštitu za oči/zaštitu za lice/zaštitu sluha/…",
+     "superseded": "Nositi zaštitne rukavice/zaštitno odijelo/zaštitu za oči/zaštitu za lice.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hu": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Védőkesztyű/védőruha/szemvédő/arcvédő/hallásvédelem/... használata kötelező.",
+     "superseded": "Védőkesztyű/védőruha/szemvédő/arcvédő használata kötelező.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Indossare guanti/indumenti protettivi/proteggere gli occhi/proteggere il viso/proteggere l'udito/...",
+     "superseded": "Indossare guanti/indumenti protettivi/Proteggere gli occhi/il viso.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Mūvėti apsaugines pirštines/dėvėti apsauginius drabužius/naudoti akių (veido) apsaugos priemones/naudoti klausos apsaugos priemones/…",
+     "superseded": "Mūvėti apsaugines pirštines/dėvėti apsauginius drabužius/naudoti akių (veido) apsaugos priemones.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Izmantot aizsargcimdus/aizsargapģērbu/acu aizsargus/sejas aizsargus.",
+     "superseded": "Izmantot aizsargcimdus/aizsargdrēbes/acu aizsargus/sejas aizsargus.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Ilbes ingwanti protettivi/ilbies protettiv/protezzjoni għall-għajnejn/protezzjoni għall-wiċċ/protezzjoni għas-smigħ/…",
+     "superseded": "Ilbes ingwanti protettivi/ilbies protettiv/protezzjoni għall-għajnejn/protezzjoni għall-wiċċ.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Draag beschermende handschoenen/beschermende kleding/oogbescherming/gelaatsbescherming/gehoorbescherming ...",
+     "superseded": "Beschermende handschoenen/beschermende kleding/oogbescherming/gelaatsbescherming dragen.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Stosować rękawice ochronne/odzież ochronną/ochronę oczu/ochronę twarzy/ochronę słuchu/…",
+     "superseded": "Stosować rękawice ochronne/odzież ochronną/ochronę oczu/ochronę twarzy.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Usar luvas de proteção/vestuário de proteção/proteção ocular/proteção facial/proteção auditiva/…",
+     "superseded": "Usar luvas de protecção/vestuário de protecção/protecção ocular/protecção facial.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "A se purta mănuși de protecție/îmbrăcăminte de protecție/echipament de protecție a ochilor/echipament de protecție a feței/protecție a auzului/…",
+     "superseded": "Purtați mănuși de protecție/îmbrăcăminte de protecție/echipament de protecție a ochilor/echipament de protecție a feței.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Noste ochranné rukavice/ochranný odev/ochranné okuliare/ochranu tváre/prostriedky na ochranu sluchu/…",
+     "superseded": "Noste ochranné rukavice/ochranný odev/ochranné okuliare/ochranu tváre.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Nositi zaščitne rokavice/zaščitno obleko/zaščito za oči/zaščito za obraz/opremo za varovanje sluha/…",
+     "superseded": "Nositi zaščitne rokavice/zaščitno obleko/zaščito za oči/zaščito za obraz.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Använd skyddshandskar/skyddskläder/ögonskydd/ansiktsskydd/hörselskydd/...",
+     "superseded": "Använd skyddshandskar/skyddskläder/ögonskydd/ansiktsskydd.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P282": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "cs": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Používejte ochranné rukavice proti chladu a buď obličejový štít, nebo ochranné brýle.",
+     "superseded": "Používejte ochranné rukavice proti chladu a buď obličejový štít, anebo ochranné brýle.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Utilizzare guanti termici e schermo facciale o protezione per gli occhi.",
+     "superseded": "Utilizzare guanti termici isolanti e schermo facciale o protezione per gli occhi.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P284": {
+   "part": "Part 1",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "Part 1 was last amended by M12, Part 2 by M4",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "[Σε περίπτωση ανεπαρκούς αερισμού] να φοράτε μέσα ατομικής προστασίας της αναπνοής.",
+     "superseded": "[Σε περίπτωση ανεπαρκούς αερισμού] χρησιμοποιείστε μέσα ατομικής προστασίας της αναπνοής.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "[Ebapiisava ventilatsiooni korral] kanda hingamisteede kaitsevahendeid.",
+     "superseded": "[Ebapiisava ventilatsiooni korral] kanda hingamisteede kaitsevahendit.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "[Mura leor an aeráil] caith cosaint riospráide.",
+     "superseded": "[Mura leor an aeráil] caith cosaint riospráide.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "[U slučaju nedovoljnog prozračivanja] nositi sredstva za zaštitu dišnog sustava.",
+     "superseded": "[U slučaju nedovoljne ventilacije] nositi sredstva za zaštitu dišnog sustava.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P302": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "I gCÁS TEAGMHÁLA LEIS AN gCRAICEANN:",
+     "superseded": "I gCÁS TEAGMHÁLA LEIS AN gCRAICEANN:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "JEKK FUQ IL-ĠILDA:",
+     "superseded": "F'KAŻ TA' KUNTATT MAL-ĠILDA:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P304": {
+   "part": "Part 1",
+   "act": "M2",
+   "act_title": "COMMISSION REGULATION (EU) No 286/2011 of 10 March 2011",
+   "note": "Part 1 was last amended by M2, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "ga": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "not_on_file",
+     "text": "MÁ IONANÁLAÍTEAR:",
+     "superseded": "MÁ IONANÁLAÍTEAR:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "JEKK TITTIEĦED BIN-NIFS:",
+     "superseded": "JEKK JINĠIBED MAN-NIFS:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "PRI VDÝCHNUTÍ:",
+     "superseded": "PO VDÝCHNUTÍ:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P305": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "lv": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "IEKĻŪSTOT ACĪS:",
+     "superseded": "SASKARĒ AR ACĪM:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P306": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "pl": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "W PRZYPADKU KONTAKTU Z ODZIEŻĄ:",
+     "superseded": "W PRZYPADKU DOSTANIA SIĘ NA ODZIEŻ:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P308": {
+   "part": "Part 1",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "Part 1 was last amended by M4, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Σε περίπτωση έκθεσης ή πιθανής έκθεσης:",
+     "superseded": "ΣΕ ΠΕΡΙΠΤΩΣΗ έκθεσης ή πιθανής έκθεσης:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "not_on_file",
+     "text": "I gCÁS nochta nó má mheastar a bheith nochtaithe:",
+     "superseded": "I gCÁS nochta nó má mheastar a bheith nochtaithe:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Esant poveikiui arba jeigu numanomas poveikis:",
+     "superseded": "Esant sąlyčiui arba jeigu numanomas sąlytis:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P310": {
+   "part": "Part 2",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "both Parts come from the same act (M4)",
+   "corroborated": true,
+   "languages": {
+    "es": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Llamar inmediatamente a un CENTRO DE TOXICOLOGĺA/médico/…",
+     "superseded": "Llamar inmediatamente a un CENTRO DE TOXICOLOGÍA/médico/…",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Võtta viivitamata ühendust MÜRGISTUSTEABEKESKUSE/arstiga…",
+     "superseded": "Võtta viivitamata ühendust MÜRGISTUSTEABEKESKUSEGA/arstiga/…",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P311": {
+   "part": "Part 2",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "both Parts come from the same act (M4)",
+   "corroborated": true,
+   "languages": {
+    "es": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Llamar a un CENTRO DE TOXICOLOGĺA/médico/…",
+     "superseded": "Llamar a un CENTRO DE TOXICOLOGÍA/médico/…",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Võtta ühendust MÜRGISTUSTEABEKESKUSE/arstiga…",
+     "superseded": "Võtta ühendust MÜRGISTUSTEABEKESKUSEGA/arstiga/…",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P312": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "da": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Kontakt GIFTLINJEN/læge/… i tilfælde af ubehag.",
+     "superseded": "Ring til GIFTLINJEN/læge/… i tilfælde af ubehag.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P313": {
+   "part": "Part 1",
+   "act": "M2",
+   "act_title": "COMMISSION REGULATION (EU) No 286/2011 of 10 March 2011",
+   "note": "Part 1 was last amended by M2, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "ga": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "not_on_file",
+     "text": "Faigh comhairle/cúram liachta.",
+     "superseded": "Faigh comhairle/cúram liachta.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "not_on_file",
+     "text": "Lūdziet mediķu palīdzību",
+     "superseded": "Lūdziet palīdzību mediķiem.",
+     "defects": [
+      "the sentence ends 'u' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "Sib għajnuna medika.",
+     "superseded": "Ikkonsulta tabib.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P314": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "sk": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ak pociťujete zdravotné problémy, vyhľadajte lekársku pomoc/starostlivosť.",
+     "superseded": "Pri zdravotných problémoch vyhľadajte lekársku pomoc/starostlivosť.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P315": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "mt": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ikkonsulta tabib minnufih.",
+     "superseded": "Ikkonsulta tabib minnufiħ.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P320": {
+   "part": "Part 2",
+   "act": "C5",
+   "act_title": "Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217)",
+   "note": "acts and markers disagree (Part 1: act M12 vs marker M12; Part 2: act B vs marker C5) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Χρειάζεται επειγόντως ειδική αγωγή (βλέπε … στην ετικέτα).",
+     "superseded": "Χρειάζεται επειγόντως ειδική αγωγή (βλ. … σε αυτή την ετικέτα).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Nõuab kiiret eriravi (vt…etiketil).",
+     "superseded": "Nõuab viivitamatut eriravi (vt … käesoleval etiketil).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Tá sé práinneach go bhfaightear cóir leighis ar leith (féach … ar an lipéad seo).",
+     "superseded": "Tá sé práinneach go bhfaightear cóir leighis ar leith (féach … ar an lipéad seo).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Hitno je potrebna posebna liječnička obrada (vidjeti … na ovoj naljepnici).",
+     "superseded": "Hitno je potrebna posebna liječnička obrada (vidi … na ovoj naljepnici).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Steidzami nepieciešama īpaša medicīniskā palīdzība (sk. … uz etiķetes).",
+     "superseded": "Steidzami nepieciešama īpaša medicīniskā palīdzība (skat. … uz šīs etiķetes).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Trattament speċifiku huwa urġenti (ara … fuq din it-tikketta).",
+     "superseded": "Trattament speċifiku hu urġenti (ara … fuq din it-tikketta).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Je nevyhnutné odborné ošetrenie (pozri …na etikete).",
+     "superseded": "Odborné ošetrenie je naliehavé (pozri … na etikete).",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P321": {
+   "part": "Part 1",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "Part 1 was last amended by M12, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "cs": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Odborné ošetření (viz … na štítku).",
+     "superseded": "Odborné ošetření (viz … na tomto štítku).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Χρειάζεται ειδική αγωγή (βλέπε … στην ετικέτα).",
+     "superseded": "Χρειάζεται ειδική αγωγή (βλ. … σε αυτή την ετικέτα).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Cóir liachta ar leith (féach … ar an lipéad seo).",
+     "superseded": "Cóir liachta ar leith (féach … ar an lipéad seo).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Posebna liječnička obrada (vidjeti … na ovoj naljepnici).",
+     "superseded": "Potrebna je posebna liječnička obrada (vidi … na ovoj naljepnici).",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Īpaša medicīniskā palīdzība (sk. … uz etiķetes).",
+     "superseded": "Īpaša medicīniskā palīdzība (skat. … uz šīs etiķetes).",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P330": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ξεπλύνετε το στόμα.",
+     "superseded": "Ξεπλύντε το στόμα.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P332": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "I gcás greannú craicinn:",
+     "superseded": "I gcás greannú craicinn:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "U slučaju nadraživanja kože:",
+     "superseded": "U slučaju nadražaja kože:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Ja rodas ādas kairinājums:",
+     "superseded": "Ja rodas ādas iekaisums:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "F'każ ta' irritazzjoni tal-ġilda:",
+     "superseded": "Jekk ikun hemm irritazzjoni tal-ġilda:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Ak sa prejaví podráždenie kože:",
+     "superseded": "Ak sa prejaví podráždenie pokožky:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P333": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "acts and markers disagree (Part 1: act M2 vs marker C4; Part 2: act B vs marker B) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "da": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ved hudirritation eller udslet:",
+     "superseded": "Ved hudirritation eller udslæt :",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "fr": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "En cas d’irritation/éruption cutanée:",
+     "superseded": "En cas d’irritation ou d’éruption cutanée:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "not_on_file",
+     "text": "I gcás greannú nó grís craicinn:",
+     "superseded": "I gcás greannú nó grís craicinn:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "Ja rodas ādas kairinājums vai izsitumi",
+     "superseded": "Ja rodas ādas iekaisums vai izsitumi:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "F’każ ta’ irritazzjoni jew raxx tal-ġilda:",
+     "superseded": "Jekk ikun hemm irritazzjoni jew raxx tal-ġilda:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "Ak sa objaví podráždenie kože alebo vyrážky:",
+     "superseded": "Ak sa prejaví podráždenie pokožky alebo sa vytvoria vyrážky:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P334": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "mt": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Daħħal fl-ilma kiesaħ [jew kebbeb f'faxex imxarrbin].",
+     "superseded": "Daħħal fl-ilma frisk [jew kebbeb f'faxex imxarrbin].",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P335": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "hu": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "A bőrre lazán tapadó szemcséket óvatosan le kell kefélni.",
+     "superseded": "A bőre lazán tapadó szemcséket óvatosan le kell kefélni.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Rimuovere le particelle depositate sulla pelle.",
+     "superseded": "Rimuovere dalla pelle le particelle.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Noberzt no ādas nepiestiprinātās daļiņas.",
+     "superseded": "Noberziet brīvās daļiņas no ādas.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Z pokožky oprášte sypké čiastočky.",
+     "superseded": "Z pokožky oprášte sypké častice.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P336": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "bg": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Размразете замръзналите части в хладка вода. Не разтривайте засегнатото място.",
+     "superseded": "Размразете замръзналите части с хладка вода. Не разтривайте засегнатата област.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "en": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "errata",
+     "text": "Thaw frosted parts with lukewarm water. Do no rub affected area.",
+     "superseded": "Thaw frosted parts with lukewarm water. Do not rub affected area.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Sulatada külmunud piirkonnad leige veega. Kannatada saanud piirkonda mitte hõõruda.",
+     "superseded": "Sulatada külmunud osad leiges vees. Kannatada saanud piirkonda mitte hõõruda.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ħoll il-partijiet kiesħa bl-ilma fietel. Togħrokx il-parti affettwata.",
+     "superseded": "Ħoll il-partijiet friżati bl-ilma fietel. Togħrokx il-parti affettwata.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Bevroren lichaamsdelen met lauw water ontdooien. Niet wrijven op de betrokken plaatsen.",
+     "superseded": "Bevroren lichaamsdelen met lauw water ontdooien. Niet wrijven.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P337": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "mt": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Jekk l-irritazzjoni ta' l-għajnejn tibqa’:",
+     "superseded": "Jekk l-irritazzjoni ta' l-għajnejn tippersisti:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P338": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "hr": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ukloniti kontaktne leće ukoliko ih nosite i ako se one lako uklanjaju. Nastaviti ispiranje.",
+     "superseded": "Ukloniti kontaktne leće ako ih nosite i ako se one lako uklanjaju. Nastaviti ispiranje.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Izņemiet kontaktlēcas, ja tās ir ievietotas un to ir viegli izdarīt. Turpiniet skalot.",
+     "superseded": "Izņemt kontaktlēcas, ja tās ir ievietotas un ja to var vienkārši izdarīt. Turpināt skalot.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pl": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Wyjąć soczewki kontaktowe, jeżeli są i można je łatwo usunąć. Nadal płukać.",
+     "superseded": "Wyjąć soczewki kontaktowe, jeżeli są i można je łatwo usunąć. Kontynuować płukanie.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pt": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Se usar lentes de contacto, retire-as, se tal lhe for possível. Continue a enxaguar.",
+     "superseded": "Se usar lentes de contacto, retire-as, se tal lhe for possível. Continuar a enxaguar.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ak používate kontaktné šošovky a ak je to možné, odstráňte ich. Pokračujte vo vyplachovaní.",
+     "superseded": "Ak používate kontaktné šošovky a je to možné, odstráňte ich. Pokračujte vo vyplachovaní.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sl": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Odstranite kontaktne leče, če jih imate in če to lahko storite brez težav. Nadaljujte z izpiranjem.",
+     "superseded": "Odstranite kontaktne leče, če jih imate in če to lahko stori brez težav. Nadaljujte z izpiranjem.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P340": {
+   "part": "Part 2",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "both Parts come from the same act (M4)",
+   "corroborated": true,
+   "languages": {
+    "hr": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Premjestiti osobu na svježi zrak i postaviti ju u položaj koji olakšava disanje.",
+     "superseded": "Premjestiti unesrećenog na svježi zrak, umiriti ga i postaviti u položaj koji olakšava disanje.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P342": {
+   "part": "Part 1",
+   "act": "M2",
+   "act_title": "COMMISSION REGULATION (EU) No 286/2011 of 10 March 2011",
+   "note": "Part 1 was last amended by M2, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "ga": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "not_on_file",
+     "text": "I gcás siomptóm riospráide:",
+     "superseded": "I gcás siomptóm riospráide:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "U slučaju respiratornih simptoma:",
+     "superseded": "Pri otežanom disanju:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "Ja rodas elpas trūkuma simptomi:",
+     "superseded": "Ja rodas elpošanas traucējumu simptomi:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "Jekk ikollok sintomi respiratorji:",
+     "superseded": "Jekk tkun qed tbati minn sintomi respiratorji:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M2",
+     "status": "ok",
+     "text": "Pri ťažkostiach s dýchaním:",
+     "superseded": "Pri sťaženom dýchaní:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P351": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ξεπλύνετε προσεκτικά με νερό για αρκετά λεπτά.",
+     "superseded": "Ξεπλύντε προσεκτικά με νερό για αρκετά λεπτά.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P353": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "sl": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Kožo izprati z vodo [ali prho].",
+     "superseded": "Izprati kožo z vodo [ali prho].",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P360": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "cs": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Kontaminovaný oděv a kůži okamžitě omyjte velkým množstvím vody a potom oděv odložte.",
+     "superseded": "Před svlečením okamžitě opláchněte kontaminovaný oděv a kůži velkým množstvím vody.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "el": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Ξεπλύνετε αμέσως τα μολυσμένα ρούχα και την επιδερμίδα με άφθονο νερό πριν αφαιρέσετε τα ρούχα.",
+     "superseded": "Ξεπλύντε αμέσως τα μολυσμένα ρούχα και την επιδερμίδα με άφθονο νερό πριν αφαιρέσετε τα ρούχα.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P362": {
+   "part": "Part 2",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "both Parts come from the same act (M4)",
+   "corroborated": true,
+   "languages": {
+    "et": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "Võtta saastunud rõivad seljast.",
+     "superseded": "Võtta seljast saastunud rõivad.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P363": {
+   "part": "Part 1",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "Part 1 was last amended by M4, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "da": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Alt tilsmudset tøj skal vaskes inden genanvendelse.",
+     "superseded": "Tilsmudset tøj skal vaskes, før det kan anvendes igen.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "el": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Πλύντε τα μολυσμένα ρούχα πριν τα ξαναχρησιμοποιήσετε.",
+     "superseded": "Πλύνετε τα μολυσμένα ενδύματα πριν τα ξαναχρησιμοποιήσετε.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Pesta saastunud rõivad enne järgmist kasutamist.",
+     "superseded": "Saastunud rõivad enne järgmist kasutamist pesta.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "not_on_file",
+     "text": "Nigh éadaí éillithe sula ndéanfar iad a athúsáid.",
+     "superseded": "Nigh éadaí éillithe sula ndéanfar iad a athúsáid.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Aħsel il-ħwejjeġ kontaminati qabel terġa’ tilbishom.",
+     "superseded": "Aħsel il-ħwejjeġ kontaminati qabel terġa’ tużahom.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M4",
+     "status": "ok",
+     "text": "Spălați îmbrăcămintea contaminată înainte de reutilizare.",
+     "superseded": "Spălați îmbracămintea contaminată, înainte de reutilizare.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P364": {
+   "part": "Part 2",
+   "act": "M4",
+   "act_title": "COMMISSION REGULATION (EU) No 487/2013 of 8 May 2013",
+   "note": "both Parts come from the same act (M4)",
+   "corroborated": true,
+   "languages": {
+    "hr": {
+     "part": "Part 2",
+     "act": "M4",
+     "status": "ok",
+     "text": "I oprati je prije ponovne uporabe.",
+     "superseded": "I oprati prije ponovne uporabe.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P371": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "I gcás mórdhóiteáin agus má tá cainníochtaí móra i gceist:",
+     "superseded": "I gcás mórdhóiteáin agus má tá cainníochtaí móra i gceist:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "In caso di incendio grave e di grandi quantità:",
+     "superseded": "In caso di incendio grave e di quantità rilevanti:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Liela ugunsgrēka un liela apjoma gadījumā:",
+     "superseded": "Ugunsgrēka un lielu apjomu gadījumā:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "F'każ ta' nirien kbar u kwantitajiet kbar:",
+     "superseded": "F’każ ta' nar kbir u kwantitajiet kbar:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Em caso de incêndio importante e grandes quantidades:",
+     "superseded": "Em caso de incêndio importante e de grandes quantidades:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "În caz de incendiu de proporții și de cantități mari:",
+     "superseded": "În caz de incendiu de proporții și de cantități mari de produs:",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "V prípade veľkého požiaru a veľkých množstiev:",
+     "superseded": "V prípade veľkého požiaru a veľkého množstva:",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P373": {
+   "part": "Part 1",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "Part 1 was last amended by M12, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "ΜΗΝ προσπαθείτε να κατασβέσετε την πυρκαγιά, όταν η φωτιά πλησιάζει σε εκρηκτικά.",
+     "superseded": "ΜΗΝ προσπαθείτε να σβήσετε την πυρκαγιά, όταν η φωτιά πλησιάζει σε εκρηκτικά.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "NÁ DÉAN an dóiteán a chomhrac má shroicheann sé pléascáin.",
+     "superseded": "NÁ DÉAN an dóiteán a chomhrac má shroicheann sé pléascáin.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hr": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "NE gasiti vatru kada plamen zahvati eksplozive.",
+     "superseded": "NE gasiti vatru kada plamen može zahvatiti eksplozive.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P375": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Téigh i gcianghleic leis an dóiteán mar gheall ar an mbaol pléasctha.",
+     "superseded": "Téigh i gcianghleic leis an dóiteán mar gheall ar an mbaol pléasctha.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Dzēst uguni no attāluma eksplozijas riska dēļ.",
+     "superseded": "Dzēst ugunsgrēku no attāluma eksplozijas riska dēļ.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Op afstand blussen in verband met ontploffingsgevaar.",
+     "superseded": "Op afstand blussen omwille van ontploffingsgevaar.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "A se stinge incendiul de la distanță din cauza pericolului de explozie.",
+     "superseded": "Stingeți incendiul de la distanță din cauza pericolului de explozie.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P376": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "lv": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Apstādināt noplūdi, ja to var izdarīt drošā veidā.",
+     "superseded": "Apturiet noplūdi, ja to darīt ir droši.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P377": {
+   "part": "Part 2",
+   "act": "C5",
+   "act_title": "Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217)",
+   "note": "acts and markers disagree (Part 1: act M19 vs marker M19; Part 2: act B vs marker C5) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Διαρροή φλεγόμενου αερίου: Μην την σβήσετε, εκτός εάν μπορείτε να σταματήσετε τη διαρροή χωρίς κίνδυνο.",
+     "superseded": "Διαρροή φλεγόμενου αερίου: Μην την κατασβέσετε, εκτός εάν μπορείτε να σταματήσετε τη διαρροή χωρίς κίνδυνο.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Tine gháis ag sceitheadh: Ná múch, mura i ndán agus gur féidir stop a chur leis an sceitheadh go sábháilte.",
+     "superseded": "Tine gháis ag sceitheadh: Ná múch, mura i ndán agus gur féidir stop a chur leis an sceitheadh go sábháilte.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Ugunsgrēks gāzes noplūdes rezultātā: Nedzēst, ja vien noplūdi nevar drošā veidā apstādināt.",
+     "superseded": "Degšanas gāzes noplūde: Nedzēst, ja vien noplūdi var apstādināt drošā veidā.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Nar minħabba ħruġ ta' gass: Titfihx, sakemm it-tnixxija tista' titwaqqaf mingħajr periklu.",
+     "superseded": "Tnixxija ta' gass tan-nar: Tippruvax titfiha, sakemm it-tnixxija ma tkunx tista' titwaqqaf bla periklu.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "W przypadku pożaru w wyniku wycieku gazu: Nie gasić, o ile nie można bezpiecznie zahamować wycieku.",
+     "superseded": "W przypadku płonięcia wyciekającego gazu: Nie gasić, jeżeli nie można bezpiecznie zahamować wycieku.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Incendiu cu scurgeri de gaze: A nu se încerca stingerea dacă scurgerea nu poate fi oprită în siguranță.",
+     "superseded": "Incendiu cauzat de o scurgere de gaz: nu încercați să stingeți, decât dacă scurgerea poate fi oprită în siguranță.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sl": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Požar zaradi uhajanja plina: Ne gasiti, če puščanja ni mogoče varno ustaviti.",
+     "superseded": "Požar zaradi uhajanja plina: Ne gasiti, če puščanja ni mogoče varno zaustaviti.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P378": {
+   "part": "Part 1",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "Part 1 was last amended by M12, Part 2 by M4",
+   "corroborated": true,
+   "languages": {
+    "de": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "… zum Löschen … verwenden.",
+     "superseded": "… zum Löschen verwenden.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "el": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Χρησιμοποιήστε… για την κατάσβεση.",
+     "superseded": "Χρησιμοποιείστε… για να κατασβήσετε.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Úsáid … le haghaidh múchta.",
+     "superseded": "Úsáid … le haghaidh múchta.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "hu": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Az oltáshoz … használandó.",
+     "superseded": "Oltásra …használandó.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Estinguere con…",
+     "superseded": "Utilizzare….per estinguere.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Gesinimui naudoti.",
+     "superseded": "Gesinimui naudoti …",
+     "defects": [
+      "1 fill-in(s) fewer than the same sentence has in the other Part"
+     ],
+     "act_confirms_defect": true
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Utilizați … pentru stingere.",
+     "superseded": "A se utiliza… pentru a stinge.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sl": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Za gašenje uporabiti ….",
+     "superseded": "Za gašenje se uporabi…",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P380": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "cs": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Vykliďte prostor.",
+     "superseded": "Vykliďte _roctor.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Aslonnaigh gach duine as an limistéar.",
+     "superseded": "Aslonnaigh gach duine as an limistéar.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "A se evacua zona.",
+     "superseded": "Evacuați zona.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P381": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by M12",
+   "corroborated": true,
+   "languages": {
+    "bg": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "В случай на теч отстранете всички източници на запалване.",
+     "superseded": "В случай на изтичане премахнете всички източници на запалване.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "I gcás sceite, díothaigh gach foinse adhainte.",
+     "superseded": "I gcás sceite, díothaigh gach foinse adhainte.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Atsiradus nuotėkiui pašalinti visus uždegimo šaltinius.",
+     "superseded": "Nuotėkio atveju, pašalinti visus uždegimo šaltinius.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "V prípade úniku odstráňte všetky zdroje vznietenia.",
+     "superseded": "V prípade úniku odstráňte všetky zdroje zapálenia.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P390": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Σκουπίστε τη χυμένη ποσότητα για να προλάβετε υλικές ζημιές.",
+     "superseded": "Σκουπίστε την ουσία που χύθηκε για να προλάβετε υλικές ζημιές.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Mahavoolanud toode absorbeerida, et see ei kahjustaks teisi materjale.",
+     "superseded": "Mahavoolanud aine absorbeerida, et see ei kahjustaks teisi materjale.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Absorbuoti išsiliejusią medžiagą, siekiant išvengti materialinės žalos.",
+     "superseded": "Absorbuokite išsiliejusią medžiagą, siekiant išvengti materialinės žalos.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P391": {
+   "part": "Part 2",
+   "act": "C5",
+   "act_title": "Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217)",
+   "note": "acts and markers disagree (Part 1: act B vs marker B; Part 2: act B vs marker C5) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "el": {
+     "part": "Part 2",
+     "act": "C5",
+     "status": "ok",
+     "text": "Μαζέψτε τη χυμένη ποσότητα.",
+     "superseded": "Μαζέψτε την ουσία ή το προϊόν που χύθηκε",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Mahavoolanud toode kokku koguda.",
+     "superseded": "Mahavoolanud aine kokku koguda.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Raccogliere il materiale fuoriuscito.",
+     "superseded": "Raccogliere la fuoriuscita.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P401": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "acts and markers disagree (Part 1: act M19 vs marker M19; Part 2: act M12 vs marker B) - Part 2 kept",
+   "corroborated": false,
+   "languages": {
+    "sv": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Förvaras enligt … .",
+     "superseded": "Förvaras i enlighet med ….",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P403": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Stóráil in áit dhea-aeráilte.",
+     "superseded": "Stóráil in áit dhea-aeráilte.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Glabāt labi vēdināmās telpās.",
+     "superseded": "Glabāt labi vēdināmā vietā.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P404": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "lv": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Glabāt slēgtā tvertnē.",
+     "superseded": "Glabāt aizvērtā tvertnē.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P405": {
+   "part": "Part 2",
+   "act": "B",
+   "act_title": "REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1)",
+   "note": "both Parts come from the same act (B)",
+   "corroborated": true,
+   "languages": {
+    "et": {
+     "part": "Part 2",
+     "act": "B",
+     "status": "ok",
+     "text": "Hoida lukustatult.",
+     "superseded": "Hoida luku taga.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P406": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "es": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Almacenar en un recipiente resistente a la corrosión /… en un recipiente con revestimiento interior resistente.",
+     "superseded": "Almacenar en un recipiente resistente a la corrosión/en un recipiente … con revestimiento interior resistente.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P411": {
+   "part": "Part 1",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "Part 1 was last amended by M12, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "es": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Almacenar a una temperatura que no exceda de … °C/…°F.",
+     "superseded": "Almacenar a temperaturas no superiores a … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Mitte hoida temperatuuril üle … °C / …°F.",
+     "superseded": "Hoida temperatuuril mitte üle … °C/… °F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Stóráil ag teocht nach airde ná … °C/…°F.",
+     "superseded": "Stóráil ag teocht nach airde ná … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Glabāt temperatūrā, kas nepārsniedz …°C/…°F.",
+     "superseded": "Uzglabāt temperatūrā, kas nepārsniedz … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Aħżen f'temperaturi li ma jaqbżux …°C / …°F.",
+     "superseded": "Aħżen f’temperaturi li ma jeċċedux … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Nevystavujte teplotám nad … °C/… °F.",
+     "superseded": "Uchovávajte pri teplotách do … °C/…°F",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P412": {
+   "part": "Part 1",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "Part 1 was last amended by M12, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "da": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Må ikke udsættes for temperaturer på over 50 °C/122 °F",
+     "superseded": "Må ikke udsættes for en temperatur, som overstiger 50 °C/122°F.",
+     "defects": [
+      "the sentence ends 'F' where the other Part ends it with a full stop"
+     ],
+     "act_confirms_defect": true
+    },
+    "es": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "No exponer a una temperatura superior a 50 °C/122 °F.",
+     "superseded": "No exponer a temperaturas superiores a 50 °C/122°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Ná nocht do theocht níos airde ná 50 °C/122°F.",
+     "superseded": "Ná nocht do theocht níos airde ná 50 °C/122°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Tesponix għal temperatura ogħla minn 50 °C / 122 °F.",
+     "superseded": "Tesponix għal temperaturi li jeċċedu l-50 °C/122°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P413": {
+   "part": "Part 1",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "Part 1 was last amended by M12, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "bg": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "При насипни количества, надвишаващи … kg/… фунта, да се съхранява при температури, не по-високи от …°C/…°F.",
+     "superseded": "При насипни количества, по-големи от … kg/… фунта, да се съхранява при температури, не по-високи от … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "es": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Almacenar las cantidades a granel de más de … kg/… lbs a una temperatura que no exceda de … °C/… °F.",
+     "superseded": "Almacenar las cantidades a granel superiores a … kg/… lbs a temperaturas no superiores a … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Kogust, mis ületab …kg/ …naela, hoida temperatuuril mitte üle … °C/… °F.",
+     "superseded": "Kogust, mis on suurem kui … kg/… naela, hoida temperatuuril mitte üle … °C/… °F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Stóráil bulcmhaiseanna os cionn … kg/… lb ag teocht nach airde ná … °C/…°F.",
+     "superseded": "Stóráil bulcmhaiseanna os cionn … kg/… lb ag teocht nach airde ná … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Conservare le rinfuse di peso superiore a … kg/… lb a temperature non superiori a … C/…°F.",
+     "superseded": "Conservare le rinfuse di peso superiore a …kg/…lb a temperature non superiori a … °C/°F.",
+     "defects": [
+      "a temperature unit without its degree sign"
+     ],
+     "act_confirms_defect": true
+    },
+    "lv": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Lielus apjomus, kas pārsniedz … kg/… lbs, glabāt temperatūrā, kas nepārsniedz …°C/…°F.",
+     "superseded": "Lielus apjomus, kas pārsniedz … kg/… lbs, uzglabāt temperatūrā, kas nepārsniedz … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Aħżen volumi ta' massa ta' mhux aktar minn … kg /… lbs f'temperaturi mhux ogħla minn … °C /… °F.",
+     "superseded": "Aħżen il-kwantitajiet f’massa ta' akbar minn … kg/… lbs f’temperaturi ta' mhux aktar minn … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "nl": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Bulkmateriaal, indien meer dan … kg, bij temperaturen van maximaal …°C/…°F bewaren.",
+     "superseded": "Bulkmateriaal, indien meer dan … kg/… lbs, bij temperaturen van maximaal … °C bewaren.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "pl": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "not_on_file",
+     "text": "Przechowywać luzem masy przekraczające … kg/… funtów w temperaturze nieprzekraczającej °C/…°F.",
+     "superseded": "Przechowywać luzem masy przekraczające … kg/… funtów w temperaturze nieprzekraczającej … °C/…°F.",
+     "defects": [
+      "1 fill-in(s) fewer than the same sentence has in the other Part"
+     ],
+     "act_confirms_defect": true
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Depozitați cantitățile în vrac mai mari de… kg/… lb la temperaturi care să nu depășească … °C/… °F.",
+     "superseded": "Depozitați cantitățile în vrac mai mari de … kg/… lbs la temperaturi care să nu depășească … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 1",
+     "act": "M12",
+     "status": "ok",
+     "text": "Veľké množstvá s hmotnosťou nad … kg/… lbs uchovávajte pri teplote do … °C/…°F.",
+     "superseded": "Veľké množstvo s hmotnosťou nad … kg/… lbs uchovávajte pri teplote do … °C/…°F.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
+  },
+  "P501": {
+   "part": "Part 1",
+   "act": "M19",
+   "act_title": "COMMISSION REGULATION (EU) 2019/521 of 27 March 2019",
+   "note": "Part 1 was last amended by M19, Part 2 by B",
+   "corroborated": true,
+   "languages": {
+    "da": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Indhold/beholder bortskaffes i …",
+     "superseded": "Indholdet/beholderen bortskaffes i …",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "es": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Eliminar el contenido o el recipiente en …",
+     "superseded": "Eliminar el contenido/el recipiente en …",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ga": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Diúscair an t-ábhar/an coimeádán i …",
+     "superseded": "Diúscair an t-ábhar/an coimeádán i …",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "it": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "Smaltire il contenuto/recipiente in…",
+     "superseded": "Smaltire il prodotto/recipiente in …",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "ro": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "ok",
+     "text": "A se elimina conținutul/recipientul la …",
+     "superseded": "Aruncați conținutul/recipientul la …",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sv": {
+     "part": "Part 1",
+     "act": "M19",
+     "status": "not_on_file",
+     "text": "Innehållet/behållaren lämnas till",
+     "superseded": "Innehållet/behållaren lämnas till…",
+     "defects": [
+      "1 fill-in(s) fewer than the same sentence has in the other Part"
+     ],
+     "act_confirms_defect": true
+    }
+   }
+  },
+  "P502": {
+   "part": "Part 2",
+   "act": "M12",
+   "act_title": "COMMISSION REGULATION (EU) 2016/918 of 19 May 2016",
+   "note": "both Parts come from the same act (M12)",
+   "corroborated": true,
+   "languages": {
+    "da": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Indhent oplysninger om genindvinding/genanvendelse hos fabrikanten/leverandøren.",
+     "superseded": "Indhent oplysninger om genvinding/genanvendelse hos producenten/leverandøren",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "de": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Informationen zur Wiederverwendung oder Wiederverwertung beim Hersteller oder Lieferanten erfragen.",
+     "superseded": "Informationen zur Wiederverwendung oder Wiederverwertung bei Hersteller oder Lieferant erfragen",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "et": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Hankida valmistajalt või tarnijalt teavet kemikaali taaskasutamise või ringlussevõtu kohta.",
+     "superseded": "Hankida tootjalt või tarnijalt teavet kemikaali taaskasutamise või ringlussevõtu kohta",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "lt": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Kreiptis į gamintoją arba tiekėją dėl informacijos apie surinkimą arba recirkuliavimą.",
+     "superseded": "Kreiptis į gamintoją arba tiekėją dėl informacijos apie surinkimą ar recirkuliavimą",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "mt": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Irreferi għall-manifattur jew il-fornitur għal informazzjoni dwar l-irkupru jew ir-riċiklaġġ.",
+     "superseded": "Irreferi għall-manifattur/fornitur għall-informazzjoni dwar l-irkupru jew ir-riċiklaġġ",
+     "defects": [],
+     "act_confirms_defect": null
+    },
+    "sk": {
+     "part": "Part 2",
+     "act": "M12",
+     "status": "ok",
+     "text": "Obráťte sa na výrobcu alebo dodávateľa s požiadavkou o informácie týkajúce sa obnovenia alebo recyklácie.",
+     "superseded": "Obráťte sa na výrobcu alebo dodávateľa s požiadavkou o informácie týkajúce sa zhodnocovania alebo recyklácie.",
+     "defects": [],
+     "act_confirms_defect": null
+    }
+   }
   }
  }
 }
