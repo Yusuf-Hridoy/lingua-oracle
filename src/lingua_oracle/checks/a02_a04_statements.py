@@ -80,12 +80,15 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
             continue
 
         loose_end = ctx.regulation.statements_lack_terminal_punctuation
-        result = match(hit.text, entry.text, optional_terminator=loose_end)
+        result = match(hit.text, entry.text, optional_terminator=loose_end,
+                       language=ctx.language)
         if not result.matched:
             # A regulation may require several languages in one document, and a
             # phrase only has to be correct in the language it is written in.
             for other_language, other in ctx.alternate_entries(hit.code):
-                other_result = match(hit.text, other.text, optional_terminator=loose_end)
+                other_result = match(hit.text, other.text,
+                                     optional_terminator=loose_end,
+                                     language=other_language)
                 if other_result.matched:
                     result, entry = other_result, other
                     findings.append(
