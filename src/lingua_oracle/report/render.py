@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import difflib
 import functools
 import html
@@ -21,14 +22,51 @@ TEMPLATES = Path(__file__).parent / "templates"
 STATIC = Path(__file__).parent / "static"
 
 
+#: How large a saved report may get once the fonts are inside it. A report is
+#: an attachment people mail to each other; past this the typeface is not worth
+#: the weight, and the fallback stack is a perfectly good read.
+_REPORT_BUDGET = 1_000_000
+
+_FONT_URL_RE = re.compile(r'url\("fonts/([^"]+)"\)')
+
+
 @functools.lru_cache(maxsize=1)
 def app_css() -> str:
-    """The design system, read once.
-
-    One file is the source of truth for both pages. The upload page links it;
-    the report inlines it, because a saved report travels as a single file.
-    """
+    """The design system, read once. Served at /static/app.css."""
     return (STATIC / "app.css").read_text(encoding="utf-8")
+
+
+@functools.lru_cache(maxsize=1)
+def _embedded_css() -> str:
+    """app.css with the fonts inlined, for a report that travels alone."""
+
+    def embed(match: re.Match[str]) -> str:
+        path = STATIC / "fonts" / match.group(1)
+        if not path.exists():
+            return match.group(0)
+        data = base64.b64encode(path.read_bytes()).decode("ascii")
+        return f'url("data:font/woff2;base64,{data}")'
+
+    return _FONT_URL_RE.sub(embed, app_css())
+
+
+@functools.lru_cache(maxsize=1)
+def _stripped_css() -> str:
+    """app.css with the @font-face blocks removed, so nothing is requested."""
+    return re.sub(r"@font-face\s*\{[^}]*\}\s*", "", app_css())
+
+
+def report_css(body_size: int = 0) -> str:
+    """The stylesheet a saved report carries.
+
+    The fonts go in where the result still fits in an attachment. Where they do
+    not, the @font-face rules are removed rather than left pointing at files
+    that will not be there - a saved report never requests anything.
+    """
+    embedded = _embedded_css()
+    if body_size + len(embedded) <= _REPORT_BUDGET:
+        return embedded
+    return _stripped_css()
 
 _SEVERITY_ORDER = {Severity.FAIL: 0, Severity.WARN: 1, Severity.INFO: 2}
 
@@ -269,6 +307,14 @@ def _statement_cards(report: Report) -> dict:
             "counts": counts, "provenance": provenance}
 
 
+def _body_estimate(report: Report) -> int:
+    """Rough size of the report's own markup, before the stylesheet."""
+    return sum(
+        len(v.found) + len(v.expected) + len(v.why) + len(v.source) + 400
+        for v in report.statements
+    ) + sum(len(f.message or "") + 400 for f in report.findings) + 4000
+
+
 def render_html(report: Report) -> str:
     registry = load_registry()
     try:
@@ -282,7 +328,7 @@ def render_html(report: Report) -> str:
         regulation_display=display,
         coverage_percent=report.coverage.percent,
         verdict=labels.verdict_of(report, display),
-        app_css=app_css(),
+        app_css=report_css(_body_estimate(report)),
         language_name=language_name(report.language),
         cards=_statement_cards(report),
         L=labels,

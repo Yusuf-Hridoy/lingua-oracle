@@ -564,3 +564,38 @@ def test_a_placeholder_card_shows_the_official_wording_as_reference(page, server
     # is highlighted, once.
     assert reference.locator("mark").count() == 0
     assert card.locator("mark").count() == 1
+
+
+def test_the_upload_page_fetches_fonts_only_from_static(page, server, shots_dir):
+    """Nothing is requested from a font CDN - or from anywhere else."""
+    requests: list[str] = []
+    page.on("request", lambda r: requests.append(r.url))
+    page.goto(server + "/", wait_until="load")
+
+    external = [u for u in requests if not u.startswith(server)]
+    assert external == [], external
+
+    fonts = [u for u in requests if u.endswith(".woff2")]
+    assert fonts, "no font was fetched at all"
+    assert all(u.startswith(server + "/static/fonts/") for u in fonts), fonts
+
+
+def test_the_served_fonts_actually_arrive(page, server, shots_dir):
+    statuses: dict[str, int] = {}
+    page.on("response", lambda r: statuses.__setitem__(r.url, r.status))
+    page.goto(server + "/", wait_until="load")
+    fonts = {u: s for u, s in statuses.items() if u.endswith(".woff2")}
+    assert fonts, "no font response"
+    assert all(status == 200 for status in fonts.values()), fonts
+
+
+def test_a_report_page_requests_no_font_at_all(page, server, shots_dir):
+    """The report carries them inside it."""
+    from tests.ui.manifest import BY_NAME
+
+    requests: list[str] = []
+    _upload(page, server, BY_NAME["clean_eu_da"])
+    page.on("request", lambda r: requests.append(r.url))
+    page.reload(wait_until="load")
+    assert [u for u in requests if u.endswith(".woff2")] == []
+    assert [u for u in requests if not u.startswith(server)] == []

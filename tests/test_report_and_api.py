@@ -327,3 +327,67 @@ def test_any_other_failure_is_a_plain_message(client):
     assert response.headers["content-type"].startswith("text/html")
     assert "We couldn’t read that file" in response.text
     assert "Traceback" not in response.text
+
+
+# -- self-hosted fonts ---------------------------------------------------------
+
+
+FONT_FILES = [
+    "IBMPlexSans-Regular.woff2", "IBMPlexSans-Medium.woff2",
+    "IBMPlexSans-SemiBold.woff2", "IBMPlexMono-Regular.woff2",
+    "IBMPlexMono-Medium.woff2",
+]
+
+
+@pytest.mark.parametrize("name", FONT_FILES)
+def test_each_font_is_served_from_static(client, name):
+    response = client.get(f"/static/fonts/{name}")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "font/woff2"
+    assert response.content[:4] == b"wOF2", "not a woff2 file"
+
+
+def test_the_font_licence_ships_with_the_fonts(client):
+    response = client.get("/static/fonts/OFL.txt")
+    assert response.status_code == 200
+    assert "SIL Open Font License" in response.text
+
+
+def test_the_stylesheet_points_at_our_own_fonts(client):
+    css = client.get("/static/app.css").text
+    assert css.count("@font-face") == len(FONT_FILES)
+    for name in FONT_FILES:
+        assert f'url("fonts/{name}")' in css, name
+    # Nothing is fetched from anywhere else.
+    assert "fonts.googleapis" not in css and "fonts.gstatic" not in css
+    assert "@import" not in css
+
+
+def test_no_page_requests_anything_external(client):
+    for path in ("/", "/history", "/coverage"):
+        text = client.get(path).text
+        for host in ("fonts.googleapis", "fonts.gstatic", "unpkg", "cdn."):
+            assert host not in text, (path, host)
+
+
+def test_a_saved_report_embeds_the_fonts_and_links_nothing():
+    """A report is an attachment; it has to render with no network."""
+    from lingua_oracle.report.render import render_html
+
+    html = render_html(check_pdf(pdf("defect_a02_hazard"), "eu_clp"))
+    assert "<link" not in html
+    assert "fonts/IBMPlexSans-Regular.woff2" not in html, "left a relative URL"
+    assert html.count("data:font/woff2;base64,") == len(FONT_FILES)
+    assert len(html) < 1_000_000, f"{len(html):,} bytes is too big to mail"
+
+
+def test_the_fonts_are_dropped_rather_than_left_dangling():
+    """Past the budget the rules go, so nothing is requested from a saved file."""
+    from lingua_oracle.report.render import report_css
+
+    stripped = report_css(5_000_000)
+    assert "@font-face" not in stripped
+    assert 'url("fonts/' not in stripped, "left a URL that will not resolve"
+    # The licence attribution stays; it is a comment, not a request.
+    assert "SIL Open Font License" in stripped
+    assert "--accent" in stripped, "the rest of the stylesheet must survive"

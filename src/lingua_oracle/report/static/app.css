@@ -1,10 +1,35 @@
 /* Lingua Oracle design system.
  *
- * One file, loaded two ways: the upload page links it, and the report inlines
- * it at render time. Reports are saved to disk and passed around, so a saved
- * report has to render with no network and no neighbouring files - which is
- * why the fonts are a stack rather than a webfont import here.
+ * One file, loaded two ways: the upload page links it and fetches the fonts
+ * beside it, and the report inlines it with the fonts embedded. Reports are
+ * saved to disk and passed around, so a saved report has to render with no
+ * network and no neighbouring files.
  */
+
+/* IBM Plex, served from this app rather than a font CDN: the page must finish
+ * loading with no network, and a saved report travels as one file.
+ * SIL Open Font License 1.1 - see fonts/OFL.txt.
+ */
+@font-face {
+  font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400;
+  font-display: swap; src: url("fonts/IBMPlexSans-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500;
+  font-display: swap; src: url("fonts/IBMPlexSans-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600;
+  font-display: swap; src: url("fonts/IBMPlexSans-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400;
+  font-display: swap; src: url("fonts/IBMPlexMono-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500;
+  font-display: swap; src: url("fonts/IBMPlexMono-Medium.woff2") format("woff2");
+}
 
 :root {
   --page:    #F6F7F9;
