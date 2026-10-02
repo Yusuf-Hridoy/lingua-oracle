@@ -108,3 +108,30 @@ def test_the_correction_is_one_word_not_a_rewrite():
         assert len(wrong) == len(right), erratum.code
         differing = [i for i, (a, b) in enumerate(zip(wrong, right, strict=True)) if a != b]
         assert len(differing) == 1, erratum.code
+
+
+def test_the_errata_cache_follows_the_data_directory(tmp_path, monkeypatch):
+    """A cache keyed on the regulation name answered for the wrong directory.
+
+    Several tests point LINGUA_DATA_DIR at a temporary tree. The first call made
+    inside one of those cached an empty table against the name "eu_clp", and
+    every later call in the same process - back in the real data directory -
+    got the empty answer, so P336 stopped being corrected.
+    """
+    monkeypatch.setenv("LINGUA_DATA_DIR", str(tmp_path))
+    assert load_errata("eu_clp") == ()
+    monkeypatch.delenv("LINGUA_DATA_DIR")
+    assert [e.code for e in load_errata("eu_clp")] == ["P336"]
+
+
+def test_the_audit_shows_the_errata_verdict_for_P336():
+    """The audit's "in force" column has to say when a correction was used."""
+    import json
+
+    from lingua_oracle.registry import data_dir
+
+    record = data_dir() / "audits" / "eu_clp_annex_iv.json"
+    if not record.exists():
+        pytest.skip("no audit record; rebuild eu_clp to produce one")
+    audit = json.loads(record.read_text(encoding="utf-8"))["decisions"]
+    assert audit["P336"]["languages"]["en"]["status"] == "errata"

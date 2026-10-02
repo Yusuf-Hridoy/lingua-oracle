@@ -21,6 +21,7 @@ from __future__ import annotations
 import collections
 import json
 import re
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from lxml import html as LH
@@ -33,7 +34,19 @@ from lingua_oracle.keys.builders.common import (
     repair_degree_sign,
     strip_markers,
 )
+from lingua_oracle.keys.builders.defects import defects
+from lingua_oracle.keys.builders.eu_acts import (
+    Decision,
+    act_rank,
+    act_rendering,
+    amending_acts,
+    annex_iv_scope,
+    decide,
+    markers_by_code,
+    markers_used,
+)
 from lingua_oracle.keys.builders.signal_words import leading_word
+from lingua_oracle.keys.errata import load_errata
 from lingua_oracle.match.normalize import normalize, strip_punctuation
 from lingua_oracle.models import (
     SIGNAL_DANGER,
@@ -229,23 +242,40 @@ def _differing_by_code(
     return out
 
 
-#: How much of the language set has to show the same disagreement before Part 1
-#: is taken as an amendment. A real amendment rewrites every translation; a
-#: rendering difference in one or two languages is Part 1 abbreviating a row.
-_AMENDMENT_SHARE = 0.8
+def act_scope(acts: dict[str, dict[str, str]], markers: set[str], *,
+              use_cache: bool = True) -> dict[str, dict[str, dict[str, str]]]:
+    """Read the Annex IV section of every act that governs a statement here.
+
+    Only the acts that actually produced a block of Annex IV are fetched - five
+    of the thirty-seven in the consolidation's front matter have ever touched
+    it. Which five is read off the markers, so a later amendment pulls its own
+    act in without anyone editing a list.
+    """
+    scope: dict[str, dict[str, dict[str, str]]] = {}
+    for marker in sorted(markers):
+        if act_rank(marker) in (None, 0):
+            continue  # the base act amends nothing; a corrigendum is not an act
+        celex = acts.get(marker, {}).get("celex")
+        if not celex:
+            continue
+        try:
+            scope[marker] = annex_iv_scope(celex, use_cache=use_cache)
+        except Exception:  # noqa: BLE001 - an unreadable act decides nothing
+            continue
+    return scope
 
 
-def amended_in_part_one(
-    part_one: dict[str, dict[str, str]], part_two: dict[str, dict[str, str]]
-) -> dict[str, list[str]]:
-    """Codes whose Part 1 text supersedes Part 2, with the languages agreeing."""
-    languages = sorted(set(part_one) & set(part_two))
-    if len(languages) < 20:
-        return {}  # not a full build; nothing to compare across
-    disagreeing = _differing_by_code(part_one, part_two)
+def decisions_for(language: str, part_one_marks: dict[str, str],
+                  part_two_marks: dict[str, str],
+                  scope: dict[str, dict[str, dict[str, str]]],
+                  ) -> dict[str, Decision]:
+    """Which Part is in force, for every precautionary code in both Parts."""
+    codes = {c for c in set(part_one_marks) & set(part_two_marks)
+             if c.startswith("P")}
     return {
-        code: langs for code, langs in disagreeing.items()
-        if len(langs) >= _AMENDMENT_SHARE * len(languages)
+        code: decide(code, language, part_one_marks.get(code),
+                     part_two_marks.get(code), scope)
+        for code in sorted(codes)
     }
 
 
@@ -452,29 +482,122 @@ def _signal_words_for(lang, iso3, en_doc, positions, en_tables, entries, *, use_
     return words, note
 
 
-def write_part_audit(amended: dict[str, list[str]],
-                     part_one: dict[str, dict[str, str]]) -> Path:
-    """Record which codes Part 1 superseded, and with what.
+@dataclass(frozen=True)
+class Chosen:
+    """The text in force for one code in one language, and how it got there."""
 
-    The audit that found P103 and P280 becomes a permanent test: the key has to
-    keep holding the text this build chose, in every language it chose it for.
+    code: str
+    language: str
+    decision: Decision
+    text: str
+    superseded: str
+    defects: tuple[str, ...]
+    #: "ok" when the text may be used, "errata" when a reviewed correction
+    #: covers its defect, "not_on_file" when it may not be used at all.
+    status: str
+    #: True when the amending act prints the defect too, so there is nothing to
+    #: correct it from; None when the act was not consulted.
+    act_confirms_defect: bool | None = None
+
+
+def choose(code: str, language: str, decision: Decision,
+           part_one_text: str | None, part_two_text: str | None,
+           *, erratum_for: str | None = None) -> Chosen:
+    """Apply one decision to the two renderings, and check what it chose.
+
+    The Part the acts point at is taken whole - never blended with the other.
+    If the chosen rendering carries a visible defect, it is not used silently:
+    either a reviewed erratum covers it, or the code is withheld in that
+    language. Repairing it here would mean writing regulatory text ourselves.
     """
-    # Not under answer_keys/: everything there is loaded as a key.
-    target = data_dir() / "audits" / "eu_clp_annex_iv.json"
+    wanted = part_one_text if decision.from_part_one else part_two_text
+    other = part_two_text if decision.from_part_one else part_one_text
+    if not wanted:
+        # The language's own act could not be read, so the rendering the acts
+        # point at is not available here; what is left is the superseded one.
+        return Chosen(code, language, decision, other or "", other or "", (),
+                      "not_on_file" if decision.from_part_one else "ok")
+    found = tuple(defects(wanted, other))
+    if erratum_for is not None and erratum_for == wanted:
+        # A reviewed correction covers this exact text; resolve() applies it.
+        status = "errata"
+    elif found:
+        status = "not_on_file"
+    else:
+        status = "ok"
+    return Chosen(code, language, decision, wanted, other or "", found, status)
+
+
+def write_act_audit(acts: dict[str, dict[str, str]],
+                    scope: dict[str, dict[str, dict[str, str]]]) -> Path:
+    """Record what each amending act does to Annex IV, read from the act."""
+    target = data_dir() / "audits" / "eu_clp_amending_acts.json"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(
         json.dumps(
             {
                 "source": CELEX,
-                "note": "Annex IV Part 1 text used where Part 2 was not amended",
-                "amended": {c: sorted(langs) for c, langs in sorted(amended.items())},
-                "text": {
-                    code: {lang: part_one[lang][code]
-                           for lang in sorted(langs) if code in part_one.get(lang, {})}
-                    for code, langs in sorted(amended.items())
+                "note": ("Annex IV amendments, read from each act's own ANNEX IV. "
+                         "Only acts that have amended Annex IV appear here."),
+                "acts": {
+                    marker: {
+                        **acts.get(marker, {}),
+                        "annex_iv": {part: dict(sorted(codes.items()))
+                                     for part, codes in sorted(parts.items())},
+                    }
+                    for marker, parts in sorted(
+                        scope.items(), key=lambda kv: act_rank(kv[0]) or 0)
                 },
             },
-            ensure_ascii=False, indent=1, sort_keys=False,
+            ensure_ascii=False, indent=1,
+        ),
+        encoding="utf-8",
+    )
+    return target
+
+
+def write_part_audit(chosen: dict[str, dict[str, Chosen]],
+                     acts: dict[str, dict[str, str]]) -> Path:
+    """Record, per code and per language, which Part is in force and why."""
+    # Not under answer_keys/: everything there is loaded as a key.
+    target = data_dir() / "audits" / "eu_clp_annex_iv.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    record: dict[str, dict] = {}
+    for code in sorted(chosen):
+        per_language = chosen[code]
+        if not per_language:
+            continue
+        sample = next(iter(per_language.values())).decision
+        record[code] = {
+            "part": sample.part,
+            "act": sample.act,
+            "act_title": acts.get(sample.act, {}).get("title", ""),
+            "note": sample.note,
+            "corroborated": sample.corroborated,
+            "languages": {
+                lang: {
+                    "part": c.decision.part,
+                    "act": c.decision.act,
+                    "status": c.status,
+                    "text": c.text,
+                    "superseded": c.superseded,
+                    "defects": list(c.defects),
+                    "act_confirms_defect": c.act_confirms_defect,
+                }
+                for lang, c in sorted(per_language.items())
+            },
+        }
+    target.write_text(
+        json.dumps(
+            {
+                "source": CELEX,
+                "note": ("Which Part of Annex IV holds the text in force, per code "
+                         "and per language. Decided by the latest amending act to "
+                         "touch each Part, corroborated by the consolidation's own "
+                         "markers. Only codes whose two Parts differ are listed."),
+                "decisions": record,
+            },
+            ensure_ascii=False, indent=1,
         ),
         encoding="utf-8",
     )
@@ -488,57 +611,75 @@ def _cell(text: str | None) -> str:
     return text.replace("|", "\\|").replace("\n", " ").strip()
 
 
-def write_part_comparison(
-    part_one: dict[str, dict[str, str]], part_two: dict[str, dict[str, str]]
-) -> Path:
-    """List every code where Annex IV Parts 1 and 2 disagree, for review.
+def write_part_comparison(part_one: dict[str, dict[str, str]],
+                          part_two: dict[str, dict[str, str]],
+                          chosen: dict[str, dict[str, Chosen]],
+                          acts: dict[str, dict[str, str]]) -> Path:
+    """List every disagreement between Annex IV Parts 1 and 2, with its verdict.
 
-    Only two of these are amendments - the build decides that by asking whether
-    the whole language set shows the same disagreement. The rest are the act
-    rendering a statement differently in the two places it prints it: an
-    abbreviated row, a dropped bracket, a typing error. None of them is acted on
-    automatically; this file exists so a person can read them and say which, if
-    any, is a correction worth making (see data/errata/).
+    One row per code per language, because the decision is made per code per
+    language: the acts amend both at once, but only the languages whose own act
+    could be read have markers to corroborate, and a defect is a property of one
+    rendering in one language.
     """
     differing = _differing_by_code(part_one, part_two)
     languages = sorted(set(part_one) & set(part_two))
-    lines = [
+    rows = []
+    for code in sorted(chosen, key=lambda c: (-len(differing.get(c, ())), c)):
+        count = len(differing.get(code, ()))
+        for lang, c in sorted(chosen[code].items()):
+            verdict = {"ok": c.decision.part, "errata": "errata",
+                       "not_on_file": "not_on_file"}[c.status]
+            note = "; ".join(c.defects) if c.defects else c.decision.note
+            if c.act_confirms_defect:
+                note += " - and the act prints it that way too"
+            rows.append(
+                f"| {code} | {lang} | {count}/{len(languages)} "
+                f"| {_cell(part_one.get(lang, {}).get(code))} "
+                f"| {_cell(part_two.get(lang, {}).get(code))} "
+                f"| {verdict} | {c.decision.act} | {_cell(note)} |"
+            )
+    titles = []
+    for marker in sorted({c.decision.act for per in chosen.values()
+                          for c in per.values()}, key=lambda m: (len(m), m)):
+        act = acts.get(marker, {})
+        oj = act.get("oj", "").strip()
+        titles.append(f"`{marker}` = {act.get('title', '')}"
+                      + (f" (OJ {oj})" if oj else ""))
+    lines_out = [
         "# EU CLP Annex IV: where Part 1 and Part 2 disagree",
         "",
         f"Source: `{CELEX}`  ",
         f"Languages compared: {len(languages)} ({', '.join(languages)})  ",
         f"Codes where the two Parts disagree in at least one language: "
-        f"{len(differing)}",
+        f"{len(differing)}  ",
+        f"Rows below (one per code per language): {len(rows)}",
         "",
         "CLP states each statement twice: Part 1 beside the hazard class it is",
-        "selected for, Part 2 in every language. A disagreement is usually the",
-        "act rendering the same statement differently in the two places, not a",
-        "change in the law. The build treats Part 1 as superseding Part 2 only",
-        f"when at least {int(_AMENDMENT_SHARE * 100)}% of languages show the same",
-        "disagreement, which here is true of P103 and P280 alone - both rewritten",
-        "by Regulation (EU) 2019/521, which amended Part 1 and left Part 2.",
+        "selected for, Part 2 in every language. Several amending acts rewrote",
+        "one Part and not the other, so which rendering is the law has to be",
+        "decided per code: the latest act to touch each Part wins, read from the",
+        "acts themselves and corroborated by the consolidation's own markers.",
+        "Where the two sources disagree, or both Parts come from the same act,",
+        "Part 2 stands and the reason is given.",
         "",
-        "Nothing in this list is applied automatically. It is here to be read.",
+        "**in force** is what the key holds: `Part 1` or `Part 2` where the text",
+        "is used as the act prints it, `errata` where a reviewed correction in",
+        "`data/errata/` repairs a defect in it, and `not_on_file` where the text",
+        "in force carries a defect that cannot be corrected from the act, so the",
+        "code is withheld in that language rather than used.",
         "",
-        "Where English is not named in the last column, the two English",
-        "renderings are identical and the difference is in the languages that",
-        "are named. The English texts are given so the statement can be",
-        "recognised.",
+        "**act** is the act that decided it:",
         "",
-        "| Code | Languages differing | Part 1 (en) | Part 2 (en) | Which languages |",
-        "| --- | --- | --- | --- | --- |",
+        *[f"* {t}" for t in titles],
+        "",
+        "| Code | Lang | Differs in | Part 1 | Part 2 | In force | Act | Why |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+        *rows,
     ]
-    en_one, en_two = part_one.get("en", {}), part_two.get("en", {})
-    for code, langs in sorted(
-        differing.items(), key=lambda kv: (-len(kv[1]), kv[0])
-    ):
-        lines.append(
-            f"| {code} | {len(langs)} of {len(languages)} | {_cell(en_one.get(code))} "
-            f"| {_cell(en_two.get(code))} | {', '.join(sorted(langs))} |"
-        )
     target = data_dir() / "audits" / "eu_clp_part1_vs_part2.md"
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    target.write_text("\n".join(lines_out) + "\n", encoding="utf-8")
     return target
 
 
@@ -554,9 +695,9 @@ def write_hazard_classes(doc) -> Path:
     return target
 
 
-#: Filled by the last build: {code: [languages where Part 1 superseded Part 2]}.
-#: Written into the parse report so the choice is on the record.
-AMENDED_IN_PART_ONE: dict[str, list[str]] = {}
+#: Filled by the last build: {code: {language: Chosen}} for every code whose two
+#: Parts disagree. Written into the parse report so the choice is on the record.
+IN_FORCE: dict[str, dict[str, Chosen]] = {}
 
 
 def build(languages: list[str] | None = None, *, use_cache: bool = True,
@@ -581,6 +722,11 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
         lang: {e.code: e.text for e in entries if e.text}
         for lang, entries in per_lang.items()
     }
+    # Markers are read from the same documents: which act produced each block is
+    # a property of the language's own consolidation, so it is read per language
+    # rather than assumed from English.
+    part_one_marks: dict[str, dict[str, str]] = {}
+    part_two_marks: dict[str, dict[str, str]] = {}
     for lang in wanted:
         iso3 = LANGS.get(lang)
         if iso3 is None:
@@ -590,14 +736,75 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
         except SourceUnavailable:
             continue  # the language's own act is unavailable; Part 2 stands
         part_one[lang] = part_one_statements(doc)
+        part_one_marks[lang], part_two_marks[lang] = markers_by_code(doc)
 
-    amended = amended_in_part_one(part_one, part_two)
+    acts = amending_acts(en_doc)
+    markers = set()
+    for lang in part_one_marks:
+        both = set(part_one_marks[lang]) & set(part_two_marks[lang])
+        markers |= markers_used(part_one_marks[lang], part_two_marks[lang], both)
+    scope = act_scope(acts, markers, use_cache=use_cache)
+    write_act_audit(acts, scope)
+
+    # The acts amend every language at once, so a language whose own act could
+    # not be read still has a decision - English's - and the question for it is
+    # only whether the text that decision points at exists here.
+    reference = decisions_for("en", part_one_marks.get("en", {}),
+                              part_two_marks.get("en", {}), scope)
+    differing = _differing_by_code(part_one, part_two)
+    chosen: dict[str, dict[str, Chosen]] = {}
+    for code, langs in differing.items():
+        for lang in langs:
+            decision = (decisions_for(lang, part_one_marks.get(lang, {}),
+                                      part_two_marks.get(lang, {}), scope).get(code)
+                        if lang in part_one_marks else reference.get(code))
+            if decision is None:
+                continue
+            chosen.setdefault(code, {})[lang] = choose(
+                code, lang, decision,
+                part_one.get(lang, {}).get(code),
+                part_two.get(lang, {}).get(code),
+                erratum_for=next((e.wrong for e in load_errata(REGULATION)
+                                  if e.code == code and e.language == lang), None),
+            )
+    # A language with no document of its own loses only the codes whose Parts
+    # are known to disagree: there the Part 2 text it holds may be the
+    # superseded one and nothing here can tell. Where every readable language
+    # shows the two Parts saying the same thing, nothing is superseded and the
+    # text stands.
+    for code, decision in reference.items():
+        if not decision.from_part_one or code not in differing:
+            continue
+        for lang in wanted:
+            if lang in part_one_marks or lang not in LANGS:
+                continue
+            chosen.setdefault(code, {}).setdefault(lang, choose(
+                code, lang, decision, None, part_two.get(lang, {}).get(code)))
+    # A defective rendering is checked against the act that produced it. If the
+    # act prints the same thing, the defect is the law's own and there is
+    # nothing to correct it from; the code is withheld in that language.
+    celex = {m: info.get("celex", "") for m, info in acts.items()}
+    for code, per_language in chosen.items():
+        for lang, pick in list(per_language.items()):
+            if not pick.defects or not celex.get(pick.decision.act):
+                continue
+            iso3 = LANGS.get(lang)
+            if iso3 is None:
+                continue
+            try:
+                printed = act_rendering(celex[pick.decision.act], iso3, lang, code,
+                                        pick.decision.part, use_cache=use_cache)
+            except Exception:  # noqa: BLE001 - an unreadable act proves nothing
+                printed = None
+            if printed is not None:
+                per_language[lang] = replace(
+                    pick, act_confirms_defect=printed.strip() == pick.text.strip())
+    IN_FORCE.clear()
+    IN_FORCE.update(chosen)
+    if chosen:
+        write_part_audit(chosen, acts)
     if len(part_one) >= 20:
-        write_part_comparison(part_one, part_two)
-    AMENDED_IN_PART_ONE.clear()
-    AMENDED_IN_PART_ONE.update(amended)
-    if amended:
-        write_part_audit(amended, part_one)
+        write_part_comparison(part_one, part_two, chosen, acts)
 
     keys: list[AnswerKey] = []
     for lang in wanted:
@@ -610,30 +817,37 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
             else e
             for e in per_lang.get(lang, [])
         ]
-        # Where Part 1 carries an amendment Part 2 never received, Part 1 is
-        # the text in force. Chosen per code, never blended within a statement.
-        newer = part_one.get(lang, {})
+        # The text in force, per code. Taken whole from the Part the acts point
+        # at, never blended; withheld where that rendering is defective or is
+        # not available in this language.
         updated = []
         for entry in entries:
-            if entry.code not in amended:
+            pick = chosen.get(entry.code, {}).get(lang)
+            if pick is None:
                 updated.append(entry)
-            elif newer.get(entry.code):
-                updated.append(entry.model_copy(update={
-                    "text": newer[entry.code],
-                    "source_ref": f"{entry.source_ref}; Part 1 text, "
-                                  "amended after Part 2",
-                }))
-            else:
-                # This language's own act could not be read, so the amended
-                # text is not available here. What we hold is the superseded
-                # wording, and comparing a sheet against it would fail a
-                # correct one. Kept visible, never used.
+                continue
+            act = acts.get(pick.decision.act, {}).get("title", pick.decision.act)
+            where = f"Annex IV {pick.decision.part}, in force under {act}"
+            if pick.status == "not_on_file":
+                why = ("; ".join(pick.defects) if pick.defects else
+                       f"the {pick.decision.part} text is not available in "
+                       f"'{lang}'")
+                if pick.act_confirms_defect:
+                    why += " - the act prints it that way too, so it cannot be "\
+                           "corrected from the act"
                 updated.append(entry.model_copy(update={
                     "status": Status.NOT_ON_FILE,
-                    "source_ref": f"{entry.source_ref}; superseded by the "
-                                  "amendment in Part 1, which is not available "
-                                  f"in '{lang}' - not used for a verdict",
+                    "text": pick.text or entry.text,
+                    "source_ref": f"{entry.source_ref}; {where}, but {why} "
+                                  "- not used for a verdict",
                 }))
+            elif pick.text and pick.text != entry.text:
+                updated.append(entry.model_copy(update={
+                    "text": pick.text,
+                    "source_ref": f"{entry.source_ref}; {where}",
+                }))
+            else:
+                updated.append(entry)
         entries = updated
         if with_signal_words:
             words, note = _signal_words_for(lang, iso3, en_doc, positions, en_tables,

@@ -56,12 +56,23 @@ def errata_root() -> Path:
 
 
 @cache
+def _read(path: str, _stamp: tuple[float, int]) -> tuple[Erratum, ...]:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    return tuple(Erratum(**row) for row in payload.get("corrections", []))
+
+
 def load_errata(regulation: str) -> tuple[Erratum, ...]:
+    """The reviewed corrections on file for one regulation.
+
+    Cached on the file's own timestamp and size rather than on the regulation's
+    name: the data directory is relocatable - tests point it at a temporary one -
+    and a cache keyed on the name alone would answer for the wrong directory.
+    """
     path = errata_root() / f"{regulation}.json"
     if not path.exists():
         return ()
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    return tuple(Erratum(**row) for row in payload.get("corrections", []))
+    stat = path.stat()
+    return _read(str(path), (stat.st_mtime, stat.st_size))
 
 
 def correct(key: AnswerKey | None) -> tuple[dict[str, AnswerKeyEntry], list[Erratum]]:

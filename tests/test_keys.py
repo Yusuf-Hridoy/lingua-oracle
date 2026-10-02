@@ -876,33 +876,86 @@ def test_the_amendment_reached_every_language(code):
     assert behind == [], behind
 
 
-def test_no_code_holds_two_different_current_texts():
-    """The permanent form of the audit that found this.
-
-    CLP states each statement in Annex IV Part 1 and again in Part 2. Where the
-    two disagree substantively, one of them is out of date, and the key has to
-    hold the one in force - never a mixture, and never silently the older.
-    """
+def _part_audit():
     import json
 
-    from lingua_oracle.match.normalize import normalize, strip_punctuation
     from lingua_oracle.registry import data_dir
 
     record = data_dir() / "audits" / "eu_clp_annex_iv.json"
     if not record.exists():
         pytest.skip("no audit record; rebuild eu_clp to produce one")
-    audit = json.loads(record.read_text(encoding="utf-8"))
+    return json.loads(record.read_text(encoding="utf-8"))["decisions"]
 
-    key = lambda t: strip_punctuation(normalize(t)).casefold()  # noqa: E731
-    from lingua_oracle.keys.store import load_key
 
-    for code, langs in audit.get("amended", {}).items():
-        for language in langs:
-            entry = load_key("eu_clp", language).by_code().get(code)
+def test_no_key_entry_holds_text_a_later_act_superseded():
+    """The integrity rule, in one assertion.
+
+    For every code whose two Parts of Annex IV disagree, the build decided which
+    Part the law is in - the latest act to touch each, read from the acts and
+    corroborated by the consolidation's markers. The key must hold that text and
+    no other: holding the losing Part would mean checking documents against
+    wording an amendment replaced.
+    """
+    audit = _part_audit()
+    for code, record in audit.items():
+        for language, chosen in record["languages"].items():
+            key = load_key("eu_clp", language)
+            if key is None:
+                continue
+            entry = key.by_code().get(code)
             assert entry is not None, f"{language}/{code} vanished"
-            assert key(entry.text) == key(audit["text"][code][language]), (
-                f"{language}/{code} is not the text the audit chose"
+            if chosen["status"] == "not_on_file":
+                assert entry.status is Status.NOT_ON_FILE, (
+                    f"{language}/{code} is used for verdicts although the audit "
+                    f"withheld it: {chosen['defects']}"
+                )
+                continue
+            assert entry.text == chosen["text"], (
+                f"{language}/{code} holds {entry.text!r}, but the act in force "
+                f"({chosen['act']}, {chosen['part']}) says {chosen['text']!r}"
             )
+            assert entry.text != chosen["superseded"] or not chosen["superseded"], (
+                f"{language}/{code} holds the superseded rendering"
+            )
+
+
+def test_the_decision_is_recorded_with_the_act_that_made_it():
+    for code, record in _part_audit().items():
+        assert record["part"] in {"Part 1", "Part 2"}, code
+        assert record["act"], code
+        assert record["note"], code
+        if record["corroborated"]:
+            assert record["act_title"] or record["act"] == "B", code
+
+
+def test_a_withheld_entry_says_what_was_wrong_with_it():
+    audit = _part_audit()
+    for code, record in audit.items():
+        for language, chosen in record["languages"].items():
+            if chosen["status"] != "not_on_file":
+                continue
+            entry = load_key("eu_clp", language).by_code()[code]
+            assert "not used for a verdict" in (entry.source_ref or ""), (
+                f"{language}/{code}"
+            )
+            assert code not in resolve("eu_clp", language).entries
+
+
+def test_a_defect_the_act_itself_prints_is_never_corrected():
+    """The line between a typing error and the law.
+
+    Where the amending act prints the defect too, there is nothing to correct
+    the text from, and inventing the repair is not an option. Those entries are
+    withheld, never quietly fixed.
+    """
+    audit = _part_audit()
+    confirmed = [(c, lang) for c, r in audit.items()
+                 for lang, v in r["languages"].items()
+                 if v.get("act_confirms_defect")]
+    assert confirmed, "no defect was checked against its act"
+    for code, language in confirmed:
+        assert load_key("eu_clp", language).by_code()[code].status is (
+            Status.NOT_ON_FILE), f"{language}/{code}"
 
 
 # -- an open option is not an unfilled blank ----------------------------------
@@ -977,20 +1030,35 @@ def test_a_not_on_file_entry_never_reaches_a_comparison(code):
     assert code not in resolve("eu_clp", "ga").entries
 
 
-def test_only_the_amended_codes_are_withheld_in_irish():
-    """The rest of the Irish key is ordinary Part 2 text and still usable."""
+def test_only_the_superseded_codes_are_withheld_in_irish():
+    """The rest of the Irish key is ordinary Part 2 text and still usable.
+
+    A code is withheld in Irish when an act rewrote Part 1 and demonstrably
+    changed the wording - the Part 2 text Irish holds is then the superseded
+    one, and there is no Irish version of the amending act to replace it with.
+    Where the two Parts say the same thing everywhere they can be read, nothing
+    was superseded and the Irish entry stands.
+    """
+    audit = _part_audit()
+    expected = {code for code, record in audit.items()
+                if record["languages"].get("ga", {}).get("status") == "not_on_file"}
     withheld = {
         code for code, entry in load_key("eu_clp", "ga").by_code().items()
         if entry.status is Status.NOT_ON_FILE
     }
-    assert withheld == {"P103", "P280"}
+    assert withheld == expected
+    assert {"P103", "P280"} <= withheld
+    assert len(withheld) < len(load_key("eu_clp", "ga").entries) / 4
 
 
 def test_the_languages_that_do_have_the_amendment_are_untouched():
-    for lang in ("en", "de", "fr"):
+    # de and et are not in this list: their Part 1 rendering of P280 is printed
+    # without its full stop, in the act as well as the consolidation, so the
+    # entry is withheld rather than used. See the defect tests below.
+    for lang in ("en", "fr", "es"):
         entry = load_key("eu_clp", lang).by_code()["P280"]
         assert entry.status is Status.OK
-        assert "Part 1 text" in (entry.source_ref or "")
+        assert "Annex IV Part 1, in force under" in (entry.source_ref or "")
         assert "P280" in resolve("eu_clp", lang).entries
 
 
@@ -1006,36 +1074,42 @@ def _comparison_rows():
     rows = []
     for line in path.read_text(encoding="utf-8").splitlines():
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        if len(cells) == 5 and re.fullmatch(r"[PH]\d{3}(\+[PH]\d{3})*", cells[0]):
+        if len(cells) == 8 and re.fullmatch(r"[PH]\d{3}(\+[PH]\d{3})*", cells[0]):
             rows.append(cells)
     return rows
 
 
-def test_the_part_comparison_lists_every_code_that_disagrees():
+def test_the_part_comparison_has_a_row_per_code_and_language():
     rows = _comparison_rows()
-    assert len(rows) > 50
-    assert len({r[0] for r in rows}) == len(rows)  # one row per code
+    assert len(rows) > 200
+    assert len({(r[0], r[1]) for r in rows}) == len(rows)
 
 
 def test_the_two_amendments_lead_the_comparison():
-    """The codes the whole language set disagrees on are the real amendments."""
+    """The codes every language disagrees on are the real amendments."""
     rows = _comparison_rows()
-    assert [r[0] for r in rows[:2]] == ["P103", "P280"]
-    for row in rows[:2]:
-        count, _, total = row[1].partition(" of ")
-        assert count == total
+    assert {r[0] for r in rows[:46]} == {"P103", "P280"}
 
 
-def test_every_comparison_row_names_the_languages_it_counted():
-    for code, count, part_one, part_two, langs in _comparison_rows():
-        named = [x for x in langs.split(", ") if x]
-        assert len(named) == int(count.split()[0]), code
-        assert part_one and part_two, code
+def test_every_comparison_row_names_its_verdict_and_act():
+    for code, lang, _count, _one, _two, verdict, act, why in _comparison_rows():
+        assert verdict in {"Part 1", "Part 2", "errata", "not_on_file"}, code
+        assert act, f"{code}/{lang}"
+        assert why, f"{code}/{lang}"
 
 
 def test_P336_is_in_the_comparison_as_an_english_difference():
     """The code the errata table corrects has to be visible here as evidence."""
-    row = next(r for r in _comparison_rows() if r[0] == "P336")
-    assert "Do not rub" in row[2]
-    assert "Do no rub" in row[3]
-    assert "en" in row[4].split(", ")
+    row = next(r for r in _comparison_rows() if r[0] == "P336" and r[1] == "en")
+    assert "Do not rub" in row[3]
+    assert "Do no rub" in row[4]
+
+
+def test_the_comparison_agrees_with_the_audit():
+    audit = _part_audit()
+    for code, lang, _c, _o, _t, verdict, act, _why in _comparison_rows():
+        chosen = audit[code]["languages"][lang]
+        expected = {"ok": chosen["part"], "errata": "errata",
+                    "not_on_file": "not_on_file"}[chosen["status"]]
+        assert verdict == expected, f"{code}/{lang}"
+        assert act == chosen["act"], f"{code}/{lang}"
