@@ -649,3 +649,46 @@ def test_a_single_row_class_does_not_attach_but_the_statement_does():
     ]]
     hits = extract_hits(lines, official)
     assert [h.text for h in hits] == ["", "", "", key["H315"].text]
+
+
+# -- the stamp has to cover everything a fixture is built from -----------------
+
+
+def test_the_fixture_stamp_covers_the_answer_keys(tmp_path, monkeypatch):
+    """Fixtures quote the keys, so a key change has to rebuild them.
+
+    Hashing only make_fixtures.py was not enough: amending P280 changed what a
+    correct sheet says, the fixtures kept the old wording, and the suite passed
+    against documents that no longer matched the law.
+    """
+    import json
+
+    from tests import conftest
+
+    before = conftest._inputs_digest()
+    key_path = conftest.DATA / "answer_keys" / "au_whs" / "en.json"
+    original = key_path.read_bytes()
+    try:
+        data = json.loads(original)
+        data["entries"][0]["text"] += " "
+        key_path.write_text(json.dumps(data, ensure_ascii=False, indent=1),
+                            encoding="utf-8")
+        assert conftest._inputs_digest() != before, (
+            "a changed answer key left the fixture digest unmoved"
+        )
+    finally:
+        key_path.write_bytes(original)
+    assert conftest._inputs_digest() == before
+
+
+def test_the_stamp_also_covers_the_generator():
+    from tests import conftest
+
+    before = conftest._inputs_digest()
+    original = conftest.MAKER.read_bytes()
+    try:
+        conftest.MAKER.write_bytes(original + b"\n# touched\n")
+        assert conftest._inputs_digest() != before
+    finally:
+        conftest.MAKER.write_bytes(original)
+    assert conftest._inputs_digest() == before
