@@ -299,3 +299,38 @@ def test_two_named_instruments_still_ask():
         detect_regulation(
             "Classified under (EC) No 1272/2008 and under 29 CFR 1910.1200."
         )
+
+
+@pytest.mark.parametrize(
+    ("text", "expected", "reason"),
+    [
+        # A corporate footer names countries the supplier merely trades in.
+        # The telephone number belongs to the contact details and settles it.
+        ("MACQUARIE PARK NSW 2113 AUSTRALIA Telephone : +61 1800 800 097 "
+         "MilliporeSigma in the US and Canada", "au_whs", "address, +61 phone"),
+        ("20 King St, Toronto, Canada. Tel +1 416 555 0100", "ca_whmis", "address"),
+        ("Tel +44 161 555 0100", "uk_clp", "+44 phone"),
+    ],
+)
+def test_the_phone_settles_a_corporate_footer(text, expected, reason):
+    from lingua_oracle.detect.country import country_hint
+
+    hint = country_hint(text)
+    assert hint is not None and hint.regulation == expected
+    assert hint.reason == reason
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Offices in Australia and Canada.",
+        # The phone disagreeing with the only country named is a reason to say
+        # nothing, not a reason to pick one of them.
+        "Darmstadt, Germany. Tel +61 1800 000 000",
+        "No address at all.",
+    ],
+)
+def test_where_the_evidence_disagrees_nothing_is_suggested(text):
+    from lingua_oracle.detect.country import country_hint
+
+    assert country_hint(text) is None

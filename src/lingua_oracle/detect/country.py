@@ -49,28 +49,31 @@ class CountryHint:
 
 def country_hint(text: str) -> CountryHint | None:
     """A regulation suggested by where the sheet seems to come from."""
-    found: dict[str, list[str]] = {}
-
+    countries: dict[str, None] = {}
     # Every country named, not just the first: a sheet that mentions two is a
-    # sheet we cannot place, and stopping early would hide that.
+    # sheet we may not be able to place, and stopping early would hide that.
     for name, regulation in COUNTRY_REGULATION.items():
         if re.search(rf"\b{re.escape(name)}\b", text, re.IGNORECASE):
-            reasons = found.setdefault(regulation, [])
-            if "address" not in reasons:
-                reasons.append("address")
+            countries[regulation] = None
 
+    phone: str | None = None
     # Longest prefix first, so +353 is not read as +35.
     for prefix in sorted(PHONE_REGULATION, key=len, reverse=True):
         if re.search(rf"\{prefix}[\s\d(]", text):
-            regulation = PHONE_REGULATION[prefix]
-            reasons = found.setdefault(regulation, [])
-            reasons.append(f"{prefix} phone")
+            phone = prefix
             break
 
-    if not found:
-        return None
-    # Where the address and the phone disagree, we know less than we thought.
-    if len(found) > 1:
-        return None
-    regulation, reasons = next(iter(found.items()))
-    return CountryHint(regulation=regulation, reason=", ".join(reasons))
+    by_phone = PHONE_REGULATION[phone] if phone else None
+
+    # A corporate footer names countries the supplier merely trades in -
+    # "MilliporeSigma in the US and Canada" sits on a sheet whose own address
+    # is in Australia. The telephone number belongs to the contact details, so
+    # where it agrees with one of the countries named, that is the one.
+    if by_phone and by_phone in countries:
+        return CountryHint(by_phone, f"address, {phone} phone")
+    if len(countries) == 1 and not by_phone:
+        return CountryHint(next(iter(countries)), "address")
+    if by_phone and not countries:
+        return CountryHint(by_phone, f"{phone} phone")
+    # Nothing agrees, or nothing was found: we know less than we thought.
+    return None
