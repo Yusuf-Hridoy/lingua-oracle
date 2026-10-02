@@ -18,17 +18,20 @@ stripped before the code is read.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
-from lingua_oracle.keys.builders.common import now
+from lingua_oracle.keys.builders.common import normalise_code, now
 from lingua_oracle.keys.builders.pdf_tables import (
     ParseIssues,
+    clean_statement,
     dense_code_pages,
     harvest,
     harvest_multilingual,
     harvest_prose,
 )
 from lingua_oracle.keys.builders.signal_words import entries_for, from_english
+from lingua_oracle.match.normalize import normalize, strip_punctuation
 from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Kind, Status, Tier
 from lingua_oracle.registry import data_dir
 
@@ -44,6 +47,71 @@ def _kind(code: str) -> Kind:
     if code.startswith("H"):
         return Kind.HAZARD
     return Kind.PRECAUTIONARY
+
+
+_PART_ONE_CODE_RE = re.compile(
+    r"^\s*(?:\[\s*[FX]\d+\s*)?((?:EUH|AUH|P|H)\s?\d{3}[A-Za-z]?)\s*$"
+)
+
+
+def doc_page_count(path: str) -> int:
+    import pymupdf
+
+    doc = pymupdf.open(path)
+    try:
+        return doc.page_count
+    finally:
+        doc.close()
+
+
+def part_one_statements(path: str, first_page: int, last_page: int) -> dict[str, str]:
+    """{code: text} from the Part 1 tables, which name the code in each row.
+
+    GB CLP states each statement twice, as EU CLP does, and Part 1 carries
+    amendments Part 2 did not receive. Two shapes are rejected here because
+    they are not statements: a Part 2 table's header row, whose second cell is
+    the word "Language", and a cell the table extractor truncated.
+    """
+    import pymupdf
+
+    out: dict[str, str] = {}
+    doc = pymupdf.open(path)
+    try:
+        last = min(last_page, doc.page_count)
+        for index in range(max(0, first_page), last):
+            for table in doc[index].find_tables().tables:
+                for row in table.extract():
+                    if not row or len(row) < 2 or not row[0] or not row[1]:
+                        continue
+                    match = _PART_ONE_CODE_RE.match(" ".join(row[0].split()))
+                    if not match or row[1].strip().lower() == "language":
+                        continue
+                    text = clean_statement(row[1])
+                    if text:
+                        out.setdefault(normalise_code(match.group(1)), text)
+    finally:
+        doc.close()
+    return out
+
+
+def supersedes(held: str, part_one: str) -> bool:
+    """True when the Part 1 rendering is a later text rather than a worse one.
+
+    A rendering that is merely a shortened form of what we hold is a truncated
+    cell - GB CLP's P220 comes out as "Keep away from clothing and other" - and
+    taking it would lose half the statement.
+    """
+    if not part_one or not held:
+        return False
+    if _same_statement(held, part_one):
+        return False
+    short, long = sorted((held.strip(), part_one.strip()), key=len)
+    return not long.startswith(short) or len(part_one) > len(held)
+
+
+def _same_statement(a: str, b: str) -> bool:
+    key = lambda t: strip_punctuation(normalize(t)).casefold()  # noqa: E731
+    return key(a) == key(b)
 
 
 def build(
@@ -85,6 +153,22 @@ def build(
         if code not in found:
             found[code] = text
             added += 1
+
+    # GB CLP states each statement twice as EU CLP does, and the Part 1 tables
+    # carry amendments Part 2 did not receive: Regulation 2019/521 substituted
+    # P103 and P280, and only Part 1 shows it.
+    part_one = part_one_statements(str(path), 0, doc_page_count(str(path)))
+    replaced = sorted(
+        code for code, text in part_one.items()
+        if code in found and supersedes(found[code], text)
+    )
+    for code in replaced:
+        found[code] = part_one[code]
+    if replaced:
+        issues.notes.append(
+            f"Part 1 text used where it supersedes Part 2 ({len(replaced)}): "
+            + ", ".join(replaced)
+        )
 
     # Annex II states the supplemental (EUH) statements as quoted prose rather
     # than in a table, so the table parsers alone miss most of them.

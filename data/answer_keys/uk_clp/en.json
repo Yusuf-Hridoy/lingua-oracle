@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
-  "retrieved_at": "2026-10-01T06:50:49.048731Z",
+  "retrieved_at": "2026-10-02T09:05:19.932769Z",
   "notes": [],
   "entries": [
     {
@@ -1289,13 +1289,13 @@
       "language": "en",
       "code": "P103",
       "kind": "precautionary",
-      "text": "Read label before use.",
+      "text": "Read carefully and follow all instructions.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
       "source_ref": "GB CLP (retained Reg. 1272/2008) Annex II/III/IV, row for P103 (gb_clp_full.pdf, p404)",
-      "retrieved_at": "2026-09-30T07:29:07.555189Z",
+      "retrieved_at": "2026-10-02T09:05:19.932769Z",
       "status": "ok"
     },
     {
@@ -1769,13 +1769,13 @@
       "language": "en",
       "code": "P280",
       "kind": "precautionary",
-      "text": "Wear protective gloves/protective clothing/eye protection/face protection.",
+      "text": "Wear protective gloves/protective clothing/eye protection/face protection/hearing protection/…",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
       "source_ref": "GB CLP (retained Reg. 1272/2008) Annex II/III/IV, row for P280 (gb_clp_full.pdf, p415)",
-      "retrieved_at": "2026-09-30T09:45:55.121972Z",
+      "retrieved_at": "2026-10-02T09:05:19.932769Z",
       "status": "ok"
     },
     {
@@ -2354,13 +2354,13 @@
       "language": "en",
       "code": "P336",
       "kind": "precautionary",
-      "text": "Thaw frosted parts with lukewarm water. Do no rub affected area.",
+      "text": "Thaw frosted parts with lukewarm water. Do not rub affected area.",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "https://www.legislation.gov.uk/eur/2008/1272/contents",
       "source_ref": "GB CLP (retained Reg. 1272/2008) Annex II/III/IV, row for P336 (gb_clp_full.pdf, p424)",
-      "retrieved_at": "2026-09-30T07:29:07.555189Z",
+      "retrieved_at": "2026-10-02T09:05:19.932769Z",
       "status": "ok"
     },
     {

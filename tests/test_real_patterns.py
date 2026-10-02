@@ -313,15 +313,30 @@ def test_a_danish_sheet_against_un_ghs_is_read_as_danish():
     )
 
 
-def test_a_language_with_no_key_is_unverified_not_failed():
-    """Tier C says "not checked". It must never say "wrong"."""
+def test_a_language_with_no_key_produces_no_failures():
+    """UN GHS publishes no Danish, and the sheet must still come out clean.
+
+    Every code here now resolves through tier B - EU CLP publishes Danish, and
+    its English matches UN GHS's for these codes - which is the tier system
+    doing its job. P280 only became borrowable once the key carried the 2019
+    amendment; before that it was tier C.
+    """
     report = check_pdf(pdf("pattern_language_outside_regulation"))
     fails = [f for f in report.findings
              if f.severity is Severity.FAIL and not f.unverified]
     assert fails == [], [f"{f.check_id} {f.code}: {f.message}" for f in fails]
-    assert any(f.unverified for f in report.findings), (
-        "nothing was reported as unverified, so the absent key went unnoticed"
-    )
+    assert report.coverage.percent == 100.0
+    assert all(v.status == "correct" for v in report.statements), [
+        (v.code, v.status) for v in report.statements
+    ]
+
+
+def test_a_code_with_no_reference_is_unverified_not_failed():
+    """Tier C says "not checked". It must never say "wrong"."""
+    report = check_pdf(pdf("defect_c12_euh_on_osha"), "us_osha")
+    unverified = [f for f in report.findings if f.unverified]
+    assert unverified, "the absent key went unnoticed"
+    assert all(f.severity is not Severity.FAIL for f in unverified)
 
 
 def test_official_languages_only_break_a_tie():

@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-01T06:44:46.186269Z",
+  "retrieved_at": "2026-10-02T08:59:00.221694Z",
   "notes": [],
   "entries": [
     {
@@ -1199,13 +1199,13 @@
       "language": "sk",
       "code": "P103",
       "kind": "precautionary",
-      "text": "Pred použitím si prečítajte etiketu.",
+      "text": "Pozorne si prečítajte všetky pokyny a dodržiavajte ich",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P103",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P103; Part 1 text, amended after Part 2",
+      "retrieved_at": "2026-10-02T08:58:59.635532Z",
       "status": "ok"
     },
     {
@@ -1679,13 +1679,13 @@
       "language": "sk",
       "code": "P280",
       "kind": "precautionary",
-      "text": "Noste ochranné rukavice/ochranný odev/ochranné okuliare/ochranu tváre.",
+      "text": "Noste ochranné rukavice/ochranný odev/ochranné okuliare/ochranu tváre/prostriedky na ochranu sluchu/…",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P280",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P280; Part 1 text, amended after Part 2",
+      "retrieved_at": "2026-10-02T08:58:59.635532Z",
       "status": "ok"
     },
     {

@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-01T06:44:46.186269Z",
+  "retrieved_at": "2026-10-02T08:59:00.221694Z",
   "notes": [],
   "entries": [
     {
@@ -1199,13 +1199,13 @@
       "language": "nl",
       "code": "P103",
       "kind": "precautionary",
-      "text": "Alvorens te gebruiken, het etiket lezen.",
+      "text": "Lees aandachtig en volg alle instructies op",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P103",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P103; Part 1 text, amended after Part 2",
+      "retrieved_at": "2026-10-02T08:58:59.635532Z",
       "status": "ok"
     },
     {
@@ -1679,13 +1679,13 @@
       "language": "nl",
       "code": "P280",
       "kind": "precautionary",
-      "text": "Beschermende handschoenen/beschermende kleding/oogbescherming/gelaatsbescherming dragen.",
+      "text": "Draag beschermende handschoenen/beschermende kleding/oogbescherming/gelaatsbescherming/gehoorbescherming ...",
       "signal_word": null,
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P280",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
+      "source_ref": "Annex III/IV table for P280; Part 1 text, amended after Part 2",
+      "retrieved_at": "2026-10-02T08:58:59.635532Z",
       "status": "ok"
     },
     {

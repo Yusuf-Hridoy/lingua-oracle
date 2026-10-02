@@ -827,3 +827,79 @@ def test_no_statement_is_two_statements_run_together():
                     bad.append((key.regulation, key.language, code, other))
                     break
     assert bad == [], bad[:10]
+
+
+# -- CLP states each statement twice; the key must hold the amended one --------
+
+
+def test_p103_is_the_amended_text():
+    """Regulation (EU) 2019/521 replaced "Read label before use.".
+
+    The consolidated act shows the new wording only in Annex IV Part 1, under a
+    M19 block; Part 2, which the builder reads, still carries the old one.
+    """
+    from lingua_oracle.keys.store import load_key
+
+    for regulation in ("eu_clp", "uk_clp"):
+        text = load_key(regulation, "en").by_code()["P103"].text
+        assert text == "Read carefully and follow all instructions.", regulation
+
+
+def test_p280_includes_hearing_protection():
+    from lingua_oracle.keys.store import load_key
+
+    for regulation in ("eu_clp", "uk_clp"):
+        text = load_key(regulation, "en").by_code()["P280"].text
+        assert "hearing protection" in text, regulation
+        assert text.startswith("Wear protective gloves/protective clothing/")
+
+
+@pytest.mark.parametrize("code", ["P103", "P280"])
+def test_the_amendment_reached_every_language(code):
+    """An amendment rewrites every translation, which is how it was identified."""
+    from lingua_oracle.keys.store import available_languages, load_key
+
+    stale = {
+        "P103": "Read label before use.",
+        "P280": "Wear protective gloves/protective clothing/eye protection/face protection.",
+    }[code]
+    behind = []
+    for language in available_languages("eu_clp"):
+        entry = load_key("eu_clp", language).by_code().get(code)
+        if entry is None:
+            continue
+        if language == "en" and entry.text == stale:
+            behind.append(language)
+        # Every language's text must differ from the pre-2019 English one and
+        # must not be empty.
+        assert entry.text, f"{language}/{code} is empty"
+    assert behind == [], behind
+
+
+def test_no_code_holds_two_different_current_texts():
+    """The permanent form of the audit that found this.
+
+    CLP states each statement in Annex IV Part 1 and again in Part 2. Where the
+    two disagree substantively, one of them is out of date, and the key has to
+    hold the one in force - never a mixture, and never silently the older.
+    """
+    import json
+
+    from lingua_oracle.match.normalize import normalize, strip_punctuation
+    from lingua_oracle.registry import data_dir
+
+    record = data_dir() / "audits" / "eu_clp_annex_iv.json"
+    if not record.exists():
+        pytest.skip("no audit record; rebuild eu_clp to produce one")
+    audit = json.loads(record.read_text(encoding="utf-8"))
+
+    key = lambda t: strip_punctuation(normalize(t)).casefold()  # noqa: E731
+    from lingua_oracle.keys.store import load_key
+
+    for code, langs in audit.get("amended", {}).items():
+        for language in langs:
+            entry = load_key("eu_clp", language).by_code().get(code)
+            assert entry is not None, f"{language}/{code} vanished"
+            assert key(entry.text) == key(audit["text"][code][language]), (
+                f"{language}/{code} is not the text the audit chose"
+            )

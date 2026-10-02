@@ -34,6 +34,7 @@ from lingua_oracle.keys.builders.common import (
     strip_markers,
 )
 from lingua_oracle.keys.builders.signal_words import leading_word
+from lingua_oracle.match.normalize import normalize, strip_punctuation
 from lingua_oracle.models import (
     SIGNAL_DANGER,
     SIGNAL_WARNING,
@@ -174,6 +175,70 @@ def hazard_class_codes(doc) -> list[str]:
                             out.append(f"{stem} {extra}")
         break
     return sorted({c for c in out if c})
+
+
+_CODE_CELL = re.compile(r"^(EUH|AUH|P|H)\s?\d{3}[A-Za-z]?$")
+
+
+def part_one_statements(doc) -> dict[str, str]:
+    """{code: text} from Annex IV Part 1, the tables that select statements.
+
+    CLP states each statement twice: Part 1 lists it beside the hazard class it
+    is selected for, and Part 2 gives it in all 24 languages. They are normally
+    identical, and where they are not, Part 1 has sometimes had an amendment
+    Part 2 did not - Regulation (EU) 2019/521 rewrote P103 and P280, and in this
+    consolidation only Part 1 shows it, under a ▼M19 block.
+
+    Part 1 tables carry five columns and name the code in each row; Part 2
+    tables carry three and name the code in the header.
+    """
+    out: dict[str, str] = {}
+    for table in doc.xpath("//table"):
+        rows = table.xpath(".//tr")
+        if len(rows) < 2:
+            continue
+        head = _row_cells(rows[0])
+        if len(head) < 3 or _CODE_CELL.match(head[0].strip().replace(" ", "")):
+            continue
+        for row in rows[1:]:
+            cells = _row_cells(row)
+            if len(cells) < 2:
+                continue
+            code = normalise_code(cells[0])
+            if _CODE_CELL.match(code) and cells[1].strip():
+                out.setdefault(code, strip_markers(cells[1]))
+    return out
+
+
+def _same_statement(a: str, b: str) -> bool:
+    """True when two renderings differ only in punctuation, spacing or case."""
+    key = lambda t: strip_punctuation(normalize(t)).casefold()  # noqa: E731
+    return key(a) == key(b)
+
+
+#: How much of the language set has to show the same disagreement before Part 1
+#: is taken as an amendment. A real amendment rewrites every translation; a
+#: rendering difference in one or two languages is Part 1 abbreviating a row.
+_AMENDMENT_SHARE = 0.8
+
+
+def amended_in_part_one(
+    part_one: dict[str, dict[str, str]], part_two: dict[str, dict[str, str]]
+) -> dict[str, list[str]]:
+    """Codes whose Part 1 text supersedes Part 2, with the languages agreeing."""
+    languages = sorted(set(part_one) & set(part_two))
+    if len(languages) < 20:
+        return {}  # not a full build; nothing to compare across
+    disagreeing: dict[str, list[str]] = {}
+    for lang in languages:
+        for code, text in part_one[lang].items():
+            other = part_two[lang].get(code)
+            if other and not _same_statement(text, other):
+                disagreeing.setdefault(code, []).append(lang)
+    return {
+        code: langs for code, langs in disagreeing.items()
+        if len(langs) >= _AMENDMENT_SHARE * len(languages)
+    }
 
 
 def parse_statements(doc) -> dict[str, list[AnswerKeyEntry]]:
@@ -379,6 +444,35 @@ def _signal_words_for(lang, iso3, en_doc, positions, en_tables, entries, *, use_
     return words, note
 
 
+def write_part_audit(amended: dict[str, list[str]],
+                     part_one: dict[str, dict[str, str]]) -> Path:
+    """Record which codes Part 1 superseded, and with what.
+
+    The audit that found P103 and P280 becomes a permanent test: the key has to
+    keep holding the text this build chose, in every language it chose it for.
+    """
+    # Not under answer_keys/: everything there is loaded as a key.
+    target = data_dir() / "audits" / "eu_clp_annex_iv.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        json.dumps(
+            {
+                "source": CELEX,
+                "note": "Annex IV Part 1 text used where Part 2 was not amended",
+                "amended": {c: sorted(langs) for c, langs in sorted(amended.items())},
+                "text": {
+                    code: {lang: part_one[lang][code]
+                           for lang in sorted(langs) if code in part_one.get(lang, {})}
+                    for code, langs in sorted(amended.items())
+                },
+            },
+            ensure_ascii=False, indent=1, sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+    return target
+
+
 def write_hazard_classes(doc) -> Path:
     """Commit the class list so check time needs no network and no parse."""
     target = data_dir() / "hazard_classes" / "eu_clp.json"
@@ -389,6 +483,11 @@ def write_hazard_classes(doc) -> Path:
         encoding="utf-8",
     )
     return target
+
+
+#: Filled by the last build: {code: [languages where Part 1 superseded Part 2]}.
+#: Written into the parse report so the choice is on the record.
+AMENDED_IN_PART_ONE: dict[str, list[str]] = {}
 
 
 def build(languages: list[str] | None = None, *, use_cache: bool = True,
@@ -405,6 +504,30 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
     en_tables = en_doc.xpath("//table")
     ts = now()
 
+    # Each language's own act, read for Part 1. Fetched once here rather than
+    # inside the loop below, because deciding whether a difference is an
+    # amendment needs every language at once.
+    part_one: dict[str, dict[str, str]] = {}
+    part_two: dict[str, dict[str, str]] = {
+        lang: {e.code: e.text for e in entries if e.text}
+        for lang, entries in per_lang.items()
+    }
+    for lang in wanted:
+        iso3 = LANGS.get(lang)
+        if iso3 is None:
+            continue
+        try:
+            doc = en_doc if lang == "en" else _doc(iso3, use_cache=use_cache)
+        except SourceUnavailable:
+            continue  # the language's own act is unavailable; Part 2 stands
+        part_one[lang] = part_one_statements(doc)
+
+    amended = amended_in_part_one(part_one, part_two)
+    AMENDED_IN_PART_ONE.clear()
+    AMENDED_IN_PART_ONE.update(amended)
+    if amended:
+        write_part_audit(amended, part_one)
+
     keys: list[AnswerKey] = []
     for lang in wanted:
         iso3 = LANGS.get(lang)
@@ -415,6 +538,17 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
             if e.code in code_signals
             else e
             for e in per_lang.get(lang, [])
+        ]
+        # Where Part 1 carries an amendment Part 2 never received, Part 1 is
+        # the text in force. Chosen per code, never blended within a statement.
+        newer = part_one.get(lang, {})
+        entries = [
+            e.model_copy(update={
+                "text": newer[e.code],
+                "source_ref": f"{e.source_ref}; Part 1 text, amended after Part 2",
+            })
+            if e.code in amended and newer.get(e.code) else e
+            for e in entries
         ]
         if with_signal_words:
             words, note = _signal_words_for(lang, iso3, en_doc, positions, en_tables,
