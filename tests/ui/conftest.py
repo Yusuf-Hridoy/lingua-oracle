@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 import shutil
+import signal
 import socket
 import subprocess
 import time
@@ -27,6 +28,22 @@ pytest.importorskip(
 )
 
 
+def _stop(proc: subprocess.Popen) -> None:
+    """Signal the whole group, so uvicorn goes with its parent."""
+    for signal_number in (signal.SIGTERM, signal.SIGKILL):
+        if proc.poll() is not None:
+            return
+        try:
+            os.killpg(os.getpgid(proc.pid), signal_number)
+        except (ProcessLookupError, PermissionError):
+            proc.kill()
+        try:
+            proc.wait(timeout=10)
+            return
+        except subprocess.TimeoutExpired:
+            continue
+
+
 def _free_port() -> int:
     with socket.socket() as s:
         s.bind(("127.0.0.1", 0))
@@ -40,9 +57,14 @@ def server(tmp_path_factory) -> str:
     env = dict(os.environ)
     # Reports written by the browser runs go to a temp dir, not the repo's.
     env["LINGUA_REPORTS_DIR"] = str(tmp_path_factory.mktemp("ui-reports"))
+    # Its own process group: "uv run" spawns uvicorn as a child, and
+    # terminating only the parent leaves the server alive holding its port and
+    # competing for the machine. Interrupted runs used to leak one each time,
+    # which showed up later as goto timeouts in a perfectly good suite.
     proc = subprocess.Popen(
         ["uv", "run", "lingua", "serve", "--host", "127.0.0.1", "--port", str(port)],
         cwd=ROOT, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        start_new_session=True,
     )
     base = f"http://127.0.0.1:{port}"
     deadline = time.time() + 90
@@ -62,11 +84,7 @@ def server(tmp_path_factory) -> str:
     try:
         yield base
     finally:
-        proc.terminate()
-        try:
-            proc.wait(timeout=15)
-        except subprocess.TimeoutExpired:
-            proc.kill()
+        _stop(proc)
 
 
 @pytest.fixture(scope="session")
