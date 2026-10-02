@@ -252,6 +252,14 @@ def _compile_variants(template: str, *, ignore_case: bool = True) -> list[re.Pat
                 )
                 variants.append(pattern)
 
+    # A statement ending in an open option - ".../hearing protection/…" - has no
+    # full stop, because the author is meant to continue it. One who takes a
+    # subset and stops writes the sentence out: "…/face protection." Without
+    # this, the only reading that matched was the one where the open option
+    # swallowed "face protection." as if it were filled in, so a correct subset
+    # came back as an unfinished blank.
+    closing = r"[.!?]?" if tpl.rstrip().endswith("…") else ""
+
     compiled: list[re.Pattern[str]] = []
     seen: set[str] = set()
     for v in variants:
@@ -260,7 +268,9 @@ def _compile_variants(template: str, *, ignore_case: bool = True) -> list[re.Pat
         seen.add(v)
         flags = re.IGNORECASE if ignore_case else 0
         try:
-            pattern = re.compile(r"^\s*" + _optional_brackets(v) + r"\s*$", flags)
+            pattern = re.compile(
+                r"^\s*" + _optional_brackets(v) + closing + r"\s*$", flags
+            )
         except re.error:
             continue
         if pattern.match(_CATCHALL_PROBE):

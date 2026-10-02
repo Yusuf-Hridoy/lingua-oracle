@@ -9,6 +9,7 @@ Run directly to regenerate:  uv run python tests/make_fixtures.py
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -122,6 +123,23 @@ def signal_text(regulation: str, language: str, danger: bool = True) -> str:
     return entry.text
 
 
+_OPEN_OPTION_RE = re.compile(r"\s*/\s*…\s*$")
+
+
+def close_open_options(text: str) -> str:
+    """Write out a statement that ends in an open option, as a sheet would.
+
+    ".../hearing protection/…" invites the author to add their own and has no
+    full stop. A real sheet keeps the options that apply and ends the sentence.
+    Fixtures that are meant to be correct have to do the same, or they ship an
+    unfilled blank and are not correct at all.
+    """
+    closed = _OPEN_OPTION_RE.sub("", text or "")
+    if closed == text:
+        return text
+    return closed if closed.endswith((".", "!", "?")) else closed + "."
+
+
 def write_sds(
     path: Path,
     *,
@@ -145,6 +163,7 @@ def write_sds(
     omit_from_s16 = omit_from_s16 or set()
     all_codes = h_codes + p_codes + supplemental
     official = texts(regulation, language, all_codes)
+    official = {code: close_open_options(text) for code, text in official.items()}
     official.update({k: v for k, v in overrides.items() if k in official})
 
     sheet = Sheet(path)
@@ -427,7 +446,8 @@ def _language_outside_the_regulation(path: Path) -> Path:
     """
     head = HEADINGS["da"]
     codes = ["H225", "H319"], ["P210", "P280"]
-    official = texts("eu_clp", "da", codes[0] + codes[1])
+    official = {c: close_open_options(t)
+                for c, t in texts("eu_clp", "da", codes[0] + codes[1]).items()}
 
     sheet = Sheet(path)
     sheet.line(PRODUCT, bold=True, size=12)

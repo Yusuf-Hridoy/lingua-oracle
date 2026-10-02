@@ -903,3 +903,53 @@ def test_no_code_holds_two_different_current_texts():
             assert key(entry.text) == key(audit["text"][code][language]), (
                 f"{language}/{code} is not the text the audit chose"
             )
+
+
+# -- an open option is not an unfilled blank ----------------------------------
+
+
+@pytest.mark.parametrize(
+    ("document", "fillins"),
+    [
+        # A subset that drops the open option and ends the sentence is correct.
+        ("Wear protective gloves/protective clothing/eye protection/face protection.", []),
+        ("Wear protective gloves/eye protection.", []),
+        ("Wear protective gloves.", []),
+        # Without the full stop too.
+        ("Wear protective gloves/protective clothing/eye protection/face protection", []),
+        # A literal leftover placeholder IS an unfilled blank.
+        ("Wear protective gloves/protective clothing/eye protection/face protection/"
+         "hearing protection/…", ["…"]),
+        ("Wear protective gloves/protective clothing/eye protection/face protection/"
+         "hearing protection/ …", ["…"]),
+        # Something the author wrote into the open option is a filled value.
+        ("Wear protective gloves/protective clothing/eye protection/face protection/"
+         "hearing protection/a rubber apron.", ["a rubber apron"]),
+    ],
+)
+def test_an_open_option_may_simply_be_dropped(document, fillins):
+    """".../hearing protection/…" invites more; a sheet may decline."""
+    from lingua_oracle.keys.store import load_key
+    from lingua_oracle.match.template import match
+
+    result = match(document, load_key("eu_clp", "en").by_code()["P280"].text)
+    assert result.matched, document
+    assert result.fillins == fillins, result.fillins
+
+
+def test_the_rule_holds_for_every_open_ended_statement():
+    """Not P280 alone: any template ending in an open option behaves this way."""
+    from lingua_oracle.keys.store import load_key
+    from lingua_oracle.match.template import match
+
+    key = load_key("eu_clp", "en").by_code()
+    open_ended = [e for e in key.values()
+                  if e.text.rstrip().endswith("…") and "/" in e.text]
+    assert len(open_ended) > 3, "no open-ended statements to check"
+    for entry in open_ended:
+        subset = entry.text.rstrip().rsplit("/", 1)[0] + "."
+        result = match(subset, entry.text)
+        assert result.matched, entry.code
+        assert not [v for v in result.fillins if "…" in v], (
+            f"{entry.code}: dropping the open option read as an unfilled blank"
+        )
