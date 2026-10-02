@@ -27,7 +27,12 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from itertools import combinations
 
-from lingua_oracle.match.normalize import normalize, strip_punctuation
+from lingua_oracle.match.normalize import (
+    fold_homoglyphs,
+    folds_homoglyphs,
+    normalize,
+    strip_punctuation,
+)
 
 # A fill-in: an ellipsis, an <instruction>, or a (parenthetical instruction).
 # The sources write the same slot three ways - EU CLP uses angle brackets, the
@@ -309,19 +314,36 @@ def compile_template(template: str, *, ignore_case: bool = True) -> list[re.Patt
 _TERMINATORS = (".", "!", "?")
 
 
-def match(found: str, template: str, *, optional_terminator: bool = False) -> MatchResult:
+def match(found: str, template: str, *, optional_terminator: bool = False,
+          language: str | None = None) -> MatchResult:
     """Compare a phrase from a document against official template text.
 
     `optional_terminator` is for a regulation whose own rendering prints the
     statements without a closing full stop (us_osha - see the note in
-    data/regulations.yaml). It lets the document end the sentence normally. It
-    never works the other way round: a document that DROPS a terminator the
-    official text has is still a difference, and no other punctuation moves.
+    data/regulations.yaml). It lets the document end the sentence normally and
+    report nothing at all. It never works the other way round: a document that
+    DROPS a terminator the official text has is still a difference, and no
+    other punctuation moves.
+
+    `language` enables the homoglyph fold for the alphabets that share letter
+    shapes with Latin. It is a second attempt, made only when the plain
+    comparison has already failed, so a document is never judged against
+    anything but its own text.
     """
     f = normalize(found)
     t = normalize(template)
     if not f:
         return MatchResult(False, MatchKind.MISMATCH, message="empty text in document")
+    result = _compare(f, t, optional_terminator=optional_terminator)
+    if result.matched or not folds_homoglyphs(language):
+        return result
+    folded_f, folded_t = (fold_homoglyphs(f, language), fold_homoglyphs(t, language))
+    if (folded_f, folded_t) == (f, t):
+        return result
+    return _compare(folded_f, folded_t, optional_terminator=optional_terminator)
+
+
+def _compare(f: str, t: str, *, optional_terminator: bool) -> MatchResult:
     if optional_terminator and not t.endswith(_TERMINATORS) and f.endswith(_TERMINATORS):
         f = f[:-1].rstrip()
 
@@ -358,6 +380,24 @@ def match(found: str, template: str, *, optional_terminator: bool = False) -> Ma
         if m:
             return MatchResult(True, MatchKind.CASE, fillins=_fillins(m),
                                message="differs only in capitalisation")
+
+    # The official text of several statements stops without a full stop - the
+    # consolidation prints "…/Gehörschutz/… tragen" that way, and so does the
+    # act. An author who writes the sentence out ends it normally, and the only
+    # difference is that full stop. It is reported, never failed: the subset the
+    # author chose is correct, so this goes through the template again with the
+    # terminator set aside rather than falling through to a mismatch.
+    if not t.endswith(_TERMINATORS) and f.endswith(_TERMINATORS):
+        trimmed = f[:-1].rstrip()
+        for patterns, message in (
+            (compile_template(t, ignore_case=False), "differs only in punctuation"),
+            (compile_template(t), "differs only in punctuation and letter case"),
+        ):
+            for pattern in patterns:
+                m = pattern.match(trimmed)
+                if m:
+                    return MatchResult(True, MatchKind.PUNCTUATION,
+                                       fillins=_fillins(m), message=message)
 
     if strip_punctuation(f) == strip_punctuation(t):
         return MatchResult(True, MatchKind.PUNCTUATION, message="differs only in punctuation")

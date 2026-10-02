@@ -222,3 +222,106 @@ def test_the_2013_act_amended_both_parts():
     m4 = _act_audit()["M4"]["annex_iv"]
     assert "P210" in m4["Part 1"]
     assert "P210" in m4["Part 2"]
+
+
+# -- what the comparison does with a carried defect ---------------------------
+
+
+GERMAN_P280 = ("Schutzhandschuhe/Schutzkleidung/Augenschutz/Gesichtsschutz/"
+               "Gehörschutz/… tragen")
+
+
+@pytest.mark.parametrize("document", [
+    # The official German text stops without a full stop, in the act as well as
+    # the consolidation. An author who writes the sentence out ends it normally.
+    "Schutzhandschuhe/Augenschutz tragen",
+    "Schutzhandschuhe/Augenschutz tragen.",
+    "Schutzhandschuhe/Schutzkleidung/Augenschutz/Gesichtsschutz tragen",
+    "Schutzhandschuhe/Schutzkleidung/Augenschutz/Gesichtsschutz tragen.",
+    GERMAN_P280,
+    GERMAN_P280 + ".",
+])
+def test_a_full_stop_the_official_text_lacks_is_never_a_failure(document):
+    from lingua_oracle.match.template import match
+
+    result = match(document, GERMAN_P280, language="de")
+    assert result.matched, document
+
+
+def test_the_full_stop_is_still_reported_as_something_to_check():
+    """Never wrong wording - but not silent either."""
+    from lingua_oracle.match.template import MatchKind, match
+
+    with_stop = match("Schutzhandschuhe/Augenschutz tragen.", GERMAN_P280)
+    without = match("Schutzhandschuhe/Augenschutz tragen", GERMAN_P280)
+    assert with_stop.kind is MatchKind.PUNCTUATION
+    assert without.kind is MatchKind.TEMPLATE
+
+
+def test_a_real_wording_difference_still_fails_with_a_full_stop_on_it():
+    from lingua_oracle.match.template import match
+
+    assert not match("Schutzhandschuhe/Augenschutz anlegen.", GERMAN_P280).matched
+
+
+def test_a_document_that_drops_a_full_stop_the_act_has_is_still_reported():
+    """The tolerance runs one way: this is the case it must not swallow."""
+    from lingua_oracle.match.template import MatchKind, match
+
+    result = match("Read label before use", "Read label before use.")
+    assert result.matched
+    assert result.kind is MatchKind.PUNCTUATION
+
+
+# -- homoglyphs ---------------------------------------------------------------
+
+
+GREEK_KEY = ("Aποφεύγετε να αναπνέετε σκόνη/αναθυμιάσεις/αέρια/σταγονίδια/"
+             "ατμούς/εκνεφώματα.")          # opens with LATIN CAPITAL A - the act's own
+GREEK_DOC = ("Αποφεύγετε να αναπνέετε σκόνη/αναθυμιάσεις/αέρια/σταγονίδια/"
+             "ατμούς/εκνεφώματα.")          # opens with GREEK CAPITAL ALPHA
+
+
+def test_a_greek_document_matches_the_acts_latin_a():
+    from lingua_oracle.match.template import match
+
+    assert match(GREEK_DOC, GREEK_KEY, language="el").matched
+
+
+def test_and_the_other_way_round():
+    """A document carrying the same slip is not failed for it either."""
+    from lingua_oracle.match.template import match
+
+    assert match(GREEK_KEY, GREEK_DOC, language="el").matched
+
+
+def test_the_fold_is_not_applied_to_languages_that_do_not_need_it():
+    from lingua_oracle.match.template import match
+
+    for language in (None, "en", "de", "ru"):
+        assert not match(GREEK_DOC, GREEK_KEY, language=language).matched
+
+
+def test_folding_never_hides_a_real_difference():
+    from lingua_oracle.match.template import match
+
+    assert not match("Αποφεύγετε να πίνετε νερό.", GREEK_KEY, language="el").matched
+
+
+def test_bulgarian_folds_against_cyrillic():
+    from lingua_oracle.match.template import match
+
+    latin = "Избягвайте вдишване на прах. 50 °C"      # C is LATIN CAPITAL C
+    cyrillic = "Избягвайте вдишване на прах. 50 °С"   # C is CYRILLIC CAPITAL ES
+    assert match(latin, cyrillic, language="bg").matched
+    assert match(cyrillic, latin, language="bg").matched
+    assert not match(latin, cyrillic, language="el").matched
+
+
+def test_the_text_itself_is_never_rewritten():
+    """Folding is for comparing. The key keeps what the act printed."""
+    from lingua_oracle.keys.store import load_key
+
+    entry = load_key("eu_clp", "el").by_code()["P261"]
+    assert entry.text.startswith("A")          # U+0041, as the act prints it
+    assert ord(entry.text[0]) == 0x41
