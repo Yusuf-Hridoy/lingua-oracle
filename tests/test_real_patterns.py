@@ -692,3 +692,32 @@ def test_the_stamp_also_covers_the_generator():
     finally:
         conftest.MAKER.write_bytes(original)
     assert conftest._inputs_digest() == before
+
+
+# -- a full stop the official German text does not have -----------------------
+
+
+@pytest.mark.parametrize("fixture", ["pattern_de_no_terminator",
+                                     "pattern_de_terminator"])
+def test_a_german_sheet_is_never_failed_over_a_final_full_stop(fixture):
+    """The two sheets differ by one character: the full stop after "tragen".
+
+    The official German P280 stops without one - in Regulation (EU) 2019/521 as
+    well as in the consolidation - so an author who writes the sentence out
+    properly disagrees with the act. That is something to check, never wrong
+    wording.
+    """
+    report = check_pdf(pdf(fixture), "eu_clp")
+    assert report.language == "de"
+    verdict = next(s for s in report.statements if s.code == "P280")
+    assert verdict.status in {"correct", "check"}, verdict.why
+    assert not [f for f in report.findings
+                if f.code == "P280" and f.severity == Severity.FAIL]
+
+
+def test_the_two_german_sheets_differ_only_in_that_full_stop():
+    with_stop = check_pdf(pdf("pattern_de_terminator"), "eu_clp")
+    without = check_pdf(pdf("pattern_de_no_terminator"), "eu_clp")
+    assert {s.code for s in with_stop.statements} == {
+        s.code for s in without.statements}
+    assert all(s.status in {"correct", "check"} for s in with_stop.statements)

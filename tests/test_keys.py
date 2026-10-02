@@ -945,17 +945,52 @@ def test_a_defect_the_act_itself_prints_is_never_corrected():
     """The line between a typing error and the law.
 
     Where the amending act prints the defect too, there is nothing to correct
-    the text from, and inventing the repair is not an option. Those entries are
-    withheld, never quietly fixed.
+    the text from, and inventing the repair is not an option. What follows is
+    decided by what the defect costs: one that loses meaning withholds the
+    entry, one that costs only appearance is carried and recorded.
     """
+    from lingua_oracle.keys.builders.defects import WITHHOLDING
+
     audit = _part_audit()
-    confirmed = [(c, lang) for c, r in audit.items()
+    confirmed = [(c, lang, v) for c, r in audit.items()
                  for lang, v in r["languages"].items()
                  if v.get("act_confirms_defect")]
     assert confirmed, "no defect was checked against its act"
-    for code, language in confirmed:
-        assert load_key("eu_clp", language).by_code()[code].status is (
-            Status.NOT_ON_FILE), f"{language}/{code}"
+    for code, language, chosen in confirmed:
+        entry = load_key("eu_clp", language).by_code()[code]
+        costly = any(d.split(":", 1)[0] in WITHHOLDING for d in chosen["defects"])
+        if costly:
+            assert entry.status is Status.NOT_ON_FILE, f"{language}/{code}"
+        else:
+            assert entry.status is Status.OK, f"{language}/{code}"
+            assert entry.text == chosen["text"], f"{language}/{code}"
+
+
+def test_a_carried_defect_is_still_written_down():
+    """Used is not the same as unnoticed: the entry says what is in its text."""
+    audit = _part_audit()
+    carried = [(c, lang, v) for c, r in audit.items()
+               for lang, v in r["languages"].items()
+               if v["status"] == "ok" and v["defects"]]
+    assert len(carried) >= 15
+    for code, language, chosen in carried:
+        entry = load_key("eu_clp", language).by_code()[code]
+        assert entry.status is Status.OK
+        assert "it" in (entry.source_ref or "")
+        assert any(d.split(":", 1)[1].strip()[:20] in (entry.source_ref or "")
+                   for d in chosen["defects"]), f"{language}/{code}"
+        assert code in resolve("eu_clp", language).entries
+
+
+def test_only_a_defect_that_loses_meaning_withholds_an_entry():
+    from lingua_oracle.keys.builders.defects import WITHHOLDING
+
+    for code, record in _part_audit().items():
+        for language, chosen in record["languages"].items():
+            if chosen["status"] != "not_on_file" or not chosen["defects"]:
+                continue
+            kinds = {d.split(":", 1)[0] for d in chosen["defects"]}
+            assert kinds & WITHHOLDING, f"{language}/{code} withheld for {kinds}"
 
 
 # -- an open option is not an unfilled blank ----------------------------------

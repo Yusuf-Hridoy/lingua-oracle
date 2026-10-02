@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-02T11:29:02.537429Z",
+  "retrieved_at": "2026-10-02T12:15:38.786073Z",
   "notes": [],
   "entries": [
     {
@@ -1549,9 +1549,9 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P260; Annex IV Part 2, in force under REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1), but the sentence ends 'α' where the other Part ends it with a full stop - not used for a verdict",
-      "retrieved_at": "2026-10-02T11:29:01.932916Z",
-      "status": "not_on_file"
+      "source_ref": "Annex III/IV table for P260; Annex IV Part 2, in force under REGULATION (EC) No 1272/2008 OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 16 December 2008 on classification, labelling and packaging of substances and mixtures, amending and repealing Directives 67/548/EEC and 1999/45/EC, and amending Regulation (EC) No 1907/2006 (Text with EEA relevance) (OJ L 353 31.12.2008, p. 1) - as printed it has terminator: the sentence ends 'α' where the other Part ends it with a full stop",
+      "retrieved_at": "2026-10-02T12:15:38.197529Z",
+      "status": "ok"
     },
     {
       "regulation": "eu_clp",
@@ -1564,9 +1564,9 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P261; Annex IV Part 2, in force under Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217), but a greek sentence containing the latin character 'A' (U+0041) in 'Aποφεύγετε' - not used for a verdict",
-      "retrieved_at": "2026-10-02T11:22:16.998344Z",
-      "status": "not_on_file"
+      "source_ref": "Annex III/IV table for P261; Annex IV Part 2, in force under Corrigendum, OJ L 051, 25.2.2020, p. 13 (2020/217) - as printed it has wrong script: a greek sentence containing the latin character 'A' (U+0041) in 'Aποφεύγετε'",
+      "retrieved_at": "2026-10-02T12:15:38.197529Z",
+      "status": "ok"
     },
     {
       "regulation": "eu_clp",

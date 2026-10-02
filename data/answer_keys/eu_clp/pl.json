@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-02T11:29:02.537429Z",
+  "retrieved_at": "2026-10-02T12:15:38.786073Z",
   "notes": [],
   "entries": [
     {
@@ -1204,9 +1204,9 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P103; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019, but the sentence ends 'h' where the other Part ends it with a full stop - the act prints it that way too, so it cannot be corrected from the act - not used for a verdict",
-      "retrieved_at": "2026-10-02T11:29:01.932916Z",
-      "status": "not_on_file"
+      "source_ref": "Annex III/IV table for P103; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2019/521 of 27 March 2019 - the act prints it with terminator: the sentence ends 'h' where the other Part ends it with a full stop",
+      "retrieved_at": "2026-10-02T12:15:38.197529Z",
+      "status": "ok"
     },
     {
       "regulation": "eu_clp",
@@ -3034,8 +3034,8 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P413; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016, but 1 fill-in(s) fewer than the same sentence has in the other Part - the act prints it that way too, so it cannot be corrected from the act - not used for a verdict",
-      "retrieved_at": "2026-10-02T11:29:01.932916Z",
+      "source_ref": "Annex III/IV table for P413; Annex IV Part 1, in force under COMMISSION REGULATION (EU) 2016/918 of 19 May 2016, but blank: 1 fill-in(s) fewer than the same sentence has in the other Part - the act prints it that way too, so it cannot be corrected from the act - not used for a verdict",
+      "retrieved_at": "2026-10-02T12:15:38.197529Z",
       "status": "not_on_file"
     },
     {

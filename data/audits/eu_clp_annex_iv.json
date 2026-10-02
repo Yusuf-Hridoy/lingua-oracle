@@ -138,11 +138,11 @@
     "fi": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Lue huolellisesti ja noudata kaikkia ohjeita",
      "superseded": "Lue merkinnät ennen käyttöä.",
      "defects": [
-      "the sentence ends 'a' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'a' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -203,11 +203,11 @@
     "lv": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Uzmanīgi izlasiet visas instrukcijas un ievērojiet tās",
      "superseded": "Pirms izmantošanas izlasīt etiķeti.",
      "defects": [
-      "the sentence ends 's' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 's' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -223,33 +223,33 @@
     "nl": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Lees aandachtig en volg alle instructies op",
      "superseded": "Alvorens te gebruiken, het etiket lezen.",
      "defects": [
-      "the sentence ends 'p' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'p' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
     "pl": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Uważnie przeczytać wszystkie instrukcje i zastosować się do nich",
      "superseded": "Przed użyciem przeczytać etykietę.",
      "defects": [
-      "the sentence ends 'h' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'h' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
     "pt": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Ler atentamente e seguir todas as instruções",
      "superseded": "Ler o rótulo antes da utilização.",
      "defects": [
-      "the sentence ends 's' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 's' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -265,11 +265,11 @@
     "sk": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Pozorne si prečítajte všetky pokyny a dodržiavajte ich",
      "superseded": "Pred použitím si prečítajte etiketu.",
      "defects": [
-      "the sentence ends 'h' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'h' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -285,11 +285,11 @@
     "sv": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Läs noggrant och följ alla instruktioner,",
      "superseded": "Läs etiketten före användning.",
      "defects": [
-      "the sentence ends ',' where the other Part ends it with a full stop"
+      "terminator: the sentence ends ',' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     }
@@ -395,11 +395,11 @@
     "mt": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Tmissux qabel ma tkun qrajt u fhimt il-prekwazjonijiet kollha tas-sikurezza",
      "superseded": "Tmissux qabel ma tkun qrajt u fhimt l-istruzzjonijiet kollha ta' prekawzjoni.",
      "defects": [
-      "the sentence ends 'a' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'a' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -541,11 +541,11 @@
     "sk": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Uchovávajte mimo dosahu tepla, horúcich povrchov, iskier, otvoreného ohňa a iných zdrojov vznietenia. Zákaz fajčenia",
      "superseded": "Uchovávajte mimo dosahu tepla, horúcich povrchov, iskier, otvoreného ohňa a iných zdrojov zapálenia. Nefajčite.",
      "defects": [
-      "the sentence ends 'a' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'a' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -633,11 +633,11 @@
     "ro": {
      "part": "Part 2",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "A se evita încălzirea în mediu confinat sau în caz de scădere a agentului de desensibilizare",
      "superseded": "Evitați încălzirea în caz de izolare sau de reducere a agentului de desensibilizare.",
      "defects": [
-      "the sentence ends 'e' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'e' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": null
     }
@@ -1121,11 +1121,11 @@
     "el": {
      "part": "Part 2",
      "act": "B",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Μην αναπνέετε σκόνη/αναθυμιάσεις/αέρια/σταγονίδια/ατμούς/εκνεφώματα",
      "superseded": "Μην αναπνέετε σκόνη/αναθυμιάσεις/αέρια/συγκεντρώσεις σταγονιδίων/ατμούς/εκνεφώματα.",
      "defects": [
-      "the sentence ends 'α' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'α' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": null
     },
@@ -1150,11 +1150,11 @@
     "el": {
      "part": "Part 2",
      "act": "C5",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Aποφεύγετε να αναπνέετε σκόνη/αναθυμιάσεις/αέρια/σταγονίδια/ατμούς/εκνεφώματα.",
      "superseded": "Αποφεύγετε να αναπνέετε σκόνη/αναθυμιάσεις/αέρια/συγκεντρώσεις σταγονιδίων/ατμούς/εκνεφώματα.",
      "defects": [
-      "a greek sentence containing the latin character 'A' (U+0041) in 'Aποφεύγετε'"
+      "wrong script: a greek sentence containing the latin character 'A' (U+0041) in 'Aποφεύγετε'"
      ],
      "act_confirms_defect": null
     },
@@ -1449,11 +1449,11 @@
     "de": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Schutzhandschuhe/Schutzkleidung/Augenschutz/Gesichtsschutz/Gehörschutz/… tragen",
      "superseded": "Schutzhandschuhe/Schutzkleidung/Augenschutz/Gesichtsschutz tragen.",
      "defects": [
-      "the sentence ends 'n' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'n' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -1487,11 +1487,11 @@
     "et": {
      "part": "Part 1",
      "act": "M19",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Kanda kaitsekindaid/kaitserõivastust/kaitseprille/kaitsemaski/kuulmiskaitsevahendeid",
      "superseded": "Kanda kaitsekindaid/kaitserõivastust/kaitseprille/kaitsemaski.",
      "defects": [
-      "the sentence ends 'd' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'd' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -1939,11 +1939,11 @@
     "lv": {
      "part": "Part 1",
      "act": "M2",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Lūdziet mediķu palīdzību",
      "superseded": "Lūdziet palīdzību mediķiem.",
      "defects": [
-      "the sentence ends 'u' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'u' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -2989,7 +2989,7 @@
      "text": "Gesinimui naudoti.",
      "superseded": "Gesinimui naudoti …",
      "defects": [
-      "1 fill-in(s) fewer than the same sentence has in the other Part"
+      "blank: 1 fill-in(s) fewer than the same sentence has in the other Part"
      ],
      "act_confirms_defect": true
     },
@@ -3338,11 +3338,11 @@
     "da": {
      "part": "Part 1",
      "act": "M12",
-     "status": "not_on_file",
+     "status": "ok",
      "text": "Må ikke udsættes for temperaturer på over 50 °C/122 °F",
      "superseded": "Må ikke udsættes for en temperatur, som overstiger 50 °C/122°F.",
      "defects": [
-      "the sentence ends 'F' where the other Part ends it with a full stop"
+      "terminator: the sentence ends 'F' where the other Part ends it with a full stop"
      ],
      "act_confirms_defect": true
     },
@@ -3425,7 +3425,7 @@
      "text": "Conservare le rinfuse di peso superiore a … kg/… lb a temperature non superiori a … C/…°F.",
      "superseded": "Conservare le rinfuse di peso superiore a …kg/…lb a temperature non superiori a … °C/°F.",
      "defects": [
-      "a temperature unit without its degree sign"
+      "degree sign: a temperature unit without its degree sign"
      ],
      "act_confirms_defect": true
     },
@@ -3463,7 +3463,7 @@
      "text": "Przechowywać luzem masy przekraczające … kg/… funtów w temperaturze nieprzekraczającej °C/…°F.",
      "superseded": "Przechowywać luzem masy przekraczające … kg/… funtów w temperaturze nieprzekraczającej … °C/…°F.",
      "defects": [
-      "1 fill-in(s) fewer than the same sentence has in the other Part"
+      "blank: 1 fill-in(s) fewer than the same sentence has in the other Part"
      ],
      "act_confirms_defect": true
     },
@@ -3546,7 +3546,7 @@
      "text": "Innehållet/behållaren lämnas till",
      "superseded": "Innehållet/behållaren lämnas till…",
      "defects": [
-      "1 fill-in(s) fewer than the same sentence has in the other Part"
+      "blank: 1 fill-in(s) fewer than the same sentence has in the other Part"
      ],
      "act_confirms_defect": true
     }

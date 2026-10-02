@@ -343,6 +343,17 @@ def build_all() -> dict[str, Path]:
         h_codes=EU_H, p_codes=EU_P,
         extra_lines_s16=[f"H336 {texts('eu_clp','da',['H336'])['H336'].rstrip('.')} i hovedet."]))
 
+    # The official German P280 stops without a full stop - in Regulation (EU)
+    # 2019/521 as well as in the consolidation. These two sheets differ only by
+    # the full stop an author naturally writes, and neither may be failed.
+    subset = "Schutzhandschuhe/Augenschutz tragen"
+    for name, text in (("pattern_de_no_terminator", subset),
+                       ("pattern_de_terminator", subset + ".")):
+        add(name, write_sds(
+            FIXTURES / f"{name}.pdf", regulation="eu_clp", language="de",
+            h_codes=["H225", "H319"], p_codes=["P210", "P280"],
+            overrides={"P280": text}))
+
     return built
 
 

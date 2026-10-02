@@ -34,7 +34,7 @@ from lingua_oracle.keys.builders.common import (
     repair_degree_sign,
     strip_markers,
 )
-from lingua_oracle.keys.builders.defects import defects
+from lingua_oracle.keys.builders.defects import defects, withholding
 from lingua_oracle.keys.builders.eu_acts import (
     Decision,
     act_rank,
@@ -517,13 +517,16 @@ def choose(code: str, language: str, decision: Decision,
         # point at is not available here; what is left is the superseded one.
         return Chosen(code, language, decision, other or "", other or "", (),
                       "not_on_file" if decision.from_part_one else "ok")
-    found = tuple(defects(wanted, other))
+    seen = defects(wanted, other)
+    found = tuple(f"{kind}: {message}" for kind, message in seen)
     if erratum_for is not None and erratum_for == wanted:
         # A reviewed correction covers this exact text; resolve() applies it.
         status = "errata"
-    elif found:
+    elif withholding(seen):
         status = "not_on_file"
     else:
+        # Recorded, and used: the comparison handles it without judging a
+        # correct sheet wrongly.
         status = "ok"
     return Chosen(code, language, decision, wanted, other or "", found, status)
 
@@ -841,10 +844,14 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
                     "source_ref": f"{entry.source_ref}; {where}, but {why} "
                                   "- not used for a verdict",
                 }))
-            elif pick.text and pick.text != entry.text:
+            elif pick.text and (pick.text != entry.text or pick.defects):
+                note = f"{entry.source_ref}; {where}"
+                if pick.defects:
+                    note += (f" - the act prints it with {'; '.join(pick.defects)}"
+                             if pick.act_confirms_defect else
+                             f" - as printed it has {'; '.join(pick.defects)}")
                 updated.append(entry.model_copy(update={
-                    "text": pick.text,
-                    "source_ref": f"{entry.source_ref}; {where}",
+                    "text": pick.text, "source_ref": note,
                 }))
             else:
                 updated.append(entry)

@@ -7,11 +7,17 @@ other Part does not: a degree sign that never made it in, a blank the author of
 the row dropped, a sentence left without its full stop, a Latin ``A`` at the
 start of a Greek sentence.
 
-None of these may be used silently. A key entry whose text carries one of them
-is either corrected by a reviewed erratum - with the evidence, in
-``data/errata/`` - or marked ``not_on_file`` so it never reaches a comparison.
-Guessing the repair in code is not an option: that would be inventing
-regulatory text.
+What follows from one depends on what it costs. A defect that loses *meaning* -
+a blank with nowhere to put the value, a temperature with no scale - makes the
+entry unusable: it is withheld, because a correct sheet would be judged against
+a sentence that no longer says what it must, and guessing the repair in code
+would be inventing regulatory text. A defect that costs only *appearance* - a
+sentence that stops without its full stop, a letter typed in the wrong alphabet
+- is carried, because the comparison already handles it: a full stop a document
+adds or drops is reported as something to check, never as wrong wording, and
+homoglyphs fold in the Greek and Bulgarian comparisons.
+
+Either way the defect is recorded, so the audit shows what is in the text.
 
 Each check is deliberately narrow and says what it saw, so a human reviewing
 ``data/audits/eu_clp_part1_vs_part2.md`` can decide which it is.
@@ -55,6 +61,11 @@ def _aligned(text: str) -> list[str]:
         if bare:
             out.append(bare)
     return out
+
+
+#: Defect kinds that make an entry unusable. The rest are recorded and carried:
+#: the comparison handles them without judging a correct sheet wrongly.
+WITHHOLDING = frozenset({"blank", "degree sign", "dropped words"})
 
 
 def wrong_script(text: str) -> str | None:
@@ -158,15 +169,24 @@ def dropped_words(text: str, other: str | None) -> str | None:
     return f"missing {gap!r}, which the same sentence carries in the other Part"
 
 
-def defects(text: str, other: str | None = None) -> list[str]:
-    """Every visible defect in `text`, with `other` as the comparison rendering."""
+def defects(text: str, other: str | None = None) -> list[tuple[str, str]]:
+    """Every visible defect in `text`, as (kind, what was seen).
+
+    `other` is the rendering in the other Part, used as evidence of what the
+    sentence carries when it is whole.
+    """
     blank = missing_blank(text, other)
     found = [
-        wrong_script(text),
-        missing_degree_sign(text),
-        missing_terminator(text, other),
-        blank,
+        ("wrong script", wrong_script(text)),
+        ("degree sign", missing_degree_sign(text)),
+        ("terminator", missing_terminator(text, other)),
+        ("blank", blank),
         # A dropped blank is already named; saying it twice helps nobody.
-        None if blank else dropped_words(text, other),
+        ("dropped words", None if blank else dropped_words(text, other)),
     ]
-    return [f for f in found if f]
+    return [(kind, message) for kind, message in found if message]
+
+
+def withholding(found: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    """The defects that make an entry unusable, out of everything seen."""
+    return [(kind, message) for kind, message in found if kind in WITHHOLDING]
