@@ -992,3 +992,50 @@ def test_the_languages_that_do_have_the_amendment_are_untouched():
         assert entry.status is Status.OK
         assert "Part 1 text" in (entry.source_ref or "")
         assert "P280" in resolve("eu_clp", lang).entries
+
+
+# -- the Part 1 / Part 2 comparison, written for review -----------------------
+
+
+def _comparison_rows():
+    import re
+
+    from lingua_oracle.registry import data_dir
+
+    path = data_dir() / "audits" / "eu_clp_part1_vs_part2.md"
+    rows = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) == 5 and re.fullmatch(r"[PH]\d{3}(\+[PH]\d{3})*", cells[0]):
+            rows.append(cells)
+    return rows
+
+
+def test_the_part_comparison_lists_every_code_that_disagrees():
+    rows = _comparison_rows()
+    assert len(rows) > 50
+    assert len({r[0] for r in rows}) == len(rows)  # one row per code
+
+
+def test_the_two_amendments_lead_the_comparison():
+    """The codes the whole language set disagrees on are the real amendments."""
+    rows = _comparison_rows()
+    assert [r[0] for r in rows[:2]] == ["P103", "P280"]
+    for row in rows[:2]:
+        count, _, total = row[1].partition(" of ")
+        assert count == total
+
+
+def test_every_comparison_row_names_the_languages_it_counted():
+    for code, count, part_one, part_two, langs in _comparison_rows():
+        named = [x for x in langs.split(", ") if x]
+        assert len(named) == int(count.split()[0]), code
+        assert part_one and part_two, code
+
+
+def test_P336_is_in_the_comparison_as_an_english_difference():
+    """The code the errata table corrects has to be visible here as evidence."""
+    row = next(r for r in _comparison_rows() if r[0] == "P336")
+    assert "Do not rub" in row[2]
+    assert "Do no rub" in row[3]
+    assert "en" in row[4].split(", ")

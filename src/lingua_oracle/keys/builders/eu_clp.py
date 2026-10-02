@@ -216,6 +216,19 @@ def _same_statement(a: str, b: str) -> bool:
     return key(a) == key(b)
 
 
+def _differing_by_code(
+    part_one: dict[str, dict[str, str]], part_two: dict[str, dict[str, str]]
+) -> dict[str, list[str]]:
+    """{code: [language, ...]} wherever the two Parts disagree over a statement."""
+    out: dict[str, list[str]] = {}
+    for lang in sorted(set(part_one) & set(part_two)):
+        for code, text in part_one[lang].items():
+            other = part_two[lang].get(code)
+            if other and not _same_statement(text, other):
+                out.setdefault(code, []).append(lang)
+    return out
+
+
 #: How much of the language set has to show the same disagreement before Part 1
 #: is taken as an amendment. A real amendment rewrites every translation; a
 #: rendering difference in one or two languages is Part 1 abbreviating a row.
@@ -229,12 +242,7 @@ def amended_in_part_one(
     languages = sorted(set(part_one) & set(part_two))
     if len(languages) < 20:
         return {}  # not a full build; nothing to compare across
-    disagreeing: dict[str, list[str]] = {}
-    for lang in languages:
-        for code, text in part_one[lang].items():
-            other = part_two[lang].get(code)
-            if other and not _same_statement(text, other):
-                disagreeing.setdefault(code, []).append(lang)
+    disagreeing = _differing_by_code(part_one, part_two)
     return {
         code: langs for code, langs in disagreeing.items()
         if len(langs) >= _AMENDMENT_SHARE * len(languages)
@@ -473,6 +481,67 @@ def write_part_audit(amended: dict[str, list[str]],
     return target
 
 
+def _cell(text: str | None) -> str:
+    """A table cell: no pipes, no line breaks, nothing silently truncated."""
+    if not text:
+        return "_(not in this Part)_"
+    return text.replace("|", "\\|").replace("\n", " ").strip()
+
+
+def write_part_comparison(
+    part_one: dict[str, dict[str, str]], part_two: dict[str, dict[str, str]]
+) -> Path:
+    """List every code where Annex IV Parts 1 and 2 disagree, for review.
+
+    Only two of these are amendments - the build decides that by asking whether
+    the whole language set shows the same disagreement. The rest are the act
+    rendering a statement differently in the two places it prints it: an
+    abbreviated row, a dropped bracket, a typing error. None of them is acted on
+    automatically; this file exists so a person can read them and say which, if
+    any, is a correction worth making (see data/errata/).
+    """
+    differing = _differing_by_code(part_one, part_two)
+    languages = sorted(set(part_one) & set(part_two))
+    lines = [
+        "# EU CLP Annex IV: where Part 1 and Part 2 disagree",
+        "",
+        f"Source: `{CELEX}`  ",
+        f"Languages compared: {len(languages)} ({', '.join(languages)})  ",
+        f"Codes where the two Parts disagree in at least one language: "
+        f"{len(differing)}",
+        "",
+        "CLP states each statement twice: Part 1 beside the hazard class it is",
+        "selected for, Part 2 in every language. A disagreement is usually the",
+        "act rendering the same statement differently in the two places, not a",
+        "change in the law. The build treats Part 1 as superseding Part 2 only",
+        f"when at least {int(_AMENDMENT_SHARE * 100)}% of languages show the same",
+        "disagreement, which here is true of P103 and P280 alone - both rewritten",
+        "by Regulation (EU) 2019/521, which amended Part 1 and left Part 2.",
+        "",
+        "Nothing in this list is applied automatically. It is here to be read.",
+        "",
+        "Where English is not named in the last column, the two English",
+        "renderings are identical and the difference is in the languages that",
+        "are named. The English texts are given so the statement can be",
+        "recognised.",
+        "",
+        "| Code | Languages differing | Part 1 (en) | Part 2 (en) | Which languages |",
+        "| --- | --- | --- | --- | --- |",
+    ]
+    en_one, en_two = part_one.get("en", {}), part_two.get("en", {})
+    for code, langs in sorted(
+        differing.items(), key=lambda kv: (-len(kv[1]), kv[0])
+    ):
+        lines.append(
+            f"| {code} | {len(langs)} of {len(languages)} | {_cell(en_one.get(code))} "
+            f"| {_cell(en_two.get(code))} | {', '.join(sorted(langs))} |"
+        )
+    target = data_dir() / "audits" / "eu_clp_part1_vs_part2.md"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return target
+
+
 def write_hazard_classes(doc) -> Path:
     """Commit the class list so check time needs no network and no parse."""
     target = data_dir() / "hazard_classes" / "eu_clp.json"
@@ -523,6 +592,8 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
         part_one[lang] = part_one_statements(doc)
 
     amended = amended_in_part_one(part_one, part_two)
+    if len(part_one) >= 20:
+        write_part_comparison(part_one, part_two)
     AMENDED_IN_PART_ONE.clear()
     AMENDED_IN_PART_ONE.update(amended)
     if amended:
