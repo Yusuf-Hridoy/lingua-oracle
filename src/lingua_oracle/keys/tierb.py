@@ -16,7 +16,7 @@ from dataclasses import dataclass
 
 from lingua_oracle.keys.store import load_key
 from lingua_oracle.match.normalize import normalize
-from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Tier
+from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Status, Tier
 
 EU = "eu_clp"
 
@@ -44,7 +44,12 @@ def resolve(regulation: str, language: str) -> Borrowed:
     """
     own = load_key(regulation, language)
     status = own.status.value if own else "pending_source"
-    entries: dict[str, AnswerKeyEntry] = dict(own.by_code()) if own else {}
+    # An entry marked not_on_file holds text the law has replaced, kept only so
+    # the gap is on the record. It must never reach a comparison.
+    entries: dict[str, AnswerKeyEntry] = {
+        code: entry for code, entry in (own.by_code() if own else {}).items()
+        if entry.status is not Status.NOT_ON_FILE
+    }
     borrowed: set[str] = set()
     tier_c: set[str] = set()
 

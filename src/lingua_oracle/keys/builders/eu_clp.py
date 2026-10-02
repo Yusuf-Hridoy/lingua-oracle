@@ -542,14 +542,28 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
         # Where Part 1 carries an amendment Part 2 never received, Part 1 is
         # the text in force. Chosen per code, never blended within a statement.
         newer = part_one.get(lang, {})
-        entries = [
-            e.model_copy(update={
-                "text": newer[e.code],
-                "source_ref": f"{e.source_ref}; Part 1 text, amended after Part 2",
-            })
-            if e.code in amended and newer.get(e.code) else e
-            for e in entries
-        ]
+        updated = []
+        for entry in entries:
+            if entry.code not in amended:
+                updated.append(entry)
+            elif newer.get(entry.code):
+                updated.append(entry.model_copy(update={
+                    "text": newer[entry.code],
+                    "source_ref": f"{entry.source_ref}; Part 1 text, "
+                                  "amended after Part 2",
+                }))
+            else:
+                # This language's own act could not be read, so the amended
+                # text is not available here. What we hold is the superseded
+                # wording, and comparing a sheet against it would fail a
+                # correct one. Kept visible, never used.
+                updated.append(entry.model_copy(update={
+                    "status": Status.NOT_ON_FILE,
+                    "source_ref": f"{entry.source_ref}; superseded by the "
+                                  "amendment in Part 1, which is not available "
+                                  f"in '{lang}' - not used for a verdict",
+                }))
+        entries = updated
         if with_signal_words:
             words, note = _signal_words_for(lang, iso3, en_doc, positions, en_tables,
                                             entries, use_cache=use_cache)

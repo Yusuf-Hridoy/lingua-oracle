@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-01T06:44:46.186269Z",
+  "retrieved_at": "2026-10-02T09:54:08.857501Z",
   "notes": [],
   "entries": [
     {
@@ -1204,9 +1204,9 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P103",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
-      "status": "ok"
+      "source_ref": "Annex III/IV table for P103; superseded by the amendment in Part 1, which is not available in 'ga' - not used for a verdict",
+      "retrieved_at": "2026-10-02T09:54:08.257125Z",
+      "status": "not_on_file"
     },
     {
       "regulation": "eu_clp",
@@ -1684,9 +1684,9 @@
       "tier": "A",
       "internal_id": false,
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for P280",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
-      "status": "ok"
+      "source_ref": "Annex III/IV table for P280; superseded by the amendment in Part 1, which is not available in 'ga' - not used for a verdict",
+      "retrieved_at": "2026-10-02T09:54:08.257125Z",
+      "status": "not_on_file"
     },
     {
       "regulation": "eu_clp",

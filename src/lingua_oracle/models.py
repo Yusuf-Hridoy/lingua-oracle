@@ -30,6 +30,11 @@ class Status(StrEnum):
     OK = "ok"
     PARTIAL = "partial"
     PENDING_SOURCE = "pending_source"
+    #: The text we hold is known to be out of date and the current one is not
+    #: available in this language. Kept so the gap is visible, never used for a
+    #: verdict: comparing a sheet against wording the law replaced would fail a
+    #: correct sheet, which is worse than saying nothing.
+    NOT_ON_FILE = "not_on_file"
 
 
 class Severity(StrEnum):

@@ -953,3 +953,42 @@ def test_the_rule_holds_for_every_open_ended_statement():
         assert not [v for v in result.fillins if "…" in v], (
             f"{entry.code}: dropping the open option read as an unfilled blank"
         )
+
+
+# -- text we know to be superseded must not judge anything --------------------
+
+
+@pytest.mark.parametrize("code", ["P103", "P280"])
+def test_irish_holds_the_superseded_text_and_says_so(code):
+    """Regulation (EU) 2019/521 amended these in Part 1 only.
+
+    Part 1 is published per language and the Irish act could not be read, so
+    what we hold for 'ga' is the wording the amendment replaced. Kept on file
+    so the gap is visible, and marked, because checking a sheet against
+    replaced wording fails a correct sheet.
+    """
+    entry = load_key("eu_clp", "ga").by_code()[code]
+    assert entry.status is Status.NOT_ON_FILE
+    assert "not used for a verdict" in (entry.source_ref or "")
+
+
+@pytest.mark.parametrize("code", ["P103", "P280"])
+def test_a_not_on_file_entry_never_reaches_a_comparison(code):
+    assert code not in resolve("eu_clp", "ga").entries
+
+
+def test_only_the_amended_codes_are_withheld_in_irish():
+    """The rest of the Irish key is ordinary Part 2 text and still usable."""
+    withheld = {
+        code for code, entry in load_key("eu_clp", "ga").by_code().items()
+        if entry.status is Status.NOT_ON_FILE
+    }
+    assert withheld == {"P103", "P280"}
+
+
+def test_the_languages_that_do_have_the_amendment_are_untouched():
+    for lang in ("en", "de", "fr"):
+        entry = load_key("eu_clp", lang).by_code()["P280"]
+        assert entry.status is Status.OK
+        assert "Part 1 text" in (entry.source_ref or "")
+        assert "P280" in resolve("eu_clp", lang).entries
