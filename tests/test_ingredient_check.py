@@ -377,3 +377,23 @@ def test_the_harmonised_codes_are_read_out_of_the_packed_column(real):
     toluene = real.by_cas()["108-88-3"][0]
     assert toluene.h_codes == ["H225", "H361d", "H304", "H373", "H315", "H336"]
     assert len(toluene.hazard_classes) == len(toluene.h_codes)
+
+
+def test_a_sub_code_is_reported_with_the_letter_the_act_prints():
+    """H361d and H361f are different hazards. The letter is not decoration."""
+    table = table_of(entry(h_codes=["H361d"]))
+    verdict = check_ingredient("100-00-5", [], table)
+    assert verdict.missing_codes == ["H361d"]
+    assert "requires H361d" in verdict.findings[0].message
+
+
+def test_case_still_does_not_decide_whether_a_code_is_present():
+    table = table_of(entry(h_codes=["H361d"]))
+    assert check_ingredient("100-00-5", ["h361D"], table).status is Status.OK
+
+
+def test_an_extra_code_keeps_the_spelling_the_app_used():
+    table = table_of(entry(h_codes=["H302"]))
+    verdict = check_ingredient("100-00-5", ["H302", "H361f"], table)
+    assert verdict.status is Status.INFO
+    assert "H361f" in verdict.findings[0].message

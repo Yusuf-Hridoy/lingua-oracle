@@ -120,8 +120,13 @@ class Verdict:
                 if f.status is Status.FIX and f.code]
 
 
+def _key(code: str) -> str:
+    """How two codes are compared: case and spacing do not distinguish them."""
+    return code.strip().replace(" ", "").upper()
+
+
 def _normalise(codes: list[str]) -> set[str]:
-    return {c.strip().upper().replace(" ", "") for c in codes if c and c.strip()}
+    return {_key(c) for c in codes if c and c.strip()}
 
 
 def entries_for(cas: str | None, table: AnnexVITable,
@@ -181,19 +186,26 @@ def check_ingredient(cas: str | None, stated_codes: list[str],
 
     stated = _normalise(stated_codes)
     stated_bases = {base_code(c) for c in stated}
-    required = _normalise(entry.h_codes)
+    # Compared without case, reported with it: in CLP the letter is the code.
+    # H361d is "may damage the unborn child" and H361f is "may damage
+    # fertility", so printing H361D at a reader would name a different hazard.
+    required_as_printed = {_key(c): c.strip() for c in entry.h_codes}
+    required = set(required_as_printed)
 
     findings: list[Finding] = []
     for code in sorted(required):
         if code in stated or base_code(code) in stated_bases:
             continue
+        printed = required_as_printed[code]
         findings.append(Finding(
-            Status.FIX, code,
-            f"Under-classified: Annex VI requires {code}.",
-            required=code,
+            Status.FIX, printed,
+            f"Under-classified: Annex VI requires {printed}.",
+            required=printed,
         ))
 
-    extra = sorted(stated - required - {base_code(c) for c in required})
+    stated_as_printed = {_key(c): c.strip() for c in stated_codes if c.strip()}
+    extra = sorted(stated_as_printed[c] for c in
+                   set(stated) - required - {base_code(c) for c in required})
     if extra:
         findings.append(Finding(
             Status.INFO, None,
