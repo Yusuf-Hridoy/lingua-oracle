@@ -149,6 +149,7 @@ def keys_build(
     EU CLP and the OSHA fallback reach the network.
     """
     from lingua_oracle.keys.builders import (
+        annex_vi,
         au_whs,
         ca_whmis,
         eu_clp,
@@ -160,6 +161,14 @@ def keys_build(
     from lingua_oracle.keys.builders.common import SourceUnavailable, sanity_report
     from lingua_oracle.keys.store import keys_root, save_key
     from lingua_oracle.registry import load_registry
+
+    if regulation == "annex_vi":
+        # Not an answer key: the harmonised classifications a substance is
+        # judged against, which live in their own file.
+        table, path, issues = annex_vi.build(use_cache=not no_cache)
+        typer.secho(f"  wrote {len(table.entries)} Annex VI entries -> {path}")
+        typer.secho(f"  parse report -> {issues}")
+        return
 
     wanted = load_registry().ids() if regulation == "all" else [regulation]
     langs = [x.strip() for x in languages.split(",")] if languages else None

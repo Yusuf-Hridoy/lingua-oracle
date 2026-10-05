@@ -90,6 +90,95 @@ class AnswerKeyEntry(BaseModel):
         return v.strip()
 
 
+class AnnexVIEntry(BaseModel):
+    """One harmonised classification from CLP Annex VI Part 3, Table 3.
+
+    Every field is the act's own text. The "*" that marks a minimum
+    classification stays on the class it qualifies, the "[n]" that ties an
+    identifier to one substance of a multi-substance entry stays on the
+    identifier, and the notes letters stay as letters. Nothing here is
+    normalised, because this is the reference other things are judged against.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    index_no: str
+    name: str
+    #: EC and CAS numbers as printed, "[1]"/"[2]" suffixes included. An entry
+    #: may carry several, or none.
+    ec: list[str] = Field(default_factory=list)
+    cas: list[str] = Field(default_factory=list)
+    hazard_classes: list[str] = Field(default_factory=list)
+    h_codes: list[str] = Field(default_factory=list)
+    pictograms: list[str] = Field(default_factory=list)
+    label_h_codes: list[str] = Field(default_factory=list)
+    supplemental_h_codes: list[str] = Field(default_factory=list)
+    #: The "Specific Conc. Limits, M-factors and ATEs" column, one entry per
+    #: printed line, exactly as given.
+    limits: list[str] = Field(default_factory=list)
+    #: Which of the three each `limits` line is, positionally aligned with it.
+    limit_kinds: list[str] = Field(default_factory=list)
+    notes: list[str] = Field(default_factory=list)
+    source_ref: str
+
+    @property
+    def covers_several_substances(self) -> bool:
+        """True when the entry's identifiers are numbered [1], [2], …
+
+        Such an entry is one row covering several substances, and which
+        classification belongs to which is not something to infer.
+        """
+        import re as _re
+
+        if any("[" in value for value in (*self.cas, *self.ec)):
+            return True
+        # One printed line carrying several CAS numbers, or trailing prose such
+        # as "and others", is the same situation written differently.
+        return any(len(_re.findall(r"\b\d{2,7}-\d{2}-\d\b", value)) > 1
+                   or _re.search(r"[A-Za-z]{3,}", value)
+                   for value in self.cas)
+
+    @property
+    def minimum_classification(self) -> bool:
+        """True when any class carries the "*" of a minimum classification."""
+        return any("*" in value for value in self.hazard_classes)
+
+    def cas_numbers(self) -> list[str]:
+        """Every CAS number printed in the entry, in order.
+
+        A printed value is usually one number, but not always: the act
+        occasionally packs several into one line, and sometimes ends one with a
+        full stop. The numbers are read out of the text rather than assumed to
+        be the whole of it - the alternative is a "CAS number" that is really a
+        sentence.
+        """
+        import re as _re
+
+        out: list[str] = []
+        for value in self.cas:
+            out += _re.findall(r"\b\d{2,7}-\d{2}-\d\b", value)
+        return out
+
+
+class AnnexVITable(BaseModel):
+    """Annex VI Table 3 as committed data."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    source: str
+    note: str
+    retrieved_at: datetime | None = None
+    entries: list[AnnexVIEntry] = Field(default_factory=list)
+
+    def by_cas(self) -> dict[str, list[AnnexVIEntry]]:
+        """{CAS: entries}. A CAS can appear in more than one entry."""
+        out: dict[str, list[AnnexVIEntry]] = {}
+        for entry in self.entries:
+            for cas in entry.cas_numbers():
+                out.setdefault(cas, []).append(entry)
+        return out
+
+
 class AnswerKey(BaseModel):
     """All entries for one regulation x language, as stored on disk."""
 
