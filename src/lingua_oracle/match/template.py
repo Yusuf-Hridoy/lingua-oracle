@@ -199,6 +199,14 @@ def _split_candidates_first(atom: str) -> list[tuple[str, str]]:
 def _split_candidates_last(atom: str) -> list[tuple[str, str]]:
     """Ways to cut a trailing literal off the last alternative."""
     out: list[tuple[str, str]] = []
+    # An open option is written as "…" on its own. Anything behind it in the
+    # same alternative is the sentence continuing, not part of the value -
+    # German puts the verb there: ".../Gehörschutz/… tragen". Read that way,
+    # an author who picks two of the listed options has written official words
+    # and filled nothing in, which is what the report should say.
+    stripped = atom.lstrip()
+    if stripped.startswith("…") and stripped[1:].strip():
+        out.append(("…", stripped[1:]))
     # Cut at the first sentence end, if any (e.g. '…. Protect from moisture.').
     parts = _SENTENCE_END_RE.split(atom, maxsplit=1)
     if len(parts) == 2:
