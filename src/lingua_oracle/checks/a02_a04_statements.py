@@ -79,9 +79,24 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
             ))
             continue
 
-        loose_end = ctx.regulation.statements_lack_terminal_punctuation
+        # A regulation whose own rendering drops the terminator everywhere
+        # (us_osha), or one statement whose rendering drops it because the act
+        # that printed it did - recorded on the entry when the key was built.
+        # Either way the sheet's full stop is the correct sentence and the
+        # difference is the official text's, not the author's.
+        omits_terminator = any(d.startswith("terminator")
+                               for d in entry.text_defects)
+        loose_end = (ctx.regulation.statements_lack_terminal_punctuation
+                     or omits_terminator)
         result = match(hit.text, entry.text, optional_terminator=loose_end,
                        language=ctx.language)
+        if (omits_terminator and result.matched
+                and hit.text.rstrip().endswith((".", "!", "?"))
+                and not entry.text.rstrip().endswith((".", "!", "?"))):
+            note = (f"{hit.code}: the official text omits the final full stop; "
+                    "the sheet's full stop is correct.")
+            if note not in ctx.notes:
+                ctx.notes.append(note)
         if not result.matched:
             # A regulation may require several languages in one document, and a
             # phrase only has to be correct in the language it is written in.

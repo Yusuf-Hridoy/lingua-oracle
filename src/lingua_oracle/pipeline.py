@@ -119,6 +119,9 @@ def check_pdf(
         compared_with=Path(compare_with).name if compare_with else None,
     )
     report.recount()
+    # Anything a check wants a reviewer to know but that is not a finding about
+    # the document - an allowance made for the official text, say.
+    report.notes.extend(ctx.notes)
 
     # Notes are shown to a reviewer, so they say what happened rather than
     # naming the tiers. The tier letters stay in the JSON and in the table's

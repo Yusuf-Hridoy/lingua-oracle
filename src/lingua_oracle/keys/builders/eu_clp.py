@@ -852,6 +852,7 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
                              f" - as printed it has {'; '.join(pick.defects)}")
                 updated.append(entry.model_copy(update={
                     "text": pick.text, "source_ref": note,
+                    "text_defects": list(pick.defects),
                 }))
             else:
                 updated.append(entry)

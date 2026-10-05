@@ -704,15 +704,28 @@ def test_a_german_sheet_is_never_failed_over_a_final_full_stop(fixture):
 
     The official German P280 stops without one - in Regulation (EU) 2019/521 as
     well as in the consolidation - so an author who writes the sentence out
-    properly disagrees with the act. That is something to check, never wrong
-    wording.
+    properly disagrees with the act. The key records that its own text is
+    missing the stop, so the sheet is right and is marked correct.
     """
     report = check_pdf(pdf(fixture), "eu_clp")
     assert report.language == "de"
     verdict = next(s for s in report.statements if s.code == "P280")
-    assert verdict.status in {"correct", "check"}, verdict.why
+    assert verdict.status == "correct", verdict.why
     assert not [f for f in report.findings
                 if f.code == "P280" and f.severity == Severity.FAIL]
+
+
+def test_the_sheet_that_adds_the_full_stop_says_why_it_passed():
+    """Correct, but not silent: the allowance is named in the technical notes."""
+    report = check_pdf(pdf("pattern_de_terminator"), "eu_clp")
+    assert any("the official text omits the final full stop" in note
+               and "the sheet's full stop is correct" in note
+               for note in report.notes), report.notes
+
+
+def test_the_note_is_only_made_where_the_allowance_was_used():
+    report = check_pdf(pdf("pattern_de_no_terminator"), "eu_clp")
+    assert not any("omits the final full stop" in note for note in report.notes)
 
 
 def test_the_two_german_sheets_differ_only_in_that_full_stop():
@@ -721,3 +734,12 @@ def test_the_two_german_sheets_differ_only_in_that_full_stop():
     assert {s.code for s in with_stop.statements} == {
         s.code for s in without.statements}
     assert all(s.status in {"correct", "check"} for s in with_stop.statements)
+
+
+def test_the_allowance_is_tied_to_the_recorded_defect():
+    """Nothing else moves: this is the one entry the act printed short."""
+    from lingua_oracle.keys.store import load_key
+
+    german = load_key("eu_clp", "de").by_code()
+    assert any(d.startswith("terminator") for d in german["P280"].text_defects)
+    assert german["P210"].text_defects == []

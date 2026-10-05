@@ -69,6 +69,11 @@ class AnswerKeyEntry(BaseModel):
     #: matched by TEXT, never by code, and must never be written onto a document
     #: or reported as though the regulator had assigned them.
     internal_id: bool = False
+    #: Defects in the official rendering this entry reproduces, as "kind: what
+    #: was seen". The text is the regulator's and is never repaired here; these
+    #: say what is wrong with it, so a comparison can allow for the difference
+    #: instead of charging a correct sheet with it, and the report can say why.
+    text_defects: list[str] = Field(default_factory=list)
     source_url: str | None = None
     source_ref: str | None = None
     retrieved_at: datetime | None = None

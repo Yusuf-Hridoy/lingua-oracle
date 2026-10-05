@@ -325,3 +325,36 @@ def test_the_text_itself_is_never_rewritten():
     entry = load_key("eu_clp", "el").by_code()["P261"]
     assert entry.text.startswith("A")          # U+0041, as the act prints it
     assert ord(entry.text[0]) == 0x41
+
+
+def test_without_the_recorded_defect_the_full_stop_is_still_only_a_check():
+    """The allowance belongs to the entry, not to the matcher.
+
+    Everywhere else an added full stop stays what it was: reported, matched,
+    and not a clean pass.
+    """
+    from lingua_oracle.match.template import MatchKind, match
+
+    plain = match("Schutzhandschuhe/Augenschutz tragen.", GERMAN_P280)
+    allowed = match("Schutzhandschuhe/Augenschutz tragen.", GERMAN_P280,
+                    optional_terminator=True)
+    assert plain.kind is MatchKind.PUNCTUATION
+    assert allowed.kind is MatchKind.TEMPLATE
+
+
+def test_an_option_the_author_chose_is_not_a_filled_in_value():
+    """German puts the verb behind the open option: ".../Gehörschutz/… tragen".
+
+    Read naively the whole of "Augenschutz" lands in the open slot, and the
+    report asks a person to check a value the act itself supplies. The trailing
+    literal is split off the open option, so picking two of the listed options
+    fills nothing in.
+    """
+    from lingua_oracle.match.template import match
+
+    assert match("Schutzhandschuhe/Augenschutz tragen", GERMAN_P280).fillins == []
+    # Something the author really did write into the slot is still reported.
+    assert match("Schutzhandschuhe/eine Gummischürze tragen",
+                 GERMAN_P280).fillins == ["eine Gummischürze"]
+    # And the placeholder left in the sheet is still an unfilled blank.
+    assert match(GERMAN_P280, GERMAN_P280).fillins == ["…"]
