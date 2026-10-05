@@ -256,6 +256,89 @@ def keys_import_csv(
     )
 
 
+ingredients_app = typer.Typer(
+    help="Check ingredient classifications against CLP Annex VI Table 3.",
+    no_args_is_help=True)
+app.add_typer(ingredients_app, name="ingredients")
+
+
+@ingredients_app.command("check")
+def ingredients_check(
+    product: Annotated[int | None, typer.Option(
+        "--product", help="A single product id.")] = None,
+    sample: Annotated[int | None, typer.Option(
+        "--sample", help="How many products to take from the library.")] = None,
+    out: Annotated[Path | None, typer.Option(
+        "--out", help="Where to write the report (default reports/ingredients).",
+    )] = None,
+) -> None:
+    """Compare each ingredient's hazard codes with its harmonised entry.
+
+    Reads from the ExactSDS app: every request is a GET apart from the login.
+    Nothing is created, edited or generated. Product and compound names appear
+    only in the report, which is written under reports/ and is not committed.
+    """
+    from lingua_oracle.ingredients import report as ingredient_report
+    from lingua_oracle.ingredients.client import AppUnavailable, ExactSdsClient
+    from lingua_oracle.ingredients.compare import check_product
+    from lingua_oracle.keys.builders.annex_vi import load_table
+
+    table = load_table()
+    if table is None:
+        typer.secho("No Annex VI table on file. Run `lingua keys build "
+                    "annex_vi` first.", fg=typer.colors.RED)
+        raise typer.Exit(1)
+    if product is None and sample is None:
+        typer.secho("Give --product or --sample.", fg=typer.colors.RED)
+        raise typer.Exit(1)
+
+    try:
+        client = ExactSdsClient()
+        client.login()
+    except AppUnavailable as exc:
+        typer.secho(str(exc), fg=typer.colors.RED)
+        raise typer.Exit(1) from exc
+
+    ids = [product] if product is not None else client.product_ids(sample or 10)
+    index = table.by_cas()
+    run = ingredient_report.new_run(table.source)
+    seen_sources: dict[str, str | None] = {}
+
+    with typer.progressbar(ids, label="products") as progress:
+        for product_id in progress:
+            detail = client.product(product_id)
+            rows = client.ingredients(product_id)
+            for row in rows:
+                if row.cas and row.cas not in seen_sources:
+                    seen_sources[row.cas] = client.substance_source(row.cas)
+            verdicts = check_product(
+                [{"cas": r.cas, "h_codes": r.h_codes,
+                  "data_source": seen_sources.get(r.cas or "")}
+                 for r in rows], table, index)
+            for verdict, row in zip(verdicts, rows, strict=True):
+                verdict.data_source = seen_sources.get(row.cas or "")
+            run.products.append(ingredient_report.ProductResult(
+                product_id=product_id,
+                name=detail.get("product_name"),
+                regulation=detail.get("regulation"),
+                verdicts=verdicts))
+    client.close()
+
+    json_path, html_path = ingredient_report.save(run, out)
+    counts = run.counts()
+    typer.secho(f"\nproducts {counts['products']}  ingredients "
+                f"{counts['ingredients']}  harmonised entries "
+                f"{counts['with_entry']}", bold=True)
+    typer.secho(f"under-classified {counts['fix']}  matches {counts['ok']}  "
+                f"extra classes {counts['info']}  not checked "
+                f"{counts['not_checked']}")
+    for reason, number in run.reasons().items():
+        typer.secho(f"   not checked - {reason}: {number}")
+    for code, number in run.missing_patterns()[:3]:
+        typer.secho(f"   missing most often: {code} ({number})")
+    typer.secho(f"{json_path}\n{html_path}")
+
+
 @keys_app.command("stats")
 def keys_stats(
     as_json: Annotated[bool, typer.Option("--json", help="Machine-readable output.")] = False,

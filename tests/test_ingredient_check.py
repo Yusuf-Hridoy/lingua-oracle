@@ -240,3 +240,140 @@ def test_a_substance_outside_annex_vi_is_not_checked_on_the_real_table(real):
     verdict = check_ingredient("7732-18-5", [], real)          # water
     assert verdict.status is Status.NOT_CHECKED
     assert verdict.reason is Reason.NO_ENTRY
+
+
+# -- the report ----------------------------------------------------------------
+
+
+def _run_with(verdicts, name="<fictional product>"):
+    from lingua_oracle.ingredients import report as R
+
+    run = R.new_run("02008R1272-test")
+    run.products.append(R.ProductResult(product_id=1, name=name,
+                                        regulation="eu_clp", verdicts=verdicts))
+    return run
+
+
+def test_the_report_counts_what_it_shows():
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]),
+                     entry(index_no="000-001-00-0", cas=["200-00-0"],
+                           h_codes=["H319"]))
+    verdicts = check_product([
+        {"cas": "100-00-5", "h_codes": ["H302"]},
+        {"cas": "200-00-0", "h_codes": ["H319"]},
+        {"cas": "999-99-9", "h_codes": ["H302"]},
+    ], table)
+    counts = _run_with(verdicts).counts()
+    assert counts == {"products": 1, "ingredients": 3, "with_entry": 2,
+                      "fix": 1, "info": 0, "ok": 1, "not_checked": 1}
+    assert R.headline(counts)[0] == "Fix before release"
+
+
+def test_a_clean_run_says_so():
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(h_codes=["H302"]))
+    verdicts = check_product([{"cas": "100-00-5", "h_codes": ["H302"]}], table)
+    release, tone, detail = R.headline(_run_with(verdicts).counts())
+    assert release == "Matches Annex VI"
+    assert tone == "ok"
+    assert "1 ingredient checked" in detail
+
+
+def test_a_run_with_no_reference_does_not_claim_a_pass():
+    from lingua_oracle.ingredients import report as R
+
+    verdicts = check_product([{"cas": "999-99-9", "h_codes": ["H302"]}],
+                             table_of(entry()))
+    release, _tone, detail = R.headline(_run_with(verdicts).counts())
+    assert release == "Nothing to compare"
+    assert "nothing to check against" in detail
+
+
+def test_the_report_names_the_three_commonest_missing_codes():
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315", "H319"]))
+    verdicts = check_product([{"cas": "100-00-5", "h_codes": []}], table)
+    patterns = _run_with(verdicts).missing_patterns()
+    assert patterns[:3] == [("H302", 1), ("H315", 1), ("H319", 1)]
+
+
+def test_the_data_sources_are_counted_but_not_ranked():
+    """They belong in the technical block, beside nothing that judges them."""
+    table = table_of(entry(h_codes=["H302"]))
+    verdicts = [
+        check_ingredient("100-00-5", ["H302"], table, data_source="gemini"),
+        check_ingredient("100-00-5", ["H302"], table, data_source="database"),
+        check_ingredient("100-00-5", ["H302"], table),
+    ]
+    run = _run_with(verdicts)
+    assert run.sources() == {"database": 1, "gemini": 1, "not stated": 1}
+    assert run.counts()["ok"] == 3
+
+
+def test_the_report_writes_both_files(tmp_path):
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]))
+    verdicts = check_product([{"cas": "100-00-5", "h_codes": ["H302"]}], table)
+    json_path, html_path = R.save(_run_with(verdicts), tmp_path)
+    assert json_path.exists() and html_path.exists()
+    body = html_path.read_text(encoding="utf-8")
+    assert "Fix before release" in body
+    assert "Annex VI requires" in body
+    assert "H315" in body
+    assert "Index No 000-000-00-0" in body          # the source reference
+    assert "<fictional product>" not in body        # escaped, not raw
+    assert "&lt;fictional product&gt;" in body
+
+
+def test_the_report_escapes_what_it_prints(tmp_path):
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]))
+    verdicts = check_product([{"cas": "100-00-5", "h_codes": ["H302"]}], table)
+    _json_path, html_path = R.save(
+        _run_with(verdicts, name="<script>alert(1)</script>"), tmp_path)
+    body = html_path.read_text(encoding="utf-8")
+    assert "<script>alert(1)</script>" not in body
+
+
+def test_the_check_path_holds_no_network_call():
+    """compare.py is pure. The one networked module is called only by the CLI."""
+    from pathlib import Path
+
+    from lingua_oracle.ingredients import compare
+
+    text = Path(compare.__file__).read_text(encoding="utf-8")
+    for word in ("httpx", "requests", "urlopen", "fetch("):
+        assert word not in text, word
+
+
+def test_a_placeholder_cas_is_not_a_missing_entry():
+    """The app stores "NOCAS-…" where a substance has no registry number.
+
+    Reporting that as "no harmonised entry" would say the law is silent about
+    the substance, when the truth is that we cannot look it up.
+    """
+    verdict = check_ingredient("NOCAS-7a45cd36dcf4", ["H302"], table_of(entry()))
+    assert verdict.status is Status.NOT_CHECKED
+    assert verdict.reason is Reason.NO_CAS
+    assert "indexed by CAS" in verdict.findings[0].message
+
+
+@pytest.mark.parametrize("cas", ["", None, "NOCAS-abc", "not a cas", "1-2-3-4"])
+def test_anything_that_is_not_a_cas_number_is_treated_as_none(cas):
+    verdict = check_ingredient(cas, ["H302"], table_of(entry()))
+    assert verdict.reason is Reason.NO_CAS
+
+
+def test_the_harmonised_codes_are_read_out_of_the_packed_column(real):
+    """The act prints "H361d *** H304" on one line, asterisks and all.
+
+    Matching the whole line against a code pattern dropped every line that was
+    not a single bare code, and with it 951 harmonised classifications.
+    """
+    toluene = real.by_cas()["108-88-3"][0]
+    assert toluene.h_codes == ["H225", "H361d", "H304", "H373", "H315", "H336"]
+    assert len(toluene.hazard_classes) == len(toluene.h_codes)

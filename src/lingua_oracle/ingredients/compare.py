@@ -46,6 +46,10 @@ class Reason(StrEnum):
 #: a digit with an optional letter; the asterisk is the minimum-classification
 #: mark and belongs to the class, not the category.
 _CLASS = re.compile(r"^(?P<name>.*?)\s*(?P<category>\d[A-Fa-f]?)\s*(?P<star>\*)?$")
+#: A CAS registry number. The app stores a placeholder - "NOCAS-7a45cd36dcf4" -
+#: for substances that have none, and that is a different thing from a CAS the
+#: harmonised list happens not to carry.
+_CAS_SHAPE = re.compile(r"^\d{2,7}-\d{2}-\d$")
 
 
 @dataclass(frozen=True)
@@ -134,13 +138,15 @@ def check_ingredient(cas: str | None, stated_codes: list[str],
                      index: dict[str, list[AnnexVIEntry]] | None = None,
                      *, data_source: str | None = None) -> Verdict:
     """Compare one ingredient's H codes with its harmonised entry."""
-    if not cas:
+    if not cas or not _CAS_SHAPE.match(cas.strip()):
         return Verdict(cas=cas, status=Status.NOT_CHECKED, reason=Reason.NO_CAS,
                        data_source=data_source,
                        findings=[Finding(
                            Status.NOT_CHECKED, None,
                            "No CAS number, so no harmonised entry can be looked "
-                           "up.")])
+                           "up. Annex VI Table 3 is indexed by CAS and EC "
+                           "number; a substance with neither cannot be found "
+                           "in it.")])
 
     found = entries_for(cas, table, index)
     if not found:
