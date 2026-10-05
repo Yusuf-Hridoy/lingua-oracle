@@ -129,6 +129,33 @@
   </article>
   {% endfor %}
 
+  {% if cards.minor %}
+  {# Same words, different punctuation or capital letters. One card for all of
+     them: each is worth recording and none is worth the space a card takes. #}
+  <details class="block minor">
+    <summary>{{ cards.minor|length }} statement{{ '' if cards.minor|length == 1 else 's' }}
+      differ{{ 's' if cards.minor|length == 1 else '' }} only in punctuation or capital letters</summary>
+    <div class="inner">
+      <p class="note">The words are the official words. Align them if you are
+        editing anyway, or confirm the difference does not matter.</p>
+      <table class="minor-table">
+        <thead>
+          <tr><th>Code</th><th>Your document</th><th>Official wording</th></tr>
+        </thead>
+        <tbody>
+          {% for row in cards.minor %}
+          <tr>
+            <td class="code">{{ L.code_label(row.v.code) }}</td>
+            <td>{{ row.v.found }}</td>
+            <td>{{ row.v.expected }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+  {% endif %}
+
   {% if cards.correct %}
   <details class="block good">
     <summary>{{ cards.correct|length }} statement{{ '' if cards.correct|length == 1 else 's' }} match the official wording</summary>

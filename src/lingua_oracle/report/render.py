@@ -218,7 +218,8 @@ def _issue_status(verdict) -> str:
     "check this" - there is nothing to weigh up, the sheet is unfinished. It
     reads as "Fix this", alongside the placeholders and missing sections.
     """
-    if verdict.status == "check" and "never filled in" in (verdict.why or ""):
+    if verdict.status == "check" and (
+            verdict.blank_unfilled or "never filled in" in (verdict.why or "")):
         return "fix"
     return verdict.status
 
@@ -242,6 +243,8 @@ def _statement_cards(report: Report) -> dict:
         rows.append({
             "v": verdict,
             "status": status,
+            "minor": bool(getattr(verdict, "minor_difference", False))
+                     and status not in ("correct", "not_checked"),
             "label": labels.STATUS.get(status, labels.NOT_CHECKED),
             "found_html": right,
             "expected_html": left,
@@ -259,7 +262,12 @@ def _statement_cards(report: Report) -> dict:
             ),
             "match_note": verdict.match_note,
         })
-    problems = [r for r in rows if r["status"] not in ("correct", "not_checked")]
+    problems = [r for r in rows if r["status"] not in ("correct", "not_checked")
+                and not r["minor"]]
+    # Same words, different punctuation or capital letters. Each one is worth
+    # saying and none is worth a card of its own: a dozen of them pushed the
+    # statements that genuinely differ off the first screen.
+    minor = [r for r in rows if r["minor"]]
     correct = [r for r in rows if r["status"] == "correct"]
     unchecked = [r for r in rows if r["status"] == "not_checked"]
 
@@ -284,6 +292,7 @@ def _statement_cards(report: Report) -> dict:
             "v": None,
             "finding": finding,
             "status": status,
+            "minor": False,
             "label": labels.STATUS[status],
             "single": True,
             "action": labels.action_for(finding, display),
@@ -291,12 +300,20 @@ def _statement_cards(report: Report) -> dict:
 
     order = {"wrong": 0, "fix": 1, "check": 2}
     problems.sort(key=lambda r: order.get(r["status"], 9))
+    # The counts cover everything the reader can see, collapsed card included,
+    # because the banner sentence is written from these numbers and the stat
+    # cells show them. Two sets of numbers for one report is how a banner comes
+    # to disagree with the figures beside it.
     counts = {
         "wrong": sum(1 for r in problems if r["status"] == "wrong"),
         "fix": sum(1 for r in problems if r["status"] == "fix"),
-        "check": sum(1 for r in problems if r["status"] == "check"),
+        "check": (sum(1 for r in problems if r["status"] == "check") + len(minor)),
         "correct": len(correct),
         "not_checked": len(unchecked),
+        "minor": len(minor),
+        "blanks": sum(1 for r in problems
+                      if r["status"] == "fix" and r.get("v")
+                      and r["v"].blank_unfilled),
     }
     # Where each wording came from, in full. Off the cards, which carry the
     # regulation and the instrument only.
@@ -304,7 +321,7 @@ def _statement_cards(report: Report) -> dict:
         {(v.code, v.source_detail) for v in report.statements if v.source_detail}
     )
     return {"problems": problems, "correct": correct, "unchecked": unchecked,
-            "counts": counts, "provenance": provenance}
+            "minor": minor, "counts": counts, "provenance": provenance}
 
 
 def _body_estimate(report: Report) -> int:
@@ -322,15 +339,16 @@ def render_html(report: Report) -> str:
     except KeyError:
         display = report.regulation
     template = _environment().get_template("report.html.j2")
+    cards = _statement_cards(report)
     return template.render(
         report=report,
         groups=_grouped(report, display),
         regulation_display=display,
         coverage_percent=report.coverage.percent,
-        verdict=labels.verdict_of(report, display),
+        verdict=labels.verdict_of(report, display, counts=cards["counts"]),
         app_css=report_css(_body_estimate(report)),
         language_name=language_name(report.language),
-        cards=_statement_cards(report),
+        cards=cards,
         L=labels,
         SEV=Severity,
         set_by=labels.SET_BY.get(report.detected_by, report.detected_by),

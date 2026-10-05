@@ -293,3 +293,16 @@ dl.tech dd { margin: 0; }
   .topbar .wrap { gap: 12px; }
   .nav a { padding: 7px 10px; }
 }
+
+
+/* Punctuation and capital-letter differences, collected into one card. The
+   table stays inside its own scroller so a long statement cannot push the page
+   sideways on a narrow screen. */
+.block.minor .inner { overflow-x: auto; }
+.minor-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.minor-table th,
+.minor-table td { padding: 8px 10px; text-align: left; vertical-align: top;
+                  border-bottom: 1px solid var(--border); }
+.minor-table th { font-weight: 600; color: var(--muted); white-space: nowrap; }
+.minor-table td.code { font-family: var(--mono); white-space: nowrap; }
+.minor-table tr:last-child td { border-bottom: 0; }

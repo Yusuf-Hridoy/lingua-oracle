@@ -185,6 +185,10 @@ class StatementVerdict(BaseModel):
     source_detail: str = ""
     #: True when the document still shows the placeholder where a value belongs.
     blank_unfilled: bool = False
+    #: The words are the official words and only punctuation or capital letters
+    #: differ. Reported, never failed - and collected into one card, because a
+    #: dozen of these push the things that matter off the screen.
+    minor_difference: bool = False
 
     @property
     def checked(self) -> bool:

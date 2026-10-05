@@ -40,6 +40,18 @@ def _statement(page, code: str):
     )
 
 
+def _minor_row(page, code: str):
+    """The row for one code in the collapsed punctuation/capitals card.
+
+    Statements whose words are the official words and whose only difference is
+    punctuation or capital letters share a single card, so they have no
+    `article.issue` of their own.
+    """
+    return page.locator(".minor-table tbody tr").filter(
+        has=page.locator(f'.code:text-is("{code}")')
+    )
+
+
 def _upload(page, base: str, case: Case) -> None:
     page.goto(base + "/", wait_until="domcontentloaded")
     page.select_option("#regulation", case.regulation)
@@ -97,10 +109,18 @@ def test_fixture_report_in_the_browser(case: Case, page, server, shots_dir):
     for check_id, severity, code in case.expect:
         if code:
             card = _statement(page, labels.code_label(code))
-            assert card.count() >= 1, f"no card on the page for {code}"
+            minor = _minor_row(page, labels.code_label(code))
+            assert card.count() + minor.count() >= 1, (
+                f"no card on the page for {code}"
+            )
             # A code can have two cards - a wording verdict and, say, a C-02
-            # consistency warning - so look across all of them.
-            shown = " ".join(card.all_inner_texts())
+            # consistency warning - so look across all of them. A punctuation
+            # difference lives in the collapsed card instead, which carries the
+            # same words in its summary.
+            shown = " ".join(card.all_inner_texts() + minor.all_inner_texts())
+            if minor.count():
+                shown += " " + page.locator(".block.minor summary").inner_text()
+                shown += " " + labels.STATUS["check"].word
         else:
             shown = page.inner_text("body")
         wanted = {labels.STATUS[severity].word} if severity in labels.STATUS else {
@@ -498,13 +518,42 @@ def test_a_newer_ghs_card_explains_itself(page, server, shots_dir):
     assert "Ask whether that’s accepted." in without
 
 
-def test_a_punctuation_card_explains_itself(page, server, shots_dir):
+def test_punctuation_differences_share_one_collapsed_card(page, server, shots_dir):
+    """A dozen of these used to push the statements that matter off the screen."""
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["pattern_capitalisation"])
-    card = _statement(page, "P303+P361+P353").first.inner_text()
-    assert "only punctuation or capital letters differ" in card
-    assert "Usually acceptable" in card
+    block = page.locator("details.block.minor")
+    assert block.count() == 1
+    summary = block.locator("summary").inner_text()
+    assert "differs only in punctuation or capital letters" in summary
+    assert summary.strip().startswith("1 statement")
+    # Collapsed: the detail is there, but not taking up the page.
+    assert not block.locator(".minor-table").first.is_visible()
+    assert _statement(page, "P303+P361+P353").count() == 0
+
+
+def test_the_collapsed_card_shows_both_texts_when_opened(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_capitalisation"])
+    page.locator("details.block.minor summary").click()
+    row = _minor_row(page, "P303+P361+P353")
+    assert row.count() == 1
+    text = row.inner_text()
+    assert "Rinse SKIN" in text           # the document's own wording
+    assert "Rinse skin" in text           # the official wording beside it
+
+
+def test_one_what_to_do_line_covers_every_punctuation_difference(page, server,
+                                                                 shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["pattern_capitalisation"])
+    todo = page.locator(".card.todo li").all_inner_texts()
+    about_punctuation = [t for t in todo
+                         if "punctuation" in t or "capital letters" in t]
+    assert len(about_punctuation) == 1, todo
 
 
 def test_no_card_falls_back_to_the_generic_sentence(page, server, shots_dir):

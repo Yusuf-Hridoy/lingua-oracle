@@ -170,9 +170,11 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                     tier=entry.tier, message=f"{hit.code} {result.message}.",
                 )
             )
+            minor = result.kind in (MatchKind.PUNCTUATION, MatchKind.CASE)
             ctx.record(StatementVerdict(
                 code=hit.code, status="check", found=hit.text, expected=entry.text,
                 source=_source_of(ctx), source_detail=entry.source_ref or "",
+                minor_difference=minor,
                 why=("Same words; only punctuation or capital letters differ. "
                      "Usually acceptable \u2014 align with the official text if "
                      "you are editing anyway."

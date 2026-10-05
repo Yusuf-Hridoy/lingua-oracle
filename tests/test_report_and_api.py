@@ -451,3 +451,89 @@ def test_picking_the_suggestion_then_checks_against_it(client):
     assert response.status_code == 303
     page = client.get(response.headers["location"])
     assert "Australia WHS" in page.text
+
+
+# -- the banner sentence and the figures beside it ----------------------------
+
+
+def _report_and_cards(fixture: str, regulation: str | None = None):
+    from lingua_oracle.pipeline import check_pdf
+    from lingua_oracle.report.render import _statement_cards
+    from tests.conftest import pdf
+
+    report = check_pdf(pdf(fixture), regulation)
+    return report, _statement_cards(report)
+
+
+def test_the_banner_sentence_counts_what_the_cells_count():
+    """One report, one set of numbers.
+
+    The sentence was written from the finding severities and the cells from the
+    cards, which count different things: a reader saw "3 to check" over a row
+    that said 5.
+    """
+    from lingua_oracle.report import labels
+
+    for fixture, regulation in (("pattern_unfilled_blanks", None),
+                                ("pattern_capitalisation", "eu_clp"),
+                                ("defect_a03_precautionary", "eu_clp"),
+                                ("clean_eu_en", "eu_clp")):
+        report, cards = _report_and_cards(fixture, regulation)
+        counts = cards["counts"]
+        detail = labels.verdict_of(report, "X", counts=counts).detail
+        for number, word in ((counts["wrong"], "statement"),
+                             (counts["blanks"], "blank")):
+            if number:
+                assert f"{number} {word}" in detail, (fixture, detail)
+
+
+def test_the_sentence_never_says_statement_s():
+    from lingua_oracle.report import labels
+
+    for fixture, regulation in (("pattern_unfilled_blanks", None),
+                                ("pattern_capitalisation", "eu_clp"),
+                                ("defect_a03_precautionary", "eu_clp")):
+        report, cards = _report_and_cards(fixture, regulation)
+        verdict = labels.verdict_of(report, "X", counts=cards["counts"])
+        assert "(s)" not in verdict.detail, fixture
+
+
+def test_one_statement_reads_as_one():
+    from lingua_oracle.report.labels import plural
+
+    assert plural(1, "statement") == "1 statement"
+    assert plural(2, "statement") == "2 statements"
+    assert plural(1, "other problem") == "1 other problem"
+    assert plural(3, "other problem") == "3 other problems"
+
+
+def test_a_wrong_statement_and_a_blank_are_counted_separately():
+    from lingua_oracle.report import labels
+
+    report, cards = _report_and_cards("pattern_unfilled_blanks")
+    detail = labels.verdict_of(report, "X", counts=cards["counts"]).detail
+    assert "2 blanks to fill in" in detail
+
+
+# -- punctuation differences in one card --------------------------------------
+
+
+def test_punctuation_differences_are_collected_into_one_group():
+    _, cards = _report_and_cards("pattern_capitalisation", "eu_clp")
+    assert len(cards["minor"]) == 1
+    assert all(row["v"].minor_difference for row in cards["minor"])
+    # And they are out of the individual cards, not duplicated across both.
+    assert not any(row.get("minor") for row in cards["problems"])
+
+
+def test_a_collected_difference_is_still_counted_as_something_to_check():
+    """Collapsing the card must not quietly drop it from the figures."""
+    _, cards = _report_and_cards("pattern_capitalisation", "eu_clp")
+    assert cards["counts"]["check"] >= len(cards["minor"])
+    assert cards["counts"]["minor"] == len(cards["minor"])
+
+
+def test_a_real_wording_difference_keeps_its_own_card():
+    _, cards = _report_and_cards("defect_a03_precautionary", "eu_clp")
+    assert cards["minor"] == []
+    assert any(row["status"] == "wrong" for row in cards["problems"])

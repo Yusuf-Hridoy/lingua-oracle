@@ -230,8 +230,12 @@ def action_for(finding, regulation_display: str = "") -> str:
         return "Fill in the blank before this sheet is issued."
     if message.lower().startswith("filled in:"):
         return "Check the filled-in text is right for this product."
-    if "differs only in capitalisation" in message:
-        return "Match the capitalisation of the official text, or confirm it does not matter."
+    if "differs only in" in message and (
+            "capitalisation" in message or "punctuation" in message):
+        # Deliberately one sentence for both, so a sheet with a mixture of the
+        # two gets one line in "What to do" rather than two near-identical ones.
+        return ("Align punctuation and capital letters with the official text, "
+                "or confirm they do not matter.")
     if finding.check_id == "C-15":
         if "was deleted in" in message:
             return "Remove this code; it no longer exists in this revision."
@@ -342,41 +346,80 @@ def _caveats(report: Report) -> list[str]:
     return out
 
 
-def verdict_of(report: Report, regulation_display: str = "") -> Verdict:
-    """One line to act on, then what to do, then what was not covered."""
+def plural(count: int, singular: str, many: str | None = None) -> str:
+    """"1 statement", "2 statements" - written out, never "statement(s)".
+
+    A reader counting problems should not have to parse a bracket.
+    """
+    word = singular if count == 1 else (many or singular + "s")
+    return f"{count} {word}"
+
+
+def verdict_of(report: Report, regulation_display: str = "",
+               counts: dict[str, int] | None = None) -> Verdict:
+    """One line to act on, then what to do, then what was not covered.
+
+    The release word comes from the severities, as it always has: an unfinished
+    blank is a card to act on but not a contradiction of the official text. The
+    sentence under it is written from `counts` - the report's own card counts,
+    the figures printed beside it. It used to be written from the severities
+    too, which count different things, so a reader saw "3 to check" over a row
+    of cells that said 5 and had no way to tell which was wrong.
+    """
     summary = report.summary
     actions = actions_for(report, regulation_display)
-    wording_fails = sum(
-        1 for f in report.findings
-        if f.severity is Severity.FAIL and not f.unverified
-        and f.check_id in WORDING_CHECKS
-    )
-    other_fails = summary.fail - wording_fails
+    if counts is None:  # a caller with no cards to hand; count the statements
+        counts = {
+            "wrong": sum(1 for v in report.statements if v.status == "wrong"),
+            "fix": sum(1 for v in report.statements
+                       if v.status == "fix" or v.blank_unfilled),
+            "check": sum(1 for v in report.statements if v.status == "check"),
+            "blanks": sum(1 for v in report.statements if v.blank_unfilled),
+            "minor": sum(1 for v in report.statements if v.minor_difference),
+        }
+    wrong = counts.get("wrong", 0)
+    blanks = counts.get("blanks", 0)
+    other_fixes = max(counts.get("fix", 0) - blanks, 0)
+    to_check = counts.get("check", 0)
+    minor = counts.get("minor", 0)
+
+    def listed(parts: list[str], fallback: str) -> str:
+        return "; ".join(parts) + "." if parts else fallback
 
     if summary.fail:
         parts = []
-        if wording_fails:
-            parts.append(f"{wording_fails} statement(s) do not match the official text")
-        if other_fails:
-            parts.append(f"{other_fails} other problem(s) to fix")
+        if wrong:
+            parts.append(f"{plural(wrong, 'statement')} "
+                         f"{'does' if wrong == 1 else 'do'} not match the "
+                         "official text")
+        if blanks:
+            parts.append(f"{plural(blanks, 'blank')} to fill in")
+        if other_fixes:
+            parts.append(f"{plural(other_fixes, 'other problem')} to fix")
         return Verdict(
             release=FIX,
             headline="Wording problems found — fix before release"
-            if wording_fails else "Problems found — fix before release",
-            tone="fix", icon="✕", detail="; ".join(parts) + ".",
+            if wrong else "Problems found — fix before release",
+            tone="fix", icon="✕",
+            detail=listed(parts, f"{plural(summary.fail, 'problem')} to fix."),
             actions=actions, caveats=_caveats(report),
         )
     if summary.warn or summary.info:
-        bits = []
-        if summary.warn:
-            bits.append(f"{summary.warn} to check")
-        if summary.info:
-            bits.append(f"{summary.info} needing a person")
+        parts = []
+        if blanks:
+            parts.append(f"{plural(blanks, 'blank')} to fill in")
+        if to_check:
+            parts.append(f"{plural(to_check, 'statement')} to check")
+        if minor:
+            parts.append(f"{minor} of {'them' if minor == to_check else 'those'} "
+                         f"{'differs' if minor == 1 else 'differ'} only in "
+                         "punctuation or capital letters")
         return Verdict(
             release=REVIEW,
             headline="Looks correct — some items need a person to check",
             tone="check", icon="!",
-            detail="Nothing contradicts the official text. " + ", ".join(bits) + ".",
+            detail="Nothing contradicts the official text. "
+                   + listed(parts, "Some items need a person."),
             actions=actions, caveats=_caveats(report),
         )
     return Verdict(
