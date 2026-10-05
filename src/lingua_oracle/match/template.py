@@ -53,12 +53,17 @@ _FILLIN_RE = re.compile(rf"{_FILLIN_ATOM}(?:\s*{_FILLIN_ATOM})*", re.IGNORECASE)
 
 # Some slots are conditional by the source's own words: "<or state all organs
 # affected, if known>", "<state route of exposure if it is conclusively proven
-# that no other routes of exposure cause the hazard>". An author who does not
-# know the organs, or cannot prove the route, is meant to leave them out - so
-# requiring them failed correct sheets. These two phrasings are the only
-# conditional forms in any key on file.
+# that no other routes of exposure cause the hazard>", and OSHA's shorter
+# phrasing of the same thing, "<state route of exposure if no other routes of
+# exposure cause the hazard>". An author who does not know the organs, or whose
+# substance is hazardous by more than one route, is meant to leave them out - so
+# requiring them failed correct sheets. These are the only conditional forms in
+# any key on file.
 _CONDITIONAL_SLOT_RE = re.compile(
-    r"\bif\s+known\b|\bif\s+it\s+is\s+conclusively\s+proven\b", re.IGNORECASE
+    r"\bif\s+known\b"
+    r"|\bif\s+it\s+is\s+conclusively\s+proven\b"
+    r"|\bif\s+no\s+other\s+routes\s+of\s+exposure\b",
+    re.IGNORECASE,
 )
 _SENTENCE_END_RE = re.compile(r"(?<=[.!?])\s")
 # Two places where PDF producers move a space and nothing is meant by it:
@@ -371,8 +376,11 @@ def _compare(f: str, t: str, *, optional_terminator: bool) -> MatchResult:
         return MatchResult(True, MatchKind.CASE, message="differs only in capitalisation")
 
     def _fillins(m: re.Match[str]) -> list[str]:
+        # A slot that caught nothing but punctuation caught nothing: an optional
+        # slot at the end of a sentence will swallow the full stop, and
+        # "Filled in: '.'" is not something to ask a person to check.
         return [v for k, v in (m.groupdict() or {}).items()
-                if k.startswith("fill_") and v and v.strip()]
+                if k.startswith("fill_") and v and re.search(r"\w|…", v)]
 
     # Case-sensitive first. The permissive pass below exists so a capitalisation
     # difference is REPORTED rather than passed over: matching the template

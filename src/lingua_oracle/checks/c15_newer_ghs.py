@@ -17,13 +17,56 @@ from __future__ import annotations
 
 from lingua_oracle.checks.base import CheckContext, register
 from lingua_oracle.checks.missing_source import Reason, classify
-from lingua_oracle.match.template import match
+from lingua_oracle.match.template import MatchKind, match
 from lingua_oracle.models import Finding, Severity, StatementVerdict, Tier
 
 CHECK_ID = "C-15"
 TITLE = "Codes belong to the revision this regulation has adopted"
 
 _SEVERITY = {"warn": Severity.WARN, "info": Severity.INFO, "fail": Severity.FAIL}
+
+
+def _wording_note(edition: str, result) -> str:
+    """How close the sheet's text is to the edition's, without overstating it.
+
+    "Matches GHS Rev.7 wording exactly" is a claim, and it was being made for a
+    sheet that differed in capital letters or a full stop. Those are fine, and
+    saying so is fine - saying they are not there is not.
+    """
+    if result.kind in (MatchKind.EXACT, MatchKind.TEMPLATE):
+        return f"Matches {edition} wording exactly"
+    return f"Matches {edition} wording except punctuation/capital letters"
+
+
+def _blanks(ctx: CheckContext, check_id: str, hit, expected: str,
+            result) -> tuple[bool, list[Finding]]:
+    """Split a match's fill-ins into values and placeholders left unfilled.
+
+    The same rule A-02/A-03 use. A slot still holding "…" is not something the
+    author filled in, it is something they have not done yet, and the report has
+    a card for exactly that.
+    """
+    unfilled = False
+    findings: list[Finding] = []
+    for value in result.fillins:
+        blank = "\u2026" in value
+        unfilled = unfilled or blank
+        findings.append(
+            Finding(
+                check_id=check_id,
+                severity=Severity.WARN if blank else Severity.INFO,
+                section=hit.section if hasattr(hit, "section") else None,
+                page=hit.page, code=hit.code, expected=expected, found=hit.text,
+                tier=Tier.C,
+                message=(
+                    "Not filled in - the document still shows '\u2026' where a "
+                    "value belongs."
+                    if blank
+                    else f"Filled in: '{value}' - check it is appropriate."
+                ),
+            )
+        )
+    return unfilled, findings
 
 
 @register(CHECK_ID, TITLE)
@@ -105,12 +148,19 @@ def run(ctx: CheckContext) -> list[Finding]:
             # is GHS's own. Extra information, correctly worded - not something
             # anyone has to act on, so it belongs in the list of statements that
             # match rather than in the issues or the what-to-do list.
+            unfilled, blank_findings = _blanks(ctx, CHECK_ID, hit, against, result)
+            findings.extend(blank_findings)
             ctx.record(StatementVerdict(
-                code=hit.code, status="correct", found=hit.text,
+                code=hit.code,
+                status="check" if unfilled or result.fillins else "correct",
+                blank_unfilled=unfilled,
+                found=hit.text,
                 expected=against, source=f"{missing.edition}, Annex 3",
-                why=f"Matches {missing.edition} wording.",
-                match_note=(f"{missing.edition} wording; outside {where}'s "
-                            "scope, allowed as extra information"),
+                why=("The wording is correct, but a blank was never filled in: "
+                     "the document still shows the placeholder."
+                     if unfilled else f"{_wording_note(missing.edition, result)}."),
+                match_note=(f"{_wording_note(missing.edition, result)}; outside "
+                            f"{where}'s scope, allowed as extra information"),
                 section=section, page=hit.page,
                 fillins=[v for v in result.fillins if "\u2026" not in v],
             ))
@@ -140,11 +190,16 @@ def run(ctx: CheckContext) -> list[Finding]:
             # statement where it has one - that is what a reader would use
             # instead. The edition's text is what the sheet already matches, so
             # it goes under the document's own text as a note.
+            unfilled, blank_findings = _blanks(ctx, CHECK_ID, hit,
+                                              missing.nearest_text or against,
+                                              result)
+            findings.extend(blank_findings)
             ctx.record(StatementVerdict(
                 code=hit.code, status="check", found=hit.text,
+                blank_unfilled=unfilled,
                 expected=missing.nearest_text or against,
                 nearest_code=missing.nearest_code,
-                match_note=f"Matches {missing.edition} wording exactly",
+                match_note=_wording_note(missing.edition, result),
                 source=source,
                 why=(
                     f"Correct {missing.edition} wording, but {where} has not "
@@ -155,7 +210,8 @@ def run(ctx: CheckContext) -> list[Finding]:
                     f"adopted {hit.code} and has no equivalent statement. "
                     f"Ask whether that\u2019s accepted."
                 ),
-                section=section, page=hit.page, fillins=list(result.fillins),
+                section=section, page=hit.page,
+                fillins=[v for v in result.fillins if "\u2026" not in v],
             ))
             continue
 

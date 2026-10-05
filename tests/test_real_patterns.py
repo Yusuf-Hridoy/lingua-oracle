@@ -743,3 +743,114 @@ def test_the_allowance_is_tied_to_the_recorded_defect():
     german = load_key("eu_clp", "de").by_code()
     assert any(d.startswith("terminator") for d in german["P280"].text_defects)
     assert german["P210"].text_defects == []
+
+
+# -- a label with no safety data sheet behind it ------------------------------
+
+
+def test_a_label_only_document_gets_no_section_2_comparison():
+    """B-09 compares two halves of a document. Artwork has only one.
+
+    Label artwork carries a block title - "Hazards Identification" - that reads
+    exactly like Section 2's heading, so the comparison ran and reported every
+    statement as missing from the other half.
+    """
+    report = check_pdf(pdf("pattern_label_only"), "us_osha")
+    assert [f for f in report.findings if f.check_id == "B-09"] == []
+
+
+def test_the_label_only_document_says_why_the_comparison_was_skipped():
+    report = check_pdf(pdf("pattern_label_only"), "us_osha")
+    assert any("Label only" in note and "not applicable" in note
+               for note in report.notes), report.notes
+
+
+def test_a_real_sheet_still_gets_its_label_comparison():
+    """The skip must not switch the check off for documents that have both."""
+    from lingua_oracle.checks.b09_label_vs_section2 import _SDS_SECTIONS_NEEDED
+
+    assert _SDS_SECTIONS_NEEDED == 2
+    report = check_pdf(pdf("clean_osha_en"), "us_osha")
+    assert not any("Label only" in note for note in report.notes)
+
+
+def test_the_label_comparison_reports_each_code_once():
+    from lingua_oracle.checks.b09_label_vs_section2 import CHECK_ID
+
+    report = check_pdf(pdf("clean_eu_en"), "eu_clp")
+    seen = [(f.section, f.code) for f in report.findings if f.check_id == CHECK_ID]
+    assert len(seen) == len(set(seen))
+
+
+# -- OSHA's conditional route slot --------------------------------------------
+
+
+@pytest.mark.parametrize("statement", [
+    "Suspected of causing cancer",
+    "Suspected of causing cancer.",
+    "May cause cancer",
+    "Suspected of causing cancer (inhalation)",
+])
+def test_an_osha_route_slot_may_be_left_out(statement):
+    """OSHA explains the slot in a footnote: state the route *if no other route*
+    causes the hazard. A label for a substance hazardous by several routes
+    correctly omits it, and used to fail for doing so."""
+    from lingua_oracle.keys.store import load_key
+    from lingua_oracle.match.template import match
+
+    code = "H350" if statement.startswith("May") else "H351"
+    entry = load_key("us_osha", "en").by_code()[code]
+    assert "if no other routes of exposure" in entry.text
+    assert match(statement, entry.text, optional_terminator=True).matched
+
+
+def test_the_slot_still_carries_what_an_author_writes_into_it():
+    from lingua_oracle.keys.store import load_key
+    from lingua_oracle.match.template import match
+
+    entry = load_key("us_osha", "en").by_code()["H351"]
+    assert match("Suspected of causing cancer (inhalation)",
+                 entry.text).fillins == ["(inhalation)"]
+
+
+def test_a_full_stop_is_never_reported_as_a_filled_in_value():
+    from lingua_oracle.match.template import match
+
+    result = match("Suspected of causing cancer.",
+                   "Suspected of causing cancer <state route of exposure "
+                   "if no other routes of exposure cause the hazard>")
+    assert result.matched
+    assert result.fillins == []
+
+
+def test_every_osha_statement_with_a_slot_explains_it():
+    """No entry may keep the bare "<…>" the footnote was meant to fill."""
+    from lingua_oracle.keys.store import load_key
+
+    for entry in load_key("us_osha", "en").entries:
+        assert "<…>" not in entry.text, entry.code
+        assert "<<" not in entry.text, entry.code
+
+
+# -- the newer-GHS path reports an unfinished blank the same way --------------
+
+
+def test_an_unfilled_bracket_is_a_placeholder_on_the_ghs_path_too():
+    report = check_pdf(pdf("pattern_unfilled_bracket_ghs"), "us_osha")
+    verdict = next(s for s in report.statements if s.code == "P264+P265")
+    assert verdict.blank_unfilled is True
+    assert verdict.fillins == []
+    assert any(f.code == "P264+P265" and "Not filled in" in f.message
+               for f in report.findings)
+    assert not any("You filled in" in (f.message or "") for f in report.findings)
+
+
+def test_the_ghs_wording_claim_is_only_made_when_it_is_true():
+    exact = check_pdf(pdf("pattern_unfilled_bracket_ghs"), "us_osha")
+    loose = check_pdf(pdf("pattern_ghs_case_difference"), "us_osha")
+    exact_note = next(s.match_note for s in exact.statements
+                      if s.code == "P264+P265")
+    loose_note = next(s.match_note for s in loose.statements
+                      if s.code == "P264+P265")
+    assert exact_note.endswith("wording exactly")
+    assert loose_note.endswith("except punctuation/capital letters")

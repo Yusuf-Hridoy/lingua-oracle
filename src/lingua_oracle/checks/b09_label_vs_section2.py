@@ -11,9 +11,25 @@ CHECK_ID = "B-09"
 TITLE = "Section 2 and label show the same signal word and statements"
 
 
+#: How many numbered SDS sections a document needs before it counts as a safety
+#: data sheet. Label artwork carries a block title - "Hazards Identification" -
+#: that reads exactly like Section 2's heading, so one match proves nothing. A
+#: real sheet has sixteen sections and a label has none.
+_SDS_SECTIONS_NEEDED = 2
+
+
 @register(CHECK_ID, TITLE)
 def run(ctx: CheckContext) -> list[Finding]:
     names = {span.name for span in ctx.spans}
+    sds_sections = names - {LABEL}
+    if LABEL in names and len(sds_sections) < _SDS_SECTIONS_NEEDED:
+        # Label artwork on its own. There is no Section 2 to compare the label
+        # with - the one block that looked like it IS the label - and reporting
+        # every statement as missing from the other half said nothing true.
+        note = "Label only; Section 2 comparison not applicable."
+        if note not in ctx.notes:
+            ctx.notes.append(note)
+        return []
     if LABEL not in names or "2" not in names:
         return []  # only meaningful when both are present
 
@@ -24,21 +40,25 @@ def run(ctx: CheckContext) -> list[Finding]:
     if not label or not section2:
         return []
     findings: list[Finding] = []
+    seen: set[tuple[str, str]] = set()
 
-    for code in sorted(section2 - label):
-        findings.append(
-            Finding(
-                check_id=CHECK_ID, severity=Severity.FAIL, section="2", code=code,
-                message=f"{code} appears in Section 2 but not on the label.",
+    # One line per code per direction. A code found several times in a block is
+    # still one disagreement, and saying it twice makes the report look like two
+    # problems.
+    for section, missing, message in (
+        ("2", section2 - label, "{} appears in Section 2 but not on the label."),
+        (LABEL, label - section2, "{} appears on the label but not in Section 2."),
+    ):
+        for code in sorted(missing):
+            if (section, code) in seen:
+                continue
+            seen.add((section, code))
+            findings.append(
+                Finding(
+                    check_id=CHECK_ID, severity=Severity.FAIL, section=section,
+                    code=code, message=message.format(code),
+                )
             )
-        )
-    for code in sorted(label - section2):
-        findings.append(
-            Finding(
-                check_id=CHECK_ID, severity=Severity.FAIL, section=LABEL, code=code,
-                message=f"{code} appears on the label but not in Section 2.",
-            )
-        )
 
     words = {value.casefold() for value, _page in signal_candidates(ctx)}
     if len(words) > 1:

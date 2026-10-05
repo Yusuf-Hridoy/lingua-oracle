@@ -233,6 +233,46 @@ def _core_key(text: str) -> str:
     return " ".join(out)
 
 
+#: A footnote row that says what a slot in this table's statements is for:
+#:
+#:     < >    (state route of exposure if no other routes of exposure cause the hazard)
+#:     <<…>>  (state route of exposure if no other routes of exposure cause the hazard)
+#:     <…>    (or state all organs affected, if known)
+#:
+#: Appendix C prints the slot bare in the statement and explains it once at the
+#: foot of the table. Dropping the explanation left "Suspected of causing cancer
+#: <…>" in the key, where nothing says the slot is conditional, so a label that
+#: correctly omits the route - because no other route causes the hazard - failed.
+_SLOT_LEGEND_RE = re.compile(
+    r"^(?P<open><+)\s*[….\s]*(?P<close>>+)\s*"
+    r"\(\s*(?P<instruction>(?:or\s+)?(?:state|specify|indicate|list)\b[^()]{0,240})\)\s*$",
+    re.IGNORECASE,
+)
+
+
+def slot_legend(cell: str) -> tuple[int, str] | None:
+    """(bracket depth, the instruction) for a slot footnote, or None."""
+    m = _SLOT_LEGEND_RE.match(cell.strip())
+    if not m:
+        return None
+    return len(m.group("open")), " ".join(m.group("instruction").split())
+
+
+def apply_slot_legends(statement: str, legends: dict[int, str]) -> str:
+    """Put the table's own explanation inside the slots of one statement.
+
+    The result is the source's wording, assembled from the two places it prints
+    it. Nothing is invented: the instruction is copied verbatim, and a slot with
+    no legend is left exactly as it was.
+    """
+    def replace(match: re.Match[str]) -> str:
+        depth = len(match.group(1))
+        instruction = legends.get(depth)
+        return f"<{instruction}>" if instruction else match.group(0)
+
+    return re.sub(r"(<+)\s*[….\s]*>+", replace, statement)
+
+
 def parse_appendix_c(
     raw: bytes,
 ) -> tuple[dict[str, str], set[str], set[str], dict[str, str]]:
@@ -258,6 +298,11 @@ def parse_appendix_c(
         hazard_cols: tuple[int, int] | None = None
         category_col: int | None = None
         prec_cols: list[int] | None = None
+        # A table's slot footnotes, and the statements that use them. The
+        # footnote is printed after the statements, so they are expanded once
+        # the table has been read.
+        legends: dict[int, str] = {}
+        in_this_table: list[str] = []
         for row in table.xpath(".//tr"):
             cells = row.xpath("./td|./th")
             values = [_node_text(c) for c in cells]
@@ -277,11 +322,18 @@ def parse_appendix_c(
 
             if hazard_cols and len(values) > max(hazard_cols):
                 signal = values[hazard_cols[0]].strip()
-                statement = strip_condition(strip_guidance(values[hazard_cols[1]]))
+                raw_statement = values[hazard_cols[1]]
+                legend = slot_legend(raw_statement)
+                if legend:
+                    depth, instruction = legend
+                    legends[depth] = instruction
+                    continue
+                statement = strip_condition(strip_guidance(raw_statement))
                 if signal in ("Danger", "Warning"):
                     signals.add(signal)
                 if _is_statement(statement):
                     hazard.setdefault(statement, signal)
+                    in_this_table.append(statement)
                     if category_col is not None and category_col < len(values):
                         category = values[category_col].strip()
                         if category:
@@ -300,6 +352,14 @@ def parse_appendix_c(
                         text = strip_condition(strip_guidance(chunk))
                         if _is_statement(text):
                             precautionary.add(text)
+
+        for statement in in_this_table:
+            expanded = apply_slot_legends(statement, legends)
+            if expanded == statement:
+                continue
+            hazard[expanded] = hazard.pop(statement)
+            if statement in categories:
+                categories[expanded] = categories.pop(statement)
     return hazard, precautionary, signals, categories
 
 

@@ -336,6 +336,25 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "pattern_negative_declaration.pdf"))
     add("pattern_reach_registration", _reach_registration_number(
         FIXTURES / "pattern_reach_registration.pdf"))
+    add("pattern_label_only", _label_only(FIXTURES / "pattern_label_only.pdf"))
+    # A statement OSHA has not adopted, printed with its optional bracket still
+    # holding the blank. The wording is GHS's own, so it is checked against GHS -
+    # and the unfinished slot has to be reported there too.
+    add("pattern_unfilled_bracket_ghs", write_sds(
+        FIXTURES / "pattern_unfilled_bracket_ghs.pdf",
+        regulation="us_osha", language="en",
+        h_codes=["H225", "H319"], p_codes=["P210", "P280"],
+        extra_lines_s2=["P264+P265 Wash hands [and …] thoroughly after handling. "
+                        "Do not touch eyes."]))
+    # The same statement, dropping the optional group and shouting one word.
+    # The wording is GHS's, but not to the letter, and the report must not say
+    # it is.
+    add("pattern_ghs_case_difference", write_sds(
+        FIXTURES / "pattern_ghs_case_difference.pdf",
+        regulation="us_osha", language="en",
+        h_codes=["H225", "H319"], p_codes=["P210", "P280"],
+        extra_lines_s2=["P264+P265 Wash HANDS thoroughly after handling. "
+                        "Do not touch eyes."]))
 
     # C-02: the same code written two different ways.
     add("defect_c02_inconsistent", write_sds(
@@ -356,6 +375,34 @@ def build_all() -> dict[str, Path]:
 
     return built
 
+
+
+def _label_only(path: Path) -> Path:
+    """Label artwork with no SDS behind it.
+
+    A print file for a container label: the product, the signal word, the
+    statements, the supplier. It carries a block title that reads like Section 2
+    and a line naming the label, so both parts are recognised - but there is no
+    safety data sheet here, and comparing "Section 2" with "the label" when they
+    are the same piece of artwork reported every statement as missing from the
+    other.
+    """
+    sheet = Sheet(path)
+    official = texts("us_osha", "en", ["H225", "H319", "P210", "P280", "P264"])
+    sheet.line(PRODUCT, bold=True, size=14)
+    sheet.blank()
+    sheet.line("Hazards Identification", bold=True, size=11)
+    sheet.line("DANGER")
+    for code in ("H225", "H319"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line("Label elements", bold=True)
+    for code in ("P210", "P280", "P264"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(SUPPLIER)
+    sheet.save()
+    return path
 
 
 def _spacing_variant(path: Path) -> Path:
