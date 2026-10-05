@@ -19,11 +19,49 @@ from lingua_oracle.report.render import report_css
 
 
 @dataclass
+class _SubstanceLabel:
+    """Gives a substance the two fields the card template reads off a product."""
+
+    substance: SubstanceResult
+
+    @property
+    def name(self) -> str | None:
+        return self.substance.name
+
+    @property
+    def where(self) -> str:
+        count = self.substance.product_count
+        return f"in {count} product{'' if count == 1 else 's'}"
+
+    @property
+    def product_id(self) -> str:
+        return self.substance.cas
+
+
+@dataclass
 class ProductResult:
     product_id: int
     name: str | None
     regulation: str | None
     verdicts: list[Verdict] = field(default_factory=list)
+
+    @property
+    def where(self) -> str:
+        return f"product {self.product_id}"
+
+
+@dataclass
+class SubstanceResult:
+    """One substance checked once, however many products contain it.
+
+    Checking per product counts the same discrepancy as many times as the
+    substance is used, which says more about the library than about the data.
+    """
+
+    cas: str
+    name: str | None
+    verdict: Verdict
+    product_count: int = 0
 
 
 @dataclass
@@ -31,15 +69,26 @@ class Run:
     started_at: datetime
     annex_vi_source: str
     products: list[ProductResult] = field(default_factory=list)
+    substances: list[SubstanceResult] = field(default_factory=list)
+    #: How many products were read to find the substances. Only set when the
+    #: run was by substance.
+    products_scanned: int = 0
+
+    @property
+    def by_substance(self) -> bool:
+        return bool(self.substances)
 
     @property
     def all_verdicts(self) -> list[Verdict]:
+        if self.substances:
+            return [s.verdict for s in self.substances]
         return [v for p in self.products for v in p.verdicts]
 
     def counts(self) -> dict[str, int]:
         verdicts = self.all_verdicts
         return {
-            "products": len(self.products),
+            "products": self.products_scanned or len(self.products),
+            "substances": len(self.substances),
             "ingredients": len(verdicts),
             "with_entry": sum(1 for v in verdicts if v.entry_index_no
                               and v.status is not Status.NOT_CHECKED),
@@ -64,6 +113,13 @@ class Run:
             for code in verdict.missing_codes:
                 counts[code] = counts.get(code, 0) + 1
         return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+
+    def reach(self) -> list[tuple[str, int]]:
+        """How many products each under-classified substance appears in."""
+        return sorted(
+            ((s.cas, s.product_count) for s in self.substances
+             if s.verdict.status is Status.FIX),
+            key=lambda kv: (-kv[1], kv[0]))
 
     def sources(self) -> dict[str, int]:
         """Where the app says each substance record came from. Metadata only."""
@@ -103,6 +159,21 @@ def write_json(run: Run, path: Path) -> Path:
         "not_checked_reasons": run.reasons(),
         "missing_code_patterns": run.missing_patterns(),
         "data_sources": run.sources(),
+        "substances": [
+            {
+                "cas": s.cas,
+                "name": s.name,
+                "product_count": s.product_count,
+                "status": s.verdict.status.value,
+                "reason": s.verdict.reason.value if s.verdict.reason else None,
+                "entry_index_no": s.verdict.entry_index_no,
+                "missing_codes": s.verdict.missing_codes,
+                "source_ref": s.verdict.source_ref,
+                "data_source": s.verdict.data_source,
+            }
+            for s in run.substances
+        ],
+        "under_classified_reach": run.reach(),
         "products": [
             {
                 "product_id": p.product_id,
@@ -138,6 +209,14 @@ def render_html(run: Run) -> str:
     unchecked = [(p, v) for p in run.products for v in p.verdicts
                  if v.status is Status.NOT_CHECKED]
 
+    if run.by_substance:
+        fixes = [(_SubstanceLabel(s), s.verdict) for s in run.substances
+                 if s.verdict.status is Status.FIX]
+        rest = [(_SubstanceLabel(s), s.verdict) for s in run.substances
+                if s.verdict.status in (Status.OK, Status.INFO)]
+        unchecked = [(_SubstanceLabel(s), s.verdict) for s in run.substances
+                     if s.verdict.status is Status.NOT_CHECKED]
+
     cards = []
     for product, verdict in fixes:
         rows = "".join(
@@ -149,7 +228,7 @@ def render_html(run: Run) -> str:
     <header>
       <span class="pill fix"><span aria-hidden="true">✕</span> Fix this</span>
       <span class="code">{_e(verdict.cas)}</span>
-      <span class="where">{_e(product.name)} &middot; product {product.product_id}</span>
+      <span class="where">{_e(product.name)} &middot; {_e(product.where)}</span>
     </header>
     <div class="body">
       <div class="side">
@@ -183,7 +262,8 @@ def render_html(run: Run) -> str:
         f"<dt>{_e(k)}</dt><dd>{_e(v)}</dd>" for k, v in (
             ("Annex VI source", run.annex_vi_source),
             ("Run at", run.started_at.isoformat(timespec="seconds")),
-            ("Products checked", counts["products"]),
+            ("Products read", counts["products"]),
+            ("Distinct substances checked", counts["substances"] or "-"),
             ("Ingredients checked", counts["ingredients"]),
             ("Substance data sources (as the app reports them)",
              ", ".join(f"{k}: {v}" for k, v in run.sources().items())),

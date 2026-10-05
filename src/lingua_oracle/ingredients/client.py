@@ -91,6 +91,23 @@ class ExactSdsClient:
         return [r["primary_product_id"] for r in rows
                 if r.get("primary_product_id")][:limit]
 
+    def walk_product_ids(self, page_size: int = 100):
+        """Every product in the organisation's library, a page at a time."""
+        page_number = 1
+        while True:
+            page = self.get("/library", page_size=page_size, page=page_number)
+            if not isinstance(page, dict):
+                return
+            rows = page.get("results") or []
+            if not rows:
+                return
+            for row in rows:
+                if row.get("primary_product_id"):
+                    yield row["primary_product_id"]
+            if page_number >= (page.get("total_pages") or 1):
+                return
+            page_number += 1
+
     def product(self, product_id: int) -> dict:
         return self.get(f"/products/{product_id}") or {}
 

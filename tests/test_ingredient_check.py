@@ -266,8 +266,9 @@ def test_the_report_counts_what_it_shows():
         {"cas": "999-99-9", "h_codes": ["H302"]},
     ], table)
     counts = _run_with(verdicts).counts()
-    assert counts == {"products": 1, "ingredients": 3, "with_entry": 2,
-                      "fix": 1, "info": 0, "ok": 1, "not_checked": 1}
+    assert counts == {"products": 1, "substances": 0, "ingredients": 3,
+                      "with_entry": 2, "fix": 1, "info": 0, "ok": 1,
+                      "not_checked": 1}
     assert R.headline(counts)[0] == "Fix before release"
 
 
@@ -397,3 +398,92 @@ def test_an_extra_code_keeps_the_spelling_the_app_used():
     verdict = check_ingredient("100-00-5", ["H302", "H361f"], table)
     assert verdict.status is Status.INFO
     assert "H361f" in verdict.findings[0].message
+
+
+# -- one check per substance, not per product ---------------------------------
+
+
+def _substance_run(results):
+    from lingua_oracle.ingredients import report as R
+
+    run = R.new_run("02008R1272-test")
+    run.products_scanned = 42
+    run.substances = results
+    return run
+
+
+def test_a_substance_run_counts_substances_not_uses():
+    """The same discrepancy in forty products is one discrepancy."""
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]))
+    verdict = check_ingredient("100-00-5", ["H302"], table)
+    run = _substance_run([R.SubstanceResult(cas="100-00-5", name="<x>",
+                                            verdict=verdict, product_count=40)])
+    counts = run.counts()
+    assert counts["substances"] == 1
+    assert counts["ingredients"] == 1
+    assert counts["fix"] == 1
+    assert counts["products"] == 42          # read, not checked
+
+
+def test_a_substance_run_reports_how_far_each_problem_reaches():
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]),
+                     entry(index_no="000-001-00-0", cas=["200-00-0"],
+                           h_codes=["H319"]))
+    results = [
+        R.SubstanceResult("100-00-5", "<a>",
+                          check_ingredient("100-00-5", ["H302"], table), 40),
+        R.SubstanceResult("200-00-0", "<b>",
+                          check_ingredient("200-00-0", ["H319"], table), 7),
+    ]
+    run = _substance_run(results)
+    assert run.reach() == [("100-00-5", 40)]      # only the ones to fix
+
+
+def test_the_reach_list_is_ordered_by_how_many_products_are_affected():
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]),
+                     entry(index_no="000-001-00-0", cas=["200-00-0"],
+                           h_codes=["H319", "H335"]))
+    run = _substance_run([
+        R.SubstanceResult("100-00-5", "<a>",
+                          check_ingredient("100-00-5", [], table), 3),
+        R.SubstanceResult("200-00-0", "<b>",
+                          check_ingredient("200-00-0", [], table), 19),
+    ])
+    assert run.reach() == [("200-00-0", 19), ("100-00-5", 3)]
+
+
+def test_a_substance_run_writes_its_own_shape(tmp_path):
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]))
+    run = _substance_run([R.SubstanceResult(
+        cas="100-00-5", name="<fictional substance>",
+        verdict=check_ingredient("100-00-5", ["H302"], table),
+        product_count=12)])
+    json_path, html_path = R.save(run, tmp_path)
+    import json as _json
+
+    payload = _json.loads(json_path.read_text())
+    assert payload["substances"][0]["product_count"] == 12
+    assert payload["under_classified_reach"] == [["100-00-5", 12]]
+    body = html_path.read_text(encoding="utf-8")
+    assert "in 12 products" in body
+    assert "H315" in body
+
+
+def test_one_product_reads_as_one_product(tmp_path):
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]))
+    run = _substance_run([R.SubstanceResult(
+        cas="100-00-5", name="<x>",
+        verdict=check_ingredient("100-00-5", ["H302"], table),
+        product_count=1)])
+    _json_path, html_path = R.save(run, tmp_path)
+    assert "in 1 product<" in html_path.read_text(encoding="utf-8")

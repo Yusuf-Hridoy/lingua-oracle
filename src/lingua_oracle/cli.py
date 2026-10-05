@@ -268,6 +268,9 @@ def ingredients_check(
         "--product", help="A single product id.")] = None,
     sample: Annotated[int | None, typer.Option(
         "--sample", help="How many products to take from the library.")] = None,
+    distinct_cas: Annotated[int | None, typer.Option(
+        "--distinct-cas",
+        help="Check N distinct substances across the library, once each.")] = None,
     out: Annotated[Path | None, typer.Option(
         "--out", help="Where to write the report (default reports/ingredients).",
     )] = None,
@@ -288,8 +291,9 @@ def ingredients_check(
         typer.secho("No Annex VI table on file. Run `lingua keys build "
                     "annex_vi` first.", fg=typer.colors.RED)
         raise typer.Exit(1)
-    if product is None and sample is None:
-        typer.secho("Give --product or --sample.", fg=typer.colors.RED)
+    if product is None and sample is None and distinct_cas is None:
+        typer.secho("Give --product, --sample or --distinct-cas.",
+                    fg=typer.colors.RED)
         raise typer.Exit(1)
 
     try:
@@ -299,10 +303,18 @@ def ingredients_check(
         typer.secho(str(exc), fg=typer.colors.RED)
         raise typer.Exit(1) from exc
 
-    ids = [product] if product is not None else client.product_ids(sample or 10)
     index = table.by_cas()
     run = ingredient_report.new_run(table.source)
     seen_sources: dict[str, str | None] = {}
+
+    if distinct_cas is not None:
+        _check_distinct_substances(client, table, index, run, distinct_cas,
+                                   seen_sources)
+        client.close()
+        _print_ingredient_summary(run, *ingredient_report.save(run, out))
+        return
+
+    ids = [product] if product is not None else client.product_ids(sample or 10)
 
     with typer.progressbar(ids, label="products") as progress:
         for product_id in progress:
@@ -323,19 +335,64 @@ def ingredients_check(
                 regulation=detail.get("regulation"),
                 verdicts=verdicts))
     client.close()
+    _print_ingredient_summary(run, *ingredient_report.save(run, out))
 
-    json_path, html_path = ingredient_report.save(run, out)
+
+def _check_distinct_substances(client, table, index, run, wanted, seen_sources):
+    """Walk the library until `wanted` distinct CAS numbers have been seen.
+
+    One check per substance, not per product: checking per product counts the
+    same discrepancy once for every product that uses the substance, which
+    measures the library rather than the data.
+    """
+    from lingua_oracle.ingredients.compare import check_ingredient
+    from lingua_oracle.ingredients.report import SubstanceResult
+
+    codes_for: dict[str, set[str]] = {}
+    names_for: dict[str, str | None] = {}
+    products_for: dict[str, int] = {}
+    scanned = 0
+
+    for product_id in client.walk_product_ids():
+        if len(codes_for) >= wanted:
+            break
+        scanned += 1
+        for row in client.ingredients(product_id):
+            key = (row.cas or "").strip()
+            if not key:
+                continue
+            if key not in codes_for and len(codes_for) >= wanted:
+                continue
+            codes_for.setdefault(key, set()).update(row.h_codes)
+            names_for.setdefault(key, row.name)
+            products_for[key] = products_for.get(key, 0) + 1
+        if scanned % 100 == 0:
+            typer.secho(f"   read {scanned} products, "
+                        f"{len(codes_for)} distinct substances", dim=True)
+
+    run.products_scanned = scanned
+    for cas in sorted(codes_for):
+        if cas not in seen_sources:
+            seen_sources[cas] = client.substance_source(cas)
+        verdict = check_ingredient(cas, sorted(codes_for[cas]), table, index,
+                                   data_source=seen_sources[cas])
+        run.substances.append(SubstanceResult(
+            cas=cas, name=names_for.get(cas), verdict=verdict,
+            product_count=products_for.get(cas, 0)))
+
+
+def _print_ingredient_summary(run, json_path, html_path) -> None:
     counts = run.counts()
-    typer.secho(f"\nproducts {counts['products']}  ingredients "
-                f"{counts['ingredients']}  harmonised entries "
-                f"{counts['with_entry']}", bold=True)
+    typer.secho(f"\nproducts read {counts['products']}  distinct substances "
+                f"{counts['substances']}  checked {counts['ingredients']}  "
+                f"harmonised entries {counts['with_entry']}", bold=True)
     typer.secho(f"under-classified {counts['fix']}  matches {counts['ok']}  "
                 f"extra classes {counts['info']}  not checked "
                 f"{counts['not_checked']}")
     for reason, number in run.reasons().items():
         typer.secho(f"   not checked - {reason}: {number}")
-    for code, number in run.missing_patterns()[:3]:
-        typer.secho(f"   missing most often: {code} ({number})")
+    for code, number in run.missing_patterns()[:10]:
+        typer.secho(f"   missing: {code} ({number})")
     typer.secho(f"{json_path}\n{html_path}")
 
 
