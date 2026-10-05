@@ -29,7 +29,11 @@ from lingua_oracle.registry import data_dir
 #: The header that identifies Table 3 among the act's 544 tables. Matched on the
 #: columns rather than on a caption, because the caption is set as prose.
 _HEADER = ("index no", "ec no", "cas no")
-_CODE = re.compile(r"^(?:EU)?H\d{3}[A-Za-z]?$")
+#: A hazard statement code. Found inside the text rather than matched against
+#: the whole of it: the act packs several onto one line and hangs footnote
+#: asterisks off them - "H361d *** H304", "H373 **" - and a whole-string match
+#: dropped every line that was not a single bare code.
+_CODE = re.compile(r"\b(?:EU)?H\d{3}[A-Za-z]?\b")
 #: "233-139-2 [1]" - the bracketed index ties the identifier to one of the
 #: substances a multi-substance entry covers.
 _WHICH = re.compile(r"\s*\[(\d+)\]\s*$")
@@ -60,6 +64,14 @@ def _paragraphs(cell) -> list[str]:
         value = strip_markers(text).strip()
         if value:
             out.append(value)
+    return out
+
+
+def _codes(values: list[str]) -> list[str]:
+    """Every hazard statement code printed in a column, in order."""
+    out: list[str] = []
+    for value in values:
+        out += _CODE.findall(value)
     return out
 
 
@@ -133,10 +145,10 @@ def parse_table3(doc, *, celex: str) -> tuple[list[AnnexVIEntry], list[str]]:
             ec=_identifiers(values[2]),
             cas=_identifiers(values[3]),
             hazard_classes=[v for v in values[4] if v.strip()],
-            h_codes=[v for v in values[5] if _CODE.match(v)],
+            h_codes=_codes(values[5]),
             pictograms=[v for v in values[6] if v.strip()],
-            label_h_codes=[v for v in values[7] if _CODE.match(v)],
-            supplemental_h_codes=[v for v in values[8] if _CODE.match(v)],
+            label_h_codes=_codes(values[7]),
+            supplemental_h_codes=_codes(values[8]),
             limits=limits,
             limit_kinds=[_classify_limit(v) for v in limits],
             notes=[v for v in values[10] if v.strip()],
