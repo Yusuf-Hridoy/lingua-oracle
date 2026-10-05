@@ -268,7 +268,8 @@ def test_the_report_counts_what_it_shows():
     counts = _run_with(verdicts).counts()
     assert counts == {"products": 1, "substances": 0, "ingredients": 3,
                       "with_entry": 2, "fix": 1, "info": 0, "ok": 1,
-                      "not_checked": 1}
+                      "not_checked": 1, "uses": 0, "uses_under_classified": 0,
+                      "inconsistent_substances": 0}
     assert R.headline(counts)[0] == "Fix before release"
 
 
@@ -400,90 +401,153 @@ def test_an_extra_code_keeps_the_spelling_the_app_used():
     assert "H361f" in verdict.findings[0].message
 
 
-# -- one check per substance, not per product ---------------------------------
+# -- one check per substance, grouped from every product use ------------------
 
 
-def _substance_run(results):
+def _use(product_id, codes, table):
+    from lingua_oracle.ingredients import report as R
+
+    return R.Use(product_id=product_id, codes=tuple(sorted(codes)),
+                 verdict=check_ingredient("100-00-5", list(codes), table))
+
+
+def _substance_run(results, scanned=42):
     from lingua_oracle.ingredients import report as R
 
     run = R.new_run("02008R1272-test")
-    run.products_scanned = 42
+    run.products_scanned = scanned
     run.substances = results
     return run
 
 
-def test_a_substance_run_counts_substances_not_uses():
-    """The same discrepancy in forty products is one discrepancy."""
+def test_a_code_present_in_one_product_is_not_present_in_the_others():
+    """The bug this replaced: the union of codes across products.
+
+    Two products, the same substance, one of them missing a harmonised code.
+    The substance has one under-classified use, and must never read as a match.
+    """
     from lingua_oracle.ingredients import report as R
 
-    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]))
-    verdict = check_ingredient("100-00-5", ["H302"], table)
-    run = _substance_run([R.SubstanceResult(cas="100-00-5", name="<x>",
-                                            verdict=verdict, product_count=40)])
-    counts = run.counts()
-    assert counts["substances"] == 1
-    assert counts["ingredients"] == 1
-    assert counts["fix"] == 1
-    assert counts["products"] == 42          # read, not checked
-
-
-def test_a_substance_run_reports_how_far_each_problem_reaches():
-    from lingua_oracle.ingredients import report as R
-
-    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]),
-                     entry(index_no="000-001-00-0", cas=["200-00-0"],
-                           h_codes=["H319"]))
-    results = [
-        R.SubstanceResult("100-00-5", "<a>",
-                          check_ingredient("100-00-5", ["H302"], table), 40),
-        R.SubstanceResult("200-00-0", "<b>",
-                          check_ingredient("200-00-0", ["H319"], table), 7),
-    ]
-    run = _substance_run(results)
-    assert run.reach() == [("100-00-5", 40)]      # only the ones to fix
-
-
-def test_the_reach_list_is_ordered_by_how_many_products_are_affected():
-    from lingua_oracle.ingredients import report as R
-
-    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]),
-                     entry(index_no="000-001-00-0", cas=["200-00-0"],
-                           h_codes=["H319", "H335"]))
-    run = _substance_run([
-        R.SubstanceResult("100-00-5", "<a>",
-                          check_ingredient("100-00-5", [], table), 3),
-        R.SubstanceResult("200-00-0", "<b>",
-                          check_ingredient("200-00-0", [], table), 19),
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H336"]))
+    substance = R.SubstanceResult(cas="100-00-5", name="<a>", uses=[
+        _use(1, ["H302", "H336"], table),
+        _use(2, ["H302"], table),
     ])
-    assert run.reach() == [("200-00-0", 19), ("100-00-5", 3)]
+    assert substance.product_count == 2
+    assert substance.under_classified_uses == 1
+    assert substance.missing_code_counts == {"H336": 1}
+    assert substance.status is Status.FIX
+    assert _substance_run([substance]).counts()["ok"] == 0
+
+
+def test_a_substance_right_everywhere_is_a_match():
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302"]))
+    substance = R.SubstanceResult(cas="100-00-5", name="<a>", uses=[
+        _use(1, ["H302"], table), _use(2, ["H302"], table)])
+    assert substance.under_classified_uses == 0
+    assert substance.status is Status.OK
+    assert not substance.inconsistent
+
+
+def test_the_same_substance_classified_differently_is_its_own_finding():
+    """Whatever Annex VI says, one of the two sets is wrong."""
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302"]))
+    substance = R.SubstanceResult(cas="100-00-5", name="<a>", uses=[
+        _use(1, ["H302"], table),
+        _use(2, ["H302", "H319"], table),
+        _use(3, ["H302", "H319"], table),
+    ])
+    assert substance.inconsistent
+    assert substance.code_sets == 2
+    assert substance.under_classified_uses == 0      # none is below Annex VI
+    assert _substance_run([substance]).counts()["inconsistent_substances"] == 1
+
+
+def test_consistent_codes_are_not_reported_as_varying():
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302"]))
+    substance = R.SubstanceResult(cas="100-00-5", name="<a>", uses=[
+        _use(1, ["H302"], table), _use(2, ["H302"], table)])
+    assert substance.code_sets == 1
+    assert not substance.inconsistent
+
+
+def test_uses_and_substances_are_counted_separately():
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H336"]))
+    substance = R.SubstanceResult(cas="100-00-5", name="<a>", uses=[
+        _use(i, ["H302"], table) for i in range(40)])
+    counts = _substance_run([substance]).counts()
+    assert counts["substances"] == 1
+    assert counts["uses"] == 40
+    assert counts["fix"] == 1                      # one substance to fix
+    assert counts["uses_under_classified"] == 40   # in forty products
+
+
+def test_missing_codes_are_counted_both_ways():
+    """By use and by substance: neither answers the other's question."""
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H336"]),
+                     entry(index_no="000-001-00-0", cas=["200-00-0"],
+                           h_codes=["H336"]))
+    a = R.SubstanceResult(cas="100-00-5", name="<a>", uses=[
+        _use(i, [], table) for i in range(10)])
+    b = R.SubstanceResult(cas="200-00-0", name="<b>", uses=[
+        R.Use(product_id=99, codes=(),
+              verdict=check_ingredient("200-00-0", [], table))])
+    run = _substance_run([a, b])
+    by_use = dict(run.missing_patterns())
+    assert by_use == {"H336": 11, "H302": 10}
+    assert dict(run.missing_by_substance()) == {"H336": 2, "H302": 1}
+
+
+def test_the_reach_list_counts_under_classified_uses():
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H336"]))
+    substance = R.SubstanceResult(cas="100-00-5", name="<a>", uses=[
+        _use(1, ["H302"], table), _use(2, ["H302"], table),
+        _use(3, ["H302", "H336"], table)])
+    assert _substance_run([substance]).reach() == [("100-00-5", 2)]
 
 
 def test_a_substance_run_writes_its_own_shape(tmp_path):
     from lingua_oracle.ingredients import report as R
 
-    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]))
-    run = _substance_run([R.SubstanceResult(
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H336"]))
+    substance = R.SubstanceResult(
         cas="100-00-5", name="<fictional substance>",
-        verdict=check_ingredient("100-00-5", ["H302"], table),
-        product_count=12)])
-    json_path, html_path = R.save(run, tmp_path)
+        uses=[_use(1, ["H302"], table), _use(2, ["H302", "H319"], table)])
+    json_path, html_path = R.save(_substance_run([substance]), tmp_path)
     import json as _json
 
     payload = _json.loads(json_path.read_text())
-    assert payload["substances"][0]["product_count"] == 12
-    assert payload["under_classified_reach"] == [["100-00-5", 12]]
+    row = payload["substances"][0]
+    assert row["uses_checked"] == 2
+    assert row["uses_under_classified"] == 2
+    assert row["missing_code_counts"] == {"H336": 2}
+    assert row["distinct_code_sets"] == 2
+    assert row["inconsistent"] is True
+    assert payload["under_classified_reach"] == [["100-00-5", 2]]
+    assert payload["missing_code_by_substance"] == [["H336", 1]]
     body = html_path.read_text(encoding="utf-8")
-    assert "in 12 products" in body
-    assert "H315" in body
+    assert "in 2 products" in body
+    assert "2 different code sets" in body
 
 
 def test_one_product_reads_as_one_product(tmp_path):
     from lingua_oracle.ingredients import report as R
 
-    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H315"]))
-    run = _substance_run([R.SubstanceResult(
-        cas="100-00-5", name="<x>",
-        verdict=check_ingredient("100-00-5", ["H302"], table),
-        product_count=1)])
-    _json_path, html_path = R.save(run, tmp_path)
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H336"]))
+    substance = R.SubstanceResult(cas="100-00-5", name="<x>",
+                                  uses=[_use(1, ["H302"], table)])
+    _json_path, html_path = R.save(_substance_run([substance]), tmp_path)
+    # Every use is under-classified, so there is no "n of m" to add.
     assert "in 1 product<" in html_path.read_text(encoding="utf-8")

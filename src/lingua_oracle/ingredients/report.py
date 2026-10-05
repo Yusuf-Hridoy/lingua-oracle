@@ -30,8 +30,15 @@ class _SubstanceLabel:
 
     @property
     def where(self) -> str:
-        count = self.substance.product_count
-        return f"in {count} product{'' if count == 1 else 's'}"
+        substance = self.substance
+        count = substance.product_count
+        where = f"in {count} product{'' if count == 1 else 's'}"
+        bad = substance.under_classified_uses
+        if bad and bad != count:
+            where += f", {bad} under-classified"
+        if substance.inconsistent:
+            where += (f", {substance.code_sets} different code sets")
+        return where
 
     @property
     def product_id(self) -> str:
@@ -51,17 +58,72 @@ class ProductResult:
 
 
 @dataclass
-class SubstanceResult:
-    """One substance checked once, however many products contain it.
+class Use:
+    """One substance in one product, with the codes that product gave it."""
 
-    Checking per product counts the same discrepancy as many times as the
-    substance is used, which says more about the library than about the data.
+    product_id: int
+    codes: tuple[str, ...]
+    verdict: Verdict
+
+
+@dataclass
+class SubstanceResult:
+    """One substance, and every product use of it, checked separately.
+
+    Taking the union of a substance's codes across products was wrong: a code
+    present in one product out of forty made the substance look classified in
+    all forty. Each use is checked on its own and the results are grouped here,
+    so a code missing in most products is still missing in most products.
     """
 
     cas: str
     name: str | None
-    verdict: Verdict
-    product_count: int = 0
+    uses: list[Use] = field(default_factory=list)
+
+    @property
+    def product_count(self) -> int:
+        return len(self.uses)
+
+    @property
+    def under_classified_uses(self) -> int:
+        return sum(1 for u in self.uses if u.verdict.status is Status.FIX)
+
+    @property
+    def missing_code_counts(self) -> dict[str, int]:
+        """{code: how many uses of this substance were missing it}."""
+        out: dict[str, int] = {}
+        for use in self.uses:
+            for code in use.verdict.missing_codes:
+                out[code] = out.get(code, 0) + 1
+        return dict(sorted(out.items(), key=lambda kv: (-kv[1], kv[0])))
+
+    @property
+    def code_sets(self) -> int:
+        """How many different sets of H codes the products give this substance."""
+        return len({u.codes for u in self.uses})
+
+    @property
+    def inconsistent(self) -> bool:
+        """The same substance classified differently in different products.
+
+        A finding in its own right, whatever Annex VI says: one of the sets is
+        wrong, or they describe different things under one CAS number.
+        """
+        return self.code_sets > 1
+
+    @property
+    def verdict(self) -> Verdict:
+        """The worst verdict among the uses - what the substance needs."""
+        order = (Status.FIX, Status.INFO, Status.OK, Status.NOT_CHECKED)
+        for status in order:
+            for use in self.uses:
+                if use.verdict.status is status:
+                    return use.verdict
+        raise ValueError(f"{self.cas} has no uses")
+
+    @property
+    def status(self) -> Status:
+        return self.verdict.status
 
 
 @dataclass
@@ -84,6 +146,10 @@ class Run:
             return [s.verdict for s in self.substances]
         return [v for p in self.products for v in p.verdicts]
 
+    @property
+    def uses(self) -> list[Use]:
+        return [u for s in self.substances for u in s.uses]
+
     def counts(self) -> dict[str, int]:
         verdicts = self.all_verdicts
         return {
@@ -97,6 +163,13 @@ class Run:
             "ok": sum(1 for v in verdicts if v.status is Status.OK),
             "not_checked": sum(1 for v in verdicts
                                if v.status is Status.NOT_CHECKED),
+            # Uses, not substances: one substance can be wrong in forty products
+            # and right in one, and both numbers matter.
+            "uses": len(self.uses),
+            "uses_under_classified": sum(
+                s.under_classified_uses for s in self.substances),
+            "inconsistent_substances": sum(
+                1 for s in self.substances if s.inconsistent),
         }
 
     def reasons(self) -> dict[str, int]:
@@ -107,18 +180,36 @@ class Run:
         return dict(sorted(out.items(), key=lambda kv: -kv[1]))
 
     def missing_patterns(self) -> list[tuple[str, int]]:
-        """The codes most often absent where Annex VI has them."""
+        """The codes most often absent, counted by product use."""
         counts: dict[str, int] = {}
-        for verdict in self.all_verdicts:
-            for code in verdict.missing_codes:
+        if self.substances:
+            for substance in self.substances:
+                for code, number in substance.missing_code_counts.items():
+                    counts[code] = counts.get(code, 0) + number
+        else:
+            for verdict in self.all_verdicts:
+                for code in verdict.missing_codes:
+                    counts[code] = counts.get(code, 0) + 1
+        return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+
+    def missing_by_substance(self) -> list[tuple[str, int]]:
+        """The codes most often absent, counted by substance.
+
+        A code missing from one substance used in four hundred products is one
+        thing to fix; a code missing from forty substances is forty. Both
+        orderings are reported, because neither answers the other's question.
+        """
+        counts: dict[str, int] = {}
+        for substance in self.substances:
+            for code in substance.missing_code_counts:
                 counts[code] = counts.get(code, 0) + 1
         return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
 
     def reach(self) -> list[tuple[str, int]]:
         """How many products each under-classified substance appears in."""
         return sorted(
-            ((s.cas, s.product_count) for s in self.substances
-             if s.verdict.status is Status.FIX),
+            ((s.cas, s.under_classified_uses) for s in self.substances
+             if s.under_classified_uses),
             key=lambda kv: (-kv[1], kv[0]))
 
     def sources(self) -> dict[str, int]:
@@ -164,6 +255,11 @@ def write_json(run: Run, path: Path) -> Path:
                 "cas": s.cas,
                 "name": s.name,
                 "product_count": s.product_count,
+                "uses_checked": s.product_count,
+                "uses_under_classified": s.under_classified_uses,
+                "missing_code_counts": s.missing_code_counts,
+                "distinct_code_sets": s.code_sets,
+                "inconsistent": s.inconsistent,
                 "status": s.verdict.status.value,
                 "reason": s.verdict.reason.value if s.verdict.reason else None,
                 "entry_index_no": s.verdict.entry_index_no,
@@ -174,6 +270,7 @@ def write_json(run: Run, path: Path) -> Path:
             for s in run.substances
         ],
         "under_classified_reach": run.reach(),
+        "missing_code_by_substance": run.missing_by_substance(),
         "products": [
             {
                 "product_id": p.product_id,
@@ -264,7 +361,10 @@ def render_html(run: Run) -> str:
             ("Run at", run.started_at.isoformat(timespec="seconds")),
             ("Products read", counts["products"]),
             ("Distinct substances checked", counts["substances"] or "-"),
-            ("Ingredients checked", counts["ingredients"]),
+            ("Product uses checked", counts["uses"] or counts["ingredients"]),
+            ("Under-classified uses", counts["uses_under_classified"]),
+            ("Substances classified differently in different products",
+             counts["inconsistent_substances"]),
             ("Substance data sources (as the app reports them)",
              ", ".join(f"{k}: {v}" for k, v in run.sources().items())),
             ("Not checked, by reason",
