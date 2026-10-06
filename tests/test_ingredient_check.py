@@ -551,3 +551,64 @@ def test_one_product_reads_as_one_product(tmp_path):
     _json_path, html_path = R.save(_substance_run([substance]), tmp_path)
     # Every use is under-classified, so there is no "n of m" to add.
     assert "in 1 product<" in html_path.read_text(encoding="utf-8")
+
+
+# -- reading a whole library over a long time ---------------------------------
+
+
+class _FlakyTransport:
+    """Fails the first `failures` calls the way a dropped connection does."""
+
+    def __init__(self, failures: int, status: int = 200):
+        self.failures = failures
+        self.status = status
+        self.calls = 0
+
+    def get(self, url, params=None):
+        import httpx
+
+        self.calls += 1
+        if self.calls <= self.failures:
+            raise httpx.RemoteProtocolError("Server disconnected")
+        return httpx.Response(self.status, json={"ok": self.calls},
+                              request=httpx.Request("GET", url))
+
+
+def _client_with(transport):
+    from lingua_oracle.ingredients.client import ExactSdsClient
+
+    client = ExactSdsClient.__new__(ExactSdsClient)
+    client.base = "https://example.invalid/api/v1"
+    client.client = transport
+    return client
+
+
+def test_a_dropped_connection_is_retried(monkeypatch):
+    """Thousands of requests over many minutes; one will be cut off."""
+    from lingua_oracle.ingredients import client as C
+
+    monkeypatch.setattr(C.time, "sleep", lambda _s: None)
+    transport = _FlakyTransport(failures=2)
+    assert _client_with(transport).get("/library") == {"ok": 3}
+    assert transport.calls == 3
+
+
+def test_a_connection_that_never_comes_back_is_reported(monkeypatch):
+    from lingua_oracle.ingredients import client as C
+
+    monkeypatch.setattr(C.time, "sleep", lambda _s: None)
+    transport = _FlakyTransport(failures=99)
+    with pytest.raises(C.AppUnavailable) as caught:
+        _client_with(transport).get("/library")
+    assert "RemoteProtocolError" in str(caught.value)
+    assert transport.calls == C._ATTEMPTS
+
+
+def test_an_answer_is_never_retried(monkeypatch):
+    """A 404 means the thing is not there. Asking again will not change it."""
+    from lingua_oracle.ingredients import client as C
+
+    monkeypatch.setattr(C.time, "sleep", lambda _s: None)
+    transport = _FlakyTransport(failures=0, status=404)
+    assert _client_with(transport).get("/products/1") is None
+    assert transport.calls == 1

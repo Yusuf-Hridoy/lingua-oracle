@@ -10,6 +10,7 @@ Credentials come from `.env` and are never written to a report.
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,13 @@ from typing import Any
 import httpx
 
 TIMEOUT = 60.0
+#: Reading the whole library is thousands of requests over many minutes, and a
+#: server will close a connection in that time for reasons that have nothing to
+#: do with the request. A transport error is retried; an answer is not, however
+#: unwelcome - a 404 means the thing is not there and asking again will not
+#: change that.
+_ATTEMPTS = 4
+_BACKOFF = 2.0
 
 
 def read_env(path: str | Path = ".env") -> dict[str, str]:
@@ -77,13 +85,28 @@ class ExactSdsClient:
         self.client.headers["Authorization"] = f"Bearer {token}"
 
     def get(self, path: str, **params: Any) -> Any:
-        resp = self.client.get(f"{self.base}{path}", params=params or None)
-        if resp.status_code >= 400:
-            return None
-        try:
-            return resp.json()
-        except ValueError:
-            return None
+        """GET one path, retrying only where the request never arrived."""
+        url = f"{self.base}{path}"
+        for attempt in range(1, _ATTEMPTS + 1):
+            try:
+                resp = self.client.get(url, params=params or None)
+            except (httpx.TransportError, httpx.RemoteProtocolError) as exc:
+                if attempt == _ATTEMPTS:
+                    raise AppUnavailable(
+                        f"{path}: {type(exc).__name__} after {_ATTEMPTS} "
+                        f"attempts") from exc
+                time.sleep(_BACKOFF * attempt)
+                continue
+            if resp.status_code in (502, 503, 504) and attempt < _ATTEMPTS:
+                time.sleep(_BACKOFF * attempt)
+                continue
+            if resp.status_code >= 400:
+                return None
+            try:
+                return resp.json()
+            except ValueError:
+                return None
+        return None
 
     def product_ids(self, limit: int) -> list[int]:
         page = self.get("/library", page_size=min(limit, 100), page=1) or {}
