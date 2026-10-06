@@ -330,6 +330,30 @@ class IngredientSection(BaseModel):
         return int(self.counts.get("fix", 0))
 
 
+class MixtureSection(BaseModel):
+    """What the mixture calculation concluded for one uploaded document.
+
+    The third question one upload raises: given what is in the mixture and at
+    what concentration, is Section 2's classification what CLP Annex I gives?
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    #: "calculated", "nothing", "out_of_scope", "skipped"
+    state: str = "nothing"
+    message: str = ""
+    counts: dict[str, int] = Field(default_factory=dict)
+    declared_total: str = "0"
+    undisclosed: str = "0"
+    stated: list[str] = Field(default_factory=list)
+    assumptions: list[str] = Field(default_factory=list)
+    results: list[dict] = Field(default_factory=list)
+
+    @property
+    def inconsistent(self) -> int:
+        return int(self.counts.get("inconsistent", 0))
+
+
 class Report(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -348,6 +372,9 @@ class Report(BaseModel):
     #: The ingredient half of the same upload. None when the check did not run
     #: at all - an older report, or one made by a path that does not do it.
     ingredients: IngredientSection | None = None
+    #: The mixture half: the classification the ingredients give, against what
+    #: Section 2 states. None when it did not run.
+    mixture: MixtureSection | None = None
 
     def recount(self) -> None:
         s = Summary()

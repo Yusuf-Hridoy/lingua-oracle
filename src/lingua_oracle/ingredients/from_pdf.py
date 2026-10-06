@@ -32,6 +32,9 @@ from lingua_oracle.detect.codes import CODE_RE
 CAS_RE = re.compile(r"(?<![\d-])(\d{2,7}-\d{2}-\d)(?![\d-])")
 _REACH_RE = re.compile(r"\b\d{2}-\d{10}-\d{2}(?:-\w{4})?\b")
 _INDEX_RE = re.compile(r"\b\d{3}-\d{3}-\d{2}-\d\b")
+#: An EC number. Masked before a concentration is looked for, for the same
+#: reason the CAS numbers are: "200-827-9" contains the range "200-827".
+_EC_RE = re.compile(r"(?<![\d-])\d{3}-\d{3}-\d(?![\d-])")
 
 #: Section headings, in the languages the application issues sheets in. Matched
 #: loosely because the numbering varies - "SECTION 3:", "3.", "3 -".
@@ -60,6 +63,8 @@ class PdfIngredient:
     h_codes: list[str] = field(default_factory=list)
     raw: str = ""
     page: int | None = None
+    #: The concentration cell, as printed. Parsed by mixture.concentration.
+    concentration: str | None = None
 
 
 def _codes_in(text: str) -> list[str]:
@@ -70,6 +75,21 @@ def _codes_in(text: str) -> list[str]:
         if code.startswith(("H", "EUH")) and code not in out:
             out.append(code)
     return out
+
+
+#: A concentration as Section 3 prints it, in any of the shapes Phase 0 found.
+#: Searched for after the identifiers have been masked out, because a CAS number
+#: and a range are the same shape.
+_CONCENTRATION_RE = re.compile(
+    r"(?:[<>]=?|≤|≥)?\s*\d+(?:[.,]\d+)?\s*(?:%|\s)?\s*(?:[-–—]|to)\s*"
+    r"(?:[<>]=?|≤|≥)?\s*\d+(?:[.,]\d+)?\s*%?"
+    r"|(?:[<>]=?|≤|≥)\s*\d+(?:[.,]\d+)?\s*%?"
+    r"|\d+(?:[.,]\d+)?\s*%")
+
+
+def _concentration_in(text: str) -> str | None:
+    found = _CONCENTRATION_RE.search(text or "")
+    return found.group(0).strip() if found else None
 
 
 def _cell_lines(cell: str | None) -> list[str]:
@@ -166,7 +186,13 @@ def ingredients_in_section_three(path: str | Path) -> list[PdfIngredient]:
                         seen.add(numbers[0])
                         out.append(PdfIngredient(
                             cas=numbers[0], h_codes=_codes_in(masked),
-                            raw=" ".join(text.split())[:300], page=number))
+                            raw=" ".join(text.split())[:300], page=number,
+                            # The CAS numbers go too before a concentration is
+                            # looked for: "67-64-1" is the same shape as the
+                            # range "67-64", which is the first trap Phase 0
+                            # found and the easiest one to walk back into.
+                            concentration=_concentration_in(
+                                _EC_RE.sub(" ", CAS_RE.sub(" ", masked)))))
     except (OSError, ValueError) as exc:
         # A PDF that cannot be opened or parsed checks nothing; it is not an
         # error in this tool. Deliberately narrow: a TypeError here would be a

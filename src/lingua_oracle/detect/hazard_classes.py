@@ -49,6 +49,17 @@ _SHORT_FORM_RE = re.compile(
 )
 
 
+def is_listed_hazard_class(text: str) -> bool:
+    """True only when the text is a class Annex VI actually lists.
+
+    `is_hazard_class` also accepts anything *shaped* like a class, which is what
+    it is for - rejecting a line that might be one. Reading a classification off
+    a sheet needs the strict test: "SECTION 2" and "Table 3" are both shaped
+    like a class and neither is one.
+    """
+    return _key((text or "").strip()) in _clp_classes()
+
+
 def is_hazard_class(text: str) -> bool:
     """True when this is a class and category rather than a statement."""
     stripped = (text or "").strip()

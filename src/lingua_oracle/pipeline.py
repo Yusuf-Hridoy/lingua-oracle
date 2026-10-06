@@ -137,6 +137,8 @@ def check_pdf(
             report.ingredients = check_ingredients(
                 path, Path(path).name, document.lines,
                 client_factory=client_factory)
+            report.mixture = _mixture_section(report, path, document, spans,
+                                              reg.id)
         except Exception as exc:  # noqa: BLE001
             from lingua_oracle.models import IngredientSection
 
@@ -197,3 +199,35 @@ def compare_pdfs(
 
 
 __all__ = ["Tier", "check_pdf", "compare_pdfs"]
+
+
+def _mixture_section(report, path, document, spans, regulation):
+    """The mixture half, from whichever composition the ingredient half used.
+
+    Never allowed to cost the rest of the report: a calculation that cannot be
+    made is reported as one that was not made.
+    """
+    from lingua_oracle.keys.builders.annex_vi import load_table
+    from lingua_oracle.mixture import section as mixture_section
+    from lingua_oracle.models import MixtureSection
+
+    try:
+        rows: list[dict] = []
+        section = report.ingredients
+        if section is not None and section.source == "app" and section.product_id:
+            from lingua_oracle.ingredients.client import session
+
+            rows = mixture_section.rows_from_app(
+                session().ingredients(section.product_id))
+        if not rows:
+            from lingua_oracle.ingredients.from_pdf import (
+                ingredients_in_section_three,
+            )
+
+            rows = mixture_section.rows_from_pdf(
+                ingredients_in_section_three(path))
+        return mixture_section.build(rows, document.lines, spans, regulation,
+                                     load_table())
+    except Exception as exc:  # noqa: BLE001
+        return MixtureSection(state="skipped",
+                              message=f"Mixture check skipped: {exc}"[:200])
