@@ -32,10 +32,22 @@ _NOT_A_NAME = re.compile(r"^(see section|n/?a|not applicable|-{1,3})$",
                          re.IGNORECASE)
 
 
+def normalised(name: str) -> str:
+    """A product name reduced to what two sheets would have to share to be one.
+
+    Case, spacing and the punctuation producers vary freely - "WD-40 Specialist
+    (Aerosol)" against "WD 40 Specialist aerosol" - are not differences between
+    products.
+    """
+    return re.sub(r"[^a-z0-9]+", " ", (name or "").casefold()).strip()
+
+
 @dataclass
 class Candidate:
     product_id: int
     name: str
+    regulation: str | None = None
+    updated_at: str = ""
 
 
 @dataclass
@@ -97,13 +109,41 @@ def search(client, query: str, limit: int = 10) -> list[Candidate]:
     out = []
     for row in rows:
         product_id = row.get("primary_product_id")
-        if product_id:
-            out.append(Candidate(product_id=int(product_id),
-                                 name=row.get("product_name") or ""))
+        if not product_id:
+            continue
+        regulations = row.get("regulations") or []
+        out.append(Candidate(
+            product_id=int(product_id), name=row.get("product_name") or "",
+            regulation=(regulations[0].get("regulation")
+                        if regulations and isinstance(regulations[0], dict)
+                        else None),
+            updated_at=row.get("updated_at") or row.get("created_at") or ""))
     return out
 
 
-def match_product(client, file_name: str, lines) -> Match:
+def rank(candidates: list[Candidate], name: str,
+         regulation: str | None = None) -> list[Candidate]:
+    """Best first: the same name, then the same regulation, then the newest.
+
+    A person choosing between products should not have to scan for the obvious
+    one, and the order is an opinion rather than a decision - nothing is picked
+    on their behalf unless exactly one candidate is left.
+    """
+    wanted = normalised(name)
+
+    def key(candidate: Candidate) -> tuple:
+        return (
+            0 if normalised(candidate.name) == wanted else 1,
+            0 if regulation and candidate.regulation == regulation else 1,
+            # Newest first, so a reversed string sort puts recent dates on top.
+            [-ord(c) for c in candidate.updated_at] or [0],
+        )
+
+    return sorted(candidates, key=key)
+
+
+def match_product(client, file_name: str, lines,
+                  regulation: str | None = None) -> Match:
     """Find the application product this sheet is, if it is one.
 
     The file name is tried first and only when it names a product that exists:
@@ -127,8 +167,8 @@ def match_product(client, file_name: str, lines) -> Match:
         return Match(state="none",
                      evidence="no product name found in Section 1")
 
-    candidates = search(client, name)
-    exact = [c for c in candidates if c.name.strip().casefold() == name.casefold()]
+    candidates = rank(search(client, name), name, regulation)
+    exact = [c for c in candidates if normalised(c.name) == normalised(name)]
     if len(exact) == 1:
         candidates = exact
     if len(candidates) == 1:

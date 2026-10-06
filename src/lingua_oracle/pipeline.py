@@ -136,7 +136,7 @@ def check_pdf(
 
             report.ingredients = check_ingredients(
                 path, Path(path).name, document.lines,
-                client_factory=client_factory)
+                client_factory=client_factory, regulation=reg.id)
             report.mixture = _mixture_section(report, path, document, spans,
                                               reg.id)
         except Exception as exc:  # noqa: BLE001

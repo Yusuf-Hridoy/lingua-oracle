@@ -21,6 +21,7 @@ from lingua_oracle.models import IngredientSection
 
 NO_TABLE = ("Ingredient codes not printed on this sheet, nothing to check.")
 NO_APP = ("ExactSDS not reachable, ingredient check skipped.")
+PENDING = ("Choose the product above to check ingredients.")
 NO_ENTRIES = ("None of the ingredients has a harmonised entry in Annex VI "
               "Table 3, so there was nothing to check against.")
 
@@ -61,9 +62,15 @@ def _substances_from(rows, table, index, *, name_of=None):
     return out
 
 
-def check(path: str, file_name: str, lines, *, client_factory=None
+def check(path: str, file_name: str, lines, *, client_factory=None,
+          regulation: str | None = None, product_id: int | None = None
           ) -> IngredientSection:
-    """The ingredient section for one uploaded document."""
+    """The ingredient section for one uploaded document.
+
+    `product_id` forces the match, which is what a reader choosing between
+    candidates does: the same report is recalculated against the product they
+    named, without uploading anything again.
+    """
     from lingua_oracle.ingredients.client import session
     from lingua_oracle.keys.builders.annex_vi import load_table
 
@@ -82,7 +89,13 @@ def check(path: str, file_name: str, lines, *, client_factory=None
             client.login()
         else:
             client = session()
-        match = match_product(client, file_name, lines)
+        if product_id is not None:
+            detail = client.product(product_id) or {}
+            match = Match(state="matched", product_id=product_id,
+                          name=detail.get("product_name"),
+                          evidence="chosen by you")
+        else:
+            match = match_product(client, file_name, lines, regulation)
     except Exception as exc:  # noqa: BLE001
         # Anything at all here means the application is not answering. The
         # wording check has already run and must not be lost over it.
@@ -106,6 +119,16 @@ def check(path: str, file_name: str, lines, *, client_factory=None
         # the caller's to close.
         if client is not None and client_factory is not None:
             client.close()
+
+    # Several products could be this sheet. Nothing is calculated until a
+    # person says which: a guess here would be shown as fact.
+    if match.state == "ambiguous":
+        return IngredientSection(
+            source="nothing", match_state=match.state, evidence=match.evidence,
+            message=PENDING,
+            candidates=[{"product_id": c.product_id, "name": c.name,
+                         "regulation": c.regulation}
+                        for c in match.candidates])
 
     # Not one of ours, or the application could not say: read the sheet.
     rows = ingredients_in_section_three(path)
@@ -138,3 +161,40 @@ def worst(section: IngredientSection | None) -> Status | None:
     if section.counts.get("with_entry"):
         return Status.OK
     return None
+
+
+def recheck(report, product_id: int, *, client_factory=None):
+    """Recalculate the ingredient and mixture halves against a chosen product.
+
+    Nothing from the uploaded file is needed: the composition comes from the
+    application, and what Section 2 states was kept on the report when it was
+    first checked. So a reader choosing between candidates gets the same report
+    page filled in, rather than being asked to upload again.
+    """
+    from lingua_oracle.ingredients.client import session
+    from lingua_oracle.keys.builders.annex_vi import load_table
+    from lingua_oracle.mixture import section as mixture_section
+
+    client = (client_factory() if client_factory else session())
+    if client_factory is not None:
+        client.login()
+    detail = client.product(product_id) or {}
+    rows = client.ingredients(product_id)
+
+    table = load_table()
+    index = table.by_cas() if table else {}
+    substances = _substances_from(rows, table, index,
+                                  name_of=lambda row: row.name) if table else []
+    section = _section_from(
+        substances, "app", match_state="matched", product_id=product_id,
+        product_name=detail.get("product_name"), evidence="chosen by you")
+    if not section.checked_anything:
+        section.message = NO_ENTRIES
+    report.ingredients = section
+
+    report.mixture = mixture_section.build(
+        mixture_section.rows_from_app(rows), [], [], report.regulation, table,
+        stated_override=(report.mixture.stated if report.mixture else []))
+    if client_factory is not None:
+        client.close()
+    return report

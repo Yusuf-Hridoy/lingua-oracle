@@ -325,6 +325,30 @@ def compare_json(
 
 # Declared before the HTML route: Starlette matches in declaration order, and
 # '/reports/{report_id}' would otherwise swallow the '.json' suffix.
+@app.post("/reports/{report_id}/product")
+def choose_product(report_id: str, product_id: int = Form(...)) -> RedirectResponse:
+    """Recalculate one report against the product the reader chose.
+
+    The same report, not a new one: nothing is uploaded again, and the choice
+    is kept with it.
+    """
+    from lingua_oracle.ingredients.section import recheck
+    from lingua_oracle.report.render import save
+
+    report = load_report(report_id)
+    if report is None:
+        raise HTTPException(status_code=404, detail="no such report")
+    try:
+        recheck(report, product_id)
+    except Exception as exc:  # noqa: BLE001 - shown, not swallowed
+        from lingua_oracle.models import IngredientSection
+
+        report.ingredients = IngredientSection(
+            source="skipped", message=f"Could not check that product: {exc}"[:200])
+    save(report)
+    return RedirectResponse(url=f"/reports/{report_id}", status_code=303)
+
+
 @app.get("/reports/{report_id}.json")
 def report_json(report_id: str) -> JSONResponse:
     report = load_report(report_id)

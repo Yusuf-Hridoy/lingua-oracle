@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from lingua_oracle.mixture import concentration as conc
 from lingua_oracle.mixture.calculate import IN_SCOPE, calculate
+from lingua_oracle.mixture.classes import parse_class
 from lingua_oracle.mixture.limits import parse as parse_limits
 from lingua_oracle.mixture.model import from_annex_vi, from_codes
 from lingua_oracle.mixture.stated import stated_classes
@@ -29,21 +30,29 @@ def _ingredient(cas, name, raw_concentration, codes, table, index):
     return from_codes(cas, name, parsed.low, parsed.high, codes), parsed
 
 
-def build(rows, lines, spans, regulation: str, table) -> MixtureSection:
+def build(rows, lines, spans, regulation: str, table,
+          stated_override: list[str] | None = None) -> MixtureSection:
     """The mixture section for one document.
 
     `rows` carry a CAS number, a name, the codes and the concentration as
     printed - whether they came from the application or from Section 3.
     """
+    # Read first and keep, whatever happens next: a re-run after the reader
+    # picks a product must not need the uploaded file back.
+    stated = ([parse_class(c) for c in stated_override] if stated_override
+              else stated_classes(lines, spans))
+    stated_names = [str(c) for c in stated if c]
+
     if regulation not in IN_SCOPE:
         return MixtureSection(
-            state="out_of_scope",
+            state="out_of_scope", stated=stated_names,
             message=f"Mixture check not yet available for {regulation}.")
     if table is None:
-        return MixtureSection(state="skipped",
+        return MixtureSection(state="skipped", stated=stated_names,
                               message="No Annex VI table on file.")
     if not rows:
-        return MixtureSection(state="nothing", message=NO_COMPOSITION)
+        return MixtureSection(state="nothing", stated=stated_names,
+                              message=NO_COMPOSITION)
 
     index = table.by_cas()
     ingredients = []
@@ -61,9 +70,9 @@ def build(rows, lines, spans, regulation: str, table) -> MixtureSection:
         ingredients.append(ingredient)
 
     if not ingredients:
-        return MixtureSection(state="nothing", message=NO_CONCENTRATIONS)
+        return MixtureSection(state="nothing", stated=stated_names,
+                              message=NO_CONCENTRATIONS)
 
-    stated = stated_classes(lines, spans)
     results, summary = calculate(ingredients, stated, regulation)
     counts = {
         "inconsistent": sum(1 for r in results if r.verdict == "inconsistent"),
@@ -80,7 +89,7 @@ def build(rows, lines, spans, regulation: str, table) -> MixtureSection:
         state="calculated", counts=counts,
         declared_total=summary.get("declared_total", "0"),
         undisclosed=summary.get("undisclosed", "0"),
-        stated=[str(c) for c in stated],
+        stated=stated_names,
         assumptions=assumptions,
         results=[_as_dict(r) for r in results])
 
