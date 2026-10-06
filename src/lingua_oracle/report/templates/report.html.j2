@@ -1,4 +1,5 @@
 {% import '_substances.html.j2' as sub %}
+{% import '_mixture.html.j2' as mix %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -207,6 +208,29 @@
   {% endif %}
   {% endif %}
 
+  {% if mixture %}
+  <div class="issues-head" id="mixture">
+    <h2>Mixture &middot; {{ mixture.results|length }}</h2>
+    <span class="muted">{{ mixture_source }}</span>
+  </div>
+
+  {% if mixture.state == 'calculated' %}
+  <div class="verdict v-{{ mixture_tone }} compact">
+    <div class="stats">
+      <div><div class="n fix">{{ mixture.counts.inconsistent }}</div><div class="l">Inconsistent</div></div>
+      <div><div class="n check">{{ mixture.counts.cannot_tell }}</div><div class="l">Can&rsquo;t tell</div></div>
+      <div><div class="n ok">{{ mixture.counts.consistent }}</div><div class="l">Consistent</div></div>
+      <div><div class="n">{{ mixture.counts.not_calculated }}</div><div class="l">Not calculated</div></div>
+      <div><div class="n">{{ mixture.declared_total }}%</div>
+           <div class="l">Declared ({{ mixture.undisclosed }}% undisclosed)</div></div>
+    </div>
+  </div>
+  {% for r in mixture.results %}{{ mix.card(r) }}{% endfor %}
+  {% else %}
+  <div class="card"><p class="note">{{ mixture.message }}</p></div>
+  {% endif %}
+  {% endif %}
+
   <details class="block">
     <summary>Not checked ({{ cards.unchecked|length }}) and technical details</summary>
     <div class="inner">
@@ -230,6 +254,11 @@
         {% if cards.provenance %}
         <dt>Where each wording came from</dt>
         <dd>{% for code, detail in cards.provenance %}<b>{{ code }}</b>: {{ detail }}{% if not loop.last %}<br>{% endif %}{% endfor %}</dd>
+        {% endif %}
+        {% if mixture and mixture.results %}{{ mix.trace(mixture.results) }}{% endif %}
+        {% if mixture and mixture.assumptions %}
+        <dt>Mixture assumptions</dt>
+        <dd>{% for a in mixture.assumptions %}{{ a }}<br>{% endfor %}</dd>
         {% endif %}
         <dt>Source of official text</dt>
         <dd>{% for tier, label in L.SOURCE.items() %}<b>{{ label.word }}</b>: {{ label.help }} {% endfor %}</dd>

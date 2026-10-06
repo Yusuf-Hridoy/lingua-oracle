@@ -87,3 +87,65 @@ def test_the_wording_filters_leave_the_ingredient_cards_alone(page, server):
     after = page.locator(
         'article.issue:not([data-section="wording"]):not([hidden])').count()
     assert after == before
+
+
+# -- the third section ---------------------------------------------------------
+
+
+def test_one_upload_produces_all_three_sections(page, server):
+    _upload(page, server, "pattern_supplier_ingredients")
+    body = page.inner_text("body")
+    for heading in ("Wording", "Ingredients", "Mixture"):
+        assert heading in body, heading
+
+
+def test_the_mixture_section_has_its_own_counts(page, server):
+    _upload(page, server, "pattern_supplier_ingredients")
+    stats = page.locator("#mixture ~ .verdict.compact .stats").first.inner_text()
+    assert "Inconsistent" in stats
+    assert "Can’t tell" in stats or "Can't tell" in stats
+    assert "Consistent" in stats
+    assert "undisclosed" in stats
+
+
+def test_a_mixture_card_shows_both_sides_and_the_rule(page, server):
+    _upload(page, server, "pattern_supplier_ingredients")
+    card = page.locator('article.issue[data-section="mixture"]').first
+    text = card.inner_text().lower()      # the headings render in capitals
+    assert "section 2 says" in text
+    assert "calculation gives" in text
+    assert "annex i," in text
+
+
+def test_a_mixture_card_lists_the_contributing_ingredients(page, server):
+    _upload(page, server, "pattern_supplier_ingredients")
+    card = page.locator('article.issue[data-section="mixture"]').first
+    assert card.locator(".minor-table tbody tr").count() >= 1
+    assert "Counted as" in card.inner_text()
+
+
+def test_the_calculation_trace_is_in_the_technical_block(page, server):
+    _upload(page, server, "pattern_supplier_ingredients")
+    block = page.locator("details.block").filter(
+        has=page.locator("summary:has-text('technical details')"))
+    block.locator("summary").first.click()
+    assert "Calculation trace" in block.first.inner_text()
+
+
+def test_the_wording_filters_leave_the_mixture_cards_alone(page, server):
+    _upload(page, server, "pattern_supplier_ingredients")
+    mixture = 'article.issue[data-section="mixture"]'
+    before = page.locator(mixture).count()
+    page.click('.filters button[data-filter="must"]')
+    assert page.locator(f"{mixture}:not([hidden])").count() == before
+
+
+def test_all_three_sections_fit_a_phone(page, server):
+    page.set_viewport_size({"width": 390, "height": 900})
+    _upload(page, server, "pattern_supplier_ingredients")
+    assert page.evaluate("document.documentElement.scrollWidth") <= 391
+
+
+def test_the_three_section_screenshot(page, server, shots_dir):
+    _upload(page, server, "pattern_supplier_ingredients")
+    page.screenshot(path=str(shots_dir / "combined_report.png"), full_page=True)

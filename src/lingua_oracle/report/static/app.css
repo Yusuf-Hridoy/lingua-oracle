@@ -356,3 +356,9 @@ button.primary { background: var(--accent); color: #fff; border: 0;
                  padding: 10px 20px; border-radius: 8px; font-weight: 600;
                  font-size: 14px; cursor: pointer; }
 button.primary:hover { filter: brightness(.94); }
+
+/* The mixture section's assumptions, under the card that made them. */
+.issue .assumptions { border-top: 1px solid var(--border); padding: 10px 16px; }
+.issue .assumptions .note { margin: 0 0 4px; }
+.issue .assumptions .statements li { font-size: 13px; color: var(--muted); }
+.pill.unver { background: var(--page); color: var(--muted); }

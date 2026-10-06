@@ -361,3 +361,80 @@ def test_the_card_says_where_the_codes_came_from():
         ingredients={7: [Ingredient(cas="67-64-1", name="<substance>",
                                     h_codes=["H225"], concentration="60")]})
     assert "The app says" in render_html(_check("clean_eu_en", "eu_clp", app))
+
+
+# -- the third section ---------------------------------------------------------
+
+
+def test_a_supplier_sheet_gets_a_mixture_section():
+    report = _check("pattern_supplier_ingredients", "eu_clp", FakeApp())
+    mixture = report.mixture
+    assert mixture.state == "calculated"
+    assert mixture.counts["ingredients"] == 3
+    assert mixture.declared_total != "0"
+    assert mixture.results
+
+
+def test_the_mixture_section_names_its_paragraphs():
+    report = _check("pattern_supplier_ingredients", "eu_clp", FakeApp())
+    cited = [r for r in report.mixture.results if r["citation"]]
+    assert cited
+    for result in cited:
+        assert result["citation"].startswith("Annex I, ")
+
+
+def test_a_regulation_outside_clp_is_not_calculated():
+    report = _check("clean_osha_en", "us_osha", FakeApp())
+    assert report.mixture.state == "out_of_scope"
+    assert "not yet available for us_osha" in report.mixture.message
+
+
+def test_a_sheet_with_no_composition_has_nothing_to_calculate():
+    report = _check("clean_eu_en", "eu_clp", FakeApp())
+    assert report.mixture.state == "nothing"
+    assert report.mixture.results == []
+
+
+def test_the_mixture_reaches_the_overall_verdict():
+    report = _check("pattern_supplier_ingredients", "eu_clp", FakeApp())
+    verdict = _verdict(report)
+    assert report.mixture.counts["inconsistent"] >= 1
+    assert "inconsistent with the ingredients" in verdict.detail
+
+
+def test_the_report_renders_all_three_sections():
+    from lingua_oracle.report.render import render_html
+
+    body = render_html(_check("pattern_supplier_ingredients", "eu_clp", FakeApp()))
+    assert "Wording &middot;" in body
+    assert "Ingredients &middot;" in body
+    assert "Mixture &middot;" in body
+    assert "Section 2 says" in body
+    assert "Calculation gives" in body
+    assert "Calculation trace" in body
+
+
+def test_each_section_keeps_its_own_counts():
+    from lingua_oracle.report.render import _statement_cards
+
+    report = _check("pattern_supplier_ingredients", "eu_clp", FakeApp())
+    wording = _statement_cards(report)["counts"]
+    assert set(wording) >= {"wrong", "fix", "check"}
+    assert set(report.ingredients.counts) >= {"fix", "ok"}
+    assert set(report.mixture.counts) >= {"inconsistent", "consistent"}
+
+
+def test_an_old_report_without_a_mixture_still_renders():
+    from lingua_oracle.report.render import render_html
+
+    report = check_pdf(pdf("clean_eu_en"), "eu_clp")
+    assert report.mixture is None
+    assert "Mixture &middot;" not in render_html(report)
+
+
+def test_the_mixture_card_shows_the_contributing_ingredients():
+    from lingua_oracle.report.render import render_html
+
+    body = render_html(_check("pattern_supplier_ingredients", "eu_clp", FakeApp()))
+    assert "Counted as" in body
+    assert "67-64-1" in body or "Synthetic component A" in body

@@ -1,0 +1,71 @@
+{# Mixture cards: one per hazard class the calculation reached a view on. #}
+
+{% macro card(r) %}
+{% set tone = {'inconsistent': 'fix', 'cannot_tell': 'check',
+               'consistent': 'ok', 'not_calculated': 'unver'} %}
+{% set word = {'inconsistent': 'Inconsistent', 'cannot_tell': "Can't tell",
+               'consistent': 'Consistent', 'not_calculated': 'Not calculated'} %}
+<article class="issue" data-section="mixture" data-status="{{ tone[r.verdict] }}"
+         data-class="{{ r.hazard_class }}">
+  <header>
+    <span class="pill {{ tone[r.verdict] }}">{{ word[r.verdict] }}</span>
+    <span class="code">{{ r.hazard_class }}</span>
+    {% if r.citation %}<span class="where">{{ r.citation }}</span>{% endif %}
+  </header>
+  <div class="body">
+    <div class="side">
+      <h3>Section 2 says</h3>
+      <div class="txt">{{ r.hazard_class if r.stated else 'not stated' }}</div>
+    </div>
+    <div class="side official">
+      <header><h3>Calculation gives</h3></header>
+      <div class="txt">
+        {%- if r.calculated_low and r.calculated_low == r.calculated_high -%}
+          {{ r.calculated_low }}
+        {%- elif r.calculated_low or r.calculated_high -%}
+          {{ r.calculated_low }} at the low end, {{ r.calculated_high }} at the high end
+        {%- else -%}
+          nothing
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+  {% if r.contributions %}
+  <table class="minor-table">
+    <thead><tr><th>Ingredient</th><th>%</th><th>Classified</th><th>Counted as</th></tr></thead>
+    <tbody>
+      {% for c in r.contributions %}
+      <tr>
+        <td class="code">{{ c.name or c.cas or 'unnamed' }}</td>
+        <td>{{ c.percentage }} %</td>
+        <td>{{ c.hazard_class }}</td>
+        <td>{{ c.contributed }} %{% if c.note %} <span class="muted">({{ c.note }})</span>{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  <footer>
+    <span>{{ r.message }}</span>
+  </footer>
+  {% if r.assumptions %}
+  <div class="assumptions">
+    <p class="note"><b>Assumed:</b></p>
+    <ul class="statements">
+      {% for a in r.assumptions %}<li><span>{{ a }}</span></li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+</article>
+{% endmacro %}
+
+{% macro trace(results) %}
+<dt>Calculation trace</dt>
+<dd>
+  {% for r in results %}
+  <b>{{ r.hazard_class }}</b>{% if r.citation %} &mdash; {{ r.citation }}{% endif %}<br>
+  {% for line in r.trace %}&nbsp;&nbsp;{{ line }}<br>{% endfor %}
+  {% if not r.trace %}&nbsp;&nbsp;{{ r.message }}<br>{% endif %}
+  {% endfor %}
+</dd>
+{% endmacro %}

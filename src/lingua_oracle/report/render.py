@@ -360,6 +360,29 @@ def _ingredient_source(section) -> str:
     return _INGREDIENT_SOURCE.get(section.source, "")
 
 
+#: What the Mixture section was able to do, in one line.
+_MIXTURE_SOURCE = {
+    "calculated": "calculated from the ingredients, by CLP Annex I",
+    "nothing": "nothing to calculate from",
+    "out_of_scope": "not calculated",
+    "skipped": "not calculated",
+}
+
+
+def _mixture_source(section) -> str:
+    return _MIXTURE_SOURCE.get(getattr(section, "state", ""), "")
+
+
+def _mixture_tone(section) -> str:
+    if section is None or not section.counts:
+        return "check"
+    if section.counts.get("inconsistent"):
+        return "fix"
+    if section.counts.get("cannot_tell"):
+        return "check"
+    return "ok" if section.counts.get("consistent") else "check"
+
+
 def _ingredient_tone(section) -> str:
     if section is None or not section.counts:
         return "check"
@@ -395,6 +418,9 @@ def render_html(report: Report) -> str:
                    and not s["uses_under_classified"]],
         ing_unchecked=[s for s in substances if s["status"] == "not_checked"],
         ing_reasons=ingredient_reasons(),
+        mixture=report.mixture,
+        mixture_source=_mixture_source(report.mixture),
+        mixture_tone=_mixture_tone(report.mixture),
         report=report,
         groups=_grouped(report, display),
         regulation_display=display,
