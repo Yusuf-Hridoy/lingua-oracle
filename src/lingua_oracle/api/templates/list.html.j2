@@ -19,6 +19,7 @@
     </a>
     <nav class="nav">
       <a href="/"{% if nav == 'check' %} aria-current="page"{% endif %}>Check</a>
+      <a href="/ingredients"{% if nav == 'ingredients' %} aria-current="page"{% endif %}>Ingredients</a>
       <a href="/history"{% if nav == 'history' %} aria-current="page"{% endif %}>History</a>
       <a href="/coverage"{% if nav == 'coverage' %} aria-current="page"{% endif %}>Coverage</a>
     </nav>
@@ -34,7 +35,7 @@
       <tbody>
         {% for row in recent %}
         <tr>
-          <td><a href="/reports/{{ row.id }}">{{ row.file_name }}</a></td>
+          <td><a href="{% if row.kind == 'ingredients' %}/ingredients/runs/{{ row.id }}{% else %}/reports/{{ row.id }}{% endif %}">{{ row.file_name }}</a></td>
           <td>{{ row.regulation }} &middot; {{ row.language }}</td>
           <td><span class="pill {{ row.pill }}">{{ row.release }}</span></td>
           <td class="muted">{{ row.created_at[:16].replace('T', ' ') }}</td>

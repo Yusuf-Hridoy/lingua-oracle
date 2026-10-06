@@ -133,6 +133,13 @@ def index(request: Request) -> HTMLResponse:
     return _upload_page(request)
 
 
+def _ingredient_runs() -> list[dict]:
+    """Ingredient runs, shown in History beside the wording checks."""
+    from lingua_oracle.api import ingredients as ing
+
+    return ing.recent_runs(limit=50)
+
+
 @app.get("/history", response_class=HTMLResponse)
 def history(request: Request) -> HTMLResponse:
     """Placeholder: every saved report, newest first."""
@@ -140,8 +147,61 @@ def history(request: Request) -> HTMLResponse:
         request=request, name="list.html.j2",
         context={"title": "History", "nav": "history",
                  "lede": "Every document checked on this installation.",
-                 "recent": recent_reports(limit=200), "coverage": None},
+                 "recent": recent_reports(limit=200) + _ingredient_runs(),
+                 "coverage": None},
     )
+
+
+@app.get("/ingredients", response_class=HTMLResponse)
+def ingredients_page(request: Request, error: str = "") -> HTMLResponse:
+    """Start an ingredient check, or open a previous one."""
+    from lingua_oracle.api import ingredients as ing
+
+    return templates.TemplateResponse(
+        request=request, name="ingredients.html.j2",
+        context={"nav": "ingredients", "runs": ing.recent_runs(), "error": error},
+    )
+
+
+@app.post("/ingredients/run", response_class=HTMLResponse)
+def ingredients_run(request: Request,
+                    scope: str = Form("product"),
+                    product_id: str = Form("")) -> HTMLResponse:
+    """Begin a check on a worker thread and show its progress."""
+    from lingua_oracle.api import ingredients as ing
+
+    wanted: int | None = None
+    if scope == "product":
+        if not product_id.strip().isdigit():
+            return ingredients_page(request, error="Give a product ID, or "
+                                                   "choose the whole library.")
+        wanted = int(product_id)
+    progress = ing.start(scope, wanted)
+    return templates.TemplateResponse(
+        request=request, name="ingredients_progress.html.j2",
+        context={"nav": "ingredients", "progress": progress},
+    )
+
+
+@app.get("/ingredients/runs/{run_id}/status")
+def ingredients_status(run_id: str) -> JSONResponse:
+    from lingua_oracle.api import ingredients as ing
+
+    progress = ing.RUNS.get(run_id)
+    if progress is None:
+        return JSONResponse({"state": "unknown"}, status_code=404)
+    return JSONResponse(progress.as_dict())
+
+
+@app.get("/ingredients/runs/{run_id}", response_class=HTMLResponse)
+def ingredients_report(run_id: str) -> HTMLResponse:
+    from lingua_oracle.api import ingredients as ing
+    from lingua_oracle.ingredients.report import render_html
+
+    data = ing.load_run(run_id)
+    if data is None:
+        raise HTTPException(status_code=404, detail="no such run")
+    return HTMLResponse(render_html(data, nav=True))
 
 
 @app.get("/coverage", response_class=HTMLResponse)

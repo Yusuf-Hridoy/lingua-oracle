@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lingua Oracle &ndash; Ingredients</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="17" height="17" rx="4" stroke="#1F4FB8" stroke-width="1.6"/>
+        <path d="M5.8 10.2l2.7 2.7 5.7-5.7" stroke="#1F4FB8" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Lingua Oracle
+    </a>
+    <nav class="nav">
+      <a href="/">Check</a>
+      <a href="/ingredients" aria-current="page">Ingredients</a>
+      <a href="/history">History</a>
+      <a href="/coverage">Coverage</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap page">
+  <h1>Ingredient check</h1>
+  <p class="lede">Every ingredient's hazard codes against the harmonised
+    classification in CLP Annex VI Table 3. Reads from ExactSDS and changes
+    nothing there.</p>
+
+  {% if error %}<div class="verdict v-fix"><div class="banner">
+    <span class="vico" aria-hidden="true">&#10005;</span>
+    <div><h2>Could not run</h2><p>{{ error }}</p></div></div></div>{% endif %}
+
+  <form class="card run-form" method="post" action="/ingredients/run">
+    <fieldset>
+      <legend>What to check</legend>
+      <label class="choice">
+        <input type="radio" name="scope" value="product" checked>
+        One product
+      </label>
+      <label class="field">
+        <span>Product ID</span>
+        <input type="number" name="product_id" min="1" placeholder="e.g. 4250">
+      </label>
+      <label class="choice">
+        <input type="radio" name="scope" value="library">
+        The whole library <span class="muted">(reads every product; takes a while)</span>
+      </label>
+    </fieldset>
+    <button type="submit">Run check</button>
+  </form>
+
+  {% if runs %}
+  <h2 class="section">Previous runs</h2>
+  <table class="recent">
+    <thead><tr><th>Run</th><th>Checked against</th><th>Result</th><th>Started</th></tr></thead>
+    <tbody>
+      {% for row in runs %}
+      <tr>
+        <td><a href="/ingredients/runs/{{ row.id }}">{{ row.file_name }}</a></td>
+        <td>{{ row.regulation }}</td>
+        <td><span class="pill {{ row.pill }}">{{ row.release }}</span></td>
+        <td class="muted">{{ row.created_at[:16].replace('T', ' ') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+</body>
+</html>

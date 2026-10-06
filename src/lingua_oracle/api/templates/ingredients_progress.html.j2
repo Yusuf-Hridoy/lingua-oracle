@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lingua Oracle &ndash; reading ingredients</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">Lingua Oracle</a>
+    <nav class="nav">
+      <a href="/">Check</a>
+      <a href="/ingredients" aria-current="page">Ingredients</a>
+      <a href="/history">History</a>
+      <a href="/coverage">Coverage</a>
+    </nav>
+  </div>
+</div>
+<div class="wrap page">
+  <h1>Reading ingredients</h1>
+  <p class="lede" id="scope">Checking {{ 'the whole library' if progress.scope == 'library' else 'one product' }}.</p>
+  <div class="card" id="progress" data-run="{{ progress.id }}" data-state="{{ progress.state }}">
+    <p class="big" id="counts">0 products read &middot; 0 substances found</p>
+    <p class="muted" id="state">Starting&hellip;</p>
+  </div>
+</div>
+<script>
+  const box = document.getElementById('progress');
+  const counts = document.getElementById('counts');
+  const state = document.getElementById('state');
+  const id = box.dataset.run;
+  async function poll() {
+    const res = await fetch('/ingredients/runs/' + id + '/status');
+    const data = await res.json();
+    box.dataset.state = data.state;
+    counts.textContent = data.products_read + ' products read · '
+                       + data.substances_found + ' substances found';
+    if (data.state === 'done') {
+      state.textContent = 'Finished. Opening the report…';
+      window.location = '/ingredients/runs/' + data.run_file;
+      return;
+    }
+    if (data.state === 'failed') {
+      state.textContent = data.message || 'The run failed.';
+      return;
+    }
+    state.textContent = data.state === 'grouping'
+      ? 'Comparing against Annex VI…' : 'Reading products…';
+    setTimeout(poll, 700);
+  }
+  poll();
+</script>
+</body>
+</html>

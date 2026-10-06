@@ -114,6 +114,11 @@ class Verdict:
     #: technical block: it is never used to decide anything above.
     data_source: str | None = None
 
+    #: Everything the harmonised entry requires, as the act prints it. Kept on
+    #: the verdict so a report can show what was required beside what was there
+    #: without going back to the table.
+    required_codes: list[str] = field(default_factory=list)
+
     @property
     def missing_codes(self) -> list[str]:
         return [f.code for f in self.findings
@@ -224,7 +229,9 @@ def check_ingredient(cas: str | None, stated_codes: list[str],
         Status.INFO if extra else Status.OK)
     return Verdict(cas=cas, status=status, findings=findings,
                    entry_index_no=entry.index_no, source_ref=entry.source_ref,
-                   data_source=data_source)
+                   data_source=data_source,
+                   required_codes=[c.strip() for c in
+                                   (*entry.h_codes, *entry.euh_codes)])
 
 
 def compare_categories(stated: str, harmonised: str) -> str:

@@ -283,7 +283,6 @@ def ingredients_check(
     """
     from lingua_oracle.ingredients import report as ingredient_report
     from lingua_oracle.ingredients.client import AppUnavailable, ExactSdsClient
-    from lingua_oracle.ingredients.compare import check_product
     from lingua_oracle.keys.builders.annex_vi import load_table
 
     table = load_table()
@@ -315,27 +314,48 @@ def ingredients_check(
         return
 
     ids = [product] if product is not None else client.product_ids(sample or 10)
-
-    with typer.progressbar(ids, label="products") as progress:
-        for product_id in progress:
-            detail = client.product(product_id)
-            rows = client.ingredients(product_id)
-            for row in rows:
-                if row.cas and row.cas not in seen_sources:
-                    seen_sources[row.cas] = client.substance_source(row.cas)
-            verdicts = check_product(
-                [{"cas": r.cas, "h_codes": r.h_codes,
-                  "data_source": seen_sources.get(r.cas or "")}
-                 for r in rows], table, index)
-            for verdict, row in zip(verdicts, rows, strict=True):
-                verdict.data_source = seen_sources.get(row.cas or "")
-            run.products.append(ingredient_report.ProductResult(
-                product_id=product_id,
-                name=detail.get("product_name"),
-                regulation=detail.get("regulation"),
-                verdicts=verdicts))
+    _check_products(client, table, index, run, ids, seen_sources)
     client.close()
     _print_ingredient_summary(run, *ingredient_report.save(run, out))
+
+
+def _check_products(client, table, index, run, ids, seen_sources):
+    """Check the ingredients of the named products, grouped by substance."""
+    uses_for, names_for = {}, {}
+    for product_id in ids:
+        run.products_scanned += 1
+        for row in client.ingredients(product_id):
+            key = (row.cas or "").strip()
+            if not key:
+                continue
+            uses_for.setdefault(key, []).append(
+                (product_id, tuple(sorted(set(row.h_codes)))))
+            names_for.setdefault(key, row.name)
+    _group(client, table, index, run, uses_for, names_for, seen_sources)
+
+
+def _group(client, table, index, run, uses_for, names_for, seen_sources):
+    """Turn per-use readings into one result per substance.
+
+    The comparison runs once per distinct code set and is reused across the uses
+    that share it: the verdict is a function of the codes, so checking the same
+    set again cannot say anything different.
+    """
+    from lingua_oracle.ingredients.compare import check_ingredient
+    from lingua_oracle.ingredients.report import SubstanceResult, Use
+
+    for cas in sorted(uses_for):
+        if cas not in seen_sources:
+            seen_sources[cas] = client.substance_source(cas)
+        verdicts = {
+            codes: check_ingredient(cas, list(codes), table, index,
+                                    data_source=seen_sources[cas])
+            for codes in {c for _pid, c in uses_for[cas]}
+        }
+        run.substances.append(SubstanceResult(
+            cas=cas, name=names_for.get(cas),
+            uses=[Use(product_id=pid, codes=codes, verdict=verdicts[codes])
+                  for pid, codes in uses_for[cas]]))
 
 
 def _check_distinct_substances(client, table, index, run, wanted, seen_sources):
@@ -346,17 +366,13 @@ def _check_distinct_substances(client, table, index, run, wanted, seen_sources):
     products - which this did at first - made a code present in one product out
     of forty look present in all forty, and hid the commonest finding there was.
     """
-    from lingua_oracle.ingredients.compare import check_ingredient
-    from lingua_oracle.ingredients.report import SubstanceResult, Use
-
     uses_for: dict[str, list[tuple[int, tuple[str, ...]]]] = {}
     names_for: dict[str, str | None] = {}
-    scanned = 0
 
     for product_id in client.walk_product_ids():
         if len(uses_for) >= wanted:
             break
-        scanned += 1
+        run.products_scanned += 1
         for row in client.ingredients(product_id):
             key = (row.cas or "").strip()
             if not key:
@@ -366,26 +382,11 @@ def _check_distinct_substances(client, table, index, run, wanted, seen_sources):
             uses_for.setdefault(key, []).append(
                 (product_id, tuple(sorted(set(row.h_codes)))))
             names_for.setdefault(key, row.name)
-        if scanned % 100 == 0:
-            typer.secho(f"   read {scanned} products, "
+        if run.products_scanned % 100 == 0:
+            typer.secho(f"   read {run.products_scanned} products, "
                         f"{len(uses_for)} distinct substances", dim=True)
 
-    run.products_scanned = scanned
-    for cas in sorted(uses_for):
-        if cas not in seen_sources:
-            seen_sources[cas] = client.substance_source(cas)
-        # One comparison per distinct code set, reused across the uses that
-        # share it: the verdict is a function of the codes, so checking the
-        # same set again cannot say anything different.
-        verdicts = {
-            codes: check_ingredient(cas, list(codes), table, index,
-                                    data_source=seen_sources[cas])
-            for codes in {c for _pid, c in uses_for[cas]}
-        }
-        run.substances.append(SubstanceResult(
-            cas=cas, name=names_for.get(cas),
-            uses=[Use(product_id=pid, codes=codes, verdict=verdicts[codes])
-                  for pid, codes in uses_for[cas]]))
+    _group(client, table, index, run, uses_for, names_for, seen_sources)
 
 
 def _print_ingredient_summary(run, json_path, html_path) -> None:

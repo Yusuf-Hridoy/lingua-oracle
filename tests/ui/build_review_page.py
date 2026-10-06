@@ -210,6 +210,35 @@ def build() -> Path:
                 png.name))
             offset += 1
 
+    # The ingredient check. Its screenshots are taken over a synthetic run -
+    # fictional substances, real Annex VI codes - so they carry no company data.
+    ingredient_shots = {
+        "ingredients_run_page.png": (
+            "Ingredient check - starting a run",
+            "Where a reviewer chooses one product or the whole library, and "
+            "sees the runs already made.",
+            "Both scopes offered, a product ID field, and previous runs listed "
+            "with their result."),
+        "ingredients_report.png": (
+            "Ingredient check - the report",
+            "A finished run over a synthetic library: one substance classified "
+            "below Annex VI, one classified differently in different products, "
+            "one matching, one with extra classes, one that could not be "
+            "checked.",
+            "A Fix card per under-classified substance with what the app says "
+            "against what Annex VI requires, the affected product IDs folded "
+            "away, a card for inconsistent code sets, and everything else "
+            "collapsed."),
+    }
+    present = [name for name in ingredient_shots if (OUT / name).exists()]
+    if present:
+        cards.append('<h2 class="sec">Ingredient check</h2>')
+        for name in present:
+            title, plain, should = ingredient_shots[name]
+            key = name[:-4]
+            keys.append(key)
+            cards.append(_card(key, title, "clean", plain, should, name))
+
     real = sorted(REAL.glob("*.png")) if REAL.exists() else []
     if real:
         cards.append('<h2 class="sec">Real documents from the app</h2>')

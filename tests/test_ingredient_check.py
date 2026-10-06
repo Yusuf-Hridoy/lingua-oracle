@@ -246,11 +246,15 @@ def test_a_substance_outside_annex_vi_is_not_checked_on_the_real_table(real):
 
 
 def _run_with(verdicts, name="<fictional product>"):
+    """A run built from loose verdicts, one substance per verdict."""
     from lingua_oracle.ingredients import report as R
 
     run = R.new_run("02008R1272-test")
-    run.products.append(R.ProductResult(product_id=1, name=name,
-                                        regulation="eu_clp", verdicts=verdicts))
+    run.products_scanned = 1
+    for i, verdict in enumerate(verdicts):
+        run.substances.append(R.SubstanceResult(
+            cas=verdict.cas or str(i), name=name,
+            uses=[R.Use(product_id=i, codes=(), verdict=verdict)]))
     return run
 
 
@@ -266,9 +270,9 @@ def test_the_report_counts_what_it_shows():
         {"cas": "999-99-9", "h_codes": ["H302"]},
     ], table)
     counts = _run_with(verdicts).counts()
-    assert counts == {"products": 1, "substances": 0, "ingredients": 3,
+    assert counts == {"products": 1, "substances": 3, "ingredients": 3,
                       "with_entry": 2, "fix": 1, "info": 0, "ok": 1,
-                      "not_checked": 1, "uses": 0, "uses_under_classified": 0,
+                      "not_checked": 1, "uses": 3, "uses_under_classified": 1,
                       "inconsistent_substances": 0}
     assert R.headline(counts)[0] == "Fix before release"
 
@@ -281,7 +285,7 @@ def test_a_clean_run_says_so():
     release, tone, detail = R.headline(_run_with(verdicts).counts())
     assert release == "Matches Annex VI"
     assert tone == "ok"
-    assert "1 ingredient checked" in detail
+    assert "1 substance checked" in detail
 
 
 def test_a_run_with_no_reference_does_not_claim_a_pass():
@@ -538,8 +542,8 @@ def test_a_substance_run_writes_its_own_shape(tmp_path):
     assert payload["under_classified_reach"] == [["100-00-5", 2]]
     assert payload["missing_code_by_substance"] == [["H336", 1]]
     body = html_path.read_text(encoding="utf-8")
-    assert "in 2 products" in body
-    assert "2 different code sets" in body
+    assert "2 of 2 uses" in body
+    assert "H336" in body
 
 
 def test_one_product_reads_as_one_product(tmp_path):
@@ -549,8 +553,7 @@ def test_one_product_reads_as_one_product(tmp_path):
     substance = R.SubstanceResult(cas="100-00-5", name="<x>",
                                   uses=[_use(1, ["H302"], table)])
     _json_path, html_path = R.save(_substance_run([substance]), tmp_path)
-    # Every use is under-classified, so there is no "n of m" to add.
-    assert "in 1 product<" in html_path.read_text(encoding="utf-8")
+    assert "1 of 1 uses" in html_path.read_text(encoding="utf-8")
 
 
 # -- reading a whole library over a long time ---------------------------------
@@ -644,3 +647,15 @@ def test_the_real_acetone_entry_requires_its_supplemental_code(real):
     assert verdict.status is Status.FIX
     assert verdict.missing_codes == ["EUH066"]
     assert verdict.entry_index_no == "606-001-00-8"
+
+
+def test_the_banner_says_substances_and_the_uses_behind_them():
+    """One substance to fix and forty products to reissue are both facts."""
+    from lingua_oracle.ingredients import report as R
+
+    table = table_of(entry(cas=["100-00-5"], h_codes=["H302", "H336"]))
+    substance = R.SubstanceResult(cas="100-00-5", name="<a>", uses=[
+        _use(i, ["H302"], table) for i in range(40)])
+    _release, _tone, detail = R.headline(_substance_run([substance]).counts())
+    assert "1 substance is classified below" in detail
+    assert "40 product uses" in detail

@@ -291,7 +291,10 @@ dl.tech dd { margin: 0; }
   .actions button { margin-left: 0; width: 100%; }
   .head-actions { margin-left: 0; width: 100%; }
   .topbar .wrap { gap: 12px; }
-  .nav a { padding: 7px 10px; }
+  /* Four destinations do not fit across a phone. The bar scrolls on its own
+     rather than pushing the whole page sideways. */
+  .nav { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .nav a { padding: 7px 10px; white-space: nowrap; }
 }
 
 
@@ -306,3 +309,27 @@ dl.tech dd { margin: 0; }
 .minor-table th { font-weight: 600; color: var(--muted); white-space: nowrap; }
 .minor-table td.code { font-family: var(--mono); white-space: nowrap; }
 .minor-table tr:last-child td { border-bottom: 0; }
+
+/* The ingredient check: affected product IDs, folded away until wanted. */
+.issue details.affected { border-top: 1px solid var(--border); padding: 10px 16px; }
+.issue details.affected > summary { cursor: pointer; color: var(--muted);
+                                    font-size: 13px; }
+.issue details.affected .inner { padding-top: 8px; }
+.ids { font-family: var(--mono); font-size: 12px; word-break: break-word;
+       color: var(--muted); margin: 4px 0; }
+
+/* The ingredient run form and its progress page. */
+.run-form fieldset { border: 0; margin: 0 0 16px; padding: 0; }
+.run-form legend { font-weight: 600; padding: 0 0 8px; }
+.run-form .choice { display: block; margin: 8px 0; }
+.run-form .field { display: block; margin: 4px 0 12px 22px; }
+.run-form .field span { display: block; font-size: 13px; color: var(--muted); }
+.run-form .field input { padding: 8px 10px; border: 1px solid var(--border);
+                         border-radius: 8px; font: inherit; width: 180px; }
+.big { font-size: 20px; font-weight: 600; margin: 0 0 6px; }
+h2.section { margin-top: 32px; }
+
+/* A code-set table inside an issue card scrolls in its own box: on a narrow
+   screen the page itself must never move sideways. */
+.issue .side .minor-table { display: block; overflow-x: auto; white-space: nowrap; }
+.issue .side .minor-table td:nth-child(3) { white-space: normal; }
