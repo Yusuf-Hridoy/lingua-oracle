@@ -162,6 +162,24 @@ def keys_build(
     from lingua_oracle.keys.store import keys_root, save_key
     from lingua_oracle.registry import load_registry
 
+    if regulation == "mixture_rules":
+        # Not an answer key either: the cut-off values each regulation sets for
+        # mixtures, read out of its own published text.
+        from lingua_oracle.keys.builders import mixture_rules
+
+        for reg_id in load_registry().ids():
+            try:
+                path = mixture_rules.write(reg_id, use_cache=not no_cache)
+            except SourceUnavailable as exc:
+                typer.secho(f"  {reg_id}: {exc}", fg=typer.colors.YELLOW)
+                continue
+            table = mixture_rules.build(reg_id, use_cache=not no_cache)
+            typer.secho(f"  {reg_id}: {sum(len(v) for v in table.rules.values())} "
+                        f"rules from {table.document} -> {path}")
+            for note in table.notes:
+                typer.secho(f"      {note}", fg=typer.colors.BLUE)
+        return
+
     if regulation == "annex_vi":
         # Not an answer key: the harmonised classifications a substance is
         # judged against, which live in their own file.

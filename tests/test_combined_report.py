@@ -380,13 +380,24 @@ def test_the_mixture_section_names_its_paragraphs():
     cited = [r for r in report.mixture.results if r["citation"]]
     assert cited
     for result in cited:
-        assert result["citation"].startswith("Annex I, ")
+        assert result["citation"].startswith("Regulation (EC) No 1272/2008")
+        assert "Annex I, " in result["citation"]
 
 
-def test_a_regulation_outside_clp_is_not_calculated():
-    report = _check("clean_osha_en", "us_osha", FakeApp())
+def test_an_osha_sheet_is_calculated_against_oshas_own_appendix():
+    """Every supported regulation gets a mixture section, not only CLP."""
+    report = _check("pattern_supplier_ingredients", "us_osha", FakeApp())
+    assert report.mixture.state == "calculated"
+    assert report.mixture.source_document == "29 CFR 1910.1200 Appendix A"
+    for result in report.mixture.results:
+        assert "1272/2008" not in result["citation"]
+
+
+def test_a_regulation_with_no_rules_on_file_says_so():
+    report = _check("clean_eu_en", "jp_jis", FakeApp())
     assert report.mixture.state == "out_of_scope"
-    assert "not yet available for US OSHA HazCom" in report.mixture.message
+    assert "Japan JIS Z 7252/7253" in report.mixture.message
+    assert "no document on file" in report.mixture.message
 
 
 def test_a_sheet_with_no_composition_has_nothing_to_calculate():

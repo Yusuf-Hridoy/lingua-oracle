@@ -24,6 +24,7 @@ This file is generated from `keys/builders/sources.py`. Edit that.
 | `ca-whmis/hpr_bilingual.pdf` | Hazardous Products Regulations (SOR/2015-17), bilingual | consolidated | [link](https://laws-lois.justice.gc.ca/eng/regulations/SOR-2015-17/) | 2026-09-29 | ca_whmis |
 | `australia/swa_classification_guidance.pdf` | Safe Work Australia - GHS classification and labelling guidance | as published | [link](https://www.safeworkaustralia.gov.au/doc/ghs-classification-and-labelling-chemicals) | 2026-09-29 | au_whs |
 | `us-osha/appendix_c.html` | OSHA 29 CFR 1910.1200 Appendix C | as published | [link](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC) | 2026-09-29 | us_osha (falls back to the network if absent) |
+| `us-osha/appendix_a.html` | OSHA 29 CFR 1910.1200 Appendix A | as published | [link](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppA) | 2026-10-06 | us_osha mixture rules (falls back to the network if absent) |
 | `japan/GHS_Rev9_ja_annex2-3.pdf` | UN GHS (Purple Book), Japanese - NOT JIS | Rev.9 (2021) | _not recorded_ | 2026-09-29 | nothing: see builders/pending.py |
 
 ## Notes

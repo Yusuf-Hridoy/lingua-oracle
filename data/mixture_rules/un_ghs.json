@@ -1,0 +1,707 @@
+{
+  "regulation": "un_ghs",
+  "document": "UN GHS Rev.11 (2025)",
+  "covers": [
+    "Aquatic Acute",
+    "Aquatic Chronic",
+    "Carc.",
+    "Eye Dam.",
+    "Eye Irrit.",
+    "Lact.",
+    "Muta.",
+    "Repr.",
+    "Resp. Sens.",
+    "STOT RE",
+    "STOT SE",
+    "Skin Corr.",
+    "Skin Irrit.",
+    "Skin Sens."
+  ],
+  "rules": {
+    "aquatic_acute": {
+      "Aquatic Acute 1": [
+        {
+          "amount": "25",
+          "raw": "Acute 1 × Ma ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.3",
+            "page": 267
+          }
+        }
+      ],
+      "Aquatic Acute 1 into 2": [
+        {
+          "amount": "10",
+          "raw": "(M × 10 × Acute 1) + Acute 2 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.3",
+            "page": 267
+          }
+        }
+      ],
+      "Aquatic Acute 1 into 3": [
+        {
+          "amount": "100",
+          "raw": "(M × 100 × Acute 1) + (10 × Acute 2) + Acute 3 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.3",
+            "page": 267
+          }
+        }
+      ],
+      "Aquatic Acute 2": [
+        {
+          "amount": "25",
+          "raw": "(M × 10 × Acute 1) + Acute 2 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.3",
+            "page": 267
+          }
+        }
+      ],
+      "Aquatic Acute 2 into 3": [
+        {
+          "amount": "10",
+          "raw": "(M × 100 × Acute 1) + (10 × Acute 2) + Acute 3 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.3",
+            "page": 267
+          }
+        }
+      ],
+      "Aquatic Acute 3": [
+        {
+          "amount": "25",
+          "raw": "(M × 100 × Acute 1) + (10 × Acute 2) + Acute 3 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.3",
+            "page": 267
+          }
+        }
+      ]
+    },
+    "aquatic_chronic": {
+      "Aquatic Chronic 1": [
+        {
+          "amount": "25",
+          "raw": "Chronic 1 × Ma ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.4",
+            "page": 268
+          }
+        }
+      ],
+      "Aquatic Chronic 1 into 2": [
+        {
+          "amount": "10",
+          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.4",
+            "page": 268
+          }
+        }
+      ],
+      "Aquatic Chronic 1 into 3": [
+        {
+          "amount": "100",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2) + Chronic 3 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.4",
+            "page": 268
+          }
+        }
+      ],
+      "Aquatic Chronic 2": [
+        {
+          "amount": "25",
+          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.4",
+            "page": 268
+          }
+        }
+      ],
+      "Aquatic Chronic 2 into 3": [
+        {
+          "amount": "10",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2) + Chronic 3 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.4",
+            "page": 268
+          }
+        }
+      ],
+      "Aquatic Chronic 3": [
+        {
+          "amount": "25",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2) + Chronic 3 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.4",
+            "page": 268
+          }
+        }
+      ],
+      "Aquatic Chronic 4": [
+        {
+          "amount": "25",
+          "raw": "Chronic 1 + Chronic 2 + Chronic 3 + Chronic 4 ≥ 25 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 4.1.4",
+            "page": 268
+          }
+        }
+      ]
+    },
+    "eye": {
+      "Eye Dam. 1": [
+        {
+          "amount": "3",
+          "raw": "≥ 3 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.3.3",
+            "page": 160
+          }
+        }
+      ],
+      "Eye Dam. 1 multiplier": [
+        {
+          "amount": "10",
+          "raw": "10 × (skin Category 1 + eye Category 1)a + eye Category 2",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.3.3",
+            "page": 160
+          }
+        }
+      ],
+      "Eye Dam. 1 to Eye Irrit. 2": [
+        {
+          "amount": "1",
+          "raw": "≥ 1 % but < 3 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.3.3",
+            "page": 160
+          }
+        }
+      ],
+      "Eye Irrit. 2": [
+        {
+          "amount": "10",
+          "raw": "≥ 10 % b",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.3.3",
+            "page": 160
+          }
+        }
+      ],
+      "weighted Eye Irrit. 2": [
+        {
+          "amount": "10",
+          "raw": "≥ 10 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.3.3",
+            "page": 160
+          }
+        }
+      ]
+    },
+    "generic_limits": {
+      "Carc. 1A": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.6.1",
+            "page": 210
+          }
+        }
+      ],
+      "Carc. 1B": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.6.1",
+            "page": 210
+          }
+        }
+      ],
+      "Carc. 2": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 % (note 1)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.6.1",
+            "page": 210
+          },
+          "qualifier": "note 1"
+        },
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 % (note 2)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.6.1",
+            "page": 210
+          },
+          "qualifier": "note 2"
+        }
+      ],
+      "Lact.": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 % (note 1)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.7.1",
+            "page": 223
+          },
+          "qualifier": "note 1"
+        },
+        {
+          "amount": "0.3",
+          "raw": "≥ 0.3 % (note 2)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.7.1",
+            "page": 223
+          },
+          "qualifier": "note 2"
+        }
+      ],
+      "Muta. 1A": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.5.1",
+            "page": 204
+          }
+        }
+      ],
+      "Muta. 1B": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.5.1",
+            "page": 204
+          }
+        }
+      ],
+      "Muta. 2": [
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.5.1",
+            "page": 204
+          }
+        }
+      ],
+      "Repr. 1A": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 % (note 1)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.7.1",
+            "page": 223
+          },
+          "qualifier": "note 1"
+        },
+        {
+          "amount": "0.3",
+          "raw": "≥ 0.3 % (note 2)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.7.1",
+            "page": 223
+          },
+          "qualifier": "note 2"
+        }
+      ],
+      "Repr. 1B": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 % (note 1)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.7.1",
+            "page": 223
+          },
+          "qualifier": "note 1"
+        },
+        {
+          "amount": "0.3",
+          "raw": "≥ 0.3 % (note 2)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.7.1",
+            "page": 223
+          },
+          "qualifier": "note 2"
+        }
+      ],
+      "Repr. 2": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 % (note 3)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.7.1",
+            "page": 223
+          },
+          "qualifier": "note 3"
+        },
+        {
+          "amount": "3.0",
+          "raw": "≥ 3.0 % (note 4)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.7.1",
+            "page": 223
+          },
+          "qualifier": "note 4"
+        }
+      ],
+      "Resp. Sens. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 % (see note)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "solid/liquid note"
+        },
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 % (see note)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "gas note"
+        },
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.2",
+          "raw": "≥ 0.2 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "gas"
+        }
+      ],
+      "Resp. Sens. 1A": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "gas"
+        }
+      ],
+      "Resp. Sens. 1B": [
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.2",
+          "raw": "≥ 0.2 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "gas"
+        }
+      ],
+      "STOT RE 1": [
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 % (note 1)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.9.3",
+            "page": 242
+          },
+          "qualifier": "note 1"
+        },
+        {
+          "amount": "10",
+          "raw": "≥ 10 % (note 2)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.9.3",
+            "page": 242
+          },
+          "qualifier": "note 2"
+        }
+      ],
+      "STOT RE 1 step down": [
+        {
+          "amount": "1.0",
+          "raw": "1.0 ≤ ingredient < 10 % (note 3)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.9.3",
+            "page": 242
+          }
+        }
+      ],
+      "STOT RE 2": [
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 % (note 4)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.9.3",
+            "page": 242
+          },
+          "qualifier": "note 4"
+        },
+        {
+          "amount": "10",
+          "raw": "≥ 10 % (note 5)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.9.3",
+            "page": 242
+          },
+          "qualifier": "note 5"
+        }
+      ],
+      "STOT SE 1": [
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 % (note 1)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.8.2",
+            "page": 233
+          },
+          "qualifier": "note 1"
+        },
+        {
+          "amount": "10",
+          "raw": "≥ 10 % (note 2)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.8.2",
+            "page": 233
+          },
+          "qualifier": "note 2"
+        }
+      ],
+      "STOT SE 1 step down": [
+        {
+          "amount": "1.0",
+          "raw": "1.0 ≤ ingredient < 10 % (note 3)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.8.2",
+            "page": 233
+          }
+        }
+      ],
+      "STOT SE 2": [
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 % (note 4)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.8.2",
+            "page": 233
+          },
+          "qualifier": "note 4"
+        },
+        {
+          "amount": "10",
+          "raw": "≥ 10 % (note 5)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.8.2",
+            "page": 233
+          },
+          "qualifier": "note 5"
+        }
+      ],
+      "Skin Sens. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 % (see note)",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "all physical states note"
+        },
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "all physical states"
+        }
+      ],
+      "Skin Sens. 1A": [
+        {
+          "amount": "0.1",
+          "raw": "≥ 0.1 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "all physical states"
+        }
+      ],
+      "Skin Sens. 1B": [
+        {
+          "amount": "1.0",
+          "raw": "≥ 1.0 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.4.5",
+            "page": 184
+          },
+          "qualifier": "all physical states"
+        }
+      ]
+    },
+    "skin": {
+      "Skin Corr. 1": [
+        {
+          "amount": "5",
+          "raw": "≥ 5 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.2.3",
+            "page": 142
+          }
+        }
+      ],
+      "Skin Corr. 1 multiplier": [
+        {
+          "amount": "10",
+          "raw": "(10 × skin Category 1) + skin Category 2",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.2.3",
+            "page": 142
+          }
+        }
+      ],
+      "Skin Corr. 1 to Skin Irrit. 2": [
+        {
+          "amount": "1",
+          "raw": "≥ 1 % but < 5 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.2.3",
+            "page": 142
+          }
+        }
+      ],
+      "Skin Irrit. 2": [
+        {
+          "amount": "10",
+          "raw": "≥ 10 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.2.3",
+            "page": 142
+          }
+        }
+      ],
+      "weighted Skin Irrit. 2": [
+        {
+          "amount": "10",
+          "raw": "≥ 10 %",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "Table 3.2.3",
+            "page": 142
+          }
+        }
+      ]
+    },
+    "stot_se_3": {
+      "STOT SE 3": [
+        {
+          "amount": "20",
+          "raw": "cut-off value/concentration limit of 20 % has been suggested; however, it should be recognized that this cut-off value concentration limit may be higher or less depending on the Category 3 ingredient(",
+          "source": {
+            "document": "UN GHS Rev.11 (2025)",
+            "section": "3.8.3.4.3",
+            "page": 232
+          },
+          "qualifier": "given as a suggested limit"
+        }
+      ]
+    }
+  },
+  "notes": []
+}

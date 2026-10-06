@@ -1,0 +1,388 @@
+{
+  "regulation": "us_osha",
+  "document": "29 CFR 1910.1200 Appendix A",
+  "covers": [
+    "Carc.",
+    "Eye Dam.",
+    "Eye Irrit.",
+    "Lact.",
+    "Muta.",
+    "Repr.",
+    "Resp. Sens.",
+    "STOT RE",
+    "STOT SE",
+    "Skin Corr.",
+    "Skin Irrit.",
+    "Skin Sens."
+  ],
+  "rules": {
+    "eye": {
+      "Eye Dam. 1": [
+        {
+          "amount": "3",
+          "raw": "≥3%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.3.3",
+            "page": null
+          }
+        }
+      ],
+      "Eye Dam. 1 multiplier": [
+        {
+          "amount": "10",
+          "raw": "10 × (Skin corrosion (Category 1) + Serious eye damage (Category 1)) a + Eye irritation (Category 2)",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.3.3",
+            "page": null
+          }
+        }
+      ],
+      "Eye Dam. 1 to Eye Irrit. 2": [
+        {
+          "amount": "1",
+          "raw": "≥1% but >3%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.3.3",
+            "page": null
+          }
+        }
+      ],
+      "Eye Irrit. 2": [
+        {
+          "amount": "10",
+          "raw": "≥10%b",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.3.3",
+            "page": null
+          }
+        }
+      ],
+      "weighted Eye Irrit. 2": [
+        {
+          "amount": "10",
+          "raw": "≥10%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.3.3",
+            "page": null
+          }
+        }
+      ]
+    },
+    "generic_limits": {
+      "Carc. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.6.1",
+            "page": null
+          }
+        }
+      ],
+      "Carc. 2": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1% (note 1)",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.6.1",
+            "page": null
+          },
+          "qualifier": "note 1"
+        }
+      ],
+      "Lact.": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.7.1",
+            "page": null
+          }
+        }
+      ],
+      "Muta. 1A": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.5.1",
+            "page": null
+          }
+        }
+      ],
+      "Muta. 1B": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.5.1",
+            "page": null
+          }
+        }
+      ],
+      "Muta. 2": [
+        {
+          "amount": "1.0",
+          "raw": "≥1.0%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.5.1",
+            "page": null
+          }
+        }
+      ],
+      "Repr. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.7.1",
+            "page": null
+          }
+        }
+      ],
+      "Repr. 2": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.7.1",
+            "page": null
+          }
+        }
+      ],
+      "Resp. Sens. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.4.5",
+            "page": null
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.4.5",
+            "page": null
+          },
+          "qualifier": "gas"
+        }
+      ],
+      "Resp. Sens. 1A": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.4.5",
+            "page": null
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.4.5",
+            "page": null
+          },
+          "qualifier": "gas"
+        }
+      ],
+      "Resp. Sens. 1B": [
+        {
+          "amount": "1.0",
+          "raw": "≥1.0%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.4.5",
+            "page": null
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.2",
+          "raw": "≥0.2%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.4.5",
+            "page": null
+          },
+          "qualifier": "gas"
+        }
+      ],
+      "STOT RE 1": [
+        {
+          "amount": "1.0",
+          "raw": "≥1.0%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.9.3",
+            "page": null
+          }
+        }
+      ],
+      "STOT RE 2": [
+        {
+          "amount": "1.0",
+          "raw": "≥1.0%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.9.3",
+            "page": null
+          }
+        }
+      ],
+      "STOT SE 1": [
+        {
+          "amount": "1.0",
+          "raw": "≥1.0%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.8.2",
+            "page": null
+          }
+        }
+      ],
+      "STOT SE 2": [
+        {
+          "amount": "1.0",
+          "raw": "≥1.0%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.8.2",
+            "page": null
+          }
+        }
+      ],
+      "Skin Sens. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.4.5",
+            "page": null
+          },
+          "qualifier": "all physical states"
+        }
+      ],
+      "Skin Sens. 1A": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.4.5",
+            "page": null
+          },
+          "qualifier": "all physical states"
+        }
+      ],
+      "Skin Sens. 1B": [
+        {
+          "amount": "1.0",
+          "raw": "≥1.0%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.4.5",
+            "page": null
+          },
+          "qualifier": "all physical states"
+        }
+      ]
+    },
+    "skin": {
+      "Skin Corr. 1": [
+        {
+          "amount": "5",
+          "raw": "≥5%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.2.3",
+            "page": null
+          }
+        }
+      ],
+      "Skin Corr. 1 multiplier": [
+        {
+          "amount": "10",
+          "raw": "(10 × Skin Category 1) + Skin Category 2",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.2.3",
+            "page": null
+          }
+        }
+      ],
+      "Skin Corr. 1 to Skin Irrit. 2": [
+        {
+          "amount": "1",
+          "raw": "≥1% but <5%.",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.2.3",
+            "page": null
+          }
+        }
+      ],
+      "Skin Irrit. 2": [
+        {
+          "amount": "10",
+          "raw": "≥10%.",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.2.3",
+            "page": null
+          }
+        }
+      ],
+      "weighted Skin Irrit. 2": [
+        {
+          "amount": "10",
+          "raw": "≥10%.",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.2.3",
+            "page": null
+          }
+        }
+      ]
+    },
+    "stot_se_3": {
+      "STOT SE 3": [
+        {
+          "amount": "20",
+          "raw": "cut-off value/concentration limit of 20%, considered as an additive of all Category 3 ingredients for each hazard endpoint, is appropriate; however, this cut-off value/concentration limit may be highe",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "3.8.3.4 (paragraph not identified)",
+            "page": 1
+          },
+          "qualifier": "given as a suggested limit"
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Appendix A has no cut-off table for the aquatic classes: the standard does not cover them, so they are reported as not covered rather than as not calculated."
+  ]
+}

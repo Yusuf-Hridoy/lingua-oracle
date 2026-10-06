@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from lingua_oracle.mixture import concentration as conc
-from lingua_oracle.mixture.calculate import IN_SCOPE, calculate
+from lingua_oracle.mixture.calculate import calculate, in_scope
 from lingua_oracle.mixture.classes import parse_class
 from lingua_oracle.mixture.limits import parse as parse_limits
 from lingua_oracle.mixture.model import from_annex_vi, from_codes
@@ -53,11 +53,12 @@ def build(rows, lines, spans, regulation: str, table,
               else stated_classes(lines, spans))
     stated_names = [str(c) for c in stated if c]
 
-    if regulation not in IN_SCOPE:
+    if not in_scope(regulation):
         return MixtureSection(
             state="out_of_scope", stated=stated_names,
-            message="Mixture check not yet available for "
-                    f"{display_name(regulation)}.")
+            message="Mixture check not available for "
+                    f"{display_name(regulation)} yet: no document on file "
+                    "sets its mixture rules.")
     if table is None:
         return MixtureSection(state="skipped", stated=stated_names,
                               message="No Annex VI table on file.")
@@ -96,11 +97,17 @@ def build(rows, lines, spans, regulation: str, table,
         assumptions.append(
             f"{without_concentration} ingredient(s) had no concentration and "
             "were left out of the calculation")
+    not_covered = summary.get("not_covered") or []
+    if not_covered:
+        assumptions.append(
+            f"{display_name(regulation)} does not have these hazard classes, "
+            f"so nothing was calculated for them: {', '.join(not_covered)}")
     return MixtureSection(
         state="calculated", counts=counts,
         declared_total=summary.get("declared_total", "0"),
         undisclosed=summary.get("undisclosed", "0"),
         stated=stated_names,
+        source_document=summary.get("document", ""),
         assumptions=assumptions,
         results=[_as_dict(r) for r in results])
 

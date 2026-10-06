@@ -98,17 +98,42 @@ def test_a_class_outside_the_rules_is_not_calculated_rather_than_contradicted():
 # -- scope ---------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("regulation", ["eu_clp", "uk_clp"])
-def test_the_rules_apply_to_clp_and_its_gb_retention(regulation):
-    results, summary = calculate([ing(30, 30, "H400")], [], regulation)
+@pytest.mark.parametrize("regulation", ["eu_clp", "uk_clp", "us_osha",
+                                        "un_ghs", "au_whs", "ca_whmis"])
+def test_every_regulation_with_rules_on_file_is_calculated(regulation):
+    """One upload, one answer, whichever regulation the sheet is written to."""
+    results, summary = calculate([ing(30, 30, "H315")], [], regulation)
     assert summary["in_scope"] is True
     assert results
 
 
-@pytest.mark.parametrize("regulation", ["us_osha", "un_ghs", "au_whs",
-                                        "ca_whmis", "jp_jis"])
-def test_no_other_regulation_is_guessed_at(regulation):
+@pytest.mark.parametrize("regulation", ["eu_clp", "uk_clp", "un_ghs", "au_whs"])
+def test_the_aquatic_classes_are_calculated_where_a_regulation_has_them(
+        regulation):
+    results, _ = calculate([ing(30, 30, "H400")], [], regulation)
+    assert any(r.hazard_class.startswith("Aquatic") for r in results)
+
+
+@pytest.mark.parametrize("regulation", ["us_osha", "ca_whmis"])
+def test_an_aquatic_class_is_not_a_finding_where_a_regulation_has_none(
+        regulation):
+    """Not a gap in what we know: those standards have no aquatic classes."""
     results, summary = calculate([ing(30, 30, "H400")], [], regulation)
+    assert summary["in_scope"] is True
+    assert not [r for r in results if r.hazard_class.startswith("Aquatic")]
+    assert "Aquatic Acute" in summary["not_covered"]
+
+
+def test_a_class_a_regulation_does_not_have_is_said_to_be_so():
+    results, _ = calculate([ing(30, 30, "H315")],
+                           [parse_class("Aquatic Chronic 2")], "us_osha")
+    result = next(r for r in results if r.hazard_class == "Aquatic Chronic 2")
+    assert result.verdict == "not_calculated"
+    assert result.message == "Not covered by US OSHA HazCom."
+
+
+def test_japan_has_no_rules_on_file_and_is_not_guessed_at():
+    results, summary = calculate([ing(30, 30, "H400")], [], "jp_jis")
     assert results == []
     assert summary["in_scope"] is False
 
@@ -119,7 +144,8 @@ def test_no_other_regulation_is_guessed_at(regulation):
 def test_a_result_names_the_paragraph_it_came_from():
     results, _ = calculate([ing(30, 30, "H400")], [], "eu_clp")
     result = next(r for r in results if r.hazard_class == "Aquatic Acute 1")
-    assert result.citation == "Annex I, 4.1.3.5.5, Table 4.1.1"
+    assert result.citation.endswith("Annex I, 4.1.3.5.5, Table 4.1.1")
+    assert result.citation.startswith("Regulation (EC) No 1272/2008")
 
 
 def test_a_result_names_the_ingredients_that_caused_it():

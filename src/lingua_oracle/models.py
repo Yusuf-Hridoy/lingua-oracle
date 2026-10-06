@@ -346,6 +346,8 @@ class MixtureSection(BaseModel):
     declared_total: str = "0"
     undisclosed: str = "0"
     stated: list[str] = Field(default_factory=list)
+    #: The document the rules were read from, named for the reader.
+    source_document: str = ""
     assumptions: list[str] = Field(default_factory=list)
     results: list[dict] = Field(default_factory=list)
 
