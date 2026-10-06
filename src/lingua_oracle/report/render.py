@@ -362,11 +362,25 @@ def _ingredient_source(section) -> str:
 
 #: What the Mixture section was able to do, in one line.
 _MIXTURE_SOURCE = {
-    "calculated": "calculated from the ingredients, by CLP Annex I",
     "nothing": "nothing to calculate from",
     "out_of_scope": "not calculated",
     "skipped": "not calculated",
 }
+
+
+def _mixture_source(section) -> str:
+    """Where the rules behind this section came from, in the document's name.
+
+    Every regulation is calculated by its own text now, so naming CLP here -
+    as this line used to, whatever the sheet was written to - would be wrong
+    on five regulations out of six.
+    """
+    state = getattr(section, "state", "")
+    if state == "calculated":
+        document = getattr(section, "source_document", "")
+        return (f"calculated from the ingredients, by {document}" if document
+                else "calculated from the ingredients")
+    return _MIXTURE_SOURCE.get(state, "")
 
 
 def display_name_of(regulation: str | None) -> str:
@@ -381,10 +395,6 @@ def display_name_of(regulation: str | None) -> str:
         return load_registry().get(regulation).display_name
     except KeyError:
         return regulation
-
-
-def _mixture_source(section) -> str:
-    return _MIXTURE_SOURCE.get(getattr(section, "state", ""), "")
 
 
 def _mixture_tone(section) -> str:

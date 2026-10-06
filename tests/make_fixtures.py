@@ -400,6 +400,13 @@ def build_all() -> dict[str, Path]:
     # the record the test puts in the application.
     add("pattern_named_with_ingredients", _supplier_ingredients(
         FIXTURES / "pattern_named_with_ingredients.pdf", labelled=True))
+    # The same sheet, stating an aquatic classification in Section 2. Under a
+    # regulation that has aquatic classes that is something to check; under one
+    # that has none - OSHA, WHMIS - it is not a finding, and the report has to
+    # say which of those it is.
+    add("pattern_aquatic_statement", _supplier_ingredients(
+        FIXTURES / "pattern_aquatic_statement.pdf",
+        classification="Flam. Liq. 2, H225; Aquatic Chronic 2, H411"))
     # A sheet whose statement text is markup. Nothing about this is plausible
     # as chemistry; it is here because the report prints text taken out of a
     # PDF, and a PDF is a file somebody else wrote.
@@ -448,7 +455,8 @@ def build_all() -> dict[str, Path]:
 
 
 
-def _supplier_ingredients(path: Path, *, labelled: bool = False) -> Path:
+def _supplier_ingredients(path: Path, *, labelled: bool = False,
+                          classification: str = "") -> Path:
     """A supplier's sheet whose Section 3 prints a real composition table.
 
     Not one of ours - no product id in the name, no matching product - so the
@@ -464,6 +472,8 @@ def _supplier_ingredients(path: Path, *, labelled: bool = False) -> Path:
     sheet.line(SUPPLIER)
     sheet.blank()
     sheet.line(head["2"], bold=True, size=11)
+    if classification:
+        sheet.line(f"Classification: {classification}")
     sheet.line("Signal word: Danger")
     sheet.blank()
     official = texts("eu_clp", "en", ["H225", "H319"])
