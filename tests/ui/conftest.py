@@ -53,7 +53,6 @@ def _free_port() -> int:
 @pytest.fixture(scope="session")
 def server(tmp_path_factory) -> str:
     """Start `lingua serve` on a free port and yield its base URL."""
-    port = _free_port()
     env = dict(os.environ)
     # Reports written by the browser runs go to a temp dir, not the repo's.
     env["LINGUA_REPORTS_DIR"] = str(tmp_path_factory.mktemp("ui-reports"))
@@ -65,6 +64,15 @@ def server(tmp_path_factory) -> str:
     # application was not consulted. The matched-product path is covered
     # without a browser, in tests/test_combined_report.py.
     env["LINGUA_EXACTSDS"] = "off"
+    yield from _serve(env)
+
+
+def _serve(env: dict[str, str]):
+    """Run the server the way a user runs it, and yield its base URL."""
+    import tempfile
+
+    port = _free_port()
+    env.setdefault("LINGUA_REPORTS_DIR", tempfile.mkdtemp(prefix="ui-reports-"))
     # Its own process group: "uv run" spawns uvicorn as a child, and
     # terminating only the parent leaves the server alive holding its port and
     # competing for the machine. Interrupted runs used to leak one each time,
@@ -93,6 +101,28 @@ def server(tmp_path_factory) -> str:
         yield base
     finally:
         _stop(proc)
+
+
+@pytest.fixture(scope="session")
+def app_server():
+    """A `lingua serve` wired to a stand-in ExactSDS, for the picker flow.
+
+    Kept apart from the main `server` fixture, which stays switched off: this
+    one costs a second process and only two tests need an application to
+    answer.
+    """
+    from tests.ui.stub_exactsds import start
+
+    base, stub = start()
+    env = dict(os.environ)
+    env["LINGUA_EXACTSDS"] = "on"
+    env["EXACTSDS_URL"] = base
+    env["EXACTSDS_USER"] = "nobody@example.invalid"
+    env["EXACTSDS_PASSWORD"] = "not-a-password"
+    try:
+        yield from _serve(env)
+    finally:
+        stub.shutdown()
 
 
 @pytest.fixture(scope="session")

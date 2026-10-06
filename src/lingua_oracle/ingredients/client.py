@@ -10,6 +10,7 @@ Credentials come from `.env` and are never written to a report.
 
 from __future__ import annotations
 
+import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -94,16 +95,31 @@ def forget_session() -> None:
     _SESSION.clear()
 
 
+#: The settings that say which application to talk to and as whom. Only these
+#: are read from the environment, so nothing else leaks in from a shell.
+SETTINGS = ("EXACTSDS_URL", "EXACTSDS_USER", "EXACTSDS_PASSWORD")
+
+
 def read_env(path: str | Path = ".env") -> dict[str, str]:
+    """The application settings: `.env`, with the environment on top.
+
+    The file is where a person keeps their credentials. The environment is how
+    a deployment - or a test pointing at a stand-in application - says
+    otherwise, and it wins, which is the usual way round and the only way a
+    test can avoid talking to the live application at all.
+    """
     out: dict[str, str] = {}
     source = Path(path)
-    if not source.exists():
-        return out
-    for line in source.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            key, value = line.split("=", 1)
-            out[key.strip()] = value.strip()
+    if source.exists():
+        for line in source.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, value = line.split("=", 1)
+                out[key.strip()] = value.strip()
+    for key in SETTINGS:
+        value = os.environ.get(key)
+        if value:
+            out[key] = value
     return out
 
 

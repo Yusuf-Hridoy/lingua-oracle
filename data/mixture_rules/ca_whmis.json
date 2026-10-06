@@ -221,6 +221,17 @@
       ]
     },
     "generic_limits": {
+      "Carc. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1 %",
+          "source": {
+            "document": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations (SOR/2015-17)",
+            "section": "Table 3.6.1",
+            "page": 180
+          }
+        }
+      ],
       "Carc. 1A": [
         {
           "amount": "0.1",
@@ -287,6 +298,17 @@
           "qualifier": "note 2"
         }
       ],
+      "Muta. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations (SOR/2015-17)",
+            "section": "Table 3.5.1",
+            "page": 172
+          }
+        }
+      ],
       "Muta. 1A": [
         {
           "amount": "0.1",
@@ -318,6 +340,28 @@
             "section": "Table 3.5.1",
             "page": 172
           }
+        }
+      ],
+      "Repr. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1% (note 1)",
+          "source": {
+            "document": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations (SOR/2015-17)",
+            "section": "Table 3.7.1",
+            "page": 193
+          },
+          "qualifier": "note 1"
+        },
+        {
+          "amount": "0.3",
+          "raw": "≥0.3% (note 2)",
+          "source": {
+            "document": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations (SOR/2015-17)",
+            "section": "Table 3.7.1",
+            "page": 193
+          },
+          "qualifier": "note 2"
         }
       ],
       "Repr. 1A": [

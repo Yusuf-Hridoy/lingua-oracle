@@ -108,6 +108,17 @@
           }
         }
       ],
+      "Muta. 1": [
+        {
+          "amount": "0.1",
+          "raw": "≥0.1%",
+          "source": {
+            "document": "29 CFR 1910.1200 Appendix A",
+            "section": "Table A.5.1",
+            "page": null
+          }
+        }
+      ],
       "Muta. 1A": [
         {
           "amount": "0.1",

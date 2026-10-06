@@ -282,6 +282,33 @@ def _cut_offs(rows: list[list[str]], hazard: str, place: Place, table: Table,
                         amount, _tidy(cell), place))
 
 
+def _parent_categories(table: Table) -> None:
+    """Give a bare category 1 the limit its own column heads.
+
+    The published tables list a row per sub-category - 1A, 1B - under a column
+    headed "Category 1 carcinogen". A sheet that says only "Carc. 1" is
+    claiming that column, and where every sub-category under it carries the
+    same limit, that limit is the column's. Where the sub-categories differ -
+    the sensitizers - nothing is derived: those tables print their own
+    category 1 row.
+    """
+    limits = table.rules.get("generic_limits", {})
+    for name in ("Muta.", "Carc.", "Repr."):
+        parent = f"{name} 1"
+        if parent in limits:
+            continue
+        subs = [limits.get(f"{name} 1A"), limits.get(f"{name} 1B")]
+        if not all(subs):
+            continue
+        shape = [[(v.amount, v.qualifier) for v in values] for values in subs]
+        if shape[0] != shape[1]:
+            continue
+        for value in subs[0]:
+            table.put("generic_limits", parent, Value(
+                value.amount, value.raw, value.place,
+                qualifier=value.qualifier))
+
+
 def _qualifier(headers: list[str], cell: str) -> str:
     """What distinguishes one value in a cell from another in the same cell.
 
@@ -380,6 +407,7 @@ def _ghs(path: Path, regulation: str, document: str,
         else:
             _cut_offs(rows, _HAZARD_OF[rule], place, table, "generic_limits")
     _stot_se_3(text_by_page, document, table)
+    _parent_categories(table)
     table.covers = list(covers if covers is not None else _covered(table))
     return table
 
@@ -584,6 +612,7 @@ def _osha(body: bytes) -> Table:
             f"{OSHA_DOCUMENT}: no table found for {', '.join(missing)}")
     text = " ".join(doc.text_content().split())
     _stot_se_3({0: text}, OSHA_DOCUMENT, table)
+    _parent_categories(table)
     table.notes.append(
         "Appendix A has no cut-off table for the aquatic classes: the standard "
         "does not cover them, so they are reported as not covered rather than "
