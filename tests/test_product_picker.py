@@ -188,3 +188,47 @@ def test_a_failure_while_choosing_is_reported_not_swallowed(tmp_path,
     again = render.load(report.id)
     assert again.ingredients.source == "skipped"
     assert "Could not check that product" in again.ingredients.message
+
+
+# -- the picker on the page ----------------------------------------------------
+
+
+def test_the_picker_is_rendered_above_the_verdict():
+    from lingua_oracle.report.render import render_html
+
+    body = render_html(_check("clean_eu_en", "eu_clp", _ambiguous_app()))
+    assert body.index("Which product is this?") < body.index('class="verdict')
+    assert "Check this product" in body
+
+
+def test_the_picker_names_each_candidate_with_its_id_and_regulation():
+    from lingua_oracle.report.render import render_html
+
+    app_ = FakeApp(
+        library=[{"primary_product_id": 1, "product_name": f"{PRODUCT} A",
+                  "regulations": [{"regulation": "eu_clp"}],
+                  "updated_at": "2026-01-01"},
+                 {"primary_product_id": 2, "product_name": f"{PRODUCT} B",
+                  "regulations": [{"regulation": "us_osha"}],
+                  "updated_at": "2026-02-01"}])
+    body = render_html(_check("clean_eu_en", "eu_clp", app_))
+    assert "id 1" in body and "id 2" in body
+    assert "EU CLP" in body
+    assert "US OSHA HazCom" in body
+
+
+def test_no_report_page_shows_a_registry_id():
+    """Internal ids are database keys. A reader is shown display names."""
+    from lingua_oracle.registry import load_registry
+    from lingua_oracle.report.render import render_html
+
+    ids = load_registry().ids()
+    pages = [
+        render_html(_check("clean_eu_en", "eu_clp", _ambiguous_app())),
+        render_html(_check("pattern_supplier_ingredients", "eu_clp", FakeApp())),
+        render_html(_check("clean_osha_en", "us_osha", FakeApp())),
+        render_html(check_pdf(pdf("clean_eu_en"), "eu_clp")),
+    ]
+    for page in pages:
+        found = [i for i in ids if i in page]
+        assert found == [], found

@@ -30,6 +30,16 @@ def _ingredient(cas, name, raw_concentration, codes, table, index):
     return from_codes(cas, name, parsed.low, parsed.high, codes), parsed
 
 
+def display_name(regulation: str) -> str:
+    """A regulation's display name. Its id is a database key, not a word."""
+    from lingua_oracle.registry import load_registry
+
+    try:
+        return load_registry().get(regulation).display_name
+    except KeyError:
+        return regulation
+
+
 def build(rows, lines, spans, regulation: str, table,
           stated_override: list[str] | None = None) -> MixtureSection:
     """The mixture section for one document.
@@ -46,7 +56,8 @@ def build(rows, lines, spans, regulation: str, table,
     if regulation not in IN_SCOPE:
         return MixtureSection(
             state="out_of_scope", stated=stated_names,
-            message=f"Mixture check not yet available for {regulation}.")
+            message="Mixture check not yet available for "
+                    f"{display_name(regulation)}.")
     if table is None:
         return MixtureSection(state="skipped", stated=stated_names,
                               message="No Annex VI table on file.")

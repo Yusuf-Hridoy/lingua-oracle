@@ -369,6 +369,20 @@ _MIXTURE_SOURCE = {
 }
 
 
+def display_name_of(regulation: str | None) -> str:
+    """A regulation's display name. Its id is a database key, not a word.
+
+    Nothing in the interface shows "ca_whmis" or "us_osha" at a reader: those
+    are how this tool refers to a regulation among itself.
+    """
+    if not regulation:
+        return ""
+    try:
+        return load_registry().get(regulation).display_name
+    except KeyError:
+        return regulation
+
+
 def _mixture_source(section) -> str:
     return _MIXTURE_SOURCE.get(getattr(section, "state", ""), "")
 
@@ -418,6 +432,7 @@ def render_html(report: Report) -> str:
                    and not s["uses_under_classified"]],
         ing_unchecked=[s for s in substances if s["status"] == "not_checked"],
         ing_reasons=ingredient_reasons(),
+        regulation_name=display_name_of,
         mixture=report.mixture,
         mixture_source=_mixture_source(report.mixture),
         mixture_tone=_mixture_tone(report.mixture),

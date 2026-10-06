@@ -61,6 +61,29 @@
     </div>
   </div>
 
+  {% if ing and ing.candidates %}
+  {# Above the verdict, because the verdict is incomplete until it is answered. #}
+  <form class="card picker" method="post" action="/reports/{{ report.id }}/product">
+    <h2>Which product is this?</h2>
+    <p class="note">{{ ing.candidates|length }} products in ExactSDS could be
+      this sheet. The ingredient and mixture checks need to know which.</p>
+    <ul class="candidates">
+      {% for c in ing.candidates %}
+      <li>
+        <label>
+          <input type="radio" name="product_id" value="{{ c.product_id }}"
+                 {% if loop.first %}checked{% endif %}>
+          <span class="who">{{ c.name }}</span>
+          <span class="muted">id {{ c.product_id }}{% if c.regulation %}
+            &middot; {{ regulation_name(c.regulation) }}{% endif %}</span>
+        </label>
+      </li>
+      {% endfor %}
+    </ul>
+    <button type="submit" class="primary">Check this product</button>
+  </form>
+  {% endif %}
+
   <div class="verdict v-{{ verdict.tone }}">
     <div class="banner">
       <span class="vico" aria-hidden="true">{{ verdict.icon }}</span>

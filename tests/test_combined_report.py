@@ -386,7 +386,7 @@ def test_the_mixture_section_names_its_paragraphs():
 def test_a_regulation_outside_clp_is_not_calculated():
     report = _check("clean_osha_en", "us_osha", FakeApp())
     assert report.mixture.state == "out_of_scope"
-    assert "not yet available for us_osha" in report.mixture.message
+    assert "not yet available for US OSHA HazCom" in report.mixture.message
 
 
 def test_a_sheet_with_no_composition_has_nothing_to_calculate():
