@@ -25,6 +25,7 @@ from lingua_oracle.keys.builders.signal_words import (
     entries_for,
     from_english,
 )
+from lingua_oracle.keys.builders.sources import source_note
 from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Kind, Status, Tier
 from lingua_oracle.registry import data_dir
 
@@ -75,6 +76,7 @@ def build(
             issues.notes.append(
                 "no source file on record; left pending_source"
                 if path is None
+                else source_note(relative, path) if relative
                 else f"source file not found: {path}"
             )
             reports.append(issues)

@@ -31,6 +31,7 @@ from lingua_oracle.keys.builders.pdf_tables import (
     harvest_prose,
 )
 from lingua_oracle.keys.builders.signal_words import entries_for, from_english
+from lingua_oracle.keys.builders.sources import source_note
 from lingua_oracle.match.normalize import normalize, strip_punctuation
 from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Kind, Status, Tier
 from lingua_oracle.registry import data_dir
@@ -126,7 +127,7 @@ def build(
 
     if not path.exists():
         issues = ParseIssues(source=f"{REGULATION}/en")
-        issues.notes.append(f"source file not found: {path}")
+        issues.notes.append(source_note(DEFAULT_FILE, path))
         return (
             [
                 AnswerKey(

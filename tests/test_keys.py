@@ -469,13 +469,25 @@ def test_combined_code_repair_is_scoped_to_the_page():
 
 
 def test_rev8_overlay_is_exactly_the_codes_rev7_lacks():
-    """The overlay must stay as narrow as the regulation makes it."""
+    """The overlay must stay as narrow as the regulation makes it.
+
+    Reads the GHS Rev.7 and Rev.8 PDFs, which are not committed - they are
+    published documents anyone can download, and a hundred megabytes of them in
+    every clone is not worth it. Skipped where they are absent; the key this
+    builds from is committed and is checked by the test below.
+    """
     from pathlib import Path
 
-    from lingua_oracle.keys.builders.ghs_editions import pressure_overlay
+    from lingua_oracle.keys.builders.ghs_editions import REV7_FILE, REV8_FILE, pressure_overlay
+    from lingua_oracle.keys.builders.sources import describe
     from lingua_oracle.registry import data_dir
 
-    overlay, unchanged = pressure_overlay(Path(data_dir()) / "sources")
+    root = Path(data_dir()) / "sources"
+    for relative in (REV7_FILE.format(lang="en"), REV8_FILE.format(lang="en")):
+        if not (root / relative).exists():
+            pytest.skip(describe(relative))
+
+    overlay, unchanged = pressure_overlay(root)
     assert set(overlay) == {"H282", "H283", "H284"}
     # the class's other codes are identical in Rev.7 and must not be overlaid
     assert set(unchanged) == {"P376", "P378", "P370+P378", "P410+P403"}
@@ -1148,3 +1160,78 @@ def test_the_comparison_agrees_with_the_audit():
                     "not_on_file": "not_on_file"}[chosen["status"]]
         assert verdict == expected, f"{code}/{lang}"
         assert act == chosen["act"], f"{code}/{lang}"
+
+
+# -- the source documents, and where to get them ------------------------------
+
+
+def test_every_source_a_builder_names_is_on_the_record():
+    """A file a builder looks for must have a row saying where it comes from.
+
+    Otherwise an absent file is a dead end: the error names a path and nothing
+    tells the reader which document that path is supposed to hold.
+    """
+    from lingua_oracle.keys.builders import au_whs, ca_whmis, uk_clp, us_osha
+    from lingua_oracle.keys.builders.ghs_editions import REV7_FILE, REV8_FILE
+    from lingua_oracle.keys.builders.sources import BY_PATH
+
+    named = {
+        au_whs.GHS7_FILE, au_whs.SWA_FILE, ca_whmis.HPR_FILE,
+        uk_clp.DEFAULT_FILE, us_osha.DEFAULT_FILE, us_osha.REFERENCE_FILE,
+        REV7_FILE.format(lang="en"), REV7_FILE.format(lang="fr"),
+        REV8_FILE.format(lang="en"), REV8_FILE.format(lang="fr"),
+    }
+    assert named <= set(BY_PATH), sorted(named - set(BY_PATH))
+
+
+def test_every_source_row_says_where_to_download_it():
+    from lingua_oracle.keys.builders.sources import SOURCES
+
+    for source in SOURCES:
+        assert source.title and source.edition and source.added
+        assert source.used_by
+        # One document has no recorded link, and says so rather than guessing.
+        if source.url is None:
+            assert "japan" in source.path
+        else:
+            assert source.url.startswith("https://")
+
+
+def test_a_missing_source_names_the_file_and_the_link():
+    from lingua_oracle.keys.builders.common import SourceUnavailable
+    from lingua_oracle.keys.builders.sources import describe, require
+
+    message = describe("un-ghs/GHS_Rev11_en.pdf")
+    assert "data/sources/un-ghs/GHS_Rev11_en.pdf" in message
+    assert "unece.org" in message
+    assert "README" in message
+
+    with pytest.raises(SourceUnavailable) as caught:
+        require("un-ghs/does_not_exist.pdf")
+    assert "data/sources/un-ghs/does_not_exist.pdf" in str(caught.value)
+
+
+def test_the_readme_lists_every_source():
+    from lingua_oracle.keys.builders.sources import SOURCES, readme
+    from lingua_oracle.registry import data_dir
+
+    generated = readme()
+    for source in SOURCES:
+        assert f"`{source.path}`" in generated
+        assert source.edition in generated
+    on_disk = (data_dir() / "sources" / "README.md")
+    assert on_disk.exists(), "run sources.write_readme()"
+    assert on_disk.read_text(encoding="utf-8") == generated, (
+        "data/sources/README.md is out of date; it is generated from "
+        "keys/builders/sources.py"
+    )
+
+
+def test_the_source_documents_are_not_committed():
+    """A hundred megabytes of published PDFs do not belong in every clone."""
+    import subprocess
+
+    tracked = subprocess.run(
+        ["git", "ls-files", "data/sources"],
+        capture_output=True, text=True, check=False).stdout.split()
+    assert tracked == ["data/sources/README.md"], tracked

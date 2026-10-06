@@ -24,6 +24,7 @@ from lingua_oracle.keys.builders.pdf_tables import (
     harvest_inline,
 )
 from lingua_oracle.keys.builders.signal_words import entries_for, from_english
+from lingua_oracle.keys.builders.sources import source_note
 from lingua_oracle.models import AnswerKey, AnswerKeyEntry, Kind, Status, Tier
 from lingua_oracle.registry import data_dir
 
@@ -73,7 +74,7 @@ def build(
         issues.duplicate_conflict.extend(ghs_issues.duplicate_conflict)
         issues.notes.append(f"GHS Rev.7 pages {first}-{last}: {len(found)} H/P codes")
     else:
-        issues.notes.append(f"GHS Rev.7 source not found: {ghs7}; no H/P statements")
+        issues.notes.append(source_note(GHS7_FILE, ghs7) + " No H/P statements.")
 
     if swa.exists():
         auh, swa_issues = harvest_inline(str(swa))
@@ -91,7 +92,7 @@ def build(
         issues.duplicate_conflict.extend(swa_issues.duplicate_conflict)
         issues.notes.append(f"Safe Work Australia guidance: {added} AUH codes")
     else:
-        issues.notes.append(f"Safe Work Australia source not found: {swa}; no AUH statements")
+        issues.notes.append(source_note(SWA_FILE, swa) + " No AUH statements.")
 
     entries = [
         AnswerKeyEntry(

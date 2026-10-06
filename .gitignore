@@ -13,9 +13,14 @@ build/
 *.egg-info/
 .DS_Store
 
-# data/sources/ holds the official regulation PDFs the answer keys are built
-# from (UN GHS, Canada HPR, UK GB CLP, JIS). These are published law and are
-# committed for provenance. Real SDS / product documents must NOT go here.
+# data/sources/ holds the official regulation PDFs and HTML the answer keys are
+# built from. They are published documents anyone can download from the
+# publisher, and a hundred megabytes of them in every clone, forever, is not a
+# good trade for provenance that data/sources/README.md records just as well.
+# The README stays tracked; the documents do not. Real SDS / product documents
+# must NOT go here either.
+data/sources/**
+!data/sources/README.md
 
 # Real SDS and label PDFs used for validation are COMPANY DATA. Everything in
 # this directory stays local: the PDFs themselves and the case, triage and
