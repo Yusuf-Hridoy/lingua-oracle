@@ -184,3 +184,84 @@ def test_runs_appear_in_history(client, runs_here):
     rows = ing.recent_runs()
     assert rows and rows[0]["kind"] == "ingredients"
     assert rows[0]["file_name"] == "Whole library"
+
+
+# -- one login, not one per upload --------------------------------------------
+
+
+class CountingClient(StubClient):
+    logins = 0
+
+    def login(self):
+        type(self).logins += 1
+
+
+def test_the_session_logs_in_once_and_is_reused(monkeypatch):
+    """Logging in costs seconds, and every upload was paying it.
+
+    The browser suite went from thirty seconds to three and a half minutes the
+    day the ingredient check joined the upload path, and every one of those
+    minutes was logins.
+    """
+    from lingua_oracle.ingredients import client as C
+
+    C.forget_session()
+    monkeypatch.delenv("LINGUA_EXACTSDS", raising=False)
+    CountingClient.logins = 0
+    first = C.session(CountingClient)
+    second = C.session(CountingClient)
+    assert first is second
+    assert CountingClient.logins == 1
+    C.forget_session()
+
+
+def test_a_failure_is_remembered_for_a_while(monkeypatch):
+    """Thirty uploads against an application that is down cost one timeout."""
+    from lingua_oracle.ingredients import client as C
+
+    C.forget_session()
+    monkeypatch.delenv("LINGUA_EXACTSDS", raising=False)
+    attempts = []
+
+    class Refuses(StubClient):
+        def login(self):
+            attempts.append(1)
+            raise OSError("connection refused")
+
+    for _ in range(5):
+        with pytest.raises(C.AppUnavailable):
+            C.session(Refuses)
+    assert len(attempts) == 1
+    C.forget_session()
+
+
+def test_switching_exactsds_off_touches_nothing(monkeypatch):
+    from lingua_oracle.ingredients import client as C
+
+    C.forget_session()
+    monkeypatch.setenv("LINGUA_EXACTSDS", "off")
+
+    class Explodes(StubClient):
+        def login(self):
+            raise AssertionError("must not be reached")
+
+    assert C.disabled()
+    with pytest.raises(C.AppUnavailable) as caught:
+        C.session(Explodes)
+    assert "switched off" in str(caught.value)
+    C.forget_session()
+
+
+@pytest.mark.parametrize("value", ["off", "0", "no", "FALSE"])
+def test_the_switch_accepts_the_obvious_spellings(value, monkeypatch):
+    from lingua_oracle.ingredients import client as C
+
+    monkeypatch.setenv("LINGUA_EXACTSDS", value)
+    assert C.disabled()
+
+
+def test_the_switch_is_off_by_default(monkeypatch):
+    from lingua_oracle.ingredients import client as C
+
+    monkeypatch.delenv("LINGUA_EXACTSDS", raising=False)
+    assert not C.disabled()

@@ -57,6 +57,14 @@ def server(tmp_path_factory) -> str:
     env = dict(os.environ)
     # Reports written by the browser runs go to a temp dir, not the repo's.
     env["LINGUA_REPORTS_DIR"] = str(tmp_path_factory.mktemp("ui-reports"))
+    # No ExactSDS from the browser suite. It was reaching the real application
+    # on every upload - a two-and-a-half second login each time, which took the
+    # suite from thirty seconds to three and a half minutes - and a test suite
+    # has no business depending on a live external service. The ingredient
+    # section still runs: it reads the sheet's own Section 3, and says the
+    # application was not consulted. The matched-product path is covered
+    # without a browser, in tests/test_combined_report.py.
+    env["LINGUA_EXACTSDS"] = "off"
     # Its own process group: "uv run" spawns uvicorn as a child, and
     # terminating only the parent leaves the server alive holding its port and
     # competing for the machine. Interrupted runs used to leak one each time,

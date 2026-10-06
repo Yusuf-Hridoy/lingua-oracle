@@ -64,7 +64,7 @@ def _substances_from(rows, table, index, *, name_of=None):
 def check(path: str, file_name: str, lines, *, client_factory=None
           ) -> IngredientSection:
     """The ingredient section for one uploaded document."""
-    from lingua_oracle.ingredients.client import ExactSdsClient
+    from lingua_oracle.ingredients.client import session
     from lingua_oracle.keys.builders.annex_vi import load_table
 
     table = load_table()
@@ -77,8 +77,11 @@ def check(path: str, file_name: str, lines, *, client_factory=None
     client = None
     match = Match(state="unavailable", evidence="ExactSDS was not reached")
     try:
-        client = (client_factory or ExactSdsClient)()
-        client.login()
+        if client_factory is not None:
+            client = client_factory()
+            client.login()
+        else:
+            client = session()
         match = match_product(client, file_name, lines)
     except Exception as exc:  # noqa: BLE001
         # Anything at all here means the application is not answering. The
@@ -99,7 +102,9 @@ def check(path: str, file_name: str, lines, *, client_factory=None
                 section.message = NO_ENTRIES
             return section
     finally:
-        if client is not None:
+        # The session is shared and stays open; a client the caller supplied is
+        # the caller's to close.
+        if client is not None and client_factory is not None:
             client.close()
 
     # Not one of ours, or the application could not say: read the sheet.

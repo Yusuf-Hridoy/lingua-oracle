@@ -27,6 +27,73 @@ _ATTEMPTS = 4
 _BACKOFF = 2.0
 
 
+#: One login, not one per upload. Logging in costs two and a half seconds and
+#: every uploaded document was paying it: the web suite went from thirty seconds
+#: to three and a half minutes the day the ingredient check joined the upload
+#: path. The session is reused until it is older than this.
+_SESSION_TTL = 900.0
+#: After a failure, do not try again for this long. Thirty uploads against an
+#: application that is down should cost one timeout, not thirty.
+_OFFLINE_FOR = 60.0
+_SESSION: dict[str, object] = {}
+
+
+def disabled() -> bool:
+    """True when this installation is configured not to call ExactSDS.
+
+    `LINGUA_EXACTSDS=off` turns the ingredient half off without removing the
+    credentials - which is what a test suite wants, and what an installation
+    that has not been given an account wants too.
+    """
+    import os
+
+    return os.environ.get("LINGUA_EXACTSDS", "").strip().lower() in {
+        "off", "0", "no", "false"}
+
+
+def session(factory=None):
+    """A logged-in client, reused across calls in this process.
+
+    Raises AppUnavailable without touching the network when a recent attempt
+    failed, so a run of uploads against an application that is down pays one
+    timeout rather than one each.
+    """
+    if disabled():
+        raise AppUnavailable("ExactSDS is switched off (LINGUA_EXACTSDS=off)")
+
+    now = time.monotonic()
+    failed_at = _SESSION.get("failed_at")
+    if isinstance(failed_at, float) and now - failed_at < _OFFLINE_FOR:
+        raise AppUnavailable(str(_SESSION.get("error") or "ExactSDS is not answering"))
+
+    client = _SESSION.get("client")
+    opened = _SESSION.get("opened_at")
+    if client is not None and isinstance(opened, float) and now - opened < _SESSION_TTL:
+        return client
+
+    try:
+        client = (factory or ExactSdsClient)()
+        client.login()
+    except Exception as exc:  # noqa: BLE001 - any failure means "not answering"
+        _SESSION.update({"failed_at": now, "error": str(exc)[:200],
+                         "client": None})
+        raise AppUnavailable(str(exc)[:200]) from exc
+    _SESSION.update({"client": client, "opened_at": now, "failed_at": None,
+                     "error": None})
+    return client
+
+
+def forget_session() -> None:
+    """Drop the cached session. For tests, and for a changed configuration."""
+    import contextlib
+
+    client = _SESSION.get("client")
+    if client is not None:
+        with contextlib.suppress(Exception):
+            client.close()
+    _SESSION.clear()
+
+
 def read_env(path: str | Path = ".env") -> dict[str, str]:
     out: dict[str, str] = {}
     source = Path(path)
