@@ -394,6 +394,12 @@ def build_all() -> dict[str, Path]:
     add("pattern_label_only", _label_only(FIXTURES / "pattern_label_only.pdf"))
     add("pattern_supplier_ingredients", _supplier_ingredients(
         FIXTURES / "pattern_supplier_ingredients.pdf"))
+    # The same table, on a sheet that names its product the way ours do. Where
+    # the product is one of ours its record is what gets checked, and this is
+    # the fixture that can tell the two apart: the table here is nothing like
+    # the record the test puts in the application.
+    add("pattern_named_with_ingredients", _supplier_ingredients(
+        FIXTURES / "pattern_named_with_ingredients.pdf", labelled=True))
     # A sheet whose statement text is markup. Nothing about this is plausible
     # as chemistry; it is here because the report prints text taken out of a
     # PDF, and a PDF is a file somebody else wrote.
@@ -442,7 +448,7 @@ def build_all() -> dict[str, Path]:
 
 
 
-def _supplier_ingredients(path: Path) -> Path:
+def _supplier_ingredients(path: Path, *, labelled: bool = False) -> Path:
     """A supplier's sheet whose Section 3 prints a real composition table.
 
     Not one of ours - no product id in the name, no matching product - so the
@@ -453,6 +459,8 @@ def _supplier_ingredients(path: Path) -> Path:
     head = HEADINGS["en"]
     sheet = Sheet(path)
     sheet.line(PRODUCT, bold=True, size=12)
+    if labelled:
+        sheet.line(f"Product name: {PRODUCT}")
     sheet.line(SUPPLIER)
     sheet.blank()
     sheet.line(head["2"], bold=True, size=11)

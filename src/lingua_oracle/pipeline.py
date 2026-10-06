@@ -137,8 +137,9 @@ def check_pdf(
             report.ingredients = check_ingredients(
                 path, Path(path).name, document.lines,
                 client_factory=client_factory, regulation=reg.id)
-            report.mixture = _mixture_section(report, path, document, spans,
-                                              reg.id)
+            report.mixture = _mixture_section(
+                report, path, document, spans, reg.id,
+                client_factory=client_factory)
         except Exception as exc:  # noqa: BLE001
             from lingua_oracle.models import IngredientSection
 
@@ -201,7 +202,8 @@ def compare_pdfs(
 __all__ = ["Tier", "check_pdf", "compare_pdfs"]
 
 
-def _mixture_section(report, path, document, spans, regulation):
+def _mixture_section(report, path, document, spans, regulation,
+                     *, client_factory=None):
     """The mixture half, from whichever composition the ingredient half used.
 
     Never allowed to cost the rest of the report: a calculation that cannot be
@@ -212,14 +214,33 @@ def _mixture_section(report, path, document, spans, regulation):
     from lingua_oracle.models import MixtureSection
 
     try:
-        rows: list[dict] = []
         section = report.ingredients
-        if section is not None and section.source == "app" and section.product_id:
+        matched = (section is not None and section.source == "app"
+                   and section.product_id)
+        if matched:
+            # A product we hold has a composition we hold. Section 3 of its own
+            # PDF is a rendering of that composition, and a worse one: it loses
+            # the ingredients below the disclosure threshold and whatever the
+            # layout could not carry. Where the two differ the record is right,
+            # so the record is used and the sheet is not consulted at all.
+            # The same client the ingredient half used, so one report cannot
+            # end up asking two different applications.
             from lingua_oracle.ingredients.client import session
 
+            client = client_factory() if client_factory else session()
             rows = mixture_section.rows_from_app(
-                session().ingredients(section.product_id))
-        if not rows:
+                client.ingredients(section.product_id))
+        elif section is not None and section.match_state == "ambiguous":
+            # A choice is pending. Calculating from Section 3 now would answer
+            # a question the reader is still being asked.
+            from lingua_oracle.mixture.stated import stated_classes
+
+            return MixtureSection(
+                state="nothing",
+                message="Choose the product above to calculate the mixture.",
+                stated=[str(c) for c in
+                        stated_classes(document.lines, spans)])
+        else:
             from lingua_oracle.ingredients.from_pdf import (
                 ingredients_in_section_three,
             )
