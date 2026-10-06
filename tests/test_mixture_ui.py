@@ -73,3 +73,57 @@ def test_japan_says_the_check_is_not_available_rather_than_borrowing_rules():
     assert report.mixture.state == "out_of_scope"
     assert "Japan JIS Z 7252/7253" in body
     assert "no document on file" in body
+
+
+# -- every section, every time -------------------------------------------------
+
+
+SECTIONS = ("Wording", "Ingredients", "Mixture")
+
+
+@pytest.mark.parametrize("regulation", ["eu_clp", "us_osha", "un_ghs",
+                                        "ca_whmis", "au_whs", "uk_clp",
+                                        "jp_jis"])
+def test_all_three_sections_are_on_every_report(regulation):
+    """A reader should never have to work out whether a check ran."""
+    _, body = _page("pattern_supplier_ingredients", regulation)
+    for section in SECTIONS:
+        assert f"<h2>{section}" in body
+
+
+@pytest.mark.parametrize("regulation", ["eu_clp", "us_osha", "jp_jis"])
+def test_every_section_says_in_one_line_what_it_did(regulation):
+    _, body = _page("pattern_supplier_ingredients", regulation)
+    said = _statuses(body)
+    assert len(said) == 3
+    for word, reason in said:
+        assert word in ("checked", "nothing to check", "can&#39;t check")
+        assert len(reason) > 10, reason
+
+
+def test_a_section_that_could_not_run_says_why_in_plain_words():
+    report = check_pdf(pdf("pattern_supplier_ingredients"), "jp_jis",
+                       ingredients=True, client_factory=lambda: FakeApp(library=[]))
+    body = render_html(report)
+    word, reason = _statuses(body)[2]
+    assert word == "can&#39;t check"
+    assert "Japan JIS Z 7252/7253" in reason
+    assert "no document on file" in reason
+
+
+def test_a_report_without_the_ingredient_check_still_shows_both_sections():
+    """The sections are the page's shape, not a side effect of what was run."""
+    body = render_html(check_pdf(pdf("clean_eu_en"), "eu_clp"))
+    for section in SECTIONS:
+        assert f"<h2>{section}" in body
+    assert "the ingredient check was not run" in body
+    assert "the mixture calculation was not run" in body
+
+
+def _statuses(body):
+    import re
+
+    return [(m.group(1).strip(), " ".join(m.group(2).split()))
+            for m in re.finditer(
+                r'class="status s-[a-z]+">\s*([^<&]*(?:&#39;[^<&]*)?)\s*&mdash;'
+                r'([^<]*)<', body)]

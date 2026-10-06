@@ -277,7 +277,7 @@ def test_the_report_has_both_sections():
     body = render_html(_check("pattern_supplier_ingredients", "eu_clp", FakeApp()))
     assert "Wording" in body
     assert "Ingredients" in body
-    assert "read from Section 3" in body
+    assert "from Section 3 of this sheet" in body
 
 
 def test_a_skipped_section_says_why_on_the_page():
@@ -291,12 +291,15 @@ def test_a_skipped_section_says_why_on_the_page():
     assert "ExactSDS not reachable" in body
 
 
-def test_an_old_report_without_the_section_still_renders():
+def test_a_report_without_the_ingredient_check_says_it_did_not_run():
+    """The section is there either way; what changes is what it says."""
     from lingua_oracle.report.render import render_html
 
     report = check_pdf(pdf("clean_eu_en"), "eu_clp")
     assert report.ingredients is None
-    assert "Ingredients &middot;" not in render_html(report)
+    body = render_html(report)
+    assert "Ingredients &middot;" in body
+    assert "the ingredient check was not run" in body
 
 
 # -- "nothing to check" is not a verdict --------------------------------------
@@ -435,12 +438,14 @@ def test_each_section_keeps_its_own_counts():
     assert set(report.mixture.counts) >= {"inconsistent", "consistent"}
 
 
-def test_an_old_report_without_a_mixture_still_renders():
+def test_a_report_without_the_mixture_calculation_says_it_did_not_run():
     from lingua_oracle.report.render import render_html
 
     report = check_pdf(pdf("clean_eu_en"), "eu_clp")
     assert report.mixture is None
-    assert "Mixture &middot;" not in render_html(report)
+    body = render_html(report)
+    assert "Mixture &middot;" in body
+    assert "the mixture calculation was not run" in body
 
 
 def test_the_mixture_card_shows_the_contributing_ingredients():

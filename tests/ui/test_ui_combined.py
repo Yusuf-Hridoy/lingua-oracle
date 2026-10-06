@@ -49,7 +49,7 @@ def test_a_supplier_sheet_is_read_from_its_own_section_three(page, server):
     _upload(page, server, "pattern_supplier_ingredients")
     heading = page.locator("#ingredients")
     assert heading.count() == 1
-    assert "read from Section 3" in heading.inner_text()
+    assert "from Section 3 of this sheet" in heading.inner_text()
 
 
 def test_the_ingredient_section_shows_its_own_counts(page, server):

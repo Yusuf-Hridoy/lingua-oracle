@@ -397,6 +397,63 @@ def display_name_of(regulation: str | None) -> str:
         return regulation
 
 
+def wording_status(report) -> tuple[str, str]:
+    """One line about the wording check: what it did, or why it did nothing."""
+    coverage = report.coverage
+    if coverage and coverage.codes_checked:
+        return ("checked",
+                f"{coverage.codes_checked} of {coverage.codes_found} statements "
+                f"compared with the official {display_name_of(report.regulation)} "
+                "wording")
+    if coverage and coverage.codes_found:
+        return ("can't check",
+                "statements were found but none could be compared: there is no "
+                f"official wording on file for {report.language}")
+    return ("nothing to check",
+            "this document prints no hazard or precautionary statements")
+
+
+def ingredient_status(section) -> tuple[str, str]:
+    """One line about the ingredient check, in words rather than in states."""
+    if section is None:
+        return ("can't check", "the ingredient check was not run")
+    if section.source == "app" and section.counts.get("with_entry"):
+        return ("checked",
+                f"{section.counts.get('substances', 0)} substances from the "
+                "ExactSDS record for this product, against Annex VI")
+    if section.source == "pdf" and section.counts.get("with_entry"):
+        return ("checked",
+                f"{section.counts.get('substances', 0)} substances from "
+                "Section 3 of this sheet, against Annex VI")
+    if section.match_state == "ambiguous":
+        return ("nothing to check",
+                "several products could be this sheet; choose one above")
+    if section.source == "skipped":
+        return ("can't check", section.message or "ExactSDS could not be reached")
+    return ("nothing to check",
+            section.message or "no ingredients with CAS numbers were found")
+
+
+def mixture_status(section) -> tuple[str, str]:
+    """One line about the mixture calculation."""
+    if section is None:
+        return ("can't check", "the mixture calculation was not run")
+    if section.state == "calculated":
+        return ("checked",
+                f"{section.counts.get('ingredients', 0)} ingredients summed "
+                f"against {section.source_document}")
+    if section.state == "out_of_scope":
+        return ("can't check", section.message)
+    if section.state == "skipped":
+        return ("can't check", section.message)
+    return ("nothing to check", section.message)
+
+
+#: The three words a section can report, and how each one looks.
+STATUS_TONE = {"checked": "ok", "nothing to check": "none",
+               "can't check": "check"}
+
+
 def _mixture_tone(section) -> str:
     if section is None or not section.counts:
         return "check"
@@ -445,6 +502,10 @@ def render_html(report: Report) -> str:
         regulation_name=display_name_of,
         mixture=report.mixture,
         mixture_source=_mixture_source(report.mixture),
+        wording_status=wording_status(report),
+        ingredient_status=ingredient_status(report.ingredients),
+        mixture_status=mixture_status(report.mixture),
+        status_tone=STATUS_TONE,
         mixture_tone=_mixture_tone(report.mixture),
         report=report,
         groups=_grouped(report, display),

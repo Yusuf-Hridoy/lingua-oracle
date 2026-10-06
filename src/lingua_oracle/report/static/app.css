@@ -342,6 +342,13 @@ h2.section { margin-top: 32px; }
 .matched .change { margin-left: 8px; font-size: 13px; }
 .issues-head .muted { font-size: 13px; }
 
+/* One line per section saying what it did. The word carries the colour; the
+   reason after it is the part a reader acts on, so it is not dimmed away. */
+.status { font-size: 13px; color: var(--muted); }
+.status.s-ok { color: var(--ok-text); }
+.status.s-check { color: var(--chk-text); }
+.status.s-none { color: var(--muted); }
+
 /* The product typeahead on the Ingredients page. */
 .run-form .field input[type="search"] { width: 320px; max-width: 100%; }
 .matches { list-style: none; margin: 4px 0 0; padding: 4px;

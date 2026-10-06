@@ -228,6 +228,11 @@ def test_no_report_page_shows_a_registry_id():
         render_html(_check("pattern_supplier_ingredients", "eu_clp", FakeApp())),
         render_html(_check("clean_osha_en", "us_osha", FakeApp())),
         render_html(check_pdf(pdf("clean_eu_en"), "eu_clp")),
+        # One report per regulation, because a message built from an id would
+        # otherwise only show on the regulation nobody happened to test.
+        *[render_html(_check("pattern_aquatic_statement", regulation,
+                             FakeApp(library=[])))
+          for regulation in ids],
     ]
     for page in pages:
         found = [i for i in ids if i in page]

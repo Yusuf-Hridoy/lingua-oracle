@@ -115,6 +115,8 @@
 
   <div class="issues-head">
     <h2>Wording &middot; {{ cards.problems|length }}</h2>
+    <span class="status s-{{ status_tone[wording_status[0]] }}">{{ wording_status[0] }}
+      &mdash; {{ wording_status[1] }}</span>
     <div class="filters" role="group" aria-label="Filter issues">
       <button type="button" data-filter="all" aria-pressed="true">All</button>
       <button type="button" data-filter="must" aria-pressed="false">Must fix</button>
@@ -207,14 +209,17 @@
   </details>
   {% endif %}
 
-  {% if ing %}
+  {# All three sections are always on the page. A section with nothing to say
+     says that, in a line: a reader should never have to work out whether a
+     check was clean or never ran. #}
   <div class="issues-head" id="ingredients">
     <h2>Ingredients &middot;
-      {{ ing.counts.get('substances', 0) if ing.counts else 0 }}</h2>
-    <span class="muted">{{ ing_source }}</span>
+      {{ ing.counts.get('substances', 0) if ing and ing.counts else 0 }}</h2>
+    <span class="status s-{{ status_tone[ingredient_status[0]] }}">{{ ingredient_status[0] }}
+      &mdash; {{ ingredient_status[1] }}</span>
   </div>
 
-  {% if ing.counts and ing.counts.get('substances') %}
+  {% if ing and ing.counts and ing.counts.get('substances') %}
   <div class="verdict v-{{ ing_tone }} compact">
     <div class="stats">
       <div><div class="n fix">{{ ing.counts.fix }}</div><div class="l">Under-classified</div></div>
@@ -226,18 +231,15 @@
   {% for s in ing_under %}{{ sub.under_card(s, ing_said_by) }}{% endfor %}
   {% for s in ing_inconsistent %}{{ sub.inconsistent_card(s, ing_said_by) }}{% endfor %}
   {{ sub.collapsed(ing_matches, ing_extra, ing_unchecked, ing_reasons) }}
-  {% else %}
-  <div class="card"><p class="note">{{ ing.message or ing_source }}</p></div>
-  {% endif %}
   {% endif %}
 
-  {% if mixture %}
   <div class="issues-head" id="mixture">
-    <h2>Mixture &middot; {{ mixture.results|length }}</h2>
-    <span class="muted">{{ mixture_source }}</span>
+    <h2>Mixture &middot; {{ mixture.results|length if mixture else 0 }}</h2>
+    <span class="status s-{{ status_tone[mixture_status[0]] }}">{{ mixture_status[0] }}
+      &mdash; {{ mixture_status[1] }}</span>
   </div>
 
-  {% if mixture.state == 'calculated' %}
+  {% if mixture and mixture.state == 'calculated' %}
   <div class="verdict v-{{ mixture_tone }} compact">
     <div class="stats">
       <div><div class="n fix">{{ mixture.counts.inconsistent }}</div><div class="l">Inconsistent</div></div>
@@ -249,9 +251,6 @@
     </div>
   </div>
   {% for r in mixture.results %}{{ mix.card(r) }}{% endfor %}
-  {% else %}
-  <div class="card"><p class="note">{{ mixture.message }}</p></div>
-  {% endif %}
   {% endif %}
 
   <details class="block">
