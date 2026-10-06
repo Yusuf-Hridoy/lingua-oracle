@@ -337,6 +337,14 @@ def build_all() -> dict[str, Path]:
     add("pattern_reach_registration", _reach_registration_number(
         FIXTURES / "pattern_reach_registration.pdf"))
     add("pattern_label_only", _label_only(FIXTURES / "pattern_label_only.pdf"))
+    # A sheet whose statement text is markup. Nothing about this is plausible
+    # as chemistry; it is here because the report prints text taken out of a
+    # PDF, and a PDF is a file somebody else wrote.
+    add("pattern_markup_in_text", write_sds(
+        FIXTURES / "pattern_markup_in_text.pdf", regulation="eu_clp",
+        language="en", h_codes=["H225", "H319"], p_codes=["P210", "P280"],
+        overrides={"H319": "Causes serious <script>alert(1)</script> irritation",
+                   "P210": "Keep away from <b>x</b> heat and open flames."}))
     # A statement OSHA has not adopted, printed with its optional bracket still
     # holding the blank. The wording is GHS's own, so it is checked against GHS -
     # and the unfinished slot has to be reported there too.

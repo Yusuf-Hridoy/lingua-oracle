@@ -74,7 +74,7 @@
       <div class="side">
         <h3>The app says</h3>
         <div class="txt">{{ s.code_sets | map(attribute='codes') | map('join', ', ')
-                             | reject('equalto', '') | unique | join(' &middot; ') | safe
+                             | reject('equalto', '') | unique | join(' · ')
                              or '(no codes)' }}</div>
         <p class="note">Missing:
           {% for code, n in s.missing_code_counts.items() %}<mark class="fillin">{{ code }}</mark>

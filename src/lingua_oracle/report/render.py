@@ -11,6 +11,7 @@ import re
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markupsafe import Markup
 
 from lingua_oracle.checks import title_of
 from lingua_oracle.detect.language import language_name
@@ -138,9 +139,15 @@ char_diff = word_diff
 
 
 def _environment() -> Environment:
+    # ".j2" has to be in the list. Every template here is named "x.html.j2", and
+    # select_autoescape looks at the final suffix - so "html" alone never fired,
+    # and the report rendered text taken out of an uploaded PDF without escaping
+    # it. The only value that must not be escaped is the stylesheet, which is
+    # wrapped in Markup where it is passed in.
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATES)),
-        autoescape=select_autoescape(["html"]),
+        autoescape=select_autoescape(["html", "j2", "html.j2"],
+                                     default_for_string=True, default=True),
     )
     env.filters["word_diff"] = lambda pair: word_diff(pair[0], pair[1])
     return env
@@ -346,7 +353,7 @@ def render_html(report: Report) -> str:
         regulation_display=display,
         coverage_percent=report.coverage.percent,
         verdict=labels.verdict_of(report, display, counts=cards["counts"]),
-        app_css=report_css(_body_estimate(report)),
+        app_css=Markup(report_css(_body_estimate(report))),
         language_name=language_name(report.language),
         cards=cards,
         L=labels,

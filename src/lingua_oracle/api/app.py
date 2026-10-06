@@ -28,6 +28,10 @@ STATIC = Path(__file__).resolve().parents[1] / "report" / "static"
 
 app = FastAPI(title="Lingua Oracle", version="0.1.0")
 templates = Jinja2Templates(directory=str(TEMPLATES))
+# Starlette's default only escapes ".html"; every template here is "x.html.j2",
+# so nothing was being escaped - including the file name of an uploaded
+# document, which is text somebody else chose.
+templates.env.autoescape = True
 # One stylesheet for both pages. The upload page links it from here; the report
 # inlines it, because a saved report has to render as a single file.
 app.mount("/static", StaticFiles(directory=str(STATIC)), name="static")
