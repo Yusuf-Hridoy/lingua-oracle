@@ -612,3 +612,35 @@ def test_an_answer_is_never_retried(monkeypatch):
     transport = _FlakyTransport(failures=0, status=404)
     assert _client_with(transport).get("/products/1") is None
     assert transport.calls == 1
+
+
+# -- supplemental statements are required too ---------------------------------
+
+
+def test_a_missing_euh_code_is_a_fix():
+    """Annex VI naming EUH066 means a sheet for the substance carries it."""
+    table = table_of(entry(h_codes=["H225"], euh_codes=["EUH066"]))
+    verdict = check_ingredient("100-00-5", ["H225"], table)
+    assert verdict.status is Status.FIX
+    assert verdict.missing_codes == ["EUH066"]
+    assert "requires EUH066" in verdict.findings[0].message
+
+
+def test_a_euh_code_that_is_present_is_not_a_finding():
+    table = table_of(entry(h_codes=["H225"], euh_codes=["EUH066"]))
+    assert check_ingredient("100-00-5", ["H225", "EUH066"],
+                            table).status is Status.OK
+
+
+def test_a_euh_code_annex_vi_does_not_name_is_still_information():
+    table = table_of(entry(h_codes=["H225"]))
+    verdict = check_ingredient("100-00-5", ["H225", "EUH066"], table)
+    assert verdict.status is Status.INFO
+    assert "EUH066" in verdict.findings[0].message
+
+
+def test_the_real_acetone_entry_requires_its_supplemental_code(real):
+    verdict = check_ingredient("67-64-1", ["H225", "H319", "H336"], real)
+    assert verdict.status is Status.FIX
+    assert verdict.missing_codes == ["EUH066"]
+    assert verdict.entry_index_no == "606-001-00-8"

@@ -164,3 +164,33 @@ def test_check_time_reads_the_file_and_never_the_act():
     # The only fetch is inside build(), via the EU CLP builder's own _doc().
     assert text.count("_doc(") == 1
     assert "def load_table()" in text
+
+
+def test_the_supplemental_column_is_parsed_into_its_own_field(table):
+    """Acetone carries EUH066, and the entry has to say so.
+
+    The supplemental column was being read into `supplemental_h_codes` and then
+    ignored by the comparison, so a sheet missing a EUH code the law requires
+    looked complete.
+    """
+    acetone = table.by_cas()["67-64-1"][0]
+    assert acetone.index_no == "606-001-00-8"
+    assert acetone.euh_codes == ["EUH066"]
+    assert "EUH066" not in acetone.h_codes
+
+
+def test_every_euh_code_comes_from_the_supplemental_column(table):
+    for entry in table.entries:
+        assert set(entry.euh_codes) <= set(entry.supplemental_h_codes)
+        assert all(code.startswith("EUH") for code in entry.euh_codes)
+
+
+def test_the_supplemental_column_holds_nothing_but_euh_codes(table):
+    """If that ever stops being true, the split above is hiding something."""
+    other = {c for e in table.entries for c in e.supplemental_h_codes
+             if not c.startswith("EUH")}
+    assert other == set()
+
+
+def test_enough_entries_carry_one_to_be_worth_checking(table):
+    assert sum(1 for e in table.entries if e.euh_codes) > 100

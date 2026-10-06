@@ -113,6 +113,12 @@ class AnnexVIEntry(BaseModel):
     pictograms: list[str] = Field(default_factory=list)
     label_h_codes: list[str] = Field(default_factory=list)
     supplemental_h_codes: list[str] = Field(default_factory=list)
+    #: The supplemental column's EUH codes, split out because they are required
+    #: in the same way the hazard statements are: Annex VI naming EUH066 for a
+    #: substance means a sheet for it has to carry EUH066. Kept separate from
+    #: `h_codes` because they are a different kind of statement and a reader
+    #: should see which is which.
+    euh_codes: list[str] = Field(default_factory=list)
     #: The "Specific Conc. Limits, M-factors and ATEs" column, one entry per
     #: printed line, exactly as given.
     limits: list[str] = Field(default_factory=list)

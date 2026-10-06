@@ -149,6 +149,7 @@ def parse_table3(doc, *, celex: str) -> tuple[list[AnnexVIEntry], list[str]]:
             pictograms=[v for v in values[6] if v.strip()],
             label_h_codes=_codes(values[7]),
             supplemental_h_codes=_codes(values[8]),
+            euh_codes=[c for c in _codes(values[8]) if c.startswith("EUH")],
             limits=limits,
             limit_kinds=[_classify_limit(v) for v in limits],
             notes=[v for v in values[10] if v.strip()],

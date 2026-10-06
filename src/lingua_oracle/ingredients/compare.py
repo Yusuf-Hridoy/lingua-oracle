@@ -189,7 +189,12 @@ def check_ingredient(cas: str | None, stated_codes: list[str],
     # Compared without case, reported with it: in CLP the letter is the code.
     # H361d is "may damage the unborn child" and H361f is "may damage
     # fertility", so printing H361D at a reader would name a different hazard.
-    required_as_printed = {_key(c): c.strip() for c in entry.h_codes}
+    # The supplemental statements are required the same way the hazard
+    # statements are: Annex VI naming EUH066 for a substance means a sheet for
+    # it carries EUH066. They were being read as codes the app had added of its
+    # own accord, which is the opposite of what they are.
+    required_as_printed = {_key(c): c.strip()
+                           for c in (*entry.h_codes, *entry.euh_codes)}
     required = set(required_as_printed)
 
     findings: list[Finding] = []
