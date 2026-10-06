@@ -1,3 +1,4 @@
+{% import '_substances.html.j2' as cards %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -62,124 +63,15 @@
 
   {% if under %}
   <div class="issues-head"><h2>Under-classified &middot; {{ under|length }}</h2></div>
-  {% for s in under %}
-  <article class="issue" data-status="fix" data-cas="{{ s.cas }}">
-    <header>
-      <span class="pill fix"><span aria-hidden="true">&#10005;</span> Fix this</span>
-      <span class="code">{{ s.cas }}</span>
-      <span class="where">{{ s.name or 'unnamed' }} &middot;
-        {{ s.uses_under_classified }} of {{ s.uses_checked }} uses</span>
-    </header>
-    <div class="body">
-      <div class="side">
-        <h3>The app says</h3>
-        <div class="txt">{{ s.code_sets | map(attribute='codes') | map('join', ', ')
-                             | reject('equalto', '') | unique | join(' · ')
-                             or '(no codes)' }}</div>
-        <p class="note">Missing:
-          {% for code, n in s.missing_code_counts.items() %}<mark class="fillin">{{ code }}</mark>
-          in {{ n }} use{{ '' if n == 1 else 's' }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
-      </div>
-      <div class="side official">
-        <header><h3>Annex VI requires</h3></header>
-        <div class="txt">{{ s.harmonised_codes | join(', ') }}</div>
-      </div>
-    </div>
-    <details class="affected">
-      <summary>{{ s.affected_products|length }} affected product{{ '' if s.affected_products|length == 1 else 's' }}</summary>
-      <div class="inner"><p class="mono ids">{{ s.affected_products | join(', ') }}</p></div>
-    </details>
-    <footer>
-      <span class="src">Source: {{ s.source_ref }}</span>
-    </footer>
-  </article>
-  {% endfor %}
+  {% for s in under %}{{ cards.under_card(s) }}{% endfor %}
   {% endif %}
 
   {% if inconsistent %}
   <div class="issues-head"><h2>Same substance, different codes &middot; {{ inconsistent|length }}</h2></div>
-  {% for s in inconsistent %}
-  <article class="issue" data-status="check" data-cas="{{ s.cas }}">
-    <header>
-      <span class="pill check"><span aria-hidden="true">!</span> Check this</span>
-      <span class="code">{{ s.cas }}</span>
-      <span class="where">{{ s.name or 'unnamed' }} &middot;
-        {{ s.distinct_code_sets }} different code sets</span>
-    </header>
-    <div class="body single">
-      <div class="side">
-        <h3>What the products say</h3>
-        <table class="minor-table">
-          <thead><tr><th>Products</th><th>H codes</th><th>Against Annex VI</th></tr></thead>
-          <tbody>
-            {% for cs in s.code_sets %}
-            <tr>
-              <td class="code">{{ cs.count }}</td>
-              <td>{{ cs.codes | join(', ') or '(none)' }}</td>
-              <td>{% if cs.missing %}missing {{ cs.missing | join(', ') }}
-                  {% else %}carries everything Annex VI requires{% endif %}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <details class="affected">
-      <summary>Product IDs by code set</summary>
-      <div class="inner">
-        {% for cs in s.code_sets %}
-        <p class="mono ids"><b>{{ cs.codes | join(', ') or '(none)' }}</b>:
-          {{ cs.products | join(', ') }}</p>
-        {% endfor %}
-      </div>
-    </details>
-    <footer><span class="src">Source: {{ s.source_ref or 'no harmonised entry' }}</span></footer>
-  </article>
-  {% endfor %}
+  {% for s in inconsistent %}{{ cards.inconsistent_card(s) }}{% endfor %}
   {% endif %}
 
-  {% if matches %}
-  <details class="block good">
-    <summary>{{ matches|length }} substance{{ '' if matches|length == 1 else 's' }}
-      {{ 'matches' if matches|length == 1 else 'match' }} Annex VI</summary>
-    <div class="inner"><ul class="statements">
-      {% for s in matches %}
-      <li><span class="code">{{ s.cas }}</span>
-        <span>{{ s.name or 'unnamed' }} &mdash; {{ s.uses_checked }} use{{ '' if s.uses_checked == 1 else 's' }},
-          carries {{ s.harmonised_codes | join(', ') }}</span></li>
-      {% endfor %}
-    </ul></div>
-  </details>
-  {% endif %}
-
-  {% if extra %}
-  <details class="block">
-    <summary>{{ extra|length }} substance{{ '' if extra|length == 1 else 's' }}
-      {{ 'adds' if extra|length == 1 else 'add' }} classes Annex VI does not cover</summary>
-    <div class="inner">
-      <p class="note">Ordinary: the harmonised entry is a floor, and a supplier
-        classifies for the hazards it leaves to them.</p>
-      <ul class="statements">
-        {% for s in extra %}
-        <li><span class="code">{{ s.cas }}</span><span>{{ s.name or 'unnamed' }}</span></li>
-        {% endfor %}
-      </ul>
-    </div>
-  </details>
-  {% endif %}
-
-  {% if unchecked %}
-  <details class="block">
-    <summary>{{ unchecked|length }} substance{{ '' if unchecked|length == 1 else 's' }}
-      not checked</summary>
-    <div class="inner"><ul class="statements">
-      {% for s in unchecked %}
-      <li><span class="code">{{ s.cas }}</span>
-        <span>{{ s.name or 'unnamed' }} &mdash; {{ reasons[s.reason] or s.reason }}</span></li>
-      {% endfor %}
-    </ul></div>
-  </details>
-  {% endif %}
+  {{ cards.collapsed(matches, extra, unchecked, reasons) }}
 
   <details class="block">
     <summary>Technical details</summary>

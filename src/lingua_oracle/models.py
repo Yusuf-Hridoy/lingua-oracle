@@ -290,6 +290,46 @@ class StatementVerdict(BaseModel):
         return self.status in ("correct", "wrong", "check")
 
 
+class IngredientSection(BaseModel):
+    """What the ingredient check found for one uploaded document.
+
+    One upload, two questions: does the wording match the official text, and are
+    the ingredients classified at least as the harmonised entries require. This
+    is the second answer, and it carries where it came from - the application's
+    record of the product, or the sheet's own Section 3 - because the two are
+    not equally complete and a reader should know which they are looking at.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    #: "app"      - checked against the product's record in ExactSDS
+    #: "pdf"      - checked against the CAS numbers and codes Section 3 prints
+    #: "nothing"  - there was nothing on the sheet to check
+    #: "skipped"  - ExactSDS could not be reached
+    source: Literal["app", "pdf", "nothing", "skipped"] = "nothing"
+    #: How the document was matched: matched / ambiguous / none / unavailable.
+    match_state: str = "none"
+    product_id: int | None = None
+    product_name: str | None = None
+    #: Why the match was made, in words - "the file name carries product 4250".
+    evidence: str = ""
+    #: What the section says when it checked nothing.
+    message: str = ""
+    counts: dict[str, int] = Field(default_factory=dict)
+    #: Substances in the shape the ingredient report renders.
+    substances: list[dict] = Field(default_factory=list)
+    #: When several products could be the one, so a person can choose.
+    candidates: list[dict] = Field(default_factory=list)
+
+    @property
+    def checked_anything(self) -> bool:
+        return bool(self.counts.get("with_entry"))
+
+    @property
+    def under_classified(self) -> int:
+        return int(self.counts.get("fix", 0))
+
+
 class Report(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -305,6 +345,9 @@ class Report(BaseModel):
     coverage: Coverage = Field(default_factory=Coverage)
     compared_with: str | None = None
     notes: list[str] = Field(default_factory=list)
+    #: The ingredient half of the same upload. None when the check did not run
+    #: at all - an older report, or one made by a path that does not do it.
+    ingredients: IngredientSection | None = None
 
     def recount(self) -> None:
         s = Summary()

@@ -368,6 +368,15 @@ def verdict_of(report: Report, regulation_display: str = "",
     """
     summary = report.summary
     actions = actions_for(report, regulation_display)
+    # The ingredient half of the same upload. A substance classified below what
+    # Annex VI requires is a reason to hold the sheet, whatever its wording
+    # says, so it has to reach the one line a reader acts on.
+    ingredient = report.ingredients
+    ingredient_fix = ingredient.under_classified if ingredient else 0
+    ingredient_note = (
+        f"{plural(ingredient_fix, 'ingredient')} "
+        f"{'is' if ingredient_fix == 1 else 'are'} classified below what Annex "
+        "VI requires" if ingredient_fix else "")
     if counts is None:  # a caller with no cards to hand; count the statements
         counts = {
             "wrong": sum(1 for v in report.statements if v.status == "wrong"),
@@ -386,7 +395,7 @@ def verdict_of(report: Report, regulation_display: str = "",
     def listed(parts: list[str], fallback: str) -> str:
         return "; ".join(parts) + "." if parts else fallback
 
-    if summary.fail:
+    if summary.fail or ingredient_fix:
         parts = []
         if wrong:
             parts.append(f"{plural(wrong, 'statement')} "
@@ -396,6 +405,8 @@ def verdict_of(report: Report, regulation_display: str = "",
             parts.append(f"{plural(blanks, 'blank')} to fill in")
         if other_fixes:
             parts.append(f"{plural(other_fixes, 'other problem')} to fix")
+        if ingredient_note:
+            parts.append(ingredient_note)
         return Verdict(
             release=FIX,
             headline="Wording problems found — fix before release"
@@ -404,7 +415,7 @@ def verdict_of(report: Report, regulation_display: str = "",
             detail=listed(parts, f"{plural(summary.fail, 'problem')} to fix."),
             actions=actions, caveats=_caveats(report),
         )
-    if summary.warn or summary.info:
+    if summary.warn or summary.info or (ingredient and ingredient.counts):
         parts = []
         if blanks:
             parts.append(f"{plural(blanks, 'blank')} to fill in")
@@ -414,6 +425,13 @@ def verdict_of(report: Report, regulation_display: str = "",
             parts.append(f"{minor} of {'them' if minor == to_check else 'those'} "
                          f"{'differs' if minor == 1 else 'differ'} only in "
                          "punctuation or capital letters")
+        if ingredient and ingredient.counts.get("inconsistent_substances"):
+            parts.append(f"{plural(ingredient.counts['inconsistent_substances'], 'ingredient')} "
+                         f"{'is' if ingredient.counts['inconsistent_substances'] == 1 else 'are'} "
+                         "classified differently in different products")
+        if ingredient and ingredient.checked_anything and not parts:
+            parts.append(f"{plural(ingredient.counts.get('with_entry', 0), 'ingredient')} "
+                         "checked against Annex VI and correct")
         return Verdict(
             release=REVIEW,
             headline="Looks correct — some items need a person to check",

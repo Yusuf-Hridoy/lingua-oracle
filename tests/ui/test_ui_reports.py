@@ -350,13 +350,14 @@ def test_the_issue_filters_hide_and_show_cards(page, server, shots_dir):
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["defect_c15_osha_partial_key"])
-    assert "Issues ·" in page.locator(".issues-head h2").inner_text()
-    total = page.locator("article.issue").count()
+    assert "Wording ·" in page.locator(".issues-head h2").first.inner_text()
+    wording = 'article.issue[data-section="wording"]'
+    total = page.locator(wording).count()
     page.click('.filters button[data-filter="must"]')
-    visible = page.locator("article.issue:not([hidden])").count()
+    visible = page.locator(f"{wording}:not([hidden])").count()
     assert visible < total, "the Must fix filter hid nothing"
     page.click('.filters button[data-filter="all"]')
-    assert page.locator("article.issue:not([hidden])").count() == total
+    assert page.locator(f"{wording}:not([hidden])").count() == total
 
 
 def test_a_newer_ghs_card_names_the_closest_statement(page, server, shots_dir):

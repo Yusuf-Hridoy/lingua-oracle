@@ -77,6 +77,57 @@ class Sheet:
         self.canvas.drawString(LEFT, self.y, text)
         self.y -= LINE
 
+    def table(self, header: list[str], rows: list[list[str]]) -> None:
+        """A ruled table, the way Section 3 is actually drawn.
+
+        Ruled rather than laid out with spaces: the ingredient reader takes the
+        columns the sheet drew, because a line-based reading of a composition
+        table picks up whatever else is nearby. A fixture made of bare text
+        would test a code path the real sheets do not use.
+        """
+        usable = WIDTH - 2 * LEFT
+        widths = [usable * w for w in (0.28, 0.16, 0.18, 0.38)][:len(header)]
+        widths[-1] += usable - sum(widths)
+        size = 7
+        self.canvas.setFont("Helvetica", size)
+
+        def row_height(cells: list[str]) -> float:
+            lines = 1
+            for text, width in zip(cells, widths, strict=False):
+                lines = max(lines, len(self._wrap(text, width - 6, size)))
+            return lines * (size + 2) + 6
+
+        for cells, bold in [(header, True), *[(r, False) for r in rows]]:
+            height = row_height(cells)
+            if self.y - height < 60:
+                self.page_break()
+            top, bottom = self.y + size, self.y + size - height
+            x = LEFT
+            self.canvas.setFont("Helvetica-Bold" if bold else "Helvetica", size)
+            for text, width in zip(cells, widths, strict=False):
+                self.canvas.rect(x, bottom, width, height, stroke=1, fill=0)
+                text_y = top - size - 1
+                for part in self._wrap(text, width - 6, size):
+                    self.canvas.drawString(x + 3, text_y, part)
+                    text_y -= size + 2
+                x += width
+            self.y = bottom - 2
+        self.canvas.setFont("Helvetica", 9)
+        self.y -= LINE
+
+    def _wrap(self, text: str, width: float, size: int) -> list[str]:
+        out, line = [], ""
+        for word in (text or "").split():
+            trial = f"{line} {word}".strip()
+            if self.canvas.stringWidth(trial, "Helvetica", size) <= width:
+                line = trial
+                continue
+            if line:
+                out.append(line)
+            line = word
+        out.append(line)
+        return out or [""]
+
     def blank(self, n: int = 1) -> None:
         self.y -= LINE * n
 
@@ -168,6 +219,10 @@ def write_sds(
 
     sheet = Sheet(path)
     sheet.line(PRODUCT, bold=True, size=12)
+    # Section 1's product identifier, which is where the product name is read
+    # from. A sheet without one cannot be matched to anything.
+    sheet.line("SECTION 1: Identification of the substance/mixture")
+    sheet.line(f"Product name: {PRODUCT}")
     sheet.line(SUPPLIER)
     sheet.blank()
 
@@ -337,6 +392,8 @@ def build_all() -> dict[str, Path]:
     add("pattern_reach_registration", _reach_registration_number(
         FIXTURES / "pattern_reach_registration.pdf"))
     add("pattern_label_only", _label_only(FIXTURES / "pattern_label_only.pdf"))
+    add("pattern_supplier_ingredients", _supplier_ingredients(
+        FIXTURES / "pattern_supplier_ingredients.pdf"))
     # A sheet whose statement text is markup. Nothing about this is plausible
     # as chemistry; it is here because the report prints text taken out of a
     # PDF, and a PDF is a file somebody else wrote.
@@ -383,6 +440,44 @@ def build_all() -> dict[str, Path]:
 
     return built
 
+
+
+def _supplier_ingredients(path: Path) -> Path:
+    """A supplier's sheet whose Section 3 prints a real composition table.
+
+    Not one of ours - no product id in the name, no matching product - so the
+    ingredient check has to read the sheet itself. The CAS numbers are real
+    substances with harmonised entries, because Annex VI is public law; the
+    product and the company are invented.
+    """
+    head = HEADINGS["en"]
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("Signal word: Danger")
+    sheet.blank()
+    official = texts("eu_clp", "en", ["H225", "H319"])
+    sheet.line(head["haz"], bold=True)
+    for code in ("H225", "H319"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.table(
+        ["Chemical name", "CAS No", "Concentration", "Classification"],
+        [["Synthetic component A", "67-64-1", "30 - 60 %",
+          "Flam. Liq. 2, H225; Eye Irrit. 2, H319; STOT SE 3, H336; EUH066"],
+         ["Synthetic component B", "1333-74-0", "5 - 10 %",
+          "Flam. Gas 1, H220; Press. Gas"],
+         ["Synthetic component C", "7439-93-2", "< 1 %",
+          "Water-react. 1, H260"]])
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in ("H225", "H319"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
 
 
 def _label_only(path: Path) -> Path:

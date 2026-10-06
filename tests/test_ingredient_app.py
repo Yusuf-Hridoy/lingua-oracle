@@ -131,10 +131,10 @@ def test_the_run_page_offers_both_scopes(client):
     assert "Run check" in body
 
 
-def test_a_product_run_without_an_id_explains_itself(client):
+def test_a_product_run_without_a_chosen_product_explains_itself(client):
     body = client.post("/ingredients/run",
                        data={"scope": "product", "product_id": ""}).text
-    assert "Give a product ID" in body
+    assert "Search for a product and choose one" in body
     assert "Run check" in body            # back on the form, not a dead end
 
 
@@ -183,4 +183,4 @@ def test_runs_appear_in_history(client, runs_here):
     _finished(ing.start("library", None, client_factory=StubClient))
     rows = ing.recent_runs()
     assert rows and rows[0]["kind"] == "ingredients"
-    assert "substances" in rows[0]["file_name"]
+    assert rows[0]["file_name"] == "Whole library"

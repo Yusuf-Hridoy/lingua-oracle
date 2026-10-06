@@ -1,3 +1,4 @@
+{% import '_substances.html.j2' as sub %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -35,6 +36,16 @@
   <div class="report-head">
     <div>
       <h1>{{ report.file_name }}</h1>
+      {% if ing and ing.product_id %}
+      <p class="matched">Matched to ExactSDS product:
+        <b>{{ ing.product_name }}</b> ({{ ing.product_id }})
+        <a class="change" href="/ingredients?q={{ ing.product_name | urlencode }}">Not this product?</a>
+      </p>
+      {% elif ing and ing.match_state == 'ambiguous' %}
+      <p class="matched">Several ExactSDS products could be this sheet.
+        <a class="change" href="/ingredients?q={{ ing.evidence | urlencode }}">Choose one</a>
+      </p>
+      {% endif %}
       <div class="meta">
         <span>{{ regulation_display }}</span>
         <span>{{ language_name }}</span>
@@ -79,7 +90,7 @@
   {% endif %}
 
   <div class="issues-head">
-    <h2>Issues &middot; {{ cards.problems|length }}</h2>
+    <h2>Wording &middot; {{ cards.problems|length }}</h2>
     <div class="filters" role="group" aria-label="Filter issues">
       <button type="button" data-filter="all" aria-pressed="true">All</button>
       <button type="button" data-filter="must" aria-pressed="false">Must fix</button>
@@ -88,7 +99,7 @@
   </div>
 
   {% for row in cards.problems %}
-  <article class="issue" data-status="{{ row.status }}">
+  <article class="issue" data-section="wording" data-status="{{ row.status }}">
     <header>
       <span class="pill {{ row.label.css }}"><span aria-hidden="true">{{ row.label.icon }}</span> {{ row.label.word }}</span>
       <span class="code">{{ L.code_label(row.v.code if row.v else row.finding.code) or "This document" }}</span>
@@ -172,6 +183,30 @@
   </details>
   {% endif %}
 
+  {% if ing %}
+  <div class="issues-head" id="ingredients">
+    <h2>Ingredients &middot;
+      {{ ing.counts.get('substances', 0) if ing.counts else 0 }}</h2>
+    <span class="muted">{{ ing_source }}</span>
+  </div>
+
+  {% if ing.counts and ing.counts.get('substances') %}
+  <div class="verdict v-{{ ing_tone }} compact">
+    <div class="stats">
+      <div><div class="n fix">{{ ing.counts.fix }}</div><div class="l">Under-classified</div></div>
+      <div><div class="n check">{{ ing.counts.inconsistent_substances }}</div><div class="l">Inconsistent codes</div></div>
+      <div><div class="n ok">{{ ing.counts.ok }}</div><div class="l">Matches Annex VI</div></div>
+      <div><div class="n">{{ ing.counts.not_checked }}</div><div class="l">Not checked</div></div>
+    </div>
+  </div>
+  {% for s in ing_under %}{{ sub.under_card(s, ing_said_by) }}{% endfor %}
+  {% for s in ing_inconsistent %}{{ sub.inconsistent_card(s, ing_said_by) }}{% endfor %}
+  {{ sub.collapsed(ing_matches, ing_extra, ing_unchecked, ing_reasons) }}
+  {% else %}
+  <div class="card"><p class="note">{{ ing.message or ing_source }}</p></div>
+  {% endif %}
+  {% endif %}
+
   <details class="block">
     <summary>Not checked ({{ cards.unchecked|length }}) and technical details</summary>
     <div class="inner">
@@ -228,7 +263,9 @@
     const want = filter.dataset.filter;
     document.querySelectorAll('.filters button').forEach(b =>
       b.setAttribute('aria-pressed', String(b === filter)));
-    document.querySelectorAll('.issue').forEach(card => {
+    // Only the wording cards. The filters live in that section's header and
+    // must not reach into the Ingredients section below it.
+    document.querySelectorAll('.issue[data-section="wording"]').forEach(card => {
       const status = card.dataset.status;
       const show = want === 'all'
         || (want === 'must' && (status === 'wrong' || status === 'fix'))

@@ -119,11 +119,11 @@ def test_the_run_page_asks_what_to_check(page, server):
     assert "Run check" in page.locator("form.run-form button").inner_text()
 
 
-def test_a_product_run_with_no_id_says_so(page, server):
+def test_a_product_run_with_nothing_chosen_says_so(page, server):
     page.goto(server + "/ingredients", wait_until="domcontentloaded")
     page.locator("form.run-form button").click()
     page.wait_for_load_state("domcontentloaded")
-    assert "Give a product ID" in page.inner_text("body")
+    assert "Search for a product and choose one" in page.inner_text("body")
 
 
 def test_a_previous_run_is_listed_and_opens(page, server):
@@ -237,3 +237,86 @@ def test_the_report_screenshot(page, server, shots_dir):
     page.goto(server + "/ingredients", wait_until="domcontentloaded")
     page.screenshot(path=str(shots_dir / "ingredients_run_page.png"),
                     full_page=True)
+
+
+# -- the run form's product search --------------------------------------------
+
+
+def test_the_run_form_searches_by_name_not_by_id(page, server):
+    page.goto(server + "/ingredients", wait_until="domcontentloaded")
+    assert page.locator('input[name="product_name"]').count() == 1
+    assert page.locator('input[type="number"][name="product_id"]').count() == 0
+    assert page.locator('input[type="hidden"][name="product_id"]').count() == 1
+
+
+def test_run_check_is_a_primary_button(page, server):
+    page.goto(server + "/ingredients", wait_until="domcontentloaded")
+    button = page.locator("form.run-form button.primary")
+    assert button.count() == 1
+    assert "Run check" in button.inner_text()
+
+
+def test_the_matches_list_starts_hidden(page, server):
+    page.goto(server + "/ingredients", wait_until="domcontentloaded")
+    assert not page.locator("#product-matches").is_visible()
+    assert page.locator("#product-search").get_attribute("aria-expanded") == "false"
+
+
+def test_typing_fewer_than_two_characters_asks_nothing(page, server):
+    asked = []
+    page.on("request", lambda r: asked.append(r.url)
+            if "/ingredients/search" in r.url else None)
+    page.goto(server + "/ingredients", wait_until="domcontentloaded")
+    page.fill("#product-search", "a")
+    page.wait_for_timeout(400)
+    assert asked == []
+
+
+def test_choosing_a_match_fills_the_hidden_id(page, server):
+    """The typeahead is driven with a stubbed response: no ExactSDS here."""
+    page.route("**/ingredients/search*", lambda route: route.fulfill(
+        status=200, content_type="application/json",
+        body='{"results": [{"id": 4250, "name": "<fictional product>"}]}'))
+    page.goto(server + "/ingredients", wait_until="domcontentloaded")
+    page.fill("#product-search", "fictional")
+    page.wait_for_selector("#product-matches li")
+    page.locator("#product-matches li").first.click()
+    assert page.locator("#product-id").input_value() == "4250"
+    assert "4250" in page.locator("#chosen").inner_text()
+    assert not page.locator("#product-matches").is_visible()
+
+
+def test_editing_the_name_again_clears_the_chosen_product(page, server):
+    """A stale id must never be submitted beside a different name."""
+    page.route("**/ingredients/search*", lambda route: route.fulfill(
+        status=200, content_type="application/json",
+        body='{"results": [{"id": 4250, "name": "<fictional product>"}]}'))
+    page.goto(server + "/ingredients", wait_until="domcontentloaded")
+    page.fill("#product-search", "fictional")
+    page.wait_for_selector("#product-matches li")
+    page.locator("#product-matches li").first.click()
+    page.fill("#product-search", "something else")
+    assert page.locator("#product-id").input_value() == ""
+
+
+def test_a_run_with_nothing_to_check_does_not_say_fix(page, server,
+                                                      synthetic_run):
+    """An empty run is not a verdict on the product."""
+    import json
+
+    empty = dict(SYNTHETIC)
+    empty["counts"] = {**SYNTHETIC["counts"], "substances": 0, "ingredients": 0,
+                       "fix": 0, "with_entry": 0, "ok": 0, "info": 0,
+                       "not_checked": 0, "uses": 0, "uses_under_classified": 0,
+                       "inconsistent_substances": 0}
+    empty["substances"] = []
+    path = RUNS / "uitest-empty.json"
+    path.write_text(json.dumps(empty), encoding="utf-8")
+    try:
+        page.goto(f"{server}/ingredients/runs/uitest-empty",
+                  wait_until="domcontentloaded")
+        banner = page.locator(".verdict h2").inner_text()
+        assert banner == "Nothing to check"
+        assert "Fix before release" not in page.inner_text("body")
+    finally:
+        path.unlink(missing_ok=True)

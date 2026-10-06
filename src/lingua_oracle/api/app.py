@@ -157,34 +157,57 @@ def history(request: Request) -> HTMLResponse:
 
 
 @app.get("/ingredients", response_class=HTMLResponse)
-def ingredients_page(request: Request, error: str = "") -> HTMLResponse:
+def ingredients_page(request: Request, error: str = "",
+                     q: str = "") -> HTMLResponse:
     """Start an ingredient check, or open a previous one."""
     from lingua_oracle.api import ingredients as ing
 
     return templates.TemplateResponse(
         request=request, name="ingredients.html.j2",
-        context={"nav": "ingredients", "runs": ing.recent_runs(), "error": error},
+        context={"nav": "ingredients", "runs": ing.recent_runs(),
+                 "error": error, "query": q},
     )
 
 
 @app.post("/ingredients/run", response_class=HTMLResponse)
 def ingredients_run(request: Request,
                     scope: str = Form("product"),
-                    product_id: str = Form("")) -> HTMLResponse:
+                    product_id: str = Form(""),
+                    product_name: str = Form("")) -> HTMLResponse:
     """Begin a check on a worker thread and show its progress."""
     from lingua_oracle.api import ingredients as ing
 
     wanted: int | None = None
     if scope == "product":
         if not product_id.strip().isdigit():
-            return ingredients_page(request, error="Give a product ID, or "
-                                                   "choose the whole library.")
+            return ingredients_page(
+                request, error="Search for a product and choose one from the "
+                               "list, or check the whole library.")
         wanted = int(product_id)
-    progress = ing.start(scope, wanted)
+    progress = ing.start(scope, wanted, label=product_name.strip() or None)
     return templates.TemplateResponse(
         request=request, name="ingredients_progress.html.j2",
         context={"nav": "ingredients", "progress": progress},
     )
+
+
+@app.get("/ingredients/search")
+def ingredients_search(q: str = "") -> JSONResponse:
+    """Products whose name matches, for the run form's typeahead. GET only."""
+    from lingua_oracle.ingredients.client import AppUnavailable, ExactSdsClient
+    from lingua_oracle.ingredients.matching import search
+
+    if len(q.strip()) < 2:
+        return JSONResponse({"results": []})
+    try:
+        client = ExactSdsClient()
+        client.login()
+        found = search(client, q.strip())
+        client.close()
+    except (AppUnavailable, OSError) as exc:
+        return JSONResponse({"results": [], "error": str(exc)[:200]})
+    return JSONResponse({"results": [{"id": c.product_id, "name": c.name}
+                                     for c in found]})
 
 
 @app.get("/ingredients/runs/{run_id}/status")
@@ -240,10 +263,17 @@ def check_html(
     regulation: str | None = Form(None),
     language: str | None = Form(None),
 ) -> RedirectResponse:
-    """Browser form target: check, then redirect to the HTML report."""
+    """Browser form target: check, then redirect to the HTML report.
+
+    One upload, both checks: the wording against the official text and the
+    ingredients against Annex VI. The ingredient half never costs the wording
+    half - the pipeline keeps whatever it has already built if ExactSDS cannot
+    be reached.
+    """
     path = _save_upload(file)
     try:
-        report = _run(check_pdf, str(path), regulation or None, language or None)
+        report = _run(check_pdf, str(path), regulation or None, language or None,
+                      ingredients=True)
     finally:
         shutil.rmtree(path.parent, ignore_errors=True)
     save(report)

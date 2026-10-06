@@ -125,6 +125,8 @@ class Run:
     #: "one substance to fix" and "forty products to reissue" are different
     #: facts and a reader needs both.
     products_scanned: int = 0
+    #: What this run is called - "Whole library" or "Product: <name>".
+    label: str = ""
 
     @property
     def all_verdicts(self) -> list[Verdict]:
@@ -206,6 +208,11 @@ def _plural(count: int, word: str) -> str:
 
 def headline(counts: dict[str, int]) -> tuple[str, str, str]:
     """(release word, tone, the sentence under it)."""
+    if not counts.get("substances") and not counts.get("ingredients"):
+        # A run that looked at nothing has nothing to say. "Fix before release"
+        # over an empty run reads as a verdict on the product.
+        return ("Nothing to check", "check",
+                "No ingredient was read, so nothing was compared with Annex VI.")
     if counts["fix"]:
         uses = counts.get("uses_under_classified", 0)
         where = (f", in {_plural(uses, 'product use')}"
@@ -223,9 +230,15 @@ def headline(counts: dict[str, int]) -> tuple[str, str, str]:
             f"requires ({_plural(counts['with_entry'], 'substance')} checked).")
 
 
+def substance_payload(run: Run) -> list[dict]:
+    """The substances in the shape the report template renders."""
+    return _payload(run)["substances"]
+
+
 def _payload(run: Run) -> dict:
     return {
         "started_at": run.started_at.isoformat(),
+        "label": run.label,
         "annex_vi_source": run.annex_vi_source,
         "counts": run.counts(),
         "not_checked_reasons": run.reasons(),

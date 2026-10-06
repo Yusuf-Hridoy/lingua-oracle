@@ -43,16 +43,23 @@
         <input type="radio" name="scope" value="product" checked>
         One product
       </label>
-      <label class="field">
-        <span>Product ID</span>
-        <input type="number" name="product_id" min="1" placeholder="e.g. 4250">
-      </label>
+      <div class="field">
+        <label for="product-search"><span>Search by name</span></label>
+        <input id="product-search" name="product_name" type="search"
+               autocomplete="off" role="combobox" aria-expanded="false"
+               aria-controls="product-matches"
+               placeholder="start typing a product name"
+               value="{{ query }}">
+        <input type="hidden" name="product_id" id="product-id" value="">
+        <ul id="product-matches" class="matches" role="listbox" hidden></ul>
+        <p class="note chosen" id="chosen" hidden></p>
+      </div>
       <label class="choice">
         <input type="radio" name="scope" value="library">
         The whole library <span class="muted">(reads every product; takes a while)</span>
       </label>
     </fieldset>
-    <button type="submit">Run check</button>
+    <button type="submit" class="primary">Run check</button>
   </form>
 
   {% if runs %}
@@ -72,5 +79,58 @@
   </table>
   {% endif %}
 </div>
+<script>
+  // Typeahead over /ingredients/search. A name is only useful once it points at
+  // one product, so the hidden id is what the form submits and it is cleared
+  // whenever the text changes - no stale id can be sent with a new name.
+  const box = document.getElementById('product-search');
+  const list = document.getElementById('product-matches');
+  const idField = document.getElementById('product-id');
+  const chosen = document.getElementById('chosen');
+  let timer = null;
+
+  function clearChoice() {
+    idField.value = '';
+    chosen.hidden = true;
+    chosen.textContent = '';
+  }
+
+  function show(results) {
+    list.innerHTML = '';
+    if (!results.length) { list.hidden = true; box.setAttribute('aria-expanded', 'false'); return; }
+    for (const row of results) {
+      const item = document.createElement('li');
+      item.setAttribute('role', 'option');
+      item.tabIndex = 0;
+      item.dataset.id = row.id;
+      item.textContent = row.name + ' (' + row.id + ')';
+      const pick = () => {
+        idField.value = row.id;
+        box.value = row.name;
+        chosen.textContent = 'Checking ' + row.name + ' (' + row.id + ')';
+        chosen.hidden = false;
+        list.hidden = true;
+        box.setAttribute('aria-expanded', 'false');
+      };
+      item.addEventListener('click', pick);
+      item.addEventListener('keydown', e => { if (e.key === 'Enter') pick(); });
+      list.appendChild(item);
+    }
+    list.hidden = false;
+    box.setAttribute('aria-expanded', 'true');
+  }
+
+  box.addEventListener('input', () => {
+    clearChoice();
+    clearTimeout(timer);
+    const q = box.value.trim();
+    if (q.length < 2) { show([]); return; }
+    timer = setTimeout(async () => {
+      const res = await fetch('/ingredients/search?q=' + encodeURIComponent(q));
+      const data = await res.json();
+      show(data.results || []);
+    }, 200);
+  });
+</script>
 </body>
 </html>

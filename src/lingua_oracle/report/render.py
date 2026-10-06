@@ -339,6 +339,37 @@ def _body_estimate(report: Report) -> int:
     ) + sum(len(f.message or "") + 400 for f in report.findings) + 4000
 
 
+#: What the Ingredients section was able to look at, in one line.
+_INGREDIENT_SOURCE = {
+    "app": "checked against this product's record in ExactSDS",
+    "pdf": "read from Section 3 of this sheet",
+    "nothing": "nothing on this sheet to check",
+    "skipped": "not checked",
+}
+
+
+def ingredient_reasons() -> dict[str, str]:
+    from lingua_oracle.ingredients.report import REASONS
+
+    return REASONS
+
+
+def _ingredient_source(section) -> str:
+    if section is None:
+        return ""
+    return _INGREDIENT_SOURCE.get(section.source, "")
+
+
+def _ingredient_tone(section) -> str:
+    if section is None or not section.counts:
+        return "check"
+    if section.counts.get("fix"):
+        return "fix"
+    if section.counts.get("inconsistent_substances"):
+        return "check"
+    return "ok" if section.counts.get("with_entry") else "check"
+
+
 def render_html(report: Report) -> str:
     registry = load_registry()
     try:
@@ -347,7 +378,23 @@ def render_html(report: Report) -> str:
         display = report.regulation
     template = _environment().get_template("report.html.j2")
     cards = _statement_cards(report)
+    ing = report.ingredients
+    substances = (ing.substances if ing else []) or []
     return template.render(
+        ing=ing,
+        ing_source=_ingredient_source(ing),
+        ing_said_by=("This sheet says" if ing and ing.source == "pdf"
+                     else "The app says"),
+        ing_tone=_ingredient_tone(ing),
+        ing_under=[s for s in substances if s["uses_under_classified"]],
+        ing_inconsistent=[s for s in substances
+                          if s["inconsistent"] and not s["uses_under_classified"]],
+        ing_matches=[s for s in substances if s["status"] == "ok"
+                     and not s["uses_under_classified"]],
+        ing_extra=[s for s in substances if s["status"] == "info"
+                   and not s["uses_under_classified"]],
+        ing_unchecked=[s for s in substances if s["status"] == "not_checked"],
+        ing_reasons=ingredient_reasons(),
         report=report,
         groups=_grouped(report, display),
         regulation_display=display,

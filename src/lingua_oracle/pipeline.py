@@ -62,8 +62,17 @@ def check_pdf(
     backend: str | None = None,
     compare_with: str | None = None,
     only: list[str] | None = None,
+    ingredients: bool = False,
+    client_factory=None,
 ) -> Report:
-    """Run every check against one PDF, optionally comparing against another."""
+    """Run every check against one PDF, optionally comparing against another.
+
+    `ingredients` also checks the document's ingredients against CLP Annex VI -
+    against the product's record in ExactSDS where the sheet is one of ours, and
+    against the sheet's own Section 3 where it is not. Off by default: it is the
+    one part of this that reads from the network, and the wording check must
+    work without it.
+    """
     document, reg, lang, lang_by, spans, hits, detection = _prepare(
         path, regulation, language, backend
     )
@@ -119,6 +128,21 @@ def check_pdf(
         compared_with=Path(compare_with).name if compare_with else None,
     )
     report.recount()
+    if ingredients:
+        # Never allowed to cost the wording result. Whatever happens here, the
+        # report that has already been built is what the reader gets.
+        try:
+            from lingua_oracle.ingredients.section import check as check_ingredients
+
+            report.ingredients = check_ingredients(
+                path, Path(path).name, document.lines,
+                client_factory=client_factory)
+        except Exception as exc:  # noqa: BLE001
+            from lingua_oracle.models import IngredientSection
+
+            report.ingredients = IngredientSection(
+                source="skipped",
+                message=f"Ingredient check skipped: {exc}"[:200])
     # Anything a check wants a reviewer to know but that is not a finding about
     # the document - an allowance made for the official text, say.
     report.notes.extend(ctx.notes)

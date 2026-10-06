@@ -333,3 +333,26 @@ h2.section { margin-top: 32px; }
    screen the page itself must never move sideways. */
 .issue .side .minor-table { display: block; overflow-x: auto; white-space: nowrap; }
 .issue .side .minor-table td:nth-child(3) { white-space: normal; }
+
+/* The ingredient section inside a wording report. */
+.verdict.compact { margin-top: 0; }
+.verdict.compact .stats { border-top: 0; }
+.matched { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+.matched b { color: var(--text); }
+.matched .change { margin-left: 8px; font-size: 13px; }
+.issues-head .muted { font-size: 13px; }
+
+/* The product typeahead on the Ingredients page. */
+.run-form .field input[type="search"] { width: 320px; max-width: 100%; }
+.matches { list-style: none; margin: 4px 0 0; padding: 4px;
+           border: 1px solid var(--border); border-radius: 8px;
+           background: var(--card); max-width: 420px; max-height: 240px;
+           overflow-y: auto; }
+.matches li { padding: 7px 10px; border-radius: 6px; cursor: pointer;
+              font-size: 14px; }
+.matches li:hover, .matches li:focus { background: var(--page); outline: none; }
+.chosen { color: var(--accent); font-weight: 500; }
+button.primary { background: var(--accent); color: #fff; border: 0;
+                 padding: 10px 20px; border-radius: 8px; font-weight: 600;
+                 font-size: 14px; cursor: pointer; }
+button.primary:hover { filter: brightness(.94); }

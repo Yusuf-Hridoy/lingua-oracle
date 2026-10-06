@@ -219,6 +219,15 @@ def build() -> Path:
             "sees the runs already made.",
             "Both scopes offered, a product ID field, and previous runs listed "
             "with their result."),
+        "combined_report.png": (
+            "One upload, both checks",
+            "A supplier's sheet uploaded once. The wording is checked against "
+            "the official text and the ingredients against CLP Annex VI, read "
+            "from the sheet's own Section 3 because no ExactSDS product "
+            "matches it.",
+            "Two sections under one verdict line: Wording with its cards, then "
+            "Ingredients with its own counts and cards, and a line saying where "
+            "the ingredient data came from."),
         "ingredients_report.png": (
             "Ingredient check - the report",
             "A finished run over a synthetic library: one substance classified "

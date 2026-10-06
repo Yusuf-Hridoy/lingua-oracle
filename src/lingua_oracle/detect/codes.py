@@ -222,10 +222,19 @@ def extract_hits(
                     if not is_continuation(_clean_phrase(phrase), nxt.text):
                         break
                     phrase += " " + nxt.text
+            cleaned = _clean_phrase(phrase)
+            if is_hazard_class(cleaned):
+                # A classification cell, not a statement. Section 3 prints
+                # "Flam. Liq. 2, H225; Eye Irrit. 2, H319" - the text between
+                # one code and the next is the following substance's hazard
+                # class, and comparing it with the statement's official wording
+                # reports a supplier for something their sheet does not say.
+                # With no text, the code is simply not checked, which is true.
+                cleaned = ""
             hits.append(
                 CodeHit(
                     code=code,
-                    text=_clean_phrase(phrase),
+                    text=cleaned,
                     page=line.page,
                     line_index=idx,
                     raw_code=code,

@@ -31,6 +31,8 @@ class Progress:
 
     id: str
     scope: str
+    #: "Whole library" or "Product: <name>" - what the run is called in History.
+    label: str = "Whole library"
     started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     products_read: int = 0
     substances_found: int = 0
@@ -44,6 +46,7 @@ class Progress:
             "products_read": self.products_read,
             "substances_found": self.substances_found,
             "message": self.message, "run_file": self.run_file,
+            "label": self.label,
             "started_at": self.started_at.isoformat(timespec="seconds"),
         }
 
@@ -55,9 +58,12 @@ _LOCK = threading.Lock()
 
 
 def start(scope: str, product_id: int | None = None,
-          client_factory=None) -> Progress:
+          client_factory=None, label: str | None = None) -> Progress:
     """Begin a check on a worker thread and return its progress handle."""
-    progress = Progress(id=uuid.uuid4().hex[:12], scope=scope)
+    name = ("Whole library" if scope != "product"
+            else f"Product: {label}" if label
+            else f"Product {product_id}")
+    progress = Progress(id=uuid.uuid4().hex[:12], scope=scope, label=name)
     with _LOCK:
         RUNS[progress.id] = progress
     thread = threading.Thread(
@@ -114,6 +120,7 @@ def _work(progress: Progress, product_id: int | None, client_factory) -> None:
                       for pid, codes in uses_for[cas]]))
         client.close()
 
+        run.label = progress.label
         json_path, _html = ingredient_report.save(run, runs_dir())
         progress.run_file = json_path.stem
         progress.state = "done"
@@ -138,8 +145,9 @@ def recent_runs(limit: int = 50) -> list[dict]:
         release, tone, _detail = ingredient_report.headline(counts)
         out.append({
             "id": path.stem,
-            "file_name": f"{counts.get('substances', 0)} substances, "
-                         f"{counts.get('products', 0)} products",
+            "file_name": data.get("label") or (
+                f"{counts.get('substances', 0)} substances, "
+                f"{counts.get('products', 0)} products"),
             "regulation": "CLP Annex VI Table 3",
             "language": "ingredient check",
             "release": release,
