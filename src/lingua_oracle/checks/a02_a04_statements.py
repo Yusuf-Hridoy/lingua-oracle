@@ -39,6 +39,23 @@ def _source_of(ctx: CheckContext) -> str:
             else ctx.regulation.display_name)
 
 
+def _annulled(ctx: CheckContext, code: str) -> str:
+    """What to say about a statement the courts annulled, or "".
+
+    EUH211 and EUH212 are held without being used (keys/builders/annulled.py):
+    not a gap in our records, which is what "not checked" otherwise means, but
+    a statement the law no longer requires.
+    """
+    from lingua_oracle.keys.builders import annulled
+
+    if (ctx.regulation.id != "eu_clp" or code not in annulled.STATEMENTS
+            or not annulled.applies_to(ctx.regulation.revision)):
+        return ""
+    return ("Not checked: annulled by the General Court (titanium dioxide "
+            f"ruling) \u2014 no longer required. {annulled.NOTICE} "
+            f"({annulled.NOTICE_URL}).")
+
+
 def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
     findings: list[Finding] = []
     for hit in ctx.hits:
@@ -58,12 +75,13 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
                                ctx.regulation.ghs_edition)
             if missing.reason is not Reason.NOT_ON_FILE:
                 continue
+            annulled_text = _annulled(ctx, hit.code)
             findings.append(
                 Finding(
                     check_id=check_id, severity=Severity.WARN, section=section,
                     page=hit.page, code=hit.code, found=hit.text, tier=Tier.C,
                     unverified=True,
-                    message=(
+                    message=annulled_text or (
                         f"Not checked: we hold no official "
                         f"{ctx.regulation.display_name} wording for {hit.code} "
                         f"in '{ctx.language}'. Our records are incomplete for "
@@ -73,8 +91,9 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
             )
             ctx.record(StatementVerdict(
                 code=hit.code, status="not_checked", found=hit.text,
-                why=f"We hold no official {ctx.regulation.display_name} wording "
-                    f"for {hit.code}, so it could not be compared.",
+                why=annulled_text or (
+                    f"We hold no official {ctx.regulation.display_name} wording "
+                    f"for {hit.code}, so it could not be compared."),
                 section=section, page=hit.page,
             ))
             continue
