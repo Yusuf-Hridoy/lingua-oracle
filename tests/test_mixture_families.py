@@ -160,3 +160,50 @@ def test_a_hazard_the_ingredients_give_and_section_two_omits():
     assert found["verdict"] == "inconsistent"
     assert found["stated_class"] == ""
     assert "Section 2 does not list this hazard" in found["message"]
+
+
+# -- on the page ---------------------------------------------------------------
+
+
+def _page(regulation, fixture=SHEET):
+    from lingua_oracle.report.render import render_html
+
+    return render_html(_check(regulation, fixture))
+
+
+def test_the_banner_says_how_much_of_the_mixture_was_calculated_from():
+    body = _page("eu_clp")
+    assert "Calculated from 61% of the mixture (39% not disclosed)" in body
+
+
+def test_one_card_per_family_headed_by_the_endpoint():
+    import re
+
+    body = _page("eu_clp")
+    cards = re.findall(r'data-section="mixture"[^>]*data-class="([^"]+)"', body)
+    assert cards == ["Target organ toxicity, single exposure", "Eye", "Skin"]
+
+
+def test_a_card_puts_the_two_classifications_side_by_side():
+    body = _page("eu_clp")
+    assert "Section 2 says" in body
+    assert "Calculated from declared ingredients" in body
+    assert "Skin Corr. 1" in body and "Skin Irrit. 2" in body
+
+
+def test_the_ingredient_table_is_under_its_family():
+    body = _page("eu_clp")
+    skin = body[body.index('data-class="Skin"'):]
+    assert "<th>Ingredient</th>" in skin[:4000]
+    assert "100-00-1" in skin[:4000]
+
+
+def test_plain_words_where_a_side_is_empty():
+    body = _page("eu_clp", "pattern_sensitiser_gas")
+    assert "Section 2 does not list this hazard" in body
+
+
+def test_a_family_nothing_was_calculated_for_says_so_in_words():
+    body = _page("eu_clp", "pattern_aquatic_statement")
+    assert ("The declared ingredients don&rsquo;t give this hazard" in body
+            or "don’t give this hazard" in body)

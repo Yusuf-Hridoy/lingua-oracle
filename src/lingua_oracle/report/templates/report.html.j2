@@ -240,6 +240,7 @@
   </div>
 
   {% if mixture and mixture.state == 'calculated' %}
+  {{ mix.banner(mixture) }}
   <div class="verdict v-{{ mixture_tone }} compact">
     <div class="stats">
       <div><div class="n fix">{{ mixture.counts.inconsistent }}</div><div class="l">Inconsistent</div></div>
@@ -247,7 +248,7 @@
       <div><div class="n ok">{{ mixture.counts.consistent }}</div><div class="l">Consistent</div></div>
       <div><div class="n">{{ mixture.counts.not_calculated }}</div><div class="l">Not calculated</div></div>
       <div><div class="n">{{ mixture.declared_total }}%</div>
-           <div class="l">Declared ({{ mixture.undisclosed }}% undisclosed)</div></div>
+           <div class="l">Declared ({{ mixture.undisclosed }}% not disclosed)</div></div>
     </div>
   </div>
   {% for r in mixture.results %}{{ mix.card(r) }}{% endfor %}

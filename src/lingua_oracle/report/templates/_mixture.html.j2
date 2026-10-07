@@ -1,38 +1,51 @@
-{# Mixture cards: one per hazard class the calculation reached a view on. #}
+{# Mixture cards: one per hazard family the calculation reached a view on. #}
+
+{% macro banner(mixture) %}
+{# What the calculation could see. A verdict about 61 % of a mixture is worth
+   reading differently from one about all of it, and the reader should not
+   have to work out which this is. #}
+{% set undisclosed = (' (' ~ mixture.undisclosed ~ '% not disclosed)')
+   if mixture.undisclosed != '0' else '' %}
+{% set read_as = (', read as a ' ~ ('gas' if mixture.physical_state == 'gas'
+   else 'solid or a liquid')) if mixture.physical_state else '' %}
+<p class="note declared">Calculated from {{ mixture.declared_total }}% of the mixture{{ undisclosed }}{{ read_as }}.</p>
+{% endmacro %}
 
 {% macro card(r) %}
 {% set tone = {'inconsistent': 'fix', 'cannot_tell': 'check',
                'consistent': 'ok', 'not_calculated': 'unver'} %}
-{% set word = {'inconsistent': 'Inconsistent', 'cannot_tell': "Can't tell",
+{% set word = {'inconsistent': 'Inconsistent', 'cannot_tell': "Check this",
                'consistent': 'Consistent', 'not_calculated': 'Not calculated'} %}
 <article class="issue" data-section="mixture" data-status="{{ tone[r.verdict] }}"
-         data-class="{{ r.hazard_class }}">
+         data-class="{{ r.family or r.hazard_class }}">
   <header>
     <span class="pill {{ tone[r.verdict] }}">{{ word[r.verdict] }}</span>
     <span class="code">{{ r.hazard_class }}</span>
     {% if r.citation %}<span class="where">{{ r.citation }}</span>{% endif %}
   </header>
-  {# A class nothing was calculated for has no two sides to put beside each
-     other: the one line saying why is the whole card. #}
-  {% if r.verdict == 'not_calculated' %}
+  {% if r.verdict == 'not_calculated' and not r.calculated_class %}
   <footer><span>{{ r.message }}</span></footer>
   {% else %}
   <div class="body">
     <div class="side">
       <h3>Section 2 says</h3>
-      <div class="txt">{{ r.hazard_class if r.stated else 'not stated' }}</div>
+      <div class="txt">{{ r.stated_class or 'Section 2 does not list this hazard' }}</div>
+      {% if r.implied_from %}<p class="note">{{ r.implied_from }}</p>{% endif %}
     </div>
     <div class="side official">
-      <header><h3>Calculation gives</h3></header>
+      <header><h3>Calculated from declared ingredients</h3></header>
       <div class="txt">
-        {%- if r.calculated_low and r.calculated_low == r.calculated_high -%}
-          {{ r.calculated_low }}
-        {%- elif r.calculated_low or r.calculated_high -%}
-          {{ r.calculated_low }} at the low end, {{ r.calculated_high }} at the high end
+        {%- if r.calculated_class -%}
+          {{ r.calculated_class }}
         {%- else -%}
-          nothing
+          The declared ingredients don&rsquo;t give this hazard
         {%- endif -%}
       </div>
+      {% if r.calculated_low and r.calculated_high
+            and r.calculated_low != r.calculated_high %}
+      <p class="note">{{ r.calculated_low }} at the low end of the declared
+        ranges, {{ r.calculated_high }} at the high end.</p>
+      {% endif %}
     </div>
   </div>
   {% if r.contributions %}

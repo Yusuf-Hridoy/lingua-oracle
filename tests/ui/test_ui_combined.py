@@ -105,7 +105,7 @@ def test_the_mixture_section_has_its_own_counts(page, server):
     assert "Inconsistent" in stats
     assert "Can’t tell" in stats or "Can't tell" in stats
     assert "Consistent" in stats
-    assert "undisclosed" in stats
+    assert "not disclosed" in stats
 
 
 def test_a_mixture_card_shows_both_sides_and_the_rule(page, server):
@@ -113,7 +113,7 @@ def test_a_mixture_card_shows_both_sides_and_the_rule(page, server):
     card = page.locator('article.issue[data-section="mixture"]').first
     text = card.inner_text().lower()      # the headings render in capitals
     assert "section 2 says" in text
-    assert "calculation gives" in text
+    assert "calculated from declared ingredients" in text
     assert "annex i," in text
 
 

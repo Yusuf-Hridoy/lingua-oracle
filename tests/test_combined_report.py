@@ -424,7 +424,7 @@ def test_the_report_renders_all_three_sections():
     assert "Ingredients &middot;" in body
     assert "Mixture &middot;" in body
     assert "Section 2 says" in body
-    assert "Calculation gives" in body
+    assert "Calculated from declared ingredients" in body
     assert "Calculation trace" in body
 
 
