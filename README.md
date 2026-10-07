@@ -67,6 +67,7 @@ lingua keys build <regulation|all> [--languages da,de] [--no-cache]
 lingua keys import-csv <file> --regulation jp_jis --language ja --tier C
 lingua keys stats [--json]
 lingua keys sample [--n 20] [--regulation X] [--seed N]
+lingua sources check-updates          # read-only: what we hold vs what each publisher shows
 lingua validate init
 lingua validate
 lingua validate triage [--all]

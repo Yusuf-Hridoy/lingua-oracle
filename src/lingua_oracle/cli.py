@@ -24,6 +24,10 @@ validate_app = typer.Typer(
     invoke_without_command=True,
 )
 app.add_typer(validate_app, name="validate")
+sources_app = typer.Typer(
+    help="The official source documents: what we hold, and whether it is current.",
+    no_args_is_help=True)
+app.add_typer(sources_app, name="sources")
 
 RegOpt = Annotated[str | None, typer.Option("--regulation", "-r", help="Regulation id.")]
 LangOpt = Annotated[str | None, typer.Option("--language", "-l", help="BCP-47 language tag.")]
@@ -443,6 +447,19 @@ def _print_ingredient_summary(run, json_path, html_path) -> None:
         for code, number in run.missing_by_substance()[:10]:
             typer.secho(f"      {code}: {number}")
     typer.secho(f"{json_path}\n{html_path}")
+
+
+@sources_app.command("check-updates")
+def sources_check_updates() -> None:
+    """Compare each source we hold with what its publisher shows now.
+
+    Read-only: plain requests under this tool's own name, no bot challenge
+    answered, nothing downloaded into data/ and nothing rebuilt. A source that
+    cannot be checked this way says so, with the page to check by hand.
+    """
+    from lingua_oracle.keys.builders.freshness import check_updates, table
+
+    typer.echo(table(check_updates()))
 
 
 @keys_app.command("stats")
