@@ -260,48 +260,10 @@ def action_for(finding, regulation_display: str = "") -> str:
 # The verdict banner
 # --------------------------------------------------------------------------
 
-@dataclass(frozen=True)
-class Verdict:
-    #: The one line a reader acts on, in capitals at the top of the report.
-    release: str
-    headline: str
-    tone: str          # ok | check | fix
-    icon: str
-    detail: str
-    #: Grouped "what to do" lines, most urgent first, at most five.
-    actions: list[tuple[str, int]]
-    caveats: list[str]
-
 
 READY = "Ready to release"
 REVIEW = "Review before release"
 FIX = "Fix before release"
-
-_MAX_ACTIONS = 5
-
-
-def _rank(finding) -> int:
-    if finding.unverified:
-        return 3
-    if finding.severity is Severity.FAIL:
-        return 0
-    if finding.severity is Severity.WARN:
-        return 1
-    return 2
-
-
-def actions_for(report: Report, regulation_display: str = "") -> list[tuple[str, int]]:
-    """Every finding's next step, identical ones grouped and counted."""
-    counted: dict[str, int] = {}
-    order: dict[str, int] = {}
-    for finding in report.findings:
-        if finding.unverified:
-            continue  # nothing to do about our own gap
-        text = action_for(finding, regulation_display)
-        counted[text] = counted.get(text, 0) + 1
-        order[text] = min(order.get(text, 99), _rank(finding))
-    ranked = sorted(counted.items(), key=lambda kv: (order[kv[0]], -kv[1], kv[0]))
-    return ranked[:_MAX_ACTIONS]
 
 
 def _caveats(report: Report) -> list[str]:
@@ -339,9 +301,10 @@ def _caveats(report: Report) -> list[str]:
         )
 
     out.append(
-        "This checks the wording of statements against the official text. It "
-        "does not check whether the classification itself is correct, nor "
-        "anything outside the statements."
+        "This checks the wording of statements against the official text, and "
+        "the classification only where the substance's entry or the "
+        "ingredients allow it. Pictograms, layout and Sections 4-8 and 10-15 "
+        "are not checked."
     )
     return out
 
@@ -355,111 +318,3 @@ def plural(count: int, singular: str, many: str | None = None) -> str:
     return f"{count} {word}"
 
 
-def verdict_of(report: Report, regulation_display: str = "",
-               counts: dict[str, int] | None = None) -> Verdict:
-    """One line to act on, then what to do, then what was not covered.
-
-    The release word comes from the severities, as it always has: an unfinished
-    blank is a card to act on but not a contradiction of the official text. The
-    sentence under it is written from `counts` - the report's own card counts,
-    the figures printed beside it. It used to be written from the severities
-    too, which count different things, so a reader saw "3 to check" over a row
-    of cells that said 5 and had no way to tell which was wrong.
-    """
-    summary = report.summary
-    actions = actions_for(report, regulation_display)
-    # The ingredient half of the same upload. A substance classified below what
-    # Annex VI requires is a reason to hold the sheet, whatever its wording
-    # says, so it has to reach the one line a reader acts on.
-    ingredient = report.ingredients
-    ingredient_fix = ingredient.under_classified if ingredient else 0
-    ingredient_note = (
-        f"{plural(ingredient_fix, 'ingredient')} "
-        f"{'is' if ingredient_fix == 1 else 'are'} classified below what Annex "
-        "VI requires" if ingredient_fix else "")
-    # The mixture half. A hazard class the ingredients give and Section 2 does
-    # not state is a reason to hold the sheet, like a wording failure.
-    mixture = report.mixture
-    mixture_fix = mixture.inconsistent if mixture else 0
-    mixture_note = (
-        f"{plural(mixture_fix, 'hazard class')} "
-        f"{'is' if mixture_fix == 1 else 'are'} inconsistent with the "
-        "ingredients" if mixture_fix else "")
-    if counts is None:  # a caller with no cards to hand; count the statements
-        counts = {
-            "wrong": sum(1 for v in report.statements if v.status == "wrong"),
-            "fix": sum(1 for v in report.statements
-                       if v.status == "fix" or v.blank_unfilled),
-            "check": sum(1 for v in report.statements if v.status == "check"),
-            "blanks": sum(1 for v in report.statements if v.blank_unfilled),
-            "minor": sum(1 for v in report.statements if v.minor_difference),
-        }
-    wrong = counts.get("wrong", 0)
-    blanks = counts.get("blanks", 0)
-    other_fixes = max(counts.get("fix", 0) - blanks, 0)
-    to_check = counts.get("check", 0)
-    minor = counts.get("minor", 0)
-
-    def listed(parts: list[str], fallback: str) -> str:
-        return "; ".join(parts) + "." if parts else fallback
-
-    if summary.fail or ingredient_fix or mixture_fix:
-        parts = []
-        if wrong:
-            parts.append(f"{plural(wrong, 'statement')} "
-                         f"{'does' if wrong == 1 else 'do'} not match the "
-                         "official text")
-        if blanks:
-            parts.append(f"{plural(blanks, 'blank')} to fill in")
-        if other_fixes:
-            parts.append(f"{plural(other_fixes, 'other problem')} to fix")
-        if ingredient_note:
-            parts.append(ingredient_note)
-        if mixture_note:
-            parts.append(mixture_note)
-        return Verdict(
-            release=FIX,
-            headline="Wording problems found — fix before release"
-            if wrong else "Problems found — fix before release",
-            tone="fix", icon="✕",
-            detail=listed(parts, f"{plural(summary.fail, 'problem')} to fix."),
-            actions=actions, caveats=_caveats(report),
-        )
-    if (summary.warn or summary.info or (ingredient and ingredient.counts)
-            or (mixture and mixture.counts)):
-        parts = []
-        if blanks:
-            parts.append(f"{plural(blanks, 'blank')} to fill in")
-        if to_check:
-            parts.append(f"{plural(to_check, 'statement')} to check")
-        if minor:
-            parts.append(f"{minor} of {'them' if minor == to_check else 'those'} "
-                         f"{'differs' if minor == 1 else 'differ'} only in "
-                         "punctuation or capital letters")
-        if ingredient and ingredient.counts.get("inconsistent_substances"):
-            parts.append(f"{plural(ingredient.counts['inconsistent_substances'], 'ingredient')} "
-                         f"{'is' if ingredient.counts['inconsistent_substances'] == 1 else 'are'} "
-                         "classified differently in different products")
-        if mixture and mixture.counts.get("cannot_tell"):
-            number = mixture.counts["cannot_tell"]
-            parts.append(f"{plural(number, 'hazard class')} "
-                         f"{'could' if number == 1 else 'could'} not be decided "
-                         "from the declared concentrations")
-        if ingredient and ingredient.checked_anything and not parts:
-            parts.append(f"{plural(ingredient.counts.get('with_entry', 0), 'ingredient')} "
-                         "checked against Annex VI and correct")
-        return Verdict(
-            release=REVIEW,
-            headline="Looks correct — some items need a person to check",
-            tone="check", icon="!",
-            detail="Nothing contradicts the official text. "
-                   + listed(parts, "Some items need a person."),
-            actions=actions, caveats=_caveats(report),
-        )
-    return Verdict(
-        release=READY,
-        headline="All checked wording matches the official text",
-        tone="ok", icon="✓",
-        detail="Every statement we could check is word for word the official text.",
-        actions=actions, caveats=_caveats(report),
-    )

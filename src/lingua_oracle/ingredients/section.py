@@ -48,13 +48,15 @@ def _substances_from(rows, table, index, *, name_of=None, upcoming=None):
 
     uses: dict[str, list[tuple[int, tuple[str, ...]]]] = {}
     names: dict[str, str | None] = {}
+    shares: dict[str, str | None] = {}
     for position, row in enumerate(rows):
         cas = (row.cas or "").strip()
         if not cas:
             continue
         uses.setdefault(cas, []).append(
             (position, tuple(sorted(set(row.h_codes)))))
-        names.setdefault(cas, name_of(row) if name_of else None)
+        names.setdefault(cas, name_of(row) if name_of else getattr(row, "name", None))
+        shares.setdefault(cas, getattr(row, "concentration", None))
 
     out = []
     for cas in sorted(uses):
@@ -64,7 +66,7 @@ def _substances_from(rows, table, index, *, name_of=None, upcoming=None):
             for codes in {c for _position, c in uses[cas]}
         }
         out.append(SubstanceResult(
-            cas=cas, name=names.get(cas),
+            cas=cas, name=names.get(cas), concentration=shares.get(cas),
             uses=[Use(product_id=position, codes=codes, verdict=verdicts[codes])
                   for position, codes in uses[cas]]))
     return out
@@ -80,8 +82,9 @@ def _looked_up(rows, table, index):
         cas = (row.cas or "").strip()
         if not cas or any(s.cas == cas for s in out):
             continue
-        out.append(SubstanceResult(cas=cas, name=None, uses=[
-            Use(product_id=position, codes=(), verdict=look_up(cas, table, index))]))
+        out.append(SubstanceResult(
+            cas=cas, name=row.name, concentration=row.concentration, uses=[
+                Use(product_id=position, codes=(), verdict=look_up(cas, table, index))]))
     return out
 
 

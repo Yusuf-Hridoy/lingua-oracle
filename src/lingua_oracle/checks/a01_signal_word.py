@@ -7,7 +7,14 @@ import re
 from lingua_oracle.checks.base import CheckContext, register
 from lingua_oracle.match.normalize import normalize
 from lingua_oracle.match.template import match
-from lingua_oracle.models import SIGNAL_DANGER, SIGNAL_WARNING, Finding, Severity, Tier
+from lingua_oracle.models import (
+    SIGNAL_DANGER,
+    SIGNAL_WARNING,
+    Finding,
+    Severity,
+    StatementVerdict,
+    Tier,
+)
 
 CHECK_ID = "A-01"
 TITLE = "Signal word is the official one for this language"
@@ -40,8 +47,13 @@ _NEGATIVE_RE = re.compile(
 
 def _candidates(ctx: CheckContext) -> list[tuple[str, int]]:
     """(text, page) for anything that looks like a stated signal word."""
-    out: list[tuple[str, int]] = []
-    for line in ctx.document.lines:
+    return [(value, page) for value, page, _index in _located(ctx)]
+
+
+def _located(ctx: CheckContext) -> list[tuple[str, int, int]]:
+    """(text, page, line index) for anything that looks like a stated signal word."""
+    out: list[tuple[str, int, int]] = []
+    for index, line in enumerate(ctx.document.lines):
         if _NEGATIVE_RE.search(line.text):
             continue  # states that there is no signal word, not what it is
         m = _LABEL_RE.search(line.text)
@@ -51,7 +63,7 @@ def _candidates(ctx: CheckContext) -> list[tuple[str, int]]:
         # A signal word is one word. Anything longer is surrounding prose that
         # happened to follow the label, not a stated value.
         if value and len(value.split()) <= 2:
-            out.append((value, line.page))
+            out.append((value, line.page, index))
     return out
 
 
@@ -63,9 +75,15 @@ def run(ctx: CheckContext) -> list[Finding]:
         if (entry := ctx.entry(code)) is not None
     }
     findings: list[Finding] = []
-    stated = _candidates(ctx)
+    located = _located(ctx)
+    stated = [(value, page) for value, page, _index in located]
     if not stated:
         return findings
+    where = {(value, page): ctx.section_for_line(index)
+             for value, page, index in located}
+    authority = ctx.regulation.authority or ""
+    source = (f"{ctx.regulation.display_name}, {authority}" if authority
+              else ctx.regulation.display_name)
 
     if not official:
         for value, page in stated:
@@ -90,6 +108,10 @@ def run(ctx: CheckContext) -> list[Finding]:
                 break
         if best is None:
             expected = " / ".join(sorted(e.text for e in official.values()))
+            ctx.record(StatementVerdict(
+                code="SIGNAL", status="wrong", found=value, expected=expected,
+                why="Not the official signal word for this language.",
+                source=source, section=where.get((value, page)), page=page))
             findings.append(
                 Finding(
                     check_id=CHECK_ID, severity=Severity.FAIL, page=page, code="SIGNAL",
@@ -103,6 +125,15 @@ def run(ctx: CheckContext) -> list[Finding]:
             )
         else:
             code, entry, result = best
+            # Recorded either way, so a correct signal word is shown as a
+            # checked item and not only a wrong one.
+            ctx.record(StatementVerdict(
+                code="SIGNAL", status="correct" if result.is_clean else "check",
+                found=value, expected=entry.text,
+                why=("The official signal word." if result.is_clean
+                     else f"Signal word {result.message}."),
+                source=source, section=where.get((value, page)), page=page,
+                minor_difference=not result.is_clean))
             if not result.is_clean:
                 findings.append(
                     Finding(

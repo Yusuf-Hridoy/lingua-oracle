@@ -15,7 +15,6 @@ import re
 import pytest
 from playwright.sync_api import expect
 
-from lingua_oracle.models import Severity
 from lingua_oracle.registry import load_registry
 from lingua_oracle.report import labels
 from tests.ui.manifest import CASES, Case
@@ -35,22 +34,15 @@ def _release(page) -> str:
 
 
 def _statement(page, code: str):
-    """The issue card for one code."""
-    return page.locator("article.issue").filter(
-        has=page.locator(f'.code:text-is("{code}")')
+    """The row for one code, in whichever SDS section it sits."""
+    return page.locator(".srow").filter(
+        has=page.locator(f'.key:text-is("{code}")')
     )
 
 
 def _minor_row(page, code: str):
-    """The row for one code in the collapsed punctuation/capitals card.
-
-    Statements whose words are the official words and whose only difference is
-    punctuation or capital letters share a single card, so they have no
-    `article.issue` of their own.
-    """
-    return page.locator(".minor-table tbody tr").filter(
-        has=page.locator(f'.code:text-is("{code}")')
-    )
+    """A row whose only difference is punctuation or capital letters."""
+    return _statement(page, code).filter(has=page.locator(".pill.check"))
 
 
 def _upload(page, base: str, case: Case) -> None:
@@ -102,30 +94,18 @@ def test_fixture_report_in_the_browser(case: Case, page, server, shots_dir):
     assert _tech(page, labels.META["language"]) == case.expect_language
     assert _tech(page, labels.META["id"]), "the report has no reference on screen"
 
-    # -- each expected finding must be visible, with its evidence -----------
+    # -- each expected finding must be visible as a row, with its evidence ---
+    wanted = {"fail": {"Wrong", "Fix"}, "wrong": {"Wrong", "Fix"}, "fix": {"Fix"},
+              "warn": {"Check"}, "check": {"Check"}, "info": {"Note", "Check"}}
     for check_id, severity, code in case.expect:
         if code:
-            card = _statement(page, labels.code_label(code))
-            minor = _minor_row(page, labels.code_label(code))
-            assert card.count() + minor.count() >= 1, (
-                f"no card on the page for {code}"
-            )
-            # A code can have two cards - a wording verdict and, say, a C-02
-            # consistency warning - so look across all of them. A punctuation
-            # difference lives in the collapsed card instead, which carries the
-            # same words in its summary.
-            shown = " ".join(card.all_inner_texts() + minor.all_inner_texts())
-            if minor.count():
-                shown += " " + page.locator(".block.minor summary").inner_text()
-                shown += " " + labels.STATUS["check"].word
+            rows = _statement(page, labels.code_label(code))
+            assert rows.count() >= 1, f"no row on the page for {code}"
+            shown = " ".join(rows.all_inner_texts())
         else:
-            shown = page.inner_text("body")
-        wanted = {labels.STATUS[severity].word} if severity in labels.STATUS else {
-            labels.STATUS["wrong" if severity == "fail" else "check"].word,
-            labels.result_of(check_id, Severity(severity), False).word,
-        }
-        assert any(word in shown for word in wanted), (
-            f"{check_id}/{code}: none of {sorted(wanted)} is on the page"
+            shown = " ".join(page.locator(".srow").all_inner_texts())
+        assert any(word in shown for word in wanted[severity]), (
+            f"{check_id}/{code}: none of {sorted(wanted[severity])} on the page"
         )
 
     page.screenshot(path=str(shots_dir / f"{case.name}.png"), full_page=True)
@@ -144,18 +124,18 @@ def test_a_problem_card_shows_both_texts_and_a_copy_button(page, server, shots_d
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
-    card = _statement(page, "H225").first
-    expect(card).to_be_visible()
-    text = card.inner_text()
+    row = _statement(page, "H225").first
+    expect(row).to_be_visible()
+    text = row.inner_text()
     assert "YOUR DOCUMENT" in text.upper()
     assert "OFFICIAL WORDING" in text.upper()
-    # Header: severity pill, code in mono, where it sits.
-    assert card.locator("header .pill").count() == 1
-    assert card.locator("header .code").count() == 1
-    assert card.locator("header .where").count() == 1
-    # The copy button sits on the official side, not the document's.
-    assert card.locator(".side.official button.copy").count() == 1
+    # Code in mono, one verdict pill, and the copy button on the official side.
+    assert row.locator(".key.mono").count() == 1
+    assert row.locator(".pill").count() == 1
+    assert row.locator(".official button.copy").count() == 1
     assert "Source:" in text
+    # It sits in the section it is about.
+    assert page.locator("#s2").locator(".srow").filter(has_text="H225").count() >= 1
 
 
 def test_the_copy_button_carries_the_official_text(page, server, shots_dir):
@@ -164,30 +144,30 @@ def test_the_copy_button_carries_the_official_text(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
     official = load_key("eu_clp", "da").by_code()["H225"].text
-    button = _statement(page, "H225").first.locator(".side.official button.copy").first
+    button = _statement(page, "H225").first.locator(".official button.copy").first
     assert button.get_attribute("data-text") == official
 
 
 def test_correct_statements_are_collapsed_into_one_line(page, server, shots_dir):
+    """Every correct statement is its own compact row - none hidden away."""
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["clean_eu_da"])
-    good = page.locator("details.block.good")
-    assert good.count() == 1
-    assert not good.first.evaluate("el => el.open"), "the correct list starts open"
-    assert re.search(r"\d+ statements? match the official wording",
-                     good.first.inner_text())
-    # It expands to a plain list of code + text.
-    good.first.locator("summary").click()
-    assert good.first.locator("li").count() > 0
+    assert page.locator("details.block.good").count() == 0
+    correct = page.locator('.srow[data-status="ok"]')
+    assert correct.count() >= 7
+    # Compact: one line of text, no comparison block.
+    assert correct.first.locator(".cmp").count() == 0
+    for code in ("H225", "H319", "P210"):
+        assert _statement(page, code).first.is_visible(), code
 
 
 def test_correct_statements_get_no_card(page, server, shots_dir):
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["clean_eu_da"])
-    assert page.locator("article.issue").count() == 0, (
-        "a correct document should show no issue cards"
+    assert page.locator(".srow.problem").count() == 0, (
+        "a correct document should show no problem rows"
     )
 
 
@@ -196,9 +176,11 @@ def test_the_count_line_and_coverage_are_at_the_top(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
     stats = page.locator(".verdict .stats").first.inner_text()
-    for label in ("Wrong wording", "Fix this", "Check this", "Correct", "Codes checked"):
+    for label in ("Must fix", "To check", "Correct", "SDS sections checked",
+                  "Codes checked"):
         assert label in stats, stats[:300]
     assert re.search(r"Codes checked \(\d+ of \d+\)", stats), stats[:300]
+    assert re.search(r"\d+ of 16", stats), stats[:300]
 
 
 def test_no_check_ids_outside_the_technical_block(page, server, shots_dir):
@@ -206,7 +188,7 @@ def test_no_check_ids_outside_the_technical_block(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
     above = page.locator(".verdict").inner_text() + " ".join(
-        page.locator("article.issue").all_inner_texts()
+        page.locator(".sds-section").all_inner_texts()
     )
     assert not re.search(r"\b[ABC]-\d\d\b", above), above[:300]
 
@@ -247,12 +229,10 @@ def test_whmis_sheet_reads_review_before_release(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["pattern_conditional_slots"])
     assert _release(page) == labels.REVIEW
-    # The stat cell is always labelled; what matters is that it counts nothing
-    # and no card claims wrong wording.
-    wrong = page.locator(".verdict .stats > div").first.inner_text()
-    assert wrong.startswith("0"), wrong
-    assert page.locator('article.issue[data-status="wrong"]').count() == 0
-    assert "Confirm the French version of this SDS exists." in page.inner_text("body")
+    must_fix = page.locator(".verdict .stats > div").first.inner_text()
+    assert must_fix.startswith("0"), must_fix
+    assert page.locator('.srow[data-status="wrong"]').count() == 0
+    assert "Confirm the French version of this SDS exists" in page.inner_text("body")
 
 
 def test_a_clean_sheet_reads_ready_to_release(page, server, shots_dir):
@@ -328,11 +308,12 @@ def test_the_verdict_bar_has_a_banner_and_five_stats(page, server, shots_dir):
     cells = verdict.locator(".stats > div")
     assert cells.count() == 5, cells.count()
     labels_shown = [cells.nth(i).inner_text().split("\n")[-1] for i in range(5)]
-    assert labels_shown[:4] == ["Wrong wording", "Fix this", "Check this", "Correct"]
+    assert labels_shown[:4] == ["Must fix", "To check", "Correct", "SDS sections checked"]
     assert labels_shown[4].startswith("Codes checked")
 
 
 def test_what_to_do_is_a_numbered_list_of_at_most_five(page, server, shots_dir):
+    """Each action names the SDS section it is carried out in."""
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
@@ -341,30 +322,35 @@ def test_what_to_do_is_a_numbered_list_of_at_most_five(page, server, shots_dir):
     assert todo.locator("h2").inner_text().strip() == "What to do"
     items = todo.locator("ol li")
     assert 1 <= items.count() <= 5, items.count()
+    first = items.first.inner_text()
+    assert first.startswith("Section 2: correct H225 to"), first
 
 
 def test_the_issue_filters_hide_and_show_cards(page, server, shots_dir):
+    """Replaced by the navigator: one link per SDS section, with its status."""
     from tests.ui.manifest import BY_NAME
 
-    _upload(page, server, BY_NAME["defect_c15_osha_partial_key"])
-    assert "Wording ·" in page.locator(".issues-head h2").first.inner_text()
-    wording = 'article.issue[data-section="wording"]'
-    total = page.locator(wording).count()
-    page.click('.filters button[data-filter="must"]')
-    visible = page.locator(f"{wording}:not([hidden])").count()
-    assert visible < total, "the Must fix filter hid nothing"
-    page.click('.filters button[data-filter="all"]')
-    assert page.locator(f"{wording}:not([hidden])").count() == total
+    _upload(page, server, BY_NAME["defect_a02_hazard"])
+    nav = page.locator(".navigator")
+    assert nav.evaluate("el => getComputedStyle(el).position") == "sticky"
+    links = nav.locator("a")
+    assert [links.nth(i).get_attribute("href") for i in range(links.count())] == [
+        "#s1", "#s2", "#s3", "#s9", "#s16"]
+    assert nav.locator('a[href="#s2"] .dot').get_attribute("class") == "dot d-fix"
+    assert "4–8 · not checked" in nav.inner_text()
+    assert "10–15 · not checked" in nav.inner_text()
+    nav.locator('a[href="#s2"]').click()
+    assert page.url.endswith("#s2")
 
 
 def test_a_newer_ghs_card_names_the_closest_statement(page, server, shots_dir):
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["defect_c15_newer_ghs"])
-    card = _statement(page, "P317").first
-    heading = card.locator(".side.official h3").inner_text()
+    row = _statement(page, "P317").first
+    heading = row.locator(".official .sub").inner_text()
     assert heading.lower().startswith("closest"), heading
-    assert "Matches GHS Rev.8 wording exactly" in card.inner_text()
+    assert "Matches GHS Rev.8 wording exactly" in row.inner_text()
 
 
 def test_a_single_column_card_for_something_with_no_official_text(page, server,
@@ -372,21 +358,20 @@ def test_a_single_column_card_for_something_with_no_official_text(page, server,
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["defect_c14_english_only"])
-    card = page.locator("article.issue").first
-    assert card.locator(".body.single").count() == 1
-    assert card.locator(".side").count() == 1
+    row = page.locator(".srow.problem").first
+    assert row.locator(".official").count() == 0
+    assert "French" in row.inner_text()
 
 
 def test_both_collapsed_sections_are_present_and_shut(page, server, shots_dir):
+    """Only Technical details is collapsed; every result is on the page."""
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
-    good = page.locator("details.block.good")
-    tech = page.locator("details.block").last
-    assert good.count() == 1
-    assert "match the official wording" in good.inner_text()
-    assert not good.evaluate("el => el.open")
-    assert "Not checked" in tech.inner_text()
+    collapsed = page.locator("details")
+    assert collapsed.count() == 1
+    tech = collapsed.first
+    assert "Technical details" in tech.inner_text()
     assert not tech.evaluate("el => el.open")
 
 
@@ -399,10 +384,13 @@ def test_the_report_works_at_390px(page, server, shots_dir):
         "() => document.documentElement.scrollWidth - document.documentElement.clientWidth"
     )
     assert overflow <= 1, f"the page scrolls sideways by {overflow}px at 390px"
-    # The two columns stack rather than squeezing.
-    body = page.locator("article.issue .body").first
-    columns = body.evaluate("el => getComputedStyle(el).gridTemplateColumns")
+    # The two wordings stack rather than squeezing, and the navigator stops
+    # being sticky.
+    cmp = page.locator(".srow.problem .cmp").first
+    columns = cmp.evaluate("el => getComputedStyle(el).gridTemplateColumns")
     assert len(columns.split()) == 1, columns
+    nav = page.locator(".navigator")
+    assert nav.evaluate("el => getComputedStyle(el).position") == "static"
     page.screenshot(path=str(shots_dir / "_report_390.png"), full_page=True)
 
 
@@ -415,13 +403,10 @@ def test_a_placeholder_card_has_one_column(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["pattern_unfilled_blanks"])
     for code in ("P501", "P280"):
-        card = _statement(page, code).first
-        expect(card).to_be_visible()
-        assert card.locator(".body.single").count() == 1, code
-        assert card.locator(".side").count() == 1, code
-        # The official text appears as a reference line, never as a second
-        # column to compare against.
-        assert card.locator(".side.official").count() == 0, code
+        row = _statement(page, code).first
+        expect(row).to_be_visible()
+        assert row.locator(".cmp.single").count() == 1, code
+        assert row.locator(".official").count() == 0, code
 
 
 def test_only_the_placeholder_is_highlighted(page, server, shots_dir):
@@ -464,13 +449,15 @@ def test_a_spacing_difference_is_never_highlighted(page, server, shots_dir):
 @pytest.mark.parametrize("case_name", ["pattern_unfilled_blanks", "defect_a02_hazard",
                                        "defect_c15_osha_partial_key"])
 def test_no_developer_wording_in_a_source_line(case_name, page, server, shots_dir):
-    """The card cites the regulation and the instrument, nothing else."""
+    """The row cites the regulation and the instrument, nothing else."""
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME[case_name])
     jargon = ("code established", "split from a cell", "App. C;", "Annex 3 (English)",
               "fill-ins collapsed", ".pdf,", "table row for")
-    for line in page.locator("article.issue .src").all_inner_texts():
+    lines = page.locator(".srow .src").all_inner_texts()
+    assert lines, "no source line on any problem row"
+    for line in lines:
         for word in jargon:
             assert word not in line, f"{word!r} in source line: {line}"
 
@@ -491,15 +478,14 @@ def test_out_of_scope_wording_sits_with_the_matches(page, server, shots_dir):
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["pattern_out_of_scope"])
-    assert _statement(page, "H303").count() == 0, "H303 should raise no card"
-    good = page.locator("details.block.good")
-    good.locator("summary").click()
-    text = good.inner_text()
-    assert "H303" in text
+    row = _statement(page, "H303").first
+    assert row.get_attribute("data-status") == "ok"
+    text = row.inner_text()
     assert "outside US OSHA HazCom's scope" in text
     assert "allowed as extra information" in text
     # And it is not something to do.
-    assert "H303" not in page.locator(".todo").inner_text()
+    todo = page.locator(".todo")
+    assert todo.count() == 0 or "H303" not in todo.inner_text()
 
 
 def test_a_newer_ghs_card_explains_itself(page, server, shots_dir):
@@ -509,7 +495,6 @@ def test_a_newer_ghs_card_explains_itself(page, server, shots_dir):
     with_closest = _statement(page, "P319").first.inner_text()
     assert "Correct GHS Rev.8 wording" in with_closest
     assert "has not adopted P319" in with_closest
-    assert "if not, use P314" in with_closest
 
     without = _statement(page, "P317").first.inner_text()
     assert "has no equivalent statement" in without
@@ -517,27 +502,21 @@ def test_a_newer_ghs_card_explains_itself(page, server, shots_dir):
 
 
 def test_punctuation_differences_share_one_collapsed_card(page, server, shots_dir):
-    """A dozen of these used to push the statements that matter off the screen."""
+    """Each is its own row now - shown, not hidden - and they share one action."""
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["pattern_capitalisation"])
-    block = page.locator("details.block.minor")
-    assert block.count() == 1
-    summary = block.locator("summary").inner_text()
-    assert "differs only in punctuation or capital letters" in summary
-    assert summary.strip().startswith("1 statement")
-    # Collapsed: the detail is there, but not taking up the page.
-    assert not block.locator(".minor-table").first.is_visible()
-    assert _statement(page, "P303+P361+P353").count() == 0
+    assert page.locator("details.block.minor").count() == 0
+    row = _minor_row(page, "P303+P361+P353")
+    assert row.count() == 1
+    assert row.first.is_visible()
 
 
 def test_the_collapsed_card_shows_both_texts_when_opened(page, server, shots_dir):
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["pattern_capitalisation"])
-    page.locator("details.block.minor summary").click()
     row = _minor_row(page, "P303+P361+P353")
-    assert row.count() == 1
     text = row.inner_text()
     assert "Rinse SKIN" in text           # the document's own wording
     assert "Rinse skin" in text           # the official wording beside it
@@ -568,7 +547,7 @@ def test_the_placeholder_has_air_before_it(page, server, shots_dir):
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["pattern_unfilled_blanks"])
-    shown = _statement(page, "P501").first.locator(".side .txt").inner_text()
+    shown = _statement(page, "P501").first.locator(".cmp .txt").first.inner_text()
     assert "to …" in shown, shown
     assert "to…" not in shown, shown
 
@@ -589,28 +568,22 @@ def test_an_undetectable_regulation_shows_the_page(page, server, shots_dir):
 
 def test_a_placeholder_card_shows_the_official_wording_as_reference(page, server,
                                                                     shots_dir):
-    """One column still, with the official text as a reference line.
-
-    It is not something to compare against - the document already says it - so
-    it carries no highlighting and sits under the instruction.
-    """
+    """One column still, with the official text as a reference line."""
     from lingua_oracle.keys.store import load_key
     from tests.ui.manifest import BY_NAME
 
     _upload(page, server, BY_NAME["pattern_unfilled_blanks"])
     official = load_key("us_osha", "en").by_code()["P501"].text
-    card = _statement(page, "P501").first
-    assert card.locator(".body.single").count() == 1
-    reference = card.locator(".reference")
+    row = _statement(page, "P501").first
+    assert row.locator(".cmp.single").count() == 1
+    reference = row.locator(".reference")
     assert reference.count() == 1
     text = reference.inner_text()
     assert text.startswith("Official wording:")
     assert official in text
     assert "is the blank to fill in" in text
-    # The reference carries no diff marks; only the document's own placeholder
-    # is highlighted, once.
     assert reference.locator("mark").count() == 0
-    assert card.locator("mark").count() == 1
+    assert row.locator("mark").count() == 1
 
 
 def test_the_upload_page_fetches_fonts_only_from_static(page, server, shots_dir):
@@ -678,3 +651,19 @@ def test_confirming_the_suggestion_runs_the_check(page, server, shots_dir):
     page.click("#check-form button[type=submit]")
     page.wait_for_url(re.compile(r"/reports/"), timeout=60_000)
     assert "Australia WHS" in page.inner_text("body")
+
+
+def test_every_checked_item_is_a_row_in_its_section(page, server, shots_dir):
+    """The page is the SDS, in order, with the unread sections said."""
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["clean_eu_da"])
+    headings = page.locator(".sds-section > header h2").all_inner_texts()
+    assert headings == ["Section 1 · Identification", "Section 2 · Hazards identification",
+                        "Section 3 · Composition", "Section 9 · Physical and chemical properties",
+                        "Section 16 · Other information"]
+    two = page.locator("#s2")
+    assert "SIGNAL WORD & HAZARD STATEMENTS" in two.inner_text().upper()
+    assert "PRECAUTIONARY STATEMENTS" in two.inner_text().upper()
+    assert two.locator(".srow").filter(has_text="Signal word").count() == 1
+    assert "Sections 4–8 and 10–15" in page.locator(".skipped").inner_text()

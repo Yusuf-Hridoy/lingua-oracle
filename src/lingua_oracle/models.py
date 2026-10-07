@@ -470,6 +470,11 @@ class Report(BaseModel):
     composition_evidence: str = ""
     #: The substance check, where the product is a substance.
     substance: SubstanceSection | None = None
+    #: The SDS sections the document was found to have, by number ("2", "3",
+    #: "16"), or "label" for label artwork - what the report can show.
+    sections_found: list[str] = Field(default_factory=list)
+    #: What Section 9 says the product is: "gas", "solid/liquid" or "".
+    physical_state: str = ""
 
     def recount(self) -> None:
         s = Summary()

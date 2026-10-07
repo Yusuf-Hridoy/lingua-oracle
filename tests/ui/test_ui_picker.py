@@ -37,8 +37,11 @@ def test_several_candidates_are_offered_above_the_verdict(page, app_server):
     picker = page.locator("form.picker")
     assert picker.count() == 1
     assert picker.locator("input[name=product_id]").count() == 2
+    # In Section 1, the product match, ahead of everything that depends on it.
+    one = page.locator("#s1")
+    assert "Which product is this?" in one.inner_text()
     body = page.inner_text("body")
-    assert body.index("Which product is this?") < body.index("Wording")
+    assert body.index("Which product is this?") < body.index("Section 2 · Hazards")
     assert "Choose the product above" in body
 
 
@@ -57,12 +60,12 @@ def test_choosing_a_product_fills_both_sections_on_the_same_page(
 
     assert page.url == before, "the choice should land back on the same report"
     assert page.locator("form.picker").count() == 0
-    ingredients = page.locator("#ingredients").inner_text()
-    mixture = page.locator("#mixture").inner_text()
-    assert "checked" in ingredients
-    assert "ExactSDS record" in ingredients
-    assert "checked" in mixture
-    assert "Regulation (EC) No 1272/2008" in mixture
+    three = page.locator("#s3").inner_text()
+    two = page.locator("#s2").inner_text()
+    assert "ExactSDS record" in three
+    assert page.locator("#s3 table.ingredients tbody tr").count() >= 1
+    assert "Calculated from" in two
+    assert "Regulation (EC) No 1272/2008" in two
 
 
 def test_the_chosen_products_own_composition_is_what_was_checked(

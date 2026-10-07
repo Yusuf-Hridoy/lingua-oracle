@@ -40,6 +40,8 @@ class SubstanceResult:
     cas: str
     name: str | None
     uses: list[Use] = field(default_factory=list)
+    #: The concentration as the sheet or the record prints it, where known.
+    concentration: str | None = None
 
     @property
     def product_count(self) -> int:
@@ -254,6 +256,7 @@ def _payload(run: Run) -> dict:
             {
                 "cas": s.cas,
                 "name": s.name,
+                "concentration": s.concentration,
                 "product_count": s.product_count,
                 "uses_checked": s.product_count,
                 "uses_under_classified": s.under_classified_uses,

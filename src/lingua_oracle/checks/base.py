@@ -92,6 +92,9 @@ class CheckContext:
     def section_for(self, hit: CodeHit) -> str | None:
         return hit.section or section_of(self.spans, hit.line_index)
 
+    def section_for_line(self, index: int) -> str | None:
+        return section_of(self.spans, index)
+
     def hits_in(self, section: str) -> list[CodeHit]:
         return [h for h in self.hits if self.section_for(h) == section]
 

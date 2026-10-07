@@ -379,3 +379,104 @@ button.primary:hover { filter: brightness(.94); }
 .picker .candidates label { display: flex; align-items: baseline; gap: 10px;
                             cursor: pointer; }
 .picker .who { font-weight: 500; }
+
+/* -- the report by SDS section ------------------------------------------------
+ * A left navigator with a status dot per section, then one card per section,
+ * every checked item a row. Correct rows are one compact line; a problem row
+ * shows both wordings with the differences marked.
+ */
+.wrap.wide { max-width: 1240px; }
+.report-head .back { margin-bottom: 6px; }
+.pill.na { background: #F1F3F5; color: var(--muted); }
+
+.by-section { display: grid; grid-template-columns: 230px minmax(0, 1fr);
+              gap: 20px; align-items: start; margin-top: 20px; }
+.navigator { position: sticky; top: 20px; background: var(--card);
+             border: 1px solid var(--border); border-radius: var(--radius);
+             padding: 14px 10px; display: flex; flex-direction: column; gap: 2px;
+             font-size: 14px; }
+.navigator a, .navigator .nav-none { display: flex; align-items: center; gap: 10px;
+             padding: 7px 10px; border-radius: 6px; text-decoration: none;
+             color: var(--text); min-height: 34px; }
+.navigator a:hover { background: var(--page); }
+.navigator a.nav-fix { background: var(--fix-bg); font-weight: 600; }
+.navigator .nav-none { color: #6B737C; }
+.navigator .aside-note { border-top: 1px solid var(--border); margin: 8px 6px 0;
+             padding: 10px 4px 2px; font-size: 12.5px; color: var(--muted);
+             line-height: 1.5; }
+.sub { font-size: 12px; font-weight: 600; text-transform: uppercase;
+       letter-spacing: .05em; color: var(--muted); }
+.navigator > .sub { padding: 4px 10px 8px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+       flex-shrink: 0; }
+.d-ok { background: #12B76A; } .d-fix { background: #D92D20; }
+.d-check { background: #F79009; } .d-na, .d-none { background: #D0D5DD; }
+
+.sections { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.sections .todo { margin-top: 0; }
+.sds-section { background: var(--card); border: 1px solid var(--border);
+               border-radius: var(--radius); overflow: hidden; scroll-margin-top: 16px; }
+.sds-section.s-fix { border: 1.5px solid #F7B9B2; }
+.sds-section > header { display: flex; justify-content: space-between;
+               align-items: center; gap: 12px; padding: 14px 20px; flex-wrap: wrap; }
+.sds-section > header h2 { font-size: 16px; margin: 0; }
+.sds-section .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.sds-section .intro { margin: 0; padding: 0 20px 12px; font-size: 14px; color: var(--muted); }
+.subhead { padding: 10px 20px; background: #FAFBFC; border-top: 1px solid #EEF0F2;
+           font-size: 12px; font-weight: 600; text-transform: uppercase;
+           letter-spacing: .05em; color: var(--muted); }
+
+.srow { display: grid; grid-template-columns: 150px 108px minmax(0, 1fr); gap: 16px;
+        padding: 10px 20px; border-top: 1px solid #EEF0F2; align-items: start;
+        font-size: 14px; }
+.srow.problem { padding: 12px 20px; }
+.srow.st-fix, .srow.st-wrong { background: #FFFBFA; }
+.srow .key { word-break: break-word; }
+.srow .key.mono { font-family: var(--mono); font-weight: 500; font-size: 13.5px; }
+.srow .pill { justify-self: start; }
+.srow .val { color: var(--text); }
+.st-na .val, .st-info .val { color: var(--muted); }
+.rnote { display: block; margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.cmp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.cmp.single { grid-template-columns: minmax(0, 1fr); }
+.cmp .rnote { grid-column: 1 / -1; margin: 0; }
+.cmp .sub { margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.cmp .official .sub { color: var(--ok-text); }
+.cmp .copy { font: inherit; font-size: 12px; text-transform: none; letter-spacing: 0;
+             padding: 2px 8px; min-height: 0; border: 1px solid #C4CAD2; border-radius: 5px;
+             background: var(--card); color: var(--text); cursor: pointer; }
+mark.diff { background: var(--diff); color: var(--text); padding: 0 2px; border-radius: 2px; }
+
+.table-box { overflow-x: auto; }
+table.ingredients { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.ingredients th { text-align: left; color: var(--muted); font-size: 12px;
+                       font-weight: 500; text-transform: uppercase; letter-spacing: .04em;
+                       padding: 10px 12px; border-top: 1px solid #EEF0F2; }
+table.ingredients td { padding: 12px; border-top: 1px solid #EEF0F2; vertical-align: top; }
+table.ingredients td.cas { white-space: nowrap; }
+table.ingredients th:first-child, table.ingredients td:first-child { padding-left: 20px; }
+table.ingredients td:last-child { padding-right: 20px; }
+table.ingredients .val { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
+
+.skipped { padding: 14px 20px; font-size: 14px; color: var(--muted); }
+.skipped b { color: var(--text); }
+.sources-box { padding: 14px 20px; display: flex; flex-direction: column; gap: 6px;
+               font-size: 14px; color: var(--muted); border-style: dashed; border-color: #D0D5DD; }
+.sources-box b { color: var(--text); }
+.sds-section .picker { margin: 0 20px 14px; padding: 16px; border: 1px solid var(--border);
+                       border-radius: 8px; background: #FAFBFC; }
+.sds-section .picker h3 { margin: 0 0 4px; font-size: 15px; }
+
+@media (max-width: 960px) {
+  .by-section { grid-template-columns: 1fr; }
+  .navigator { position: static; }
+  .srow { grid-template-columns: 1fr auto; }
+  .srow .val, .srow .cmp { grid-column: 1 / -1; }
+  .cmp { grid-template-columns: 1fr; }
+}
+@media print {
+  .navigator, .topbar, .head-actions, .copy { display: none; }
+  .by-section { grid-template-columns: 1fr; }
+}
+.cmp .contributions { grid-column: 1 / -1; border: 1px solid #EEF0F2; border-radius: 6px; }
+mark.fillin { background: var(--fillin); color: var(--text); padding: 0 2px; border-radius: 2px; }

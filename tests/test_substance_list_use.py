@@ -18,7 +18,7 @@ import pytest
 from lingua_oracle.ingredients.compare import Status
 from lingua_oracle.ingredients.section import worst
 from lingua_oracle.pipeline import check_pdf
-from lingua_oracle.report.render import ingredient_status, render_html
+from lingua_oracle.report.render import render_html
 from lingua_oracle.substances.lists import LISTS, for_regulation
 from lingua_oracle.substances.load import for_check
 from tests.conftest import pdf
@@ -89,8 +89,10 @@ def test_the_same_code_against_a_reference_list_is_worth_checking():
 
 def test_the_card_says_which_list_and_that_it_does_not_bind():
     body = render_html(_check("us_osha"))
-    assert "CLP Annex VI Part 3, Table 3 lists" in body
-    assert "US OSHA HazCom has no binding list" in body
+    three = body[body.index('id="s3"'):]
+    assert "CLP Annex VI Part 3, Table 3 lists" in three
+    assert "US OSHA HazCom has no binding list" in three
+    assert "(reference only)" in three
 
 
 def test_the_card_against_a_binding_list_still_says_requires():
@@ -105,14 +107,14 @@ def test_the_card_against_a_binding_list_still_says_requires():
     ("us_osha", "CLP Annex VI Part 3, Table 3 (reference only)"),
 ])
 def test_the_section_states_which_list_was_used(regulation, expected):
-    _, reason = ingredient_status(_check(regulation).ingredients)
-    assert expected in reason
+    body = render_html(_check(regulation))
+    assert expected in body[body.index('id="s3"'):]
 
 
 def test_a_regulation_with_no_list_says_so_rather_than_borrowing_one():
-    word, reason = ingredient_status(_check("jp_jis").ingredients)
-    assert word == "nothing to check"
-    assert "No list of classified substances is on file" in reason
+    body = render_html(_check("jp_jis"))
+    three = body[body.index('id="s3"'):]
+    assert "No list of classified substances is on file" in three
 
 
 # -- the mixture takes its classifications from the same list ------------------

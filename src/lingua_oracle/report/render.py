@@ -13,9 +13,8 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markupsafe import Markup
 
-from lingua_oracle.checks import title_of
 from lingua_oracle.detect.language import language_name
-from lingua_oracle.models import Report, Severity
+from lingua_oracle.models import Report
 from lingua_oracle.registry import load_registry
 from lingua_oracle.report import labels
 
@@ -68,8 +67,6 @@ def report_css(body_size: int = 0) -> str:
     if body_size + len(embedded) <= _REPORT_BUDGET:
         return embedded
     return _stripped_css()
-
-_SEVERITY_ORDER = {Severity.FAIL: 0, Severity.WARN: 1, Severity.INFO: 2}
 
 
 def reports_dir() -> Path:
@@ -153,48 +150,6 @@ def _environment() -> Environment:
     return env
 
 
-def _grouped(report: Report, display: str = "") -> list[dict]:
-    """Findings grouped by check, failures first."""
-    groups: dict[str, list] = {}
-    for finding in report.findings:
-        groups.setdefault(finding.check_id, []).append(finding)
-
-    rendered = []
-    for check_id, findings in groups.items():
-        findings.sort(key=lambda f: (_SEVERITY_ORDER.get(f.severity, 3), f.code or ""))
-        rows = []
-        for f in findings:
-            left, right = word_diff(f.expected, f.found)
-            rows.append({
-                "finding": f,
-                "expected_html": left,
-                "found_html": right,
-                "result": labels.result_of(check_id, f.severity, f.unverified),
-                "action": labels.action_for(f, display),
-                "source": labels.SOURCE.get(f.tier) if f.tier else None,
-                "code_label": labels.code_label(f.code),
-                "section_label": labels.section_label(f.section),
-            })
-        rendered.append(
-            {
-                "check_id": check_id,
-                "title": title_of(check_id),
-                "expected_column": (labels.NEWER_GHS_EXPECTED_COLUMN
-                                    if check_id == "C-15"
-                                    else labels.COLUMNS["expected"]),
-                "rows": rows,
-                "fails": sum(1 for f in findings if f.severity == Severity.FAIL and not f.unverified),
-                "warns": sum(1 for f in findings if f.severity == Severity.WARN and not f.unverified),
-                "unverified": sum(1 for f in findings if f.unverified),
-            }
-        )
-    rendered.sort(key=lambda g: (-g["fails"], -g["warns"], g["check_id"]))
-    return rendered
-
-
-_STATUS_ORDER = {"wrong": 0, "check": 1, "not_checked": 2, "correct": 3}
-
-
 def display_of(report: Report) -> str:
     try:
         return load_registry().get(report.regulation).display_name
@@ -218,171 +173,12 @@ def _highlight_blank(text: str) -> str:
     return "".join(out)
 
 
-def _issue_status(verdict) -> str:
-    """The word shown on the card.
-
-    A statement whose wording is right but whose blank was never filled is not
-    "check this" - there is nothing to weigh up, the sheet is unfinished. It
-    reads as "Fix this", alongside the placeholders and missing sections.
-    """
-    if verdict.status == "check" and (
-            verdict.blank_unfilled or "never filled in" in (verdict.why or "")):
-        return "fix"
-    return verdict.status
-
-
-def _statement_cards(report: Report) -> dict:
-    """The report as a reader wants it: what to fix, then what is fine."""
-    display = display_of(report)
-    rows = []
-    for verdict in sorted(report.statements,
-                          key=lambda v: (_STATUS_ORDER.get(v.status, 9), v.code)):
-        status = _issue_status(verdict)
-        # A blank nobody filled in needs one column, not two. The official text
-        # and the document's are the same statement; showing them side by side
-        # invites a reader to hunt for a difference that is not there, and the
-        # only thing that matters is the placeholder still sitting in it.
-        blank = status == "fix" and verdict.blank_unfilled
-        if blank:
-            left, right = "", _highlight_blank(verdict.found)
-        else:
-            left, right = word_diff(verdict.expected, verdict.found)
-        rows.append({
-            "v": verdict,
-            "status": status,
-            "minor": bool(getattr(verdict, "minor_difference", False))
-                     and status not in ("correct", "not_checked"),
-            "label": labels.STATUS.get(status, labels.NOT_CHECKED),
-            "found_html": right,
-            "expected_html": left,
-            "action": labels.STATUS_ACTION.get(status, ""),
-            "single": blank or not verdict.expected,
-            "instruction": (labels.blank_instruction(verdict.code, verdict.expected)
-                            if blank else ""),
-            # On a placeholder card the official wording is a reference, not
-            # something to compare against - the document already says it. One
-            # line, no diff, so nobody goes looking for a difference.
-            "reference": verdict.expected if blank else "",
-            "official_heading": (
-                f"Closest {display} statement · {verdict.nearest_code}"
-                if getattr(verdict, "nearest_code", "") else "Official wording"
-            ),
-            "match_note": verdict.match_note,
-        })
-    problems = [r for r in rows if r["status"] not in ("correct", "not_checked")
-                and not r["minor"]]
-    # Same words, different punctuation or capital letters. Each one is worth
-    # saying and none is worth a card of its own: a dozen of them pushed the
-    # statements that genuinely differ off the first screen.
-    minor = [r for r in rows if r["minor"]]
-    correct = [r for r in rows if r["status"] == "correct"]
-    unchecked = [r for r in rows if r["status"] == "not_checked"]
-
-    # Findings that are not about one statement's wording - a missing language,
-    # a leftover placeholder, a code set that differs between two documents.
-    # Without these the report would simply lose them.
-    statement_checks = {"A-02", "A-03", "A-04", "C-15"}
-    for finding in report.findings:
-        if finding.check_id in statement_checks or finding.unverified:
-            continue
-        if finding.severity is Severity.INFO and finding.code:
-            continue  # fill-in notes ride on their own statement card
-        # A-01 compares the signal word against the official text, so its
-        # failure is wrong wording like any other; the rest are things to fix.
-        if finding.severity is not Severity.FAIL:
-            status = "check"
-        elif finding.check_id in labels.WORDING_CHECKS:
-            status = "wrong"
-        else:
-            status = "fix"
-        problems.append({
-            "v": None,
-            "finding": finding,
-            "status": status,
-            "minor": False,
-            "label": labels.STATUS[status],
-            "single": True,
-            "action": labels.action_for(finding, display),
-        })
-
-    order = {"wrong": 0, "fix": 1, "check": 2}
-    problems.sort(key=lambda r: order.get(r["status"], 9))
-    # The counts cover everything the reader can see, collapsed card included,
-    # because the banner sentence is written from these numbers and the stat
-    # cells show them. Two sets of numbers for one report is how a banner comes
-    # to disagree with the figures beside it.
-    counts = {
-        "wrong": sum(1 for r in problems if r["status"] == "wrong"),
-        "fix": sum(1 for r in problems if r["status"] == "fix"),
-        "check": (sum(1 for r in problems if r["status"] == "check") + len(minor)),
-        "correct": len(correct),
-        "not_checked": len(unchecked),
-        "minor": len(minor),
-        "blanks": sum(1 for r in problems
-                      if r["status"] == "fix" and r.get("v")
-                      and r["v"].blank_unfilled),
-    }
-    # Where each wording came from, in full. Off the cards, which carry the
-    # regulation and the instrument only.
-    provenance = sorted(
-        {(v.code, v.source_detail) for v in report.statements if v.source_detail}
-    )
-    return {"problems": problems, "correct": correct, "unchecked": unchecked,
-            "minor": minor, "counts": counts, "provenance": provenance}
-
-
 def _body_estimate(report: Report) -> int:
     """Rough size of the report's own markup, before the stylesheet."""
     return sum(
         len(v.found) + len(v.expected) + len(v.why) + len(v.source) + 400
         for v in report.statements
     ) + sum(len(f.message or "") + 400 for f in report.findings) + 4000
-
-
-#: What the Ingredients section was able to look at, in one line.
-_INGREDIENT_SOURCE = {
-    "app": "checked against this product's record in ExactSDS",
-    "pdf": "read from Section 3 of this sheet",
-    "nothing": "nothing on this sheet to check",
-    "skipped": "not checked",
-}
-
-
-def ingredient_reasons() -> dict[str, str]:
-    from lingua_oracle.ingredients.report import REASONS
-
-    return REASONS
-
-
-def _ingredient_source(section) -> str:
-    if section is None:
-        return ""
-    return _INGREDIENT_SOURCE.get(section.source, "")
-
-
-#: What the Mixture section was able to do, in one line.
-_MIXTURE_SOURCE = {
-    "nothing": "nothing to calculate from",
-    "cannot_calculate": "not calculated",
-    "not_applicable": "not applicable: a substance",
-    "out_of_scope": "not calculated",
-    "skipped": "not calculated",
-}
-
-
-def _mixture_source(section) -> str:
-    """Where the rules behind this section came from, in the document's name.
-
-    Every regulation is calculated by its own text now, so naming CLP here -
-    as this line used to, whatever the sheet was written to - would be wrong
-    on five regulations out of six.
-    """
-    state = getattr(section, "state", "")
-    if state == "calculated":
-        document = getattr(section, "source_document", "")
-        return (f"calculated from the ingredients, by {document}" if document
-                else "calculated from the ingredients")
-    return _MIXTURE_SOURCE.get(state, "")
 
 
 def display_name_of(regulation: str | None) -> str:
@@ -399,159 +195,32 @@ def display_name_of(regulation: str | None) -> str:
         return regulation
 
 
-def _listing(section, regulation: str) -> dict | None:
-    """Which published list the ingredients were judged against.
-
-    None where the section never got as far as one, in which case the card
-    falls back to naming Annex VI, which is what it used to say.
-    """
-    if section is None or not section.list_title:
-        return None
-    return {"name": section.list_name, "title": section.list_title,
-            "binding": section.list_binding,
-            "authority": section.list_authority,
-            "regulation_name": display_name_of(regulation)}
-
-
-def wording_status(report) -> tuple[str, str]:
-    """One line about the wording check: what it did, or why it did nothing."""
-    coverage = report.coverage
-    if coverage and coverage.codes_checked:
-        return ("checked",
-                f"{coverage.codes_checked} of {coverage.codes_found} statements "
-                f"compared with the official {display_name_of(report.regulation)} "
-                "wording")
-    if coverage and coverage.codes_found:
-        return ("can't check",
-                "statements were found but none could be compared: there is no "
-                f"official wording on file for {report.language}")
-    return ("nothing to check",
-            "this document prints no hazard or precautionary statements")
-
-
-def ingredient_status(section) -> tuple[str, str]:
-    """One line about the ingredient check, in words rather than in states."""
-    if section is None:
-        return ("can't check", "the ingredient check was not run")
-    against = (f"{section.list_title} ({'binding' if section.list_binding else 'reference only'})"
-               if section.list_title else "no list")
-    if section.source == "app" and section.counts.get("with_entry"):
-        return ("checked",
-                f"{section.counts.get('substances', 0)} substances from the "
-                f"ExactSDS record for this product, against {against}")
-    if section.source == "pdf" and section.counts.get("with_entry"):
-        return ("checked",
-                f"{section.counts.get('substances', 0)} substances from "
-                f"Section 3 of this sheet, against {against}")
-    if section.match_state == "ambiguous":
-        return ("nothing to check",
-                "several products could be this sheet; choose one above")
-    # Whatever happened, the section says which list it would have been judged
-    # against: "nothing to check" against a binding list and against somebody
-    # else's are different situations.
-    tail = f" The list for this regulation is {against}." if section.list_title else ""
-    if section.source == "skipped":
-        return ("can't check",
-                (section.message or "ExactSDS could not be reached") + tail)
-    return ("nothing to check",
-            (section.message or "no ingredients with CAS numbers were found")
-            + tail)
-
-
-def mixture_status(section) -> tuple[str, str]:
-    """One line about the mixture calculation."""
-    if section is None:
-        return ("can't check", "the mixture calculation was not run")
-    if section.state == "calculated":
-        read_as = {"gas": ", read as a gas",
-                   "solid/liquid": ", read as a solid or a liquid"}
-        return ("checked",
-                f"{section.counts.get('ingredients', 0)} ingredients summed "
-                f"against {section.source_document}"
-                + read_as.get(section.physical_state, ""))
-    if section.state == "not_applicable":
-        return ("not applicable", section.message)
-    if section.state == "cannot_calculate":
-        return ("can't check", section.message)
-    if section.state == "out_of_scope":
-        return ("can't check", section.message)
-    if section.state == "skipped":
-        return ("can't check", section.message)
-    return ("nothing to check", section.message)
-
-
-#: The three words a section can report, and how each one looks.
-STATUS_TONE = {"checked": "ok", "nothing to check": "none",
-               "can't check": "check", "not applicable": "none"}
-
-
-def _mixture_tone(section) -> str:
-    if section is None or not section.counts:
-        return "check"
-    if section.counts.get("inconsistent"):
-        return "fix"
-    if section.counts.get("cannot_tell"):
-        return "check"
-    return "ok" if section.counts.get("consistent") else "check"
-
-
-def _ingredient_tone(section) -> str:
-    if section is None or not section.counts:
-        return "check"
-    if section.counts.get("fix"):
-        return "fix"
-    if section.counts.get("inconsistent_substances"):
-        return "check"
-    return "ok" if section.counts.get("with_entry") else "check"
-
-
 def render_html(report: Report) -> str:
-    registry = load_registry()
-    try:
-        display = registry.get(report.regulation).display_name
-    except KeyError:
-        display = report.regulation
+    """The report, section by section as an SDS is read (`report.sections`)."""
+    from lingua_oracle.report import sections
+
+    display = display_of(report)
+    set_by = labels.SET_BY.get(report.detected_by, report.detected_by)
     template = _environment().get_template("report.html.j2")
-    cards = _statement_cards(report)
     ing = report.ingredients
     substances = (ing.substances if ing else []) or []
     return template.render(
+        report=report,
+        page=sections.build(report, display, set_by),
+        PILL=sections.PILL,
         ing=ing,
-        ing_source=_ingredient_source(ing),
-        ing_said_by=("This sheet says" if ing and ing.source == "pdf"
-                     else "The app says"),
-        ing_tone=_ingredient_tone(ing),
-        ing_under=[s for s in substances if s["uses_under_classified"]],
-        ing_list=_listing(report.ingredients, report.regulation),
+        mixture=report.mixture,
         ing_anomalies=sorted({line for s in substances
                               for line in s.get("list_anomalies") or []}),
-        ing_inconsistent=[s for s in substances
-                          if s["inconsistent"] and not s["uses_under_classified"]],
-        ing_matches=[s for s in substances if s["status"] == "ok"
-                     and not s["uses_under_classified"]],
-        ing_extra=[s for s in substances if s["status"] == "info"
-                   and not s["uses_under_classified"]],
-        ing_unchecked=[s for s in substances if s["status"] == "not_checked"],
-        ing_reasons=ingredient_reasons(),
+        provenance=sorted({(v.code, v.source_detail) for v in report.statements
+                           if v.source_detail}),
+        caveats=labels._caveats(report),
         regulation_name=display_name_of,
-        mixture=report.mixture,
-        mixture_source=_mixture_source(report.mixture),
-        wording_status=wording_status(report),
-        ingredient_status=ingredient_status(report.ingredients),
-        mixture_status=mixture_status(report.mixture),
-        status_tone=STATUS_TONE,
-        mixture_tone=_mixture_tone(report.mixture),
-        report=report,
-        groups=_grouped(report, display),
         regulation_display=display,
-        coverage_percent=report.coverage.percent,
-        verdict=labels.verdict_of(report, display, counts=cards["counts"]),
-        app_css=Markup(report_css(_body_estimate(report))),
         language_name=language_name(report.language),
-        cards=cards,
+        set_by=set_by,
         L=labels,
-        SEV=Severity,
-        set_by=labels.SET_BY.get(report.detected_by, report.detected_by),
+        app_css=Markup(report_css(_body_estimate(report))),
     )
 
 

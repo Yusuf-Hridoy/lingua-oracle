@@ -110,7 +110,9 @@ def check_pdf(
     # flatters the tool: a code can have an entry and still never be compared,
     # because the document gave it no text.
     statements = sorted(ctx.statements.values(), key=lambda v: v.code)
-    verified = {v.code for v in statements if v.checked}
+    # Codes the document prints. The signal word is judged and shown too, but
+    # it is not a code, and counting it would put more codes checked than found.
+    verified = {v.code for v in statements if v.checked and v.code in codes}
     report = Report(
         id=uuid.uuid4().hex[:12],
         file_name=Path(path).name,
@@ -128,6 +130,11 @@ def check_pdf(
         compared_with=Path(compare_with).name if compare_with else None,
     )
     report.recount()
+    from lingua_oracle.mixture.state import physical_state
+
+    report.sections_found = sorted({span.name for span in spans},
+                                   key=lambda n: (not n.isdigit(), int(n) if n.isdigit() else 0))
+    report.physical_state = physical_state(document.lines, spans) or ""
     if ingredients:
         # Never allowed to cost the wording result. Whatever happens here, the
         # report that has already been built is what the reader gets.

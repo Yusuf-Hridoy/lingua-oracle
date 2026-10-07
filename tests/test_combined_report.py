@@ -207,11 +207,10 @@ def test_nothing_runs_when_ingredients_are_not_asked_for():
 
 
 def _verdict(report):
-    from lingua_oracle.report import labels
-    from lingua_oracle.report.render import _statement_cards
+    """The page's verdict: the banner, its sentence and the actions."""
+    from lingua_oracle.report import sections
 
-    return labels.verdict_of(report, "EU CLP",
-                             counts=_statement_cards(report)["counts"])
+    return sections.build(report, "EU CLP", "read from the document")
 
 
 def test_an_under_classified_ingredient_reaches_the_verdict():
@@ -224,7 +223,8 @@ def test_an_under_classified_ingredient_reaches_the_verdict():
     report = _check("clean_eu_en", "eu_clp", app)
     verdict = _verdict(report)
     assert verdict.release == "Fix before release"
-    assert "Annex VI" in verdict.detail
+    assert "Section 3" in verdict.detail
+    assert any("Annex VI" in action for action in verdict.actions)
 
 
 def test_a_clean_sheet_with_clean_ingredients_stays_clean():
@@ -246,11 +246,12 @@ def test_the_two_halves_keep_their_own_counts():
         ingredients={7: [Ingredient(cas="67-64-1", name="<substance>",
                                     h_codes=["H225"], concentration="60")]})
     report = _check("clean_eu_en", "eu_clp", app)
-    from lingua_oracle.report.render import _statement_cards
-
-    wording = _statement_cards(report)["counts"]
-    assert wording["wrong"] == 0                     # the sheet's wording is right
-    assert report.ingredients.counts["fix"] == 1     # its ingredients are not
+    page = _verdict(report)
+    two = next(s for s in page.sections if s.number == "2")
+    three = next(s for s in page.sections if s.number == "3")
+    assert two.count("wrong") == 0                   # the sheet's wording is right
+    assert three.count("fix") == 1                   # its ingredients are not
+    assert report.ingredients.counts["fix"] == 1
 
 
 # -- the rendered page ---------------------------------------------------------
@@ -265,19 +266,21 @@ def test_the_report_names_the_product_it_matched():
         ingredients={7: [Ingredient(cas="67-64-1", name="<substance>",
                                     h_codes=["H225"], concentration="60")]})
     body = render_html(_check("clean_eu_en", "eu_clp", app))
-    assert "Matched to ExactSDS product" in body
-    assert PRODUCT in body
-    assert "(7)" in body
-    assert "Not this product?" in body
+    one = body[body.index('id="s1"'):body.index('id="s2"')]
+    assert "Matched to ExactSDS product" in one
+    assert PRODUCT in one
+    assert "(7)" in one
+    assert "Not this product?" in one
 
 
 def test_the_report_has_both_sections():
     from lingua_oracle.report.render import render_html
 
     body = render_html(_check("pattern_supplier_ingredients", "eu_clp", FakeApp()))
-    assert "Wording" in body
-    assert "Ingredients" in body
-    assert "from Section 3 of this sheet" in body
+    assert "2.2 Label elements" in body
+    three = body[body.index('id="s3"'):]
+    assert "<th>Ingredient</th>" in three
+    assert "from Section 3 of this sheet" in three
 
 
 def test_a_skipped_section_says_why_on_the_page():
@@ -298,8 +301,8 @@ def test_a_report_without_the_ingredient_check_says_it_did_not_run():
     report = check_pdf(pdf("clean_eu_en"), "eu_clp")
     assert report.ingredients is None
     body = render_html(report)
-    assert "Ingredients &middot;" in body
-    assert "the ingredient check was not run" in body
+    three = body[body.index('id="s3"'):]
+    assert "The ingredient check was not run." in three
 
 
 # -- "nothing to check" is not a verdict --------------------------------------
@@ -413,27 +416,32 @@ def test_the_mixture_reaches_the_overall_verdict():
     report = _check("pattern_supplier_ingredients", "eu_clp", FakeApp())
     verdict = _verdict(report)
     assert report.mixture.counts["inconsistent"] >= 1
-    assert "inconsistent with the ingredients" in verdict.detail
+    assert verdict.release == "Fix before release"
+    assert "Section 2" in verdict.detail
+    assert any(a.startswith("Section 2: check Target organ toxicity")
+               for a in verdict.actions)
 
 
 def test_the_report_renders_all_three_sections():
     from lingua_oracle.report.render import render_html
 
     body = render_html(_check("pattern_supplier_ingredients", "eu_clp", FakeApp()))
-    assert "Wording &middot;" in body
-    assert "Ingredients &middot;" in body
-    assert "Mixture &middot;" in body
+    for heading in ("Section 2 \u00b7 Hazards identification",
+                    "Section 3 \u00b7 Composition"):
+        assert f"<h2>{heading}</h2>" in body
+    assert 'data-section="mixture"' in body
     assert "Section 2 says" in body
     assert "Calculated from declared ingredients" in body
     assert "Calculation trace" in body
 
 
 def test_each_section_keeps_its_own_counts():
-    from lingua_oracle.report.render import _statement_cards
-
     report = _check("pattern_supplier_ingredients", "eu_clp", FakeApp())
-    wording = _statement_cards(report)["counts"]
-    assert set(wording) >= {"wrong", "fix", "check"}
+    page = _verdict(report)
+    by_number = {s.number: s for s in page.sections}
+    assert by_number["2"].count("fix") >= 1          # the mixture verdict
+    assert by_number["3"].count("fix") == 1          # the ingredient below its entry
+    assert by_number["16"].count("fix") == 3         # three codes without full text
     assert set(report.ingredients.counts) >= {"fix", "ok"}
     assert set(report.mixture.counts) >= {"inconsistent", "consistent"}
 
@@ -444,8 +452,8 @@ def test_a_report_without_the_mixture_calculation_says_it_did_not_run():
     report = check_pdf(pdf("clean_eu_en"), "eu_clp")
     assert report.mixture is None
     body = render_html(report)
-    assert "Mixture &middot;" in body
-    assert "the mixture calculation was not run" in body
+    two = body[body.index('id="s2"'):body.index('id="s3"')]
+    assert "The mixture calculation was not run." in two
 
 
 def test_the_mixture_card_shows_the_contributing_ingredients():

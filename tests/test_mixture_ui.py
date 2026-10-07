@@ -64,9 +64,10 @@ def test_a_class_nothing_was_calculated_for_shows_no_empty_comparison():
     assert [r for r in report.mixture.results
             if r["verdict"] == "not_calculated"]
     message = "Not covered by US OSHA HazCom"
-    card = body[body.rindex("<article", 0, body.index(message)):
-                body.index(message)]
-    assert "Calculation gives" not in card
+    row = body[body.rindex('class="srow', 0, body.index(message)):
+               body.index(message)]
+    assert "Calculated from declared ingredients" not in row
+    assert "Section 2 says" not in row
 
 
 def test_japan_says_the_check_is_not_available_rather_than_borrowing_rules():
@@ -79,52 +80,46 @@ def test_japan_says_the_check_is_not_available_rather_than_borrowing_rules():
 # -- every section, every time -------------------------------------------------
 
 
-SECTIONS = ("Wording", "Ingredients", "Mixture")
+#: The SDS sections every report shows, checked or not.
+SECTIONS = ("Section 1 \u00b7 Identification", "Section 2 \u00b7 Hazards identification",
+            "Section 3 \u00b7 Composition", "Section 9 \u00b7 Physical and chemical properties",
+            "Section 16 \u00b7 Other information")
 
 
 @pytest.mark.parametrize("regulation", ["eu_clp", "us_osha", "un_ghs",
                                         "ca_whmis", "au_whs", "uk_clp",
                                         "jp_jis"])
-def test_all_three_sections_are_on_every_report(regulation):
+def test_every_sds_section_is_on_every_report(regulation):
     """A reader should never have to work out whether a check ran."""
     _, body = _page("pattern_supplier_ingredients", regulation)
     for section in SECTIONS:
-        assert f"<h2>{section}" in body
+        assert f"<h2>{section}</h2>" in body
 
 
 @pytest.mark.parametrize("regulation", ["eu_clp", "us_osha", "jp_jis"])
-def test_every_section_says_in_one_line_what_it_did(regulation):
-    _, body = _page("pattern_supplier_ingredients", regulation)
-    said = _statuses(body)
-    assert len(said) == 3
-    for word, reason in said:
-        assert word in ("checked", "nothing to check", "can&#39;t check")
-        assert len(reason) > 10, reason
+def test_the_classification_says_what_the_mixture_check_did(regulation):
+    report, body = _page("pattern_supplier_ingredients", regulation)
+    two = body[body.index('id="s2"'):body.index('id="s3"')]
+    assert "2.1 Classification" in two
+    if report.mixture.state == "calculated":
+        assert "Calculated from" in two
+    else:
+        assert report.mixture.message in two.replace("&#39;", "'")
 
 
 def test_a_section_that_could_not_run_says_why_in_plain_words():
     report = check_pdf(pdf("pattern_supplier_ingredients"), "jp_jis",
                        ingredients=True, client_factory=lambda: FakeApp(library=[]))
     body = render_html(report)
-    word, reason = _statuses(body)[2]
-    assert word == "can&#39;t check"
-    assert "Japan JIS Z 7252/7253" in reason
-    assert "no document on file" in reason
+    two = body[body.index('id="s2"'):body.index('id="s3"')]
+    assert "Japan JIS Z 7252/7253" in two
+    assert "no document on file" in two
 
 
-def test_a_report_without_the_ingredient_check_still_shows_both_sections():
+def test_a_report_without_the_ingredient_check_still_shows_every_section():
     """The sections are the page's shape, not a side effect of what was run."""
     body = render_html(check_pdf(pdf("clean_eu_en"), "eu_clp"))
     for section in SECTIONS:
-        assert f"<h2>{section}" in body
-    assert "the ingredient check was not run" in body
-    assert "the mixture calculation was not run" in body
-
-
-def _statuses(body):
-    import re
-
-    return [(m.group(1).strip(), " ".join(m.group(2).split()))
-            for m in re.finditer(
-                r'class="status s-[a-z]+">\s*([^<&]*(?:&#39;[^<&]*)?)\s*&mdash;'
-                r'([^<]*)<', body)]
+        assert f"<h2>{section}</h2>" in body
+    assert "The ingredient check was not run." in body
+    assert "The mixture calculation was not run." in body

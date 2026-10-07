@@ -67,6 +67,13 @@ class PdfIngredient:
     #: The concentration cell, as printed. Parsed by mixture.concentration.
     concentration: str | None = None
 
+    @property
+    def name(self) -> str | None:
+        """The row's text before its CAS number - the chemical name column."""
+        if not self.cas or self.cas not in self.raw:
+            return None
+        return self.raw.split(self.cas)[0].strip(" |,;:") or None
+
 
 def _codes_in(text: str) -> list[str]:
     """Hazard and supplemental statement codes, in the order printed."""

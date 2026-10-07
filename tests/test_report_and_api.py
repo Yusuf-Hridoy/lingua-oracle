@@ -456,46 +456,45 @@ def test_picking_the_suggestion_then_checks_against_it(client):
 # -- the banner sentence and the figures beside it ----------------------------
 
 
-def _report_and_cards(fixture: str, regulation: str | None = None):
+def _report_and_page(fixture: str, regulation: str | None = None):
     from lingua_oracle.pipeline import check_pdf
-    from lingua_oracle.report.render import _statement_cards
+    from lingua_oracle.report import sections
     from tests.conftest import pdf
 
     report = check_pdf(pdf(fixture), regulation)
-    return report, _statement_cards(report)
+    return report, sections.build(report, "X", "read from the document")
 
 
 def test_the_banner_sentence_counts_what_the_cells_count():
-    """One report, one set of numbers.
-
-    The sentence was written from the finding severities and the cells from the
-    cards, which count different things: a reader saw "3 to check" over a row
-    that said 5.
-    """
-    from lingua_oracle.report import labels
-
+    """One report, one set of numbers: the sentence and the cells both come
+    from the rows on the page."""
     for fixture, regulation in (("pattern_unfilled_blanks", None),
                                 ("pattern_capitalisation", "eu_clp"),
                                 ("defect_a03_precautionary", "eu_clp"),
                                 ("clean_eu_en", "eu_clp")):
-        report, cards = _report_and_cards(fixture, regulation)
-        counts = cards["counts"]
-        detail = labels.verdict_of(report, "X", counts=counts).detail
-        for number, word in ((counts["wrong"], "statement"),
-                             (counts["blanks"], "blank")):
-            if number:
-                assert f"{number} {word}" in detail, (fixture, detail)
+        _, page = _report_and_page(fixture, regulation)
+        rows = [r for sec in page.sections for r in sec.rows]
+        blanks = sum(1 for r in rows if r.blank)
+        wrong = sum(1 for r in rows if r.status in ("fix", "wrong")) - blanks
+        assert page.stats["must_fix"] == wrong + blanks, fixture
+        if blanks:
+            assert labels_plural(blanks, "blank") in page.detail, (fixture, page.detail)
+        if wrong:
+            assert labels_plural(wrong, "problem") in page.detail, (fixture, page.detail)
+
+
+def labels_plural(count, word):
+    from lingua_oracle.report.labels import plural
+
+    return plural(count, word)
 
 
 def test_the_sentence_never_says_statement_s():
-    from lingua_oracle.report import labels
-
     for fixture, regulation in (("pattern_unfilled_blanks", None),
                                 ("pattern_capitalisation", "eu_clp"),
                                 ("defect_a03_precautionary", "eu_clp")):
-        report, cards = _report_and_cards(fixture, regulation)
-        verdict = labels.verdict_of(report, "X", counts=cards["counts"])
-        assert "(s)" not in verdict.detail, fixture
+        _, page = _report_and_page(fixture, regulation)
+        assert "(s)" not in page.detail, fixture
 
 
 def test_one_statement_reads_as_one():
@@ -508,32 +507,34 @@ def test_one_statement_reads_as_one():
 
 
 def test_a_wrong_statement_and_a_blank_are_counted_separately():
-    from lingua_oracle.report import labels
-
-    report, cards = _report_and_cards("pattern_unfilled_blanks")
-    detail = labels.verdict_of(report, "X", counts=cards["counts"]).detail
-    assert "2 blanks to fill in" in detail
+    _, page = _report_and_page("pattern_unfilled_blanks")
+    assert "2 blanks to fill in" in page.detail
+    # An unfinished blank is something to do, not a reason to hold the sheet.
+    assert page.release != "Fix before release"
 
 
 # -- punctuation differences in one card --------------------------------------
 
 
 def test_punctuation_differences_are_collected_into_one_group():
-    _, cards = _report_and_cards("pattern_capitalisation", "eu_clp")
-    assert len(cards["minor"]) == 1
-    assert all(row["v"].minor_difference for row in cards["minor"])
-    # And they are out of the individual cards, not duplicated across both.
-    assert not any(row.get("minor") for row in cards["problems"])
+    """Each is its own row, and they share one line in "What to do"."""
+    _, page = _report_and_page("pattern_capitalisation", "eu_clp")
+    minor = [r for sec in page.sections for r in sec.rows if r.minor]
+    assert len(minor) == 1
+    lines = [a for a in page.actions if "punctuation" in a]
+    assert len(lines) == 1 and minor[0].key in lines[0]
 
 
 def test_a_collected_difference_is_still_counted_as_something_to_check():
-    """Collapsing the card must not quietly drop it from the figures."""
-    _, cards = _report_and_cards("pattern_capitalisation", "eu_clp")
-    assert cards["counts"]["check"] >= len(cards["minor"])
-    assert cards["counts"]["minor"] == len(cards["minor"])
+    """Grouping its action must not quietly drop it from the figures."""
+    _, page = _report_and_page("pattern_capitalisation", "eu_clp")
+    minor = [r for sec in page.sections for r in sec.rows if r.minor]
+    assert page.stats["to_check"] >= len(minor)
+    assert all(r.status == "check" for r in minor)
 
 
 def test_a_real_wording_difference_keeps_its_own_card():
-    _, cards = _report_and_cards("defect_a03_precautionary", "eu_clp")
-    assert cards["minor"] == []
-    assert any(row["status"] == "wrong" for row in cards["problems"])
+    _, page = _report_and_page("defect_a03_precautionary", "eu_clp")
+    rows = [r for sec in page.sections for r in sec.rows]
+    assert not any(r.minor for r in rows)
+    assert any(r.status == "wrong" for r in rows)

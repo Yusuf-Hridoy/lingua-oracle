@@ -75,8 +75,6 @@ def test_real_document_renders(rel, regulation, language, page, server, real_sho
 
     # The page must actually render a verdict, not an empty shell.
     assert page.locator(".verdict .banner h2").count() == 1
-    assert page.locator("article.issue").count() or \
-        page.locator("details.block.good").count(), \
-        "neither an issue card nor a list of correct statements"
+    assert page.locator(".srow").count(), "no checked item on the page"
 
     page.screenshot(path=str(real_shots_dir / f"{Path(rel).stem}.png"), full_page=True)

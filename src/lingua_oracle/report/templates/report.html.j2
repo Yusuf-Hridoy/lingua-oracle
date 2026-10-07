@@ -1,5 +1,80 @@
-{% import '_substances.html.j2' as sub %}
 {% import '_mixture.html.j2' as mix %}
+{% macro pill(status) %}{% set p = PILL[status] %}{% if p[0] %}<span class="pill {{ p[2] }}"><span aria-hidden="true">{{ p[1] }}</span> {{ p[0] }}</span>{% else %}<span></span>{% endif %}{% endmacro %}
+{% macro mixture_row(r) %}
+{% set m = r.mixture %}
+{% if m.verdict == 'not_calculated' and not m.calculated_class %}
+  <span class="val">{{ m.message }}</span>
+{% elif not r.problem %}
+  <span class="val">Section 2 says {{ m.stated_class or 'nothing' }}; calculated from
+    declared ingredients: {{ m.calculated_class or 'no classification' }}.
+    <span class="rnote">{{ m.message }}</span></span>
+{% else %}
+  <div class="cmp">
+    <div>
+      <div class="sub">Section 2 says</div>
+      <div class="txt">{{ m.stated_class or 'Section 2 does not list this hazard' }}</div>
+      {% if m.implied_from %}<p class="rnote">{{ m.implied_from }}</p>{% endif %}
+    </div>
+    <div class="official">
+      <div class="sub">Calculated from declared ingredients</div>
+      <div class="txt">{% if m.calculated_class %}{{ m.calculated_class }}{% else %}The declared ingredients don&rsquo;t give this hazard{% endif %}</div>
+      {% if m.calculated_low and m.calculated_high and m.calculated_low != m.calculated_high %}
+      <p class="rnote">{{ m.calculated_low }} at the low end of the declared ranges,
+        {{ m.calculated_high }} at the high end.</p>
+      {% endif %}
+    </div>
+    {% if m.contributions %}
+    <div class="table-box contributions">
+      <table class="ingredients">
+        <thead><tr><th>Ingredient</th><th>%</th><th>Classified</th><th>Counted as</th></tr></thead>
+        <tbody>
+          {% for c in m.contributions %}
+          <tr><td>{{ c.name or c.cas or 'unnamed' }}</td><td>{{ c.percentage }} %</td>
+            <td>{{ c.hazard_class }}</td>
+            <td>{{ c.contributed }} %{% if c.note %} <span class="muted">({{ c.note }})</span>{% endif %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+    <p class="rnote">{{ m.message }}{% if m.citation %} &middot; {{ m.citation }}{% endif %}</p>
+  </div>
+{% endif %}
+{% endmacro %}
+{% macro row(r) %}
+<div class="srow{% if r.problem %} problem{% endif %} st-{{ r.status }}" data-status="{{ r.status }}"{% if r.mixture %} data-section="mixture" data-class="{{ r.key }}"{% endif %}>
+  <span class="key{% if r.mono %} mono{% endif %}">{{ r.key }}</span>
+  {{ pill(r.status) }}
+  {% if r.mixture %}{{ mixture_row(r) }}
+  {% elif r.compare %}
+  <div class="cmp{% if r.single %} single{% endif %}">
+    <div>
+      <div class="sub">Your document</div>
+      <div class="txt">{{ r.found_html | safe }}</div>
+    </div>
+    {% if not r.single %}
+    <div class="official">
+      <div class="sub">{{ r.official_heading }}
+        <button type="button" class="copy" data-text="{{ r.expected }}">Copy</button></div>
+      <div class="txt">{{ r.expected_html | safe }}</div>
+    </div>
+    {% endif %}
+    {% if r.reference %}
+    <p class="rnote reference"><span>Official wording:</span> {{ r.reference }}
+      <span class="muted">(the &lsquo;&hellip;&rsquo; is the blank to fill in)</span></p>
+    {% endif %}
+    {% if r.note %}<p class="rnote">{{ r.note }}</p>{% endif %}
+    {% for value in r.fillins %}<p class="rnote fill">You filled in:
+      <mark class="fillin">{{ value }}</mark> &mdash; check it fits this product.</p>{% endfor %}
+    {% if r.source %}<p class="rnote src">Source: {{ r.source }}</p>{% endif %}
+  </div>
+  {% else %}
+  <span class="val">{{ r.text }}{% if r.note %}<span class="rnote">{{ r.note }}</span>{% endif %}
+    {% for value in r.fillins %}<span class="rnote fill">You filled in:
+      <mark class="fillin">{{ value }}</mark> &mdash; check it fits this product.</span>{% endfor %}</span>
+  {% endif %}
+</div>
+{% endmacro %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,7 +88,7 @@
 <body>
 
 <div class="topbar">
-  <div class="wrap">
+  <div class="wrap wide">
     <a class="brand" href="/">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
         <rect x="1.5" y="1.5" width="17" height="17" rx="4" stroke="#1F4FB8" stroke-width="1.6"/>
@@ -31,26 +106,17 @@
   </div>
 </div>
 
-<div class="wrap page">
-  <a class="back" href="/">&larr; Check another document</a>
-
+<div class="wrap wide page">
   <div class="report-head">
     <div>
+      <a class="back" href="/">&larr; Check another document</a>
       <h1>{{ report.file_name }}</h1>
-      {% if ing and ing.product_id %}
-      <p class="matched">Matched to ExactSDS product:
-        <b>{{ ing.product_name }}</b> ({{ ing.product_id }})
-        <a class="change" href="/ingredients?q={{ ing.product_name | urlencode }}">Not this product?</a>
-      </p>
-      {% elif ing and ing.match_state == 'ambiguous' %}
-      <p class="matched">Several ExactSDS products could be this sheet.
-        <a class="change" href="/ingredients?q={{ ing.evidence | urlencode }}">Choose one</a>
-      </p>
-      {% endif %}
       <div class="meta">
-        <span>{{ regulation_display }}</span>
-        <span>{{ language_name }}</span>
-        <span>Regulation {{ set_by }}</span>
+        <span>{{ regulation_display }} &middot; {{ language_name }}</span>
+        {% if report.composition == 'substance' %}<span>Substance (Section 3)</span>
+        {% elif report.composition == 'mixture' %}<span>Mixture (Section 3)</span>{% endif %}
+        {% if report.physical_state == 'gas' %}<span>Read as a gas (Section 9)</span>
+        {% elif report.physical_state %}<span>Read as a solid or liquid (Section 9)</span>{% endif %}
         <span>Checked {{ report.created_at.strftime('%-d %b %Y, %H:%M') }}</span>
         {% if report.compared_with %}<span>compared with {{ report.compared_with }}</span>{% endif %}
       </div>
@@ -61,292 +127,192 @@
     </div>
   </div>
 
-  {% if ing and ing.candidates %}
-  {# Above the verdict, because the verdict is incomplete until it is answered. #}
-  <form class="card picker" method="post" action="/reports/{{ report.id }}/product">
-    <h2>Which product is this?</h2>
-    <p class="note">{{ ing.candidates|length }} products in ExactSDS could be
-      this sheet. The ingredient and mixture checks need to know which.</p>
-    <ul class="candidates">
-      {% for c in ing.candidates %}
-      <li>
-        <label>
-          <input type="radio" name="product_id" value="{{ c.product_id }}"
-                 {% if loop.first %}checked{% endif %}>
-          <span class="who">{{ c.name }}</span>
-          <span class="muted">id {{ c.product_id }}{% if c.regulation %}
-            &middot; {{ regulation_name(c.regulation) }}{% endif %}</span>
-        </label>
-      </li>
-      {% endfor %}
-    </ul>
-    <button type="submit" class="primary">Check this product</button>
-  </form>
-  {% endif %}
-
-  <div class="verdict v-{{ verdict.tone }}">
+  <section class="verdict v-{{ page.tone }}" aria-label="Verdict">
     <div class="banner">
-      <span class="vico" aria-hidden="true">{{ verdict.icon }}</span>
+      <span class="vico" aria-hidden="true">{{ {'fix': '✕', 'check': '!', 'ok': '✓'}[page.tone] }}</span>
       <div>
-        <h2>{{ verdict.release }}</h2>
-        <p>{{ verdict.detail }}</p>
+        <h2>{{ page.release }}</h2>
+        <p>{{ page.detail }}</p>
       </div>
     </div>
     <div class="stats">
-      <div><div class="n fix">{{ cards.counts.wrong }}</div><div class="l">Wrong wording</div></div>
-      <div><div class="n fix">{{ cards.counts.fix }}</div><div class="l">Fix this</div></div>
-      <div><div class="n check">{{ cards.counts.check }}</div><div class="l">Check this</div></div>
-      <div><div class="n ok">{{ cards.counts.correct }}</div><div class="l">Correct</div></div>
-      <div><div class="n">{{ coverage_percent }}%</div>
-           <div class="l">Codes checked ({{ report.coverage.codes_checked }} of {{ report.coverage.codes_found }})</div></div>
+      <div><div class="n fix">{{ page.stats.must_fix }}</div><div class="l">Must fix</div></div>
+      <div><div class="n check">{{ page.stats.to_check }}</div><div class="l">To check</div></div>
+      <div><div class="n ok">{{ page.stats.correct }}</div><div class="l">Correct</div></div>
+      <div><div class="n">{{ page.stats.sections }} of 16</div><div class="l">SDS sections checked</div></div>
+      <div><div class="n">{{ page.stats.codes_percent }}%</div>
+           <div class="l">Codes checked ({{ page.stats.codes_checked }} of {{ page.stats.codes_found }})</div></div>
     </div>
-  </div>
+  </section>
 
-  {% if verdict.actions %}
-  <div class="card todo">
-    <h2>What to do</h2>
-    <ol>
-      {% for text, count in verdict.actions %}
-      <li>{{ text }}{% if count > 1 %} <span class="muted">({{ count }} places)</span>{% endif %}</li>
+  <div class="by-section">
+    <aside class="navigator" aria-label="SDS sections">
+      <div class="sub">SDS sections</div>
+      {% for item in page.nav %}
+      {% if item.href %}
+      <a href="{{ item.href }}" class="nav-{{ item.status }}"><span class="dot d-{{ item.status }}" aria-hidden="true"></span>{{ item.label }}</a>
+      {% else %}
+      <span class="nav-none"><span class="dot d-none" aria-hidden="true"></span>{{ item.label }}</span>
+      {% endif %}
       {% endfor %}
-    </ol>
-  </div>
-  {% endif %}
+      <p class="aside-note">Lingua checks the sections that carry classification
+        and statements. Others are listed but not judged.</p>
+    </aside>
 
-  <div class="issues-head">
-    <h2>Wording &middot; {{ cards.problems|length }}</h2>
-    <span class="status s-{{ status_tone[wording_status[0]] }}">{{ wording_status[0] }}
-      &mdash; {{ wording_status[1] }}</span>
-    <div class="filters" role="group" aria-label="Filter issues">
-      <button type="button" data-filter="all" aria-pressed="true">All</button>
-      <button type="button" data-filter="must" aria-pressed="false">Must fix</button>
-      <button type="button" data-filter="check" aria-pressed="false">To check</button>
-    </div>
-  </div>
-
-  {% for row in cards.problems %}
-  <article class="issue" data-section="wording" data-status="{{ row.status }}">
-    <header>
-      <span class="pill {{ row.label.css }}"><span aria-hidden="true">{{ row.label.icon }}</span> {{ row.label.word }}</span>
-      <span class="code">{{ L.code_label(row.v.code if row.v else row.finding.code) or "This document" }}</span>
-      {% set sec = (row.v.section if row.v else row.finding.section) %}
-      {% set pg = (row.v.page if row.v else row.finding.page) %}
-      {% if sec %}<span class="where">{{ L.section_label(sec) }}{% if pg %} &middot; page {{ pg }}{% endif %}</span>{% endif %}
-    </header>
-
-    <div class="body{% if row.single %} single{% endif %}">
-      <div class="side">
-        <h3>Your document</h3>
-        <div class="txt">{% if row.v %}{{ row.found_html | safe }}{% else %}{{ row.finding.found or row.finding.message }}{% endif %}</div>
-        {% if row.instruction %}<p class="note instruct">{{ row.instruction }}</p>{% endif %}
-        {% if row.reference %}
-        <p class="reference"><span>Official wording:</span> {{ row.reference }}
-          <span class="muted">(the &lsquo;&hellip;&rsquo; is the blank to fill in)</span></p>
-        {% endif %}
-        {% if row.match_note %}<p class="note">{{ row.match_note }}</p>{% endif %}
-        {% if row.v %}{% for value in row.v.fillins %}
-        <p class="note" style="color:var(--accent)">You filled in:
-          <mark class="fillin">{{ value }}</mark> &mdash; check it fits this product.</p>
-        {% endfor %}{% endif %}
-      </div>
-      {% if not row.single %}
-      <div class="side official">
-        <header>
-          <h3>{{ row.official_heading }}</h3>
-          <button type="button" class="copy" data-text="{{ row.v.expected }}">Copy</button>
-        </header>
-        <div class="txt">{{ row.expected_html | safe }}</div>
-      </div>
-      {% endif %}
-    </div>
-
-    <footer>
-      <span>{% if row.v %}{{ row.v.why }}{% endif %}{% if row.action %} {{ row.action }}{% endif %}</span>
-      {% if row.v and row.v.source %}<span class="src">Source: {{ row.v.source }}</span>{% endif %}
-    </footer>
-  </article>
-  {% endfor %}
-
-  {% if cards.minor %}
-  {# Same words, different punctuation or capital letters. One card for all of
-     them: each is worth recording and none is worth the space a card takes. #}
-  <details class="block minor">
-    <summary>{{ cards.minor|length }} statement{{ '' if cards.minor|length == 1 else 's' }}
-      differ{{ 's' if cards.minor|length == 1 else '' }} only in punctuation or capital letters</summary>
-    <div class="inner">
-      <p class="note">The words are the official words. Align them if you are
-        editing anyway, or confirm the difference does not matter.</p>
-      <table class="minor-table">
-        <thead>
-          <tr><th>Code</th><th>Your document</th><th>Official wording</th></tr>
-        </thead>
-        <tbody>
-          {% for row in cards.minor %}
-          <tr>
-            <td class="code">{{ L.code_label(row.v.code) }}</td>
-            <td>{{ row.v.found }}</td>
-            <td>{{ row.v.expected }}</td>
-          </tr>
+    <div class="sections">
+      {% if page.actions %}
+      <section class="card todo" aria-label="What to do">
+        <h2>What to do</h2>
+        <ol>
+          {% for action in page.actions %}
+          {% set where, rest = action.split(': ', 1) %}
+          <li><b>{{ where }}:</b> {{ rest }}</li>
           {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </details>
-  {% endif %}
-
-  {% if cards.correct %}
-  <details class="block good">
-    <summary>{{ cards.correct|length }} statement{{ '' if cards.correct|length == 1 else 's' }} match the official wording</summary>
-    <div class="inner">
-      <ul class="statements">
-        {% for row in cards.correct %}
-        <li><span class="code">{{ row.v.code }}</span>
-          <span>{{ row.v.found }}{% if row.v.match_note %}
-            <em class="note-inline">{{ row.v.match_note }}</em>{% endif %}</span></li>
-        {% endfor %}
-      </ul>
-    </div>
-  </details>
-  {% endif %}
-
-  {# All three sections are always on the page. A section with nothing to say
-     says that, in a line: a reader should never have to work out whether a
-     check was clean or never ran. #}
-  <div class="issues-head" id="ingredients">
-    <h2>Ingredients &middot;
-      {{ ing.counts.get('substances', 0) if ing and ing.counts else 0 }}</h2>
-    <span class="status s-{{ status_tone[ingredient_status[0]] }}">{{ ingredient_status[0] }}
-      &mdash; {{ ingredient_status[1] }}</span>
-  </div>
-
-  {% if ing and ing.counts and ing.counts.get('substances') %}
-  <div class="verdict v-{{ ing_tone }} compact">
-    <div class="stats">
-      <div><div class="n fix">{{ ing.counts.fix }}</div><div class="l">Under-classified</div></div>
-      <div><div class="n check">{{ ing.counts.inconsistent_substances }}</div><div class="l">Inconsistent codes</div></div>
-      <div><div class="n ok">{{ ing.counts.ok }}</div><div class="l">Matches Annex VI</div></div>
-      <div><div class="n">{{ ing.counts.not_checked }}</div><div class="l">Not checked</div></div>
-    </div>
-  </div>
-  {% for s in ing_under %}{{ sub.under_card(s, ing_said_by, ing_list) }}{% endfor %}
-  {% for s in ing_inconsistent %}{{ sub.inconsistent_card(s, ing_said_by) }}{% endfor %}
-  {{ sub.upcoming(ing.substances) }}
-  {{ sub.collapsed(ing_matches, ing_extra, ing_unchecked, ing_reasons) }}
-  {% endif %}
-
-  <div class="issues-head" id="mixture">
-    <h2>Mixture &middot; {{ mixture.results|length if mixture else 0 }}</h2>
-    <span class="status s-{{ status_tone[mixture_status[0]] }}">{{ mixture_status[0] }}
-      &mdash; {{ mixture_status[1] }}</span>
-  </div>
-
-  {% if mixture and mixture.state == 'calculated' %}
-  {{ mix.banner(mixture) }}
-  <div class="verdict v-{{ mixture_tone }} compact">
-    <div class="stats">
-      <div><div class="n fix">{{ mixture.counts.inconsistent }}</div><div class="l">Inconsistent</div></div>
-      <div><div class="n check">{{ mixture.counts.cannot_tell }}</div><div class="l">Can&rsquo;t tell</div></div>
-      <div><div class="n ok">{{ mixture.counts.consistent }}</div><div class="l">Consistent</div></div>
-      <div><div class="n">{{ mixture.counts.not_calculated }}</div><div class="l">Not calculated</div></div>
-      <div><div class="n">{{ mixture.declared_total }}%</div>
-           <div class="l">Declared ({{ mixture.undisclosed }}% not disclosed)</div></div>
-    </div>
-  </div>
-  {% for r in mixture.results %}{{ mix.card(r) }}{% endfor %}
-  {% if mixture.upcoming %}
-  <details class="block upcoming" open>
-    <summary>Changes coming to Annex VI &middot; {{ mixture.upcoming|length }}</summary>
-    <div class="inner"><ul class="statements">
-      {% for note in mixture.upcoming %}<li><span>{{ note }}</span></li>{% endfor %}
-    </ul></div>
-  </details>
-  {% endif %}
-  {% endif %}
-
-  <details class="block">
-    <summary>Not checked ({{ cards.unchecked|length }}) and technical details</summary>
-    <div class="inner">
-      {% if cards.unchecked %}
-      <ul class="statements">
-        {% for row in cards.unchecked %}
-        <li><span class="code">{{ row.v.code }}</span><span>{{ row.v.why }}</span></li>
-        {% endfor %}
-      </ul>
+        </ol>
+      </section>
       {% endif %}
-      <dl class="tech">
-        {% for line in verdict.caveats %}<dt>&nbsp;</dt><dd>{{ line }}</dd>{% endfor %}
-        <dt>{{ L.META.file }}</dt><dd>{{ report.file_name }}</dd>
-        <dt>{{ L.META.regulation }}</dt><dd>{{ regulation_display }}</dd>
-        <dt>{{ L.META.language }}</dt><dd>{{ report.language }}</dd>
-        <dt>{{ L.META.set_by }}</dt><dd>{{ set_by }}</dd>
-        <dt>{{ L.META.id }}</dt><dd>{{ report.id }}</dd>
-        {% if report.sources %}
-        <dt>Sources used</dt>
-        <dd class="sources">{% for line in report.sources %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</dd>
+
+      {% for sec in page.sections %}
+      <section id="{{ sec.anchor }}" class="sds-section s-{{ sec.status }}">
+        <header>
+          <h2>{{ sec.heading }}</h2>
+          <div class="pills">
+            {% set fixes = sec.count('fix', 'wrong') %}{% set checks = sec.count('check') %}
+            {% if fixes %}<span class="pill fix"><span aria-hidden="true">✕</span> {{ fixes }} must fix</span>{% endif %}
+            {% if checks %}<span class="pill check"><span aria-hidden="true">!</span> {{ checks }} to check</span>{% endif %}
+            {% if not fixes and not checks %}{{ pill(sec.status) }}{% endif %}
+          </div>
+        </header>
+
+        {% if sec.number == '1' and ing and ing.candidates %}
+        {# The rest of the report is incomplete until this is answered. #}
+        <form class="picker" method="post" action="/reports/{{ report.id }}/product">
+          <h3>Which product is this?</h3>
+          <p class="note">{{ ing.candidates|length }} products in ExactSDS could be
+            this sheet. The ingredient and mixture checks need to know which.</p>
+          <ul class="candidates">
+            {% for c in ing.candidates %}
+            <li>
+              <label>
+                <input type="radio" name="product_id" value="{{ c.product_id }}"
+                       {% if loop.first %}checked{% endif %}>
+                <span class="who">{{ c.name }}</span>
+                <span class="muted">id {{ c.product_id }}{% if c.regulation %}
+                  &middot; {{ regulation_name(c.regulation) }}{% endif %}</span>
+              </label>
+            </li>
+            {% endfor %}
+          </ul>
+          <button type="submit" class="primary">Check this product</button>
+        </form>
         {% endif %}
-        {% for note in report.notes %}<dt>&nbsp;</dt><dd>{{ note }}</dd>{% endfor %}
-        <dt>Checks that reported</dt>
-        <dd>{% for cid in report.findings|map(attribute='check_id')|unique|sort %}{{ cid }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
-        {% if cards.provenance %}
-        <dt>Where each wording came from</dt>
-        <dd>{% for code, detail in cards.provenance %}<b>{{ code }}</b>: {{ detail }}{% if not loop.last %}<br>{% endif %}{% endfor %}</dd>
+
+        {% if sec.number == '1' and ing and ing.product_id %}
+        <p class="intro">Matched to ExactSDS product: <b>{{ ing.product_name }}</b> ({{ ing.product_id }}).
+          <a href="/ingredients?q={{ ing.product_name | urlencode }}">Not this product?</a></p>
         {% endif %}
-        {% if ing_anomalies %}
-        <dt>Anomalies in the list itself</dt>
-        <dd>{% for line in ing_anomalies %}{{ line }}<br>{% endfor %}</dd>
+        {% if sec.intro %}<p class="intro">{{ sec.intro }}</p>{% endif %}
+
+        {% if sec.table %}
+        <div class="table-box">
+          <table class="ingredients">
+            <thead><tr><th>Ingredient</th><th>CAS</th><th>%</th>
+              <th>{{ 'The app says' if ing and ing.source == 'app' else 'This sheet says' }}</th>
+              <th>{{ sec.table.list_heading }}</th><th>Result</th></tr></thead>
+            <tbody>
+              {% for t in sec.table.rows %}
+              <tr class="st-{{ t.row.status }}" data-status="{{ t.row.status }}">
+                <td>{{ t.name }}</td><td class="mono cas">{{ t.cas }}</td><td>{{ t.share }}</td>
+                <td class="mono">{{ t.sheet }}</td><td class="mono">{{ t.official }}</td>
+                <td>{{ pill(t.row.status) }} <span class="val">{{ t.row.text }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
         {% endif %}
-        {% if ing and ing.list_title %}
-        <dt>Ingredients measured against</dt>
-        <dd>{{ ing.list_title }} &mdash;
-          {{ 'binding' if ing.list_binding else 'reference only' }}.
-          {{ ing.list_authority }}</dd>
-        {% endif %}
-        {% if mixture and mixture.results %}{{ mix.trace(mixture.results) }}{% endif %}
-        {% if mixture and mixture.assumptions %}
-        <dt>Mixture assumptions</dt>
-        <dd>{% for a in mixture.assumptions %}{{ a }}<br>{% endfor %}</dd>
-        {% endif %}
-        <dt>Source of official text</dt>
-        <dd>{% for tier, label in L.SOURCE.items() %}<b>{{ label.word }}</b>: {{ label.help }} {% endfor %}</dd>
-      </dl>
+
+        {% for sub in sec.subs %}
+        {% if sub.title %}<div class="subhead">{{ sub.title }}</div>{% endif %}
+        {% for r in sub.rows %}{{ row(r) }}{% endfor %}
+        {% endfor %}
+      </section>
+      {% endfor %}
+
+      <section class="card skipped" aria-label="Sections not checked">
+        <b>Sections 4&ndash;8 and 10&ndash;15</b> &mdash; not checked. They carry no
+        classification or statements this tool judges.
+      </section>
+
+      {% if report.sources %}
+      <section class="card sources-box" aria-label="Sources used">
+        <b>Sources used</b>
+        {% for line in report.sources %}<span>{{ line }}</span>{% endfor %}
+      </section>
+      {% endif %}
+
+      <details class="block">
+        <summary>Technical details</summary>
+        <div class="inner">
+          <dl class="tech">
+            {% for line in caveats %}<dt>&nbsp;</dt><dd>{{ line }}</dd>{% endfor %}
+            <dt>{{ L.META.file }}</dt><dd>{{ report.file_name }}</dd>
+            <dt>{{ L.META.regulation }}</dt><dd>{{ regulation_display }}</dd>
+            <dt>{{ L.META.language }}</dt><dd>{{ report.language }}</dd>
+            <dt>{{ L.META.set_by }}</dt><dd>{{ set_by }}</dd>
+            <dt>{{ L.META.id }}</dt><dd>{{ report.id }}</dd>
+            {% for note in report.notes %}<dt>&nbsp;</dt><dd>{{ note }}</dd>{% endfor %}
+            <dt>Checks that reported</dt>
+            <dd>{% for cid in report.findings|map(attribute='check_id')|unique|sort %}{{ cid }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>
+            {% if provenance %}
+            <dt>Where each wording came from</dt>
+            <dd>{% for code, detail in provenance %}<b>{{ code }}</b>: {{ detail }}{% if not loop.last %}<br>{% endif %}{% endfor %}</dd>
+            {% endif %}
+            {% if ing_anomalies %}
+            <dt>Anomalies in the list itself</dt>
+            <dd>{% for line in ing_anomalies %}{{ line }}<br>{% endfor %}</dd>
+            {% endif %}
+            {% if ing and ing.list_title %}
+            <dt>Ingredients measured against</dt>
+            <dd>{{ ing.list_title }} &mdash;
+              {{ 'binding' if ing.list_binding else 'reference only' }}.
+              {{ ing.list_authority }}</dd>
+            {% endif %}
+            {% if report.substance and report.substance.source_ref %}
+            <dt>Substance entry</dt><dd>{{ report.substance.source_ref }}</dd>
+            {% endif %}
+            {% if mixture and mixture.results %}{{ mix.trace(mixture.results) }}{% endif %}
+            {% if mixture and mixture.assumptions %}
+            <dt>Mixture assumptions</dt>
+            <dd>{% for a in mixture.assumptions %}{{ a }}<br>{% endfor %}</dd>
+            {% endif %}
+            <dt>Source of official text</dt>
+            <dd>{% for tier, label in L.SOURCE.items() %}<b>{{ label.word }}</b>: {{ label.help }} {% endfor %}</dd>
+          </dl>
+        </div>
+      </details>
     </div>
-  </details>
+  </div>
 </div>
 
 <script>
   document.addEventListener('click', function (event) {
     const copy = event.target.closest('button.copy');
-    if (copy) {
-      const text = copy.dataset.text || window.location.href;
-      const done = () => {
-        const was = copy.textContent;
-        copy.textContent = 'Copied';
-        setTimeout(() => { copy.textContent = was; }, 1500);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, done);
-      } else {
-        const area = document.createElement('textarea');
-        area.value = text; document.body.appendChild(area); area.select();
-        try { document.execCommand('copy'); } catch (e) {}
-        area.remove(); done();
-      }
-      return;
+    if (!copy) return;
+    const text = copy.dataset.text || window.location.href;
+    const done = () => {
+      const was = copy.textContent;
+      copy.textContent = 'Copied';
+      setTimeout(() => { copy.textContent = was; }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, done);
+    } else {
+      const area = document.createElement('textarea');
+      area.value = text; document.body.appendChild(area); area.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      area.remove(); done();
     }
-    const filter = event.target.closest('.filters button');
-    if (!filter) return;
-    const want = filter.dataset.filter;
-    document.querySelectorAll('.filters button').forEach(b =>
-      b.setAttribute('aria-pressed', String(b === filter)));
-    // Only the wording cards. The filters live in that section's header and
-    // must not reach into the Ingredients section below it.
-    document.querySelectorAll('.issue[data-section="wording"]').forEach(card => {
-      const status = card.dataset.status;
-      const show = want === 'all'
-        || (want === 'must' && (status === 'wrong' || status === 'fix'))
-        || (want === 'check' && status === 'check');
-      card.hidden = !show;
-    });
   });
 </script>
 </body>

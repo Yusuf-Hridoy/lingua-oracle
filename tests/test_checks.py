@@ -412,7 +412,8 @@ def test_a_table_field_is_not_taken_as_a_statement(neighbour):
 
 def test_coverage_counts_only_codes_that_got_a_verdict():
     report = check_pdf(pdf("clean_eu_da"), "eu_clp")
-    verdicts = {v.code for v in report.statements if v.checked}
+    # The signal word is judged and shown, but it is not a code.
+    verdicts = {v.code for v in report.statements if v.checked and v.code != "SIGNAL"}
     assert report.coverage.codes_checked == len(verdicts)
     assert report.coverage.codes_checked <= report.coverage.codes_found
 
@@ -461,7 +462,7 @@ def test_out_of_scope_wording_that_matches_ghs_is_correct():
 
 
 def test_an_out_of_scope_match_raises_no_finding_and_no_action():
-    from lingua_oracle.report import labels
+    from lingua_oracle.report import sections
 
     report = check_pdf(pdf("pattern_out_of_scope"), "us_osha")
     by_code = {v.code: v for v in report.statements}
@@ -469,8 +470,8 @@ def test_an_out_of_scope_match_raises_no_finding_and_no_action():
     assert "outside US OSHA HazCom's scope" in by_code["H303"].match_note
     assert "allowed as extra information" in by_code["H303"].match_note
     assert not [f for f in report.findings if f.code == "H303"]
-    actions = labels.actions_for(report, "US OSHA HazCom")
-    assert not any("H303" in text for text, _ in actions), actions
+    actions = sections.build(report, "US OSHA HazCom", "chosen by you").actions
+    assert not any("H303" in text for text in actions), actions
 
 
 def test_a_wording_mismatch_against_ghs_is_still_a_finding():
