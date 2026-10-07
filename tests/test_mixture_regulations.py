@@ -236,7 +236,7 @@ def test_each_reading_is_calculated_and_the_disagreement_is_reported():
 
     ingredients = [from_codes("200-00-0", "<x>", D("0.5"), D("0.5"), ["H351"])]
     results, _ = calculate(ingredients, [], "un_ghs")
-    carc = next(r for r in results if r.hazard_class == "Carc. 2")
+    carc = next(r for r in results if r.calculated_class == "Carc. 2")
     assert carc.verdict == "cannot_tell"
     assert "more than one limit" in carc.message
     assert "0.1" in carc.message and "1.0" in carc.message
@@ -248,7 +248,7 @@ def test_the_same_ingredient_is_settled_where_the_regulation_chose():
 
     ingredients = [from_codes("200-00-0", "<x>", D("0.5"), D("0.5"), ["H351"])]
     results, _ = calculate(ingredients, [], "us_osha")
-    carc = next(r for r in results if r.hazard_class == "Carc. 2")
+    carc = next(r for r in results if r.calculated_class == "Carc. 2")
     assert carc.verdict == "inconsistent"
 
 

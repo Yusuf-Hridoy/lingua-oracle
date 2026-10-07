@@ -393,7 +393,9 @@
       ]
     }
   },
+  "implications": [],
   "notes": [
+    "29 CFR 1910.1200 Appendix A was searched and does not say that a skin corrosive is also seriously damaging to the eye, so that is not read into a sheet that states only skin corrosion",
     "Appendix A has no cut-off table for the aquatic classes: the standard does not cover them, so they are reported as not covered rather than as not calculated."
   ]
 }

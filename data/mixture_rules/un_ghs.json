@@ -747,5 +747,8 @@
       ]
     }
   },
-  "notes": []
+  "implications": [],
+  "notes": [
+    "UN GHS Rev.11 (2025) was searched and does not say that a skin corrosive is also seriously damaging to the eye, so that is not read into a sheet that states only skin corrosion"
+  ]
 }

@@ -17,8 +17,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from decimal import Decimal
 
-from lingua_oracle.mixture import rule_table, rules
-from lingua_oracle.mixture.classes import HazardClass
+from lingua_oracle.mixture import families, rule_table, rules
+from lingua_oracle.mixture.classes import HazardClass, parse_class
 from lingua_oracle.mixture.rule_table import RuleTable
 from lingua_oracle.mixture.rules import RuleResult
 from lingua_oracle.mixture.state import applicable, state_of
@@ -31,7 +31,12 @@ def in_scope(regulation: str) -> bool:
 
 @dataclass
 class ClassResult:
-    """What the calculation concluded about one hazard class."""
+    """What the calculation concluded about one hazard family.
+
+    One endpoint, one verdict. `hazard_class` is the family's name, which is
+    what the card is headed with; `stated_class` and `calculated_class` are
+    the two classifications being compared, either of which may be absent.
+    """
 
     #: "consistent", "inconsistent", "cannot_tell", "not_calculated"
     verdict: str
@@ -44,6 +49,13 @@ class ClassResult:
     contributions: list[dict] = field(default_factory=list)
     assumptions: list[str] = field(default_factory=list)
     trace: list[str] = field(default_factory=list)
+    #: The endpoint this is about, where it is one this tool compares.
+    family: str = ""
+    #: What Section 2 says about this endpoint, and what the ingredients give.
+    stated_class: str = ""
+    calculated_class: str = ""
+    #: Where a stated class was read into the sheet rather than printed on it.
+    implied_from: str = ""
 
 
 #: Which hazard classes each rule can produce. A rule is only run where the
@@ -105,6 +117,11 @@ def calculate(ingredients, stated: list[HazardClass], regulation: str,
               state: str | None = None) -> tuple[list[ClassResult], dict]:
     """Compare what the ingredients give with what Section 2 states.
 
+    The comparison is per hazard family, not per class: a sheet that states
+    Skin Corr. 1 where the declared ingredients give Skin Irrit. 2 has not
+    made two mistakes, it has been stricter about the skin than the part of
+    the mixture it declares, and that is one verdict about the skin.
+
     `state` is what Section 9 says the mixture is - a gas, or a solid or a
     liquid - where it says anything. Two of the sensitisation limits depend on
     it; where it is not known, both are calculated and the disagreement, if
@@ -124,12 +141,10 @@ def calculate(ingredients, stated: list[HazardClass], regulation: str,
 
     declared = _declared_total(ingredients)
     undisclosed = max(Decimal(100) - declared, Decimal(0))
-    stated_names = {str(c) for c in stated}
-    stated_generic = {str(c.generic) for c in stated}
 
     results: list[ClassResult] = []
-    seen: set[str] = set()
     not_on_file: list[str] = []
+    calculated: dict[str, _Family] = {}
 
     for key in dict.fromkeys(k for _, _, run in runs for k in run):
         by_run = {(end, variant): run[key]
@@ -137,85 +152,52 @@ def calculate(ingredients, stated: list[HazardClass], regulation: str,
         missing = sorted({m for r in by_run.values() for m in r.missing})
         if missing:
             not_on_file.append(key)
-            if _worth_saying(key, by_run.values(), stated_names, stated_generic):
+            if _worth_saying(key, by_run.values(), stated):
                 results.append(ClassResult(
                     verdict="not_calculated", hazard_class=key, citation="",
-                    stated=key in stated_names,
+                    stated=False, family=families.family_of(key) or "",
                     message=("Not calculated: "
                              f"{_display(regulation)} has no rule on file for "
                              f"{', '.join(missing)}.")))
             continue
+        _collect(key, by_run, readings, state, calculated)
 
-        outcomes = {str(r.hazard_class) if r.hazard_class else ""
-                    for r in by_run.values()}
-        if outcomes == {""}:
+    stated_families = families.by_family(stated)
+    implied = _implied(stated, table)
+    for family, (hazard_class, _) in implied.items():
+        stated_families.setdefault(family, []).append(hazard_class)
+
+    for family, names in families.FAMILIES:
+        found = calculated.get(family)
+        said = families.strictest(stated_families.get(family, []))
+        if found is None and said is None:
             continue
-        winner = _winner(by_run)
-        name = str(winner.hazard_class)
-        seen.add(name)
-        seen.add(str(winner.hazard_class.generic))
-        assumptions = sorted({a for r in by_run.values() for a in r.assumptions})
-        trace = list(dict.fromkeys(t for r in by_run.values() for t in r.trace))
-
-        if len(outcomes) > 1:
+        if found is None and not any(table.covers_class(n) for n in names):
+            # Not a gap in the calculation: the regulation has no such class.
             results.append(ClassResult(
-                verdict="cannot_tell", hazard_class=name,
-                citation=winner.citation, stated=name in stated_names,
-                calculated_low=_at(by_run, "low"), calculated_high=_at(by_run, "high"),
-                message=_depends(by_run, readings, state),
-                contributions=_as_dicts(winner),
-                assumptions=assumptions, trace=trace))
+                verdict="not_calculated", hazard_class=family, family=family,
+                citation="", stated=True, stated_class=str(said),
+                message=f"Not covered by {_display(regulation)}."))
             continue
+        results.append(_verdict(family, found, said, implied.get(family),
+                                undisclosed, declared, regulation))
 
-        if name in stated_names or str(winner.hazard_class.generic) in stated_generic:
-            results.append(ClassResult(
-                verdict="consistent", hazard_class=name,
-                citation=winner.citation, stated=True,
-                calculated_low=name, calculated_high=name,
-                message="Section 2 states this and the ingredients give it.",
-                contributions=_as_dicts(winner),
-                assumptions=assumptions, trace=trace))
-            continue
-
-        results.append(ClassResult(
-            verdict="inconsistent", hazard_class=name, citation=winner.citation,
-            stated=False, calculated_low=name, calculated_high=name,
-            message=("The ingredients give this classification and Section 2 "
-                     "does not state it."),
-            contributions=_as_dicts(winner),
-            assumptions=assumptions, trace=trace))
-
-    # Classes the sheet states that the calculation did not produce.
+    # Classes the sheet states that this tool does not compare at all.
     for hazard_class in stated:
-        name = str(hazard_class)
-        if name in seen or str(hazard_class.generic) in seen:
+        if families.family_of(hazard_class) is not None:
             continue
+        name = str(hazard_class)
         if (hazard_class.name in _ALL_CLASSES
                 and not table.covers_class(hazard_class.name)):
             results.append(ClassResult(
                 verdict="not_calculated", hazard_class=name, citation="",
-                stated=True,
+                stated=True, stated_class=name,
                 message=f"Not covered by {_display(regulation)}."))
             continue
-        if not _is_calculable(hazard_class, table):
-            results.append(ClassResult(
-                verdict="not_calculated", hazard_class=name,
-                citation="", stated=True,
-                message="This tool does not calculate this hazard class yet."))
-            continue
-        if undisclosed > 0:
-            results.append(ClassResult(
-                verdict="cannot_tell", hazard_class=name, citation="",
-                stated=True,
-                message=(f"Section 2 states this and the declared ingredients "
-                         f"do not give it. It may come from the undisclosed "
-                         f"{undisclosed} %."),
-                assumptions=[f"the declared ingredients total {declared} %"]))
-            continue
         results.append(ClassResult(
-            verdict="inconsistent", hazard_class=name, citation="", stated=True,
-            message=("Section 2 states this and the ingredients do not give "
-                     "it, with nothing undisclosed to explain it.")))
+            verdict="not_calculated", hazard_class=name, citation="",
+            stated=True, stated_class=name,
+            message="This tool does not calculate this hazard class yet."))
 
     order = {"inconsistent": 0, "cannot_tell": 1, "consistent": 2,
              "not_calculated": 3}
@@ -229,6 +211,191 @@ def calculate(ingredients, stated: list[HazardClass], regulation: str,
         "not_covered": sorted(set(_ALL_CLASSES) - table.covers),
     }
     return results, summary
+
+
+@dataclass
+class _Family:
+    """What the rules gave for one endpoint, gathered from all of them."""
+
+    hazard_class: HazardClass
+    winner: RuleResult
+    disagreed: bool = False
+    message: str = ""
+    at_low: str = ""
+    at_high: str = ""
+    assumptions: list[str] = field(default_factory=list)
+    trace: list[str] = field(default_factory=list)
+    contributions: list[dict] = field(default_factory=list)
+
+
+def _collect(key: str, by_run, readings: int, state, out: dict[str, _Family]
+             ) -> None:
+    """Fold one rule's result into what is known about its family.
+
+    Several rules can speak for one endpoint - the skin summation and nothing
+    else for the skin, but four separate concentration limits for
+    carcinogenicity - and what the family is classified as is the strictest of
+    what they gave.
+    """
+    outcomes = {str(r.hazard_class) if r.hazard_class else ""
+                for r in by_run.values()}
+    if outcomes == {""}:
+        return
+    winner = _winner(by_run)
+    hazard_class = winner.hazard_class
+    family = families.family_of(hazard_class)
+    if family is None:
+        return
+    found = _Family(
+        hazard_class=hazard_class, winner=winner,
+        disagreed=len(outcomes) > 1,
+        message=_depends(by_run, readings, state) if len(outcomes) > 1 else "",
+        at_low=_at(by_run, "low"), at_high=_at(by_run, "high"),
+        assumptions=sorted({a for r in by_run.values() for a in r.assumptions}),
+        trace=list(dict.fromkeys(t for r in by_run.values() for t in r.trace)),
+        contributions=_as_dicts(winner))
+    standing = out.get(family)
+    if standing is None:
+        out[family] = found
+        return
+    # Keep the strictest classification, and the uncertainty of either.
+    if families.stricter(hazard_class, standing.hazard_class):
+        found.disagreed = found.disagreed or standing.disagreed
+        found.message = found.message or standing.message
+        found.assumptions = sorted({*found.assumptions, *standing.assumptions})
+        found.trace = [*standing.trace, *found.trace]
+        out[family] = found
+    else:
+        standing.disagreed = standing.disagreed or found.disagreed
+        standing.message = standing.message or found.message
+        standing.assumptions = sorted({*standing.assumptions,
+                                       *found.assumptions})
+        standing.trace = [*standing.trace, *found.trace]
+
+
+def _implied(stated: list[HazardClass], table: RuleTable
+             ) -> dict[str, tuple[HazardClass, str]]:
+    """Classifications a regulation says a stated one carries with it.
+
+    Only where the regulation says so in its own text: CLP and the retained GB
+    act both say a skin corrosive is to be considered as seriously damaging to
+    the eye, and the rule tables carry the paragraph. Where a regulation does
+    not say it, nothing is read into the sheet.
+    """
+    out: dict[str, tuple[HazardClass, str]] = {}
+    for hazard_class in stated:
+        found = table.implied_by(str(hazard_class.generic))
+        if found is None:
+            continue
+        implied = parse_class(found.implied)
+        family = families.family_of(implied)
+        if implied is None or family is None:
+            continue
+        out[family] = (implied, f"{hazard_class} in Section 2 is also "
+                                f"{implied} - {found.citation}")
+    return out
+
+
+def _verdict(family: str, found: _Family | None, said: HazardClass | None,
+             implied, undisclosed: Decimal, declared: Decimal,
+             regulation: str) -> ClassResult:
+    """One endpoint, one verdict, in the words a reader can act on."""
+    said_text = str(said) if said else ""
+    calculated_text = str(found.hazard_class) if found else ""
+    common = {
+        "hazard_class": family, "family": family,
+        "stated_class": said_text, "calculated_class": calculated_text,
+        "stated": bool(said), "implied_from": implied[1] if implied else "",
+        "citation": found.winner.citation if found else "",
+        "contributions": found.contributions if found else [],
+        "assumptions": found.assumptions if found else [],
+        "trace": found.trace if found else [],
+        "calculated_low": found.at_low if found else "",
+        "calculated_high": found.at_high if found else "",
+    }
+
+    if found is None:
+        # Section 2 states a hazard the declared ingredients do not give.
+        if undisclosed > 0:
+            return ClassResult(
+                verdict="cannot_tell", message=(
+                    f"Section 2 lists {said_text} and the declared ingredients "
+                    f"do not give this hazard. It may come from the "
+                    f"undisclosed {undisclosed} %."),
+                **{**common, "assumptions": [
+                    f"the declared ingredients total {declared} %"]})
+        return ClassResult(
+            verdict="inconsistent", message=(
+                f"Section 2 lists {said_text} and the declared ingredients do "
+                "not give this hazard, with nothing undisclosed to explain "
+                "it."), **common)
+
+    if found.disagreed:
+        return ClassResult(verdict="cannot_tell", message=found.message,
+                           **common)
+
+    if said is None:
+        return ClassResult(
+            verdict="inconsistent", message=(
+                f"The declared ingredients give {calculated_text} and "
+                "Section 2 does not list this hazard."), **common)
+
+    narcotic = _stot_se_3_against_1_or_2(found.hazard_class, said)
+    if narcotic:
+        return ClassResult(verdict="cannot_tell", message=narcotic, **common)
+
+    if families.stricter(found.hazard_class, said):
+        return ClassResult(
+            verdict="inconsistent", message=(
+                f"The declared ingredients give {calculated_text}, which is "
+                f"stricter than the {said_text} Section 2 lists."), **common)
+
+    if families.stricter(said, found.hazard_class):
+        if undisclosed > 0:
+            return ClassResult(
+                verdict="consistent", message=(
+                    f"Section 2 is stricter than the declared ingredients "
+                    f"give; this may come from the undisclosed "
+                    f"{undisclosed} %."), **common)
+        return ClassResult(
+            verdict="cannot_tell", message=(
+                "Check this: Section 2 is stricter than the ingredients "
+                "justify."), **common)
+
+    return ClassResult(
+        verdict="consistent",
+        message="Section 2 lists this hazard and the ingredients give it.",
+        **common)
+
+
+def _stot_se_3_against_1_or_2(calculated: HazardClass,
+                              said: HazardClass) -> str:
+    """Category 3 is a different injury from categories 1 and 2.
+
+    Narcotic effects and respiratory irritation are not an organ. A sheet
+    whose Section 2 names a target organ at category 1 or 2 may well have
+    covered the same exposure, and may not; neither this tool nor the rule
+    tables can tell which, and calling it a contradiction would be wrong.
+    """
+    if calculated.name != "STOT SE" or calculated.category != "3":
+        return ""
+    if said.name != "STOT SE" or said.category not in ("1", "2"):
+        return ""
+    return ("Check this: STOT SE 3 (respiratory irritation/narcotic) is "
+            f"calculated; Section 2's {said} may cover it if it targets the "
+            "same organ.")
+
+
+def _worth_saying(key, results, stated) -> bool:
+    """Whether a rule that could not run is worth a card.
+
+    A rule with nothing to work on - no ingredient carrying the class, nothing
+    stated about it - would be a card saying that nothing was calculated about
+    nothing. One that had something to say is reported.
+    """
+    if any(str(c) == key or str(c.generic) == key for c in stated):
+        return True
+    return any(r.contributions or r.trace for r in results)
 
 
 #: Every class a rule table can carry, so a report can say which ones this
@@ -300,18 +467,6 @@ def _depends(by_run: dict[tuple[str, int], RuleResult], readings: int,
     if not reasons:
         reasons.append("the rules do not agree on one answer")
     return "Depends on " + "; and ".join(reasons) + "."
-
-
-def _worth_saying(key, results, stated_names, stated_generic) -> bool:
-    """Whether a rule that could not run is worth a card.
-
-    A rule with nothing to work on - no ingredient carrying the class, nothing
-    stated about it - would be a card saying that nothing was calculated about
-    nothing. One that had something to say is reported.
-    """
-    if key in stated_names or key in stated_generic:
-        return True
-    return any(r.contributions or r.trace for r in results)
 
 
 def _is_calculable(hazard_class: HazardClass, table: RuleTable) -> bool:

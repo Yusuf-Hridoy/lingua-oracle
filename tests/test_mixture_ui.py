@@ -52,7 +52,8 @@ def test_a_class_the_regulation_does_not_have_says_so_on_the_page(
 def test_the_same_class_is_calculated_where_the_regulation_has_it():
     report, body = _page("pattern_aquatic_statement", "eu_clp")
     aquatic = next(r for r in report.mixture.results
-                   if r["hazard_class"] == "Aquatic Chronic 2")
+                   if "Aquatic Chronic 2" in (r["stated_class"],
+                                              r["calculated_class"]))
     assert aquatic["verdict"] != "not_calculated"
     assert "Not covered by" not in body
 

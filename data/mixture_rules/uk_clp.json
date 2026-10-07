@@ -553,5 +553,17 @@
       ]
     }
   },
+  "implications": [
+    {
+      "class": "Skin Corr. 1",
+      "implies": "Eye Dam. 1",
+      "raw": "Skin corrosive substances shall be considered as leading to serious eye damage (Category 1) as well, while skin irritant substances may be considered as leading to eye irritation (Category 2).",
+      "source": {
+        "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+        "section": "Annex I, 3.3.2.2",
+        "page": 156
+      }
+    }
+  ],
   "notes": []
 }

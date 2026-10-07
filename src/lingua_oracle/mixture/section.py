@@ -130,6 +130,9 @@ def _as_dict(result) -> dict:
         "calculated_high": result.calculated_high,
         "message": result.message, "contributions": result.contributions,
         "assumptions": result.assumptions, "trace": result.trace,
+        "family": result.family, "stated_class": result.stated_class,
+        "calculated_class": result.calculated_class,
+        "implied_from": result.implied_from,
     }
 
 

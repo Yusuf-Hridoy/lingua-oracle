@@ -133,6 +133,20 @@ class Value:
 
 
 @dataclass
+class Implication:
+    """One class a regulation says carries another with it."""
+
+    source_class: str
+    implied: str
+    place: Place
+    raw: str
+
+    def as_dict(self) -> dict:
+        return {"class": self.source_class, "implies": self.implied,
+                "raw": self.raw, "source": self.place.as_dict()}
+
+
+@dataclass
 class Table:
     """One regulation's rules, as they will be written out."""
 
@@ -140,6 +154,7 @@ class Table:
     document: str
     covers: list[str] = field(default_factory=list)
     rules: dict[str, dict[str, list[Value]]] = field(default_factory=dict)
+    implications: list[Implication] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
     def put(self, rule: str, key: str, value: Value) -> None:
@@ -159,6 +174,7 @@ class Table:
             "rules": {rule: {key: [v.as_dict() for v in values]
                              for key, values in sorted(keys.items())}
                       for rule, keys in sorted(self.rules.items())},
+            "implications": [i.as_dict() for i in self.implications],
             "notes": self.notes,
         }
 
@@ -405,6 +421,7 @@ def _ghs(path: Path, regulation: str, document: str,
         else:
             _cut_offs(rows, _HAZARD_OF[rule], place, table, "generic_limits")
     _stot_se_3(text_by_page, document, table)
+    _implications(text_by_page, document, table)
     _parent_categories(table)
     table.covers = list(covers if covers is not None else _covered(table))
     return table
@@ -569,6 +586,40 @@ def _stot_se_3(text_by_page: dict[int, str], document: str, table: Table,
         f"{document}; that rule is reported as not on file")
 
 
+#: A regulation saying that a skin corrosive damages the eye as well. It
+#: decides whether a sheet stating Skin Corr. 1 and nothing about the eye has
+#: left the eye unstated or has stated Eye Dam. 1 without writing it, and the
+#: two readings give opposite verdicts. Only a regulation that says so in its
+#: own text gets the benefit of it.
+_IMPLIES_EYE = re.compile(
+    r"skin corrosi\w+[^.]{0,90}(?:shall|should|are|is|will)\s+(?:be\s+)?"
+    r"considered[^.]{0,120}serious (?:eye damage|damage to the eye)"
+    r"[^.]{0,220}\.", re.I)
+
+
+def _implications(text_by_page: dict[int, str], document: str, table: Table,
+                  *, paragraph_prefix: str = "", paged: bool = True) -> None:
+    """Record what a regulation says one classification carries with it."""
+    for index, text in sorted(text_by_page.items()):
+        match = _IMPLIES_EYE.search(text)
+        if match is None:
+            continue
+        before = re.findall(r"\b(\d\.\d\.\d(?:\.\d){0,3})\.?\s",
+                            text[:match.start()])
+        table.implications.append(Implication(
+            source_class="Skin Corr. 1", implied="Eye Dam. 1",
+            place=Place(document,
+                        paragraph_prefix + (before[-1] if before
+                                            else "paragraph not identified"),
+                        index + 1 if paged else None),
+            raw=" ".join(match.group(0).split())))
+        return
+    table.notes.append(
+        f"{document} was searched and does not say that a skin corrosive is "
+        "also seriously damaging to the eye, so that is not read into a sheet "
+        "that states only skin corrosion")
+
+
 def _covered(table: Table) -> list[str]:
     """The classes a table actually has rules for."""
     found = set()
@@ -641,6 +692,7 @@ def _osha(body: bytes) -> Table:
     # Appendix A is a web page: it has no pages to cite, and the paragraph
     # number it prints is what a reader looks the sentence up by.
     _stot_se_3({0: text}, OSHA_DOCUMENT, table, paged=False)
+    _implications({0: text}, OSHA_DOCUMENT, table, paged=False)
     _parent_categories(table)
     table.notes.append(
         "Appendix A has no cut-off table for the aquatic classes: the standard "
@@ -808,8 +860,10 @@ def _eu(doc, regulation: str, document: str) -> Table:
         # be an invention. The table number is what a reader looks it up by.
         place = Place(document, f"Annex I, Table {number}", None)
         _read(tables[number], rule, hazard, place, table)
-    _stot_se_3({0: " ".join(doc.text_content().split())}, document, table,
-               paragraph_prefix="Annex I, ", paged=False)
+    flat = {0: " ".join(doc.text_content().split())}
+    _stot_se_3(flat, document, table, paragraph_prefix="Annex I, ", paged=False)
+    _implications(flat, document, table, paragraph_prefix="Annex I, ",
+                  paged=False)
     _parent_categories(table)
     table.covers = _covered(table)
     return table
@@ -1078,6 +1132,7 @@ def _gb(path: Path, regulation: str, document: str) -> Table:
         raise NotInTheText(
             f"{document}: no table found for {', '.join(missing)}")
     _stot_se_3(text_by_page, document, table, paragraph_prefix="Annex I, ")
+    _implications(text_by_page, document, table, paragraph_prefix="Annex I, ")
     _parent_categories(table)
     table.covers = _covered(table)
     return table

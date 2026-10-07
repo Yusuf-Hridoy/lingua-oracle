@@ -17,10 +17,27 @@ def ing(low, high, *codes, cas="100-00-5"):
 
 
 def verdicts(results):
-    return {r.hazard_class: r.verdict for r in results}
+    """Verdict by classification. A card is about a hazard family now, so it
+    is keyed by what that family was calculated as and by what Section 2 said
+    about it - either is a fair way to ask for it."""
+    out = {}
+    for result in results:
+        for key in (result.hazard_class, result.calculated_class,
+                    result.stated_class):
+            if key:
+                out[key] = result.verdict
+    return out
 
 
 # -- both ends of every range --------------------------------------------------
+
+
+def _about(results, name):
+    """The card about one classification: cards are per family, so a class is
+    found by what the family was calculated as or by what Section 2 said."""
+    return next(r for r in results
+                if name in (r.hazard_class, r.calculated_class,
+                            r.stated_class))
 
 
 def test_a_range_that_agrees_at_both_ends_is_decided():
@@ -32,7 +49,7 @@ def test_a_range_that_agrees_at_both_ends_is_decided():
 def test_a_range_that_straddles_a_limit_cannot_be_decided():
     """3 % of a corrosive gives Skin Irrit. 2, 8 % gives Skin Corr. 1."""
     results, _ = calculate([ing(3, 8, "H314")], [], "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Skin Corr. 1")
+    result = _about(results, "Skin Corr. 1")
     assert result.verdict == "cannot_tell"
     assert result.calculated_low == "Skin Irrit. 2"
     assert result.calculated_high == "Skin Corr. 1"
@@ -41,7 +58,7 @@ def test_a_range_that_straddles_a_limit_cannot_be_decided():
 
 def test_a_range_that_only_triggers_at_the_top_says_so():
     results, _ = calculate([ing(5, 30, "H400")], [], "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Aquatic Acute 1")
+    result = _about(results, "Aquatic Acute 1")
     assert result.verdict == "cannot_tell"
     assert result.calculated_low == "no classification"
     assert result.calculated_high == "Aquatic Acute 1"
@@ -58,9 +75,9 @@ def test_a_single_value_is_a_range_with_equal_ends():
 
 def test_a_calculated_class_the_sheet_lacks_is_inconsistent():
     results, _ = calculate([ing(30, 30, "H400")], [], "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Aquatic Acute 1")
+    result = _about(results, "Aquatic Acute 1")
     assert result.verdict == "inconsistent"
-    assert "does not state it" in result.message
+    assert "does not list this hazard" in result.message
 
 
 def test_a_class_the_sheet_states_and_the_calculation_gives_is_consistent():
@@ -73,7 +90,7 @@ def test_a_stated_class_may_come_from_the_undisclosed_part():
     """Declared ingredients reach 40 %; the other 60 % is not ours to see."""
     results, summary = calculate([ing(40, 40, "H315")],
                                  [parse_class("Carc. 1")], "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Carc. 1")
+    result = _about(results, "Carc. 1")
     assert result.verdict == "cannot_tell"
     assert "undisclosed 60 %" in result.message
     assert summary["undisclosed"] == "60"
@@ -82,7 +99,7 @@ def test_a_stated_class_may_come_from_the_undisclosed_part():
 def test_with_nothing_undisclosed_a_stated_class_is_inconsistent():
     results, _ = calculate([ing(100, 100, "H315")], [parse_class("Carc. 1")],
                            "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Carc. 1")
+    result = _about(results, "Carc. 1")
     assert result.verdict == "inconsistent"
     assert "nothing undisclosed" in result.message
 
@@ -90,7 +107,7 @@ def test_with_nothing_undisclosed_a_stated_class_is_inconsistent():
 def test_a_class_outside_the_rules_is_not_calculated_rather_than_contradicted():
     results, _ = calculate([ing(100, 100, "H315")],
                            [parse_class("Flam. Liq. 2")], "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Flam. Liq. 2")
+    result = _about(results, "Flam. Liq. 2")
     assert result.verdict == "not_calculated"
     assert "does not calculate" in result.message
 
@@ -111,7 +128,7 @@ def test_every_regulation_with_rules_on_file_is_calculated(regulation):
 def test_the_aquatic_classes_are_calculated_where_a_regulation_has_them(
         regulation):
     results, _ = calculate([ing(30, 30, "H400")], [], regulation)
-    assert any(r.hazard_class.startswith("Aquatic") for r in results)
+    assert any("Aquatic" in r.calculated_class for r in results)
 
 
 @pytest.mark.parametrize("regulation", ["us_osha", "ca_whmis"])
@@ -120,14 +137,14 @@ def test_an_aquatic_class_is_not_a_finding_where_a_regulation_has_none(
     """Not a gap in what we know: those standards have no aquatic classes."""
     results, summary = calculate([ing(30, 30, "H400")], [], regulation)
     assert summary["in_scope"] is True
-    assert not [r for r in results if r.hazard_class.startswith("Aquatic")]
+    assert not [r for r in results if "Aquatic" in r.calculated_class]
     assert "Aquatic Acute" in summary["not_covered"]
 
 
 def test_a_class_a_regulation_does_not_have_is_said_to_be_so():
     results, _ = calculate([ing(30, 30, "H315")],
                            [parse_class("Aquatic Chronic 2")], "us_osha")
-    result = next(r for r in results if r.hazard_class == "Aquatic Chronic 2")
+    result = _about(results, "Aquatic Chronic 2")
     assert result.verdict == "not_calculated"
     assert result.message == "Not covered by US OSHA HazCom."
 
@@ -143,27 +160,27 @@ def test_japan_has_no_rules_on_file_and_is_not_guessed_at():
 
 def test_a_result_names_the_paragraph_it_came_from():
     results, _ = calculate([ing(30, 30, "H400")], [], "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Aquatic Acute 1")
+    result = _about(results, "Aquatic Acute 1")
     assert result.citation.endswith("Annex I, Table 4.1.1")
     assert result.citation.startswith("Regulation (EC) No 1272/2008")
 
 
 def test_a_result_names_the_ingredients_that_caused_it():
     results, _ = calculate([ing(30, 30, "H400", cas="7440-00-0")], [], "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Aquatic Acute 1")
+    result = _about(results, "Aquatic Acute 1")
     assert result.contributions[0]["cas"] == "7440-00-0"
     assert result.contributions[0]["percentage"] == "30"
 
 
 def test_every_assumption_is_recorded():
     results, _ = calculate([ing(30, 30, "H400")], [], "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Aquatic Acute 1")
+    result = _about(results, "Aquatic Acute 1")
     assert any("M = 1 assumed" in a for a in result.assumptions)
 
 
 def test_the_trace_shows_the_arithmetic():
     results, _ = calculate([ing(30, 30, "H400")], [], "eu_clp")
-    result = next(r for r in results if r.hazard_class == "Aquatic Acute 1")
+    result = _about(results, "Aquatic Acute 1")
     assert any("Sum of (Aquatic Acute 1 x M)" in line for line in result.trace)
 
 

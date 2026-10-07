@@ -25,8 +25,14 @@ def _check(fixture, regulation="eu_clp"):
 
 
 def _class(report, name):
+    """The card about one classification, whichever side of it it appears on.
+
+    Cards are per hazard family now, so a class is found by what the family
+    was calculated as or by what Section 2 said about it.
+    """
     return next((r for r in report.mixture.results
-                 if r["hazard_class"] == name), None)
+                 if name in (r["hazard_class"], r["calculated_class"],
+                             r["stated_class"])), None)
 
 
 # -- reading Section 9 ---------------------------------------------------------

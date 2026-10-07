@@ -48,11 +48,29 @@ class Value:
 
 
 @dataclass(frozen=True)
+class Implication:
+    """A classification a regulation says carries another with it."""
+
+    source_class: str
+    implied: str
+    document: str
+    section: str
+    page: int | None
+    raw: str = ""
+
+    @property
+    def citation(self) -> str:
+        where = f", page {self.page}" if self.page else ""
+        return f"{self.document}, {self.section}{where}"
+
+
+@dataclass(frozen=True)
 class RuleTable:
     regulation: str
     document: str
     covers: frozenset[str]
     values: dict[str, dict[str, tuple[Value, ...]]]
+    implications: tuple[Implication, ...] = ()
     notes: tuple[str, ...] = ()
 
     def variants(self, rule: str, key: str) -> tuple[Value, ...]:
@@ -76,6 +94,17 @@ class RuleTable:
 
     def covers_class(self, name: str) -> bool:
         return name in self.covers
+
+    def implied_by(self, hazard_class: str) -> Implication | None:
+        """What this regulation says that classification carries with it.
+
+        Nothing where the regulation does not say so: the implication is only
+        read into a sheet by a regulation that states it.
+        """
+        for implication in self.implications:
+            if implication.source_class == hazard_class:
+                return implication
+        return None
 
 
 def path_for(regulation: str) -> Path:
@@ -103,6 +132,12 @@ def load(regulation: str) -> RuleTable | None:
     return RuleTable(
         regulation=raw["regulation"], document=raw["document"],
         covers=frozenset(raw.get("covers", ())), values=values,
+        implications=tuple(
+            Implication(source_class=i["class"], implied=i["implies"],
+                        document=i["source"]["document"],
+                        section=i["source"]["section"],
+                        page=i["source"].get("page"), raw=i.get("raw", ""))
+            for i in raw.get("implications", ())),
         notes=tuple(raw.get("notes", ())))
 
 

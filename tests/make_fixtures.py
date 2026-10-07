@@ -411,6 +411,14 @@ def build_all() -> dict[str, Path]:
     for state in ("liquid", "gas", None):
         add(f"pattern_sensitiser_{state or 'unstated'}", _sensitiser_sheet(
             FIXTURES / f"pattern_sensitiser_{state or 'unstated'}.pdf", state))
+    # The shape of a real WHMIS sheet that the per-class comparison got wrong:
+    # Section 2 is stricter than the declared ingredients, and 39 % of the
+    # mixture is not declared at all. Compared per class it produced three
+    # contradictions and two unanswerables; compared per hazard family it is a
+    # sheet that is stricter about the skin and the eye than the part of the
+    # mixture it discloses.
+    add("pattern_stricter_than_declared", _stricter_sheet(
+        FIXTURES / "pattern_stricter_than_declared.pdf"))
     add("pattern_aquatic_statement", _supplier_ingredients(
         FIXTURES / "pattern_aquatic_statement.pdf",
         classification="Flam. Liq. 2, H225; Aquatic Chronic 2, H411"))
@@ -460,6 +468,39 @@ def build_all() -> dict[str, Path]:
 
     return built
 
+
+
+def _stricter_sheet(path: Path) -> Path:
+    """Section 2 stricter than Section 3, with most of the mixture undisclosed.
+
+    Two ingredients at 31 % and 30 %, each irritant to skin and eye and each
+    narcotic; Section 2 says the mixture is corrosive and a category 1 target
+    organ toxicant. Both can be true: 39 % of the mixture is not declared.
+    """
+    head = HEADINGS["en"]
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("Classification: Skin Corr. 1, H314; STOT SE 1, H370")
+    sheet.line("Signal word: Danger")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.table(
+        ["Chemical name", "CAS No", "Concentration", "Classification"],
+        [["Synthetic component F", "100-00-1", "31 %",
+          "Skin Irrit. 2, H315; Eye Irrit. 2, H319; STOT SE 3, H336"],
+         ["Synthetic component G", "100-00-2", "30 %",
+          "Skin Irrit. 2, H315; Eye Irrit. 2, H319; STOT SE 3, H336"]])
+    sheet.blank()
+    sheet.line("SECTION 9: Physical and chemical properties", bold=True, size=11)
+    sheet.line("Physical state : liquid")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    sheet.line("H314 Causes severe skin burns and eye damage.")
+    sheet.save()
+    return path
 
 
 def _sensitiser_sheet(path: Path, state: str | None) -> Path:
