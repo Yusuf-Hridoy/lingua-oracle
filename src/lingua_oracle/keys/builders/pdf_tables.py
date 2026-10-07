@@ -35,8 +35,12 @@ _AMENDMENT_RE = re.compile(r"^\s*\[?\s*F\d+\s*", re.IGNORECASE)
 _LANG_CELL_RE = re.compile(r"^[A-Z]{2}$")
 # The code cell may carry a continuation marker, e.g. "P280 (cont'd)", when a
 # statement's table spills onto the next page.
+# A combination may end with an optional member in brackets, which is a code
+# of its own: "P370 + P380 + P375[+ P378]" is not "P370 + P380 + P375".
 CODE_CELL_RE = re.compile(
-    rf"^\s*({_SINGLE}(?:\s*\+\s*{_SINGLE})*)\s*(?:\([^()]{{0,20}}\))?\s*$",
+    rf"^\s*({_SINGLE}(?:\s*\+\s*{_SINGLE})*"
+    rf"(?:\s*\[\s*\+\s*{_SINGLE}\s*\])?)"
+    rf"\s*(?:\([^()]{{0,20}}\))?\s*$",
     re.IGNORECASE,
 )
 
@@ -96,6 +100,13 @@ def harvest_multilingual(
     then carry one row per official language, ``["", "DA", "<text>"]``. A table
     may break across a page, leaving a headerless continuation whose rows belong
     to the code from the previous page, so the current code is carried forward.
+
+    Sometimes the break falls on the header row itself. The GB rendering puts
+    the code, the word "Language" and the hazard class at the foot of one page
+    as loose text - not as a table row at all - and the language rows on the
+    next, so there is no header for this parser to see and the code is simply
+    the last one printed on the page before. Four statements were lost that
+    way: H200, H250, H290 and H318.
     """
     issues = issues or ParseIssues(source=path)
     out: dict[str, dict[str, str]] = {}
@@ -105,7 +116,12 @@ def harvest_multilingual(
     try:
         for index in range(max(0, first_page), last):
             issues.pages_scanned += 1
-            for table in doc[index].find_tables().tables:
+            tables = doc[index].find_tables().tables
+            if tables and _starts_headerless(tables[0]) and index > 0:
+                carried = _last_code_on(doc[index - 1])
+                if carried:
+                    current = carried
+            for table in tables:
                 issues.tables_seen += 1
                 for row in table.extract():
                     if not row or len(row) < 3:
@@ -133,6 +149,34 @@ def harvest_multilingual(
     finally:
         doc.close()
     return out, issues
+
+
+#: A code as the page prints it, with the amendment marker already stripped.
+_LOOSE_CODE_RE = re.compile(r"(?:EU|AU)?H\s?\d{3}[A-Za-z]?")
+
+
+def _starts_headerless(table) -> bool:
+    """True when a table opens with a language row rather than a header.
+
+    Such a table is the tail of one whose header is on the page before.
+    """
+    rows = table.extract()
+    if not rows or len(rows[0]) < 3:
+        return False
+    first = rows[0]
+    return (not strip_amendment(flatten_cell(first[0]))
+            and bool(_LANG_CELL_RE.match(flatten_cell(first[1]).strip())))
+
+
+def _last_code_on(page) -> str | None:
+    """The last statement code printed on a page, however it is marked up.
+
+    The amendment markers legislation.gov.uk stamps on are removed first:
+    "[F50H318" is H318 with a marker glued to it, and a code with a marker
+    glued to its front has no word boundary to be found by.
+    """
+    found = _LOOSE_CODE_RE.findall(strip_amendment(page.get_text()))
+    return normalise_code(found[-1]) if found else None
 
 
 # Annex II defines supplemental statements in prose rather than a table:

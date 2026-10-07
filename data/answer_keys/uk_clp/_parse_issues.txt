@@ -1,9 +1,9 @@
   parse issues for uk_clp/en (gb_clp_full.pdf):
-    pages=598 tables=1562 rows=13682 used=5245
-    codes seen twice with different text (568): H242/BG, H242/ES, H242/CS, H242/DA, H242/DE, H242/ET, H242/EL, H242/EN, H242/FR, H242/GA, H242/HR, H242/IT…
+    pages=598 tables=1562 rows=13682 used=5229
+    codes seen twice with different text (608): H330/DA, H330/DE, H330/ET, H330/EL, H330/EN, H330/FR, H330/GA, H330/HR, H330/IT, H330/LV, H330/LT, H330/HU…
     Part 1 text used where it supersedes Part 2 (3): P103, P280, P336
     annex pages 62-660
-    Annex III multilingual EN rows: 209; Annex IV English rows added: 20; Annex II prose (EUH) added: 7
+    Annex III multilingual EN rows: 210; Annex IV English rows added: 25; Annex II prose (EUH) added: 6
     GB CLP is retained EU law, so EU CLP codes introduced after retention (EUH380/381/430/431/440/441/450/451) are legitimately absent, not missing.
     retained text also carries 23 other language column(s) (bg, cs, da, de, el, es, et, fi…); not stored, GB CLP is English
     signal words found: ['Danger', 'Warning']

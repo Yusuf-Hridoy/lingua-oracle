@@ -109,16 +109,7 @@ def test_every_code_is_one_the_regulation_publishes(table):
             base = re.match(r"^((?:EU)?H\d{3})", code)
             if code not in known and (base is None or base.group(1) not in known):
                 unknown[code] = unknown.get(code, 0) + 1
-    if not unknown:
-        return
-    # A code the list uses and this tool has no wording for is either an
-    # invented code - which would be a defect in the reading - or a gap in the
-    # answer key. Every one of these is in the EU key, so it is the second,
-    # and it is pinned here so it cannot grow unnoticed.
-    eu = {entry.code for entry in load_key("eu_clp", "en").entries}
-    assert set(unknown) <= eu, f"{table.name}: codes in no key at all: {unknown}"
-    assert set(unknown) == {"H200", "H250", "H290", "H318"}, (
-        f"{regulation}'s key is missing wording for {sorted(unknown)}")
+    assert not unknown, f"{table.name}: codes with no {regulation} wording: {unknown}"
 
 
 def test_every_supplemental_code_has_wording_in_its_own_regulation(table):
