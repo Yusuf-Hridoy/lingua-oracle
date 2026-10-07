@@ -444,10 +444,16 @@ def ingredient_status(section) -> tuple[str, str]:
     if section.match_state == "ambiguous":
         return ("nothing to check",
                 "several products could be this sheet; choose one above")
+    # Whatever happened, the section says which list it would have been judged
+    # against: "nothing to check" against a binding list and against somebody
+    # else's are different situations.
+    tail = f" The list for this regulation is {against}." if section.list_title else ""
     if section.source == "skipped":
-        return ("can't check", section.message or "ExactSDS could not be reached")
+        return ("can't check",
+                (section.message or "ExactSDS could not be reached") + tail)
     return ("nothing to check",
-            section.message or "no ingredients with CAS numbers were found")
+            (section.message or "no ingredients with CAS numbers were found")
+            + tail)
 
 
 def mixture_status(section) -> tuple[str, str]:
