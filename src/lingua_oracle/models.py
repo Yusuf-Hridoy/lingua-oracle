@@ -400,6 +400,45 @@ class MixtureSection(BaseModel):
         return int(self.counts.get("inconsistent", 0))
 
 
+class SubstanceSection(BaseModel):
+    """A substance's Section 2, against the list entry for its own CAS number.
+
+    No calculation is involved: a substance is classified as its entry says,
+    so each class and each code Section 2 states is compared with the entry,
+    by the same rules as an ingredient.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    #: "checked", or why not: "no_cas", "no_list", "no_entry",
+    #: "several_entries", "group_entry".
+    state: str = "checked"
+    #: The hardest thing it has to say: "fix", "check" (a difference from a
+    #: list the regulation does not adopt), "ok", or "not_checked".
+    status: str = "not_checked"
+    cas: str = ""
+    #: The name and concentration as the sheet prints them in Section 3.
+    name: str = ""
+    concentration: str = ""
+    official_name: str = ""
+    entry_index_no: str = ""
+    source_ref: str = ""
+    list_name: str = ""
+    list_title: str = ""
+    list_binding: bool = False
+    list_authority: str = ""
+    #: One row per class: {"stated", "official", "result", "note"}; result is
+    #: "ok", "fix", "info" or "na".
+    classes: list[dict] = Field(default_factory=list)
+    #: One row per code: {"code", "result", "note"}.
+    codes: list[dict] = Field(default_factory=list)
+    sheet_codes: list[str] = Field(default_factory=list)
+    official_codes: list[str] = Field(default_factory=list)
+    #: What an adopted amendment that does not apply yet changes for it.
+    upcoming: list[str] = Field(default_factory=list)
+    message: str = ""
+
+
 class Report(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -425,6 +464,12 @@ class Report(BaseModel):
     #: edition and date - "Wording: EU CLP, ..., consolidated version of
     #: 01/07/2026". Empty on a report made before this was recorded.
     sources: list[str] = Field(default_factory=list)
+    #: What Section 3 says the product is - "substance", "mixture" or
+    #: "unknown" - and why. Empty where the ingredient half did not run.
+    composition: str = ""
+    composition_evidence: str = ""
+    #: The substance check, where the product is a substance.
+    substance: SubstanceSection | None = None
 
     def recount(self) -> None:
         s = Summary()

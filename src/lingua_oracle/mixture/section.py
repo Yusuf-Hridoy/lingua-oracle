@@ -15,8 +15,9 @@ from lingua_oracle.models import MixtureSection
 
 NO_COMPOSITION = ("No composition to calculate from: this sheet prints no "
                   "ingredients with concentrations.")
-NO_CONCENTRATIONS = ("The ingredients are listed without concentrations, so "
-                     "nothing can be summed.")
+NO_CONCENTRATIONS = "Can't calculate: Section 3 gives no concentrations."
+NO_CLASSIFIED = ("Can't calculate: no ingredient with a concentration has a "
+                 "classification on the sheet or in the list.")
 
 
 def _ingredient(cas, name, raw_concentration, codes, table, index):
@@ -179,9 +180,13 @@ def _build(rows, lines, spans, regulation: str, table,
         ingredients.append(ingredient)
 
     if not ingredients:
-        return MixtureSection(state="nothing", stated=stated_names,
+        # Plain words for why: the sheet gives no concentrations at all, or
+        # gives them only for ingredients nothing is known about.
+        return MixtureSection(
+            state="cannot_calculate", stated=stated_names,
             physical_state=state or "",
-                              message=NO_CONCENTRATIONS)
+            message=(NO_CONCENTRATIONS if without_concentration == len(rows)
+                     else NO_CLASSIFIED))
 
     results, summary = calculate(ingredients, stated, regulation, state)
     counts = {

@@ -24,6 +24,8 @@ NO_APP = ("ExactSDS not reachable, ingredient check skipped.")
 PENDING = ("Choose the product above to check ingredients.")
 NO_ENTRIES = ("None of the ingredients has an entry in the list this "
               "regulation is checked against, so there was nothing to check.")
+LOOKED_UP = ("Section 3 prints no hazard codes, so nothing could be "
+             "compared; each ingredient's official classification is shown.")
 NO_LIST = ("No list of classified substances is on file for this regulation, "
            "so the ingredients were not checked against one.")
 
@@ -65,6 +67,21 @@ def _substances_from(rows, table, index, *, name_of=None, upcoming=None):
             cas=cas, name=names.get(cas),
             uses=[Use(product_id=position, codes=codes, verdict=verdicts[codes])
                   for position, codes in uses[cas]]))
+    return out
+
+
+def _looked_up(rows, table, index):
+    """One result per CAS number Section 3 prints, each its entry, unjudged."""
+    from lingua_oracle.ingredients.compare import look_up
+    from lingua_oracle.ingredients.report import SubstanceResult, Use
+
+    out = []
+    for position, row in enumerate(rows):
+        cas = (row.cas or "").strip()
+        if not cas or any(s.cas == cas for s in out):
+            continue
+        out.append(SubstanceResult(cas=cas, name=None, uses=[
+            Use(product_id=position, codes=(), verdict=look_up(cas, table, index))]))
     return out
 
 
@@ -147,6 +164,16 @@ def check(path: str, file_name: str, lines, *, client_factory=None,
 
     # Not one of ours, or the application could not say: read the sheet.
     rows = ingredients_in_section_three(path)
+    if not has_anything_to_check(rows) and any(r.cas for r in rows):
+        # Names and CAS numbers without codes: nothing to compare, but each
+        # ingredient's entry is still worth showing.
+        substances = _looked_up(rows, table, index)
+        section = _section_from(
+            substances, "pdf", match_state=match.state, evidence=match.evidence,
+            candidates=[{"product_id": c.product_id, "name": c.name}
+                        for c in match.candidates], **about_list)
+        section.message = LOOKED_UP
+        return section
     if not has_anything_to_check(rows):
         message = NO_APP if match.state == "unavailable" else NO_TABLE
         return IngredientSection(

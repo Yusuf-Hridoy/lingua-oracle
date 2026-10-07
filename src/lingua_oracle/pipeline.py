@@ -137,9 +137,11 @@ def check_pdf(
             report.ingredients = check_ingredients(
                 path, Path(path).name, document.lines,
                 client_factory=client_factory, regulation=reg.id)
-            report.mixture = _mixture_section(
-                report, path, document, spans, reg.id,
-                client_factory=client_factory)
+            _composition(report, path, document, spans, reg.id)
+            report.mixture = (
+                _not_a_mixture(document, spans) if report.composition == "substance"
+                else _mixture_section(report, path, document, spans, reg.id,
+                                      client_factory=client_factory))
         except Exception as exc:  # noqa: BLE001
             from lingua_oracle.models import IngredientSection
 
@@ -233,6 +235,45 @@ def sources_used(report: Report) -> list[str]:
                         annex_vi_source=annex_vi_source,
                         mixture_document=mixture_document,
                         upcoming=upcoming)
+
+
+def _composition(report, path, document, spans, regulation) -> None:
+    """Substance or mixture, and for a substance, its own check.
+
+    A substance is compared with its list entry directly - Section 2 against
+    the entry for its CAS number - and has no mixture to calculate.
+    """
+    from lingua_oracle.ingredients import substance
+    from lingua_oracle.ingredients.composition import SUBSTANCE, detect
+    from lingua_oracle.ingredients.from_pdf import ingredients_in_section_three
+
+    rows = ingredients_in_section_three(path)
+    found = detect(document.lines, spans, rows)
+    report.composition, report.composition_evidence = found.kind, found.evidence
+    if found.kind != SUBSTANCE:
+        return
+    row = next((r for r in rows if r.cas), None)
+    cas = row.cas if row else substance.cas_before_section_two(document.lines, spans)
+    name = ""
+    if row is not None:
+        name = row.raw.split(row.cas)[0].strip(" |,;:") if row.cas in row.raw else ""
+    report.substance = substance.check(
+        cas, regulation=regulation,
+        sheet_codes=substance.section_two_codes(document.lines, spans),
+        stated_classes=substance.explicit_classes(document.lines, spans),
+        name=name, concentration=(row.concentration or "") if row else "")
+
+
+def _not_a_mixture(document, spans):
+    from lingua_oracle.mixture.state import physical_state
+    from lingua_oracle.mixture.stated import stated_classes
+    from lingua_oracle.models import MixtureSection
+
+    return MixtureSection(
+        state="not_applicable",
+        message="Not applicable: this is a substance.",
+        stated=[str(c) for c in stated_classes(document.lines, spans)],
+        physical_state=physical_state(document.lines, spans) or "")
 
 
 def _mixture_section(report, path, document, spans, regulation,

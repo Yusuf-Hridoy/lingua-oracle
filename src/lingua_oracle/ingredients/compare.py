@@ -47,6 +47,8 @@ class Reason(StrEnum):
     SEVERAL_ENTRIES = "several_harmonised_entries"
     GROUP_ENTRY = "entry_covers_several_substances"
     NO_CAS = "ingredient_has_no_cas"
+    #: The sheet names the ingredient and prints no codes for it.
+    NO_CODES = "sheet_gives_no_codes"
 
 
 #: "Acute Tox. 4 *" -> ("Acute Tox.", "4", True). The category of a CLP class is
@@ -291,6 +293,28 @@ def check_ingredient_on(cas: str | None, stated_codes: list[str],
         current.upcoming.append(note)
         current.findings.append(Finding(Status.INFO, None, note))
     return current
+
+
+def look_up(cas: str | None, table: AnnexVITable,
+            index: dict[str, list[AnnexVIEntry]] | None = None) -> Verdict:
+    """An ingredient Section 3 prints without codes: its entry, shown, not judged.
+
+    There is nothing on the sheet to hold against the entry, so this is not a
+    comparison and never a fault - but a reader still wants to know what the
+    list says about each ingredient.
+    """
+    verdict = check_ingredient(cas, [], table, index)
+    if verdict.reason is not None:  # no CAS, no entry, several, a group
+        return verdict
+    required = ", ".join(verdict.required_codes)
+    return Verdict(
+        cas=cas, status=Status.NOT_CHECKED, reason=Reason.NO_CODES,
+        entry_index_no=verdict.entry_index_no, source_ref=verdict.source_ref,
+        required_codes=verdict.required_codes,
+        list_anomalies=verdict.list_anomalies,
+        findings=[Finding(Status.NOT_CHECKED, None,
+                          f"Section 3 prints no hazard codes for it; the entry "
+                          f"gives {required}.")])
 
 
 def compare_categories(stated: str, harmonised: str) -> str:

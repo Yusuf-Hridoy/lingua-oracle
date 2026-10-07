@@ -394,6 +394,15 @@ def build_all() -> dict[str, Path]:
     add("pattern_label_only", _label_only(FIXTURES / "pattern_label_only.pdf"))
     add("pattern_supplier_ingredients", _supplier_ingredients(
         FIXTURES / "pattern_supplier_ingredients.pdf"))
+    add("pattern_substance_2_propanol", _substance_sheet(
+        FIXTURES / "pattern_substance_2_propanol.pdf",
+        classes=["Flam. Liq. 2", "Eye Irrit. 2", "STOT SE 3"],
+        codes=["H225", "H319", "H336"]))
+    add("pattern_substance_missing_h336", _substance_sheet(
+        FIXTURES / "pattern_substance_missing_h336.pdf",
+        classes=["Flam. Liq. 2", "Eye Irrit. 2"], codes=["H225", "H319"]))
+    add("pattern_mixture_no_concentrations", _no_concentrations(
+        FIXTURES / "pattern_mixture_no_concentrations.pdf"))
     # The same table, on a sheet that names its product the way ours do. Where
     # the product is one of ours its record is what gets checked, and this is
     # the fixture that can tell the two apart: the table here is nothing like
@@ -619,6 +628,87 @@ def _supplier_ingredients(path: Path, *, labelled: bool = False,
           "Flam. Gas 1, H220; Press. Gas"],
          ["Synthetic component C", "7439-93-2", "< 1 %",
           "Water-react. 1, H260"]])
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in ("H225", "H319"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
+
+
+def _substance_sheet(path: Path, *, classes: list[str], codes: list[str]) -> Path:
+    """A substance: 2-propanol on its own, as a supplier would write it.
+
+    Annex VI 603-117-00-0 classifies 2-propanol (CAS 67-63-0) Flam. Liq. 2,
+    Eye Irrit. 2, STOT SE 3 - H225, H319, H336. The substance and its entry are
+    public law; the supplier is invented. Section 3 says "3.1 Substances" and
+    lists the one CAS number at 100 %, so either rule finds it a substance.
+    """
+    head = HEADINGS["en"]
+    official = texts("eu_clp", "en", codes + ["P210", "P233"])
+    sheet = Sheet(path)
+    sheet.line("2-Propanol", bold=True, size=12)
+    sheet.line("SECTION 1: Identification of the substance/mixture")
+    sheet.line("Product name: 2-Propanol")
+    sheet.line("CAS number: 67-63-0")
+    sheet.line(SUPPLIER)
+    sheet.line("Prepared according to Regulation (EC) No 1272/2008.", size=8)
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("2.1 Classification of the substance or mixture")
+    for hazard_class, code in zip(classes, codes, strict=True):
+        sheet.line(f"{hazard_class}; {code}")
+    sheet.line("2.2 Label elements")
+    sheet.line(f"{head['signal']}: {signal_text('eu_clp', 'en')}")
+    sheet.line(head["haz"], bold=True)
+    for code in codes:
+        sheet.line(f"{code} {official[code]}")
+    sheet.line(head["prec"], bold=True)
+    for code in ("P210", "P233"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("3.1 Substances")
+    sheet.table(["Chemical name", "CAS No", "Concentration", "Classification"],
+                [["2-Propanol", "67-63-0", "100 %", ", ".join(codes)]])
+    sheet.blank()
+    sheet.line("SECTION 9: Physical and chemical properties", bold=True, size=11)
+    sheet.line("Physical state : liquid")
+    sheet.blank()
+    sheet.line("SECTION 10: Stability and reactivity", bold=True, size=11)
+    sheet.line("Stable under normal conditions.")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in codes:
+        sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
+
+
+def _no_concentrations(path: Path) -> Path:
+    """A mixture whose Section 3 names its ingredients and gives no shares.
+
+    Nothing can be summed, and there are no codes to compare - but each CAS
+    number still has an entry worth showing. Real substances, invented product.
+    """
+    head = HEADINGS["en"]
+    official = texts("eu_clp", "en", ["H225", "H319"])
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.line("Prepared according to Regulation (EC) No 1272/2008.", size=8)
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("Classification: Flam. Liq. 2, H225")
+    sheet.line("Signal word: Danger")
+    for code in ("H225", "H319"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("3.2 Mixtures")
+    sheet.table(["Chemical name", "CAS No"],
+                [["Synthetic component A", "67-64-1"],
+                 ["Synthetic component F", "64-17-5"]])
     sheet.blank()
     sheet.line(head["16"], bold=True, size=11)
     for code in ("H225", "H319"):

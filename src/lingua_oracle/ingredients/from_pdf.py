@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 
 from lingua_oracle.detect.codes import CODE_RE
@@ -146,7 +147,26 @@ def _section_three_band(page) -> tuple[float, float] | None:
 
 
 def ingredients_in_section_three(path: str | Path) -> list[PdfIngredient]:
-    """Every substance Section 3 prints with hazard codes beside it."""
+    """Every substance Section 3 prints with hazard codes beside it.
+
+    One upload asks for this three times - the ingredient check, substance or
+    mixture, the mixture calculation - and table detection costs about half a
+    second a page, so the reading is kept per file as it stands on disk.
+    """
+    target = Path(path)
+    try:
+        stat = target.stat()
+    except OSError:
+        return []
+    return list(_read(str(target), stat.st_size, stat.st_mtime_ns))
+
+
+@lru_cache(maxsize=16)
+def _read(path: str, _size: int, _mtime: int) -> tuple[PdfIngredient, ...]:
+    return tuple(_read_section_three(path))
+
+
+def _read_section_three(path: str | Path) -> list[PdfIngredient]:
     try:
         import pdfplumber
     except ImportError:          # pragma: no cover - pdfplumber is a dependency

@@ -363,6 +363,8 @@ def _ingredient_source(section) -> str:
 #: What the Mixture section was able to do, in one line.
 _MIXTURE_SOURCE = {
     "nothing": "nothing to calculate from",
+    "cannot_calculate": "not calculated",
+    "not_applicable": "not applicable: a substance",
     "out_of_scope": "not calculated",
     "skipped": "not calculated",
 }
@@ -467,6 +469,10 @@ def mixture_status(section) -> tuple[str, str]:
                 f"{section.counts.get('ingredients', 0)} ingredients summed "
                 f"against {section.source_document}"
                 + read_as.get(section.physical_state, ""))
+    if section.state == "not_applicable":
+        return ("not applicable", section.message)
+    if section.state == "cannot_calculate":
+        return ("can't check", section.message)
     if section.state == "out_of_scope":
         return ("can't check", section.message)
     if section.state == "skipped":
@@ -476,7 +482,7 @@ def mixture_status(section) -> tuple[str, str]:
 
 #: The three words a section can report, and how each one looks.
 STATUS_TONE = {"checked": "ok", "nothing to check": "none",
-               "can't check": "check"}
+               "can't check": "check", "not applicable": "none"}
 
 
 def _mixture_tone(section) -> str:

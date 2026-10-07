@@ -309,6 +309,7 @@ REASONS = {
     "ingredient_has_no_cas": "no CAS number, so Table 3 cannot be searched",
     "several_harmonised_entries": "the CAS number appears in more than one entry",
     "entry_covers_several_substances": "the entry covers several substances at once",
+    "sheet_gives_no_codes": "Section 3 prints no codes for it to compare",
 }
 
 
