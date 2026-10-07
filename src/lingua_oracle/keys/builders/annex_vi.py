@@ -33,8 +33,11 @@ _HEADER = ("index no", "ec no", "cas no")
 #: A hazard statement code. Found inside the text rather than matched against
 #: the whole of it: the act packs several onto one line and hangs footnote
 #: asterisks off them - "H361d *** H304", "H373 **" - and a whole-string match
-#: dropped every line that was not a single bare code.
-_CODE = re.compile(r"\b(?:EU)?H\d{3}[A-Za-z]?\b")
+#: dropped every line that was not a single bare code. Up to two letters: the
+#: reproductive toxicity codes name both effects at once - H360FD, H360Df,
+#: H360Fd, H361fd - and with one letter allowed the word boundary failed and
+#: the whole code was lost, from 114 entries.
+_CODE = re.compile(r"\b(?:EU)?H\d{3}[A-Za-z]{0,2}\b")
 #: "233-139-2 [1]" - the bracketed index ties the identifier to one of the
 #: substances a multi-substance entry covers.
 _WHICH = re.compile(r"\s*\[(\d+)\]\s*$")

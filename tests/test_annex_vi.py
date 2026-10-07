@@ -194,3 +194,31 @@ def test_the_supplemental_column_holds_nothing_but_euh_codes(table):
 
 def test_enough_entries_carry_one_to_be_worth_checking(table):
     assert sum(1 for e in table.entries if e.euh_codes) > 100
+
+
+# -- reproductive toxicity codes with two letters ---------------------------------
+
+def test_a_code_naming_two_effects_is_read_whole():
+    from lingua_oracle.keys.builders.annex_vi import _codes
+
+    assert _codes(["H360FD", "H360Df H361fd", "H360Fd"]) == [
+        "H360FD", "H360Df", "H361fd", "H360Fd"]
+    # Still found inside a line, and one letter or none still works.
+    assert _codes(["H361d *** H304", "H350i", "H373 **"]) == [
+        "H361d", "H304", "H350i", "H373"]
+
+
+def test_every_reproductive_toxicant_carries_its_code(table):
+    # 114 entries once had a Repr. class and no H360/H361/H362 at all.
+    missing = [e.index_no for e in table.entries
+               if any(c.startswith("Repr.") for c in e.hazard_classes)
+               and not any(h.startswith(("H360", "H361", "H362")) for h in e.h_codes)]
+    assert missing == []
+
+
+def test_a_sheet_without_h360fd_for_trimethyl_borate_is_under_classified(table):
+    from lingua_oracle.ingredients.compare import Status, check_ingredient
+
+    verdict = check_ingredient("121-43-7", ["H226", "H312"], table)
+    assert verdict.status is Status.FIX
+    assert verdict.missing_codes == ["H360FD"]

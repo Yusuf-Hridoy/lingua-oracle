@@ -1,7 +1,7 @@
 {
  "source": "02008R1272-20260701",
  "note": "CLP Annex VI Part 3 Table 3, the harmonised classifications. Values are stored exactly as the act prints them, including the '*' that marks a minimum classification and the [n] suffixes that tie an identifier to one substance of a multi-substance entry. Left out as annulled: 022-006-00-2 (Commission notice C/2025/6670 (OJ C, 10.12.2025): the General Court's judgment of 23 November 2022 in Joined Cases T-279/20, T-283/20 and T-288/20, upheld by the Court of Justice on 1 August 2025 in Joined Cases C-71/23 P and C-82/23 P, annulled Delegated Regulation (EU) 2020/217 as regards titanium dioxide).",
- "retrieved_at": "2026-10-07T11:39:31.742943Z",
+ "retrieved_at": "2026-10-07T11:49:01.003797Z",
  "entries": [
   {
    "index_no": "001-001-00-9",
@@ -612,6 +612,7 @@
    ],
    "h_codes": [
     "H226",
+    "H360FD",
     "H312"
    ],
    "pictograms": [
@@ -622,6 +623,7 @@
    ],
    "label_h_codes": [
     "H226",
+    "H360FD",
     "H312"
    ],
    "supplemental_h_codes": [],
@@ -654,6 +656,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360FD",
     "H341",
     "H372",
     "H312",
@@ -671,6 +674,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H341",
     "H372",
     "H312",
@@ -700,12 +704,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -727,12 +735,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -837,12 +849,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -1048,12 +1064,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -1080,6 +1100,7 @@
     "Eye Dam. 1"
    ],
    "h_codes": [
+    "H360FD",
     "H332",
     "H335",
     "H318"
@@ -1091,6 +1112,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H332",
     "H335",
     "H318"
@@ -1131,6 +1153,7 @@
    ],
    "h_codes": [
     "H272",
+    "H360FD",
     "H331",
     "H302",
     "H335",
@@ -1145,6 +1168,7 @@
    ],
    "label_h_codes": [
     "H272",
+    "H360FD",
     "H331",
     "H302",
     "H335",
@@ -1270,6 +1294,7 @@
    ],
    "h_codes": [
     "H225",
+    "H361fd",
     "H372",
     "H319",
     "H315"
@@ -1282,6 +1307,7 @@
    ],
    "label_h_codes": [
     "H225",
+    "H361fd",
     "H372",
     "H319",
     "H315"
@@ -2044,6 +2070,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H351",
     "H302",
     "H373",
@@ -2057,6 +2084,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H351",
     "H302",
     "H373",
@@ -6901,6 +6929,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -6914,6 +6943,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -9445,12 +9475,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -15348,6 +15382,7 @@
     "STOT RE 2 *"
    ],
    "h_codes": [
+    "H360Fd",
     "H332",
     "H312",
     "H302",
@@ -15359,6 +15394,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Fd",
     "H332",
     "H312",
     "H302",
@@ -16942,6 +16978,7 @@
     "Skin Sens. 1B"
    ],
    "h_codes": [
+    "H360Fd",
     "H317"
    ],
    "pictograms": [
@@ -16950,6 +16987,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Fd",
     "H317"
    ],
    "supplemental_h_codes": [],
@@ -17081,14 +17119,16 @@
     "Repr. 1B"
    ],
    "h_codes": [
-    "H340"
+    "H340",
+    "H360Df"
    ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
    "label_h_codes": [
-    "H340"
+    "H340",
+    "H360Df"
    ],
    "supplemental_h_codes": [],
    "euh_codes": [],
@@ -21989,6 +22029,7 @@
    "h_codes": [
     "H341",
     "H350",
+    "H361fd",
     "H362",
     "H301",
     "H330",
@@ -22005,6 +22046,7 @@
    "label_h_codes": [
     "H341",
     "H350",
+    "H361fd",
     "H362",
     "H301",
     "H330",
@@ -22128,6 +22170,7 @@
     "H272",
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -22150,6 +22193,7 @@
     "H272",
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -22200,6 +22244,7 @@
     "H272",
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -22222,6 +22267,7 @@
     "H272",
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -22276,6 +22322,7 @@
     "H272",
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H312",
@@ -22298,6 +22345,7 @@
     "H272",
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H312",
@@ -22874,6 +22922,7 @@
    "h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -22894,6 +22943,7 @@
    "label_h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -26341,6 +26391,7 @@
    ],
    "h_codes": [
     "H350i",
+    "H360Df",
     "H372",
     "H317",
     "H400",
@@ -26354,6 +26405,7 @@
    ],
    "label_h_codes": [
     "H350i",
+    "H360Df",
     "H372",
     "H317",
     "H410"
@@ -28941,6 +28993,7 @@
     "Eye Irrit. 2"
    ],
    "h_codes": [
+    "H360FD",
     "H362",
     "H336",
     "H372",
@@ -28952,6 +29005,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H362",
     "H336",
     "H372",
@@ -29577,6 +29631,7 @@
    "h_codes": [
     "H350",
     "H341",
+    "H361fd",
     "H330",
     "H372",
     "H400",
@@ -29591,6 +29646,7 @@
    "label_h_codes": [
     "H350",
     "H341",
+    "H361fd",
     "H330",
     "H372",
     "H410"
@@ -29784,6 +29840,7 @@
    "h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -29799,6 +29856,7 @@
    "label_h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -29894,6 +29952,7 @@
    "h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -29909,6 +29968,7 @@
    "label_h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -29951,6 +30011,7 @@
    "h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -29966,6 +30027,7 @@
    "label_h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H330",
     "H301",
     "H372",
@@ -30006,6 +30068,7 @@
    "h_codes": [
     "H350",
     "H341",
+    "H361fd",
     "H372",
     "H302",
     "H413"
@@ -30018,6 +30081,7 @@
    "label_h_codes": [
     "H350",
     "H341",
+    "H361fd",
     "H372",
     "H302",
     "H413"
@@ -30060,6 +30124,7 @@
     "H250",
     "H350",
     "H341",
+    "H361fd",
     "H330",
     "H372",
     "H400",
@@ -30076,6 +30141,7 @@
     "H250",
     "H350",
     "H341",
+    "H361fd",
     "H330",
     "H372",
     "H410"
@@ -30608,6 +30674,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360FD",
     "H301",
     "H312",
     "H372",
@@ -30623,6 +30690,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H301",
     "H312",
     "H372",
@@ -31116,6 +31184,7 @@
    ],
    "h_codes": [
     "H341",
+    "H360FD",
     "H330",
     "H301",
     "H312",
@@ -31133,6 +31202,7 @@
    ],
    "label_h_codes": [
     "H341",
+    "H360FD",
     "H330",
     "H301",
     "H312",
@@ -31444,6 +31514,7 @@
    ],
    "h_codes": [
     "H341",
+    "H360FD",
     "H372"
    ],
    "pictograms": [
@@ -31452,6 +31523,7 @@
    ],
    "label_h_codes": [
     "H341",
+    "H360FD",
     "H372"
    ],
    "supplemental_h_codes": [],
@@ -31509,6 +31581,7 @@
    ],
    "h_codes": [
     "H341",
+    "H360FD",
     "H372"
    ],
    "pictograms": [
@@ -31517,6 +31590,7 @@
    ],
    "label_h_codes": [
     "H341",
+    "H360FD",
     "H372"
    ],
    "supplemental_h_codes": [],
@@ -31542,6 +31616,7 @@
    ],
    "h_codes": [
     "H341",
+    "H360FD",
     "H372"
    ],
    "pictograms": [
@@ -31550,6 +31625,7 @@
    ],
    "label_h_codes": [
     "H341",
+    "H360FD",
     "H372"
    ],
    "supplemental_h_codes": [],
@@ -31579,6 +31655,7 @@
    ],
    "h_codes": [
     "H341",
+    "H360FD",
     "H330",
     "H302",
     "H372",
@@ -31593,6 +31670,7 @@
    ],
    "label_h_codes": [
     "H341",
+    "H360FD",
     "H330",
     "H302",
     "H372",
@@ -31634,6 +31712,7 @@
    ],
    "h_codes": [
     "H341",
+    "H360FD",
     "H301",
     "H372",
     "H315",
@@ -31647,6 +31726,7 @@
    ],
    "label_h_codes": [
     "H341",
+    "H360FD",
     "H301",
     "H372",
     "H315",
@@ -31924,6 +32004,7 @@
     "Lact."
    ],
    "h_codes": [
+    "H360Df",
     "H362"
    ],
    "pictograms": [
@@ -31931,6 +32012,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H362"
    ],
    "supplemental_h_codes": [],
@@ -31954,6 +32036,7 @@
     "Lact."
    ],
    "h_codes": [
+    "H360Df",
     "H362"
    ],
    "pictograms": [
@@ -31961,6 +32044,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H362"
    ],
    "supplemental_h_codes": [],
@@ -32312,6 +32396,7 @@
     "Acute Tox. 3"
    ],
    "h_codes": [
+    "H360FD",
     "H332",
     "H301"
    ],
@@ -32321,6 +32406,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H332",
     "H301"
    ],
@@ -33592,6 +33678,7 @@
    ],
    "h_codes": [
     "H351",
+    "H360Df",
     "H362",
     "H330",
     "H310",
@@ -33608,6 +33695,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H360Df",
     "H362",
     "H330",
     "H310",
@@ -33763,6 +33851,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -33776,6 +33865,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -33813,6 +33903,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H330",
     "H310",
     "H300",
@@ -33827,6 +33918,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H330",
     "H310",
     "H300",
@@ -33869,6 +33961,7 @@
    ],
    "h_codes": [
     "H200",
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -33884,6 +33977,7 @@
    ],
    "label_h_codes": [
     "H200",
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -33918,6 +34012,7 @@
    ],
    "h_codes": [
     "H201",
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -33933,6 +34028,7 @@
    ],
    "label_h_codes": [
     "H201",
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -33965,6 +34061,7 @@
    ],
    "h_codes": [
     "H350",
+    "H360Df",
     "H373",
     "H400",
     "H410"
@@ -33976,6 +34073,7 @@
    ],
    "label_h_codes": [
     "H350",
+    "H360Df",
     "H373",
     "H410"
    ],
@@ -34004,6 +34102,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H373",
     "H400",
     "H410"
@@ -34014,6 +34113,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H373",
     "H410"
    ],
@@ -34042,6 +34142,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H373",
     "H400",
     "H410"
@@ -34052,6 +34153,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H373",
     "H410"
    ],
@@ -34082,6 +34184,7 @@
    ],
    "h_codes": [
     "H351",
+    "H360Df",
     "H373",
     "H400",
     "H410"
@@ -34093,6 +34196,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H360Df",
     "H373",
     "H410"
    ],
@@ -34123,6 +34227,7 @@
     "Eye Dam. 1"
    ],
    "h_codes": [
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -34136,6 +34241,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -34169,6 +34275,7 @@
    ],
    "h_codes": [
     "H350",
+    "H360Df",
     "H373",
     "H400",
     "H410"
@@ -34180,6 +34287,7 @@
    ],
    "label_h_codes": [
     "H350",
+    "H360Df",
     "H373",
     "H410"
    ],
@@ -34210,6 +34318,7 @@
    ],
    "h_codes": [
     "H350",
+    "H360Df",
     "H373",
     "H400",
     "H410"
@@ -34221,6 +34330,7 @@
    ],
    "label_h_codes": [
     "H350",
+    "H360Df",
     "H373",
     "H410"
    ],
@@ -34253,6 +34363,7 @@
    ],
    "h_codes": [
     "H350",
+    "H360Df",
     "H331",
     "H301",
     "H373",
@@ -34267,6 +34378,7 @@
    ],
    "label_h_codes": [
     "H350",
+    "H360Df",
     "H331",
     "H301",
     "H373",
@@ -34334,6 +34446,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360FD",
     "H362",
     "H400",
     "H410"
@@ -34344,6 +34457,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H362",
     "H410"
    ],
@@ -34379,6 +34493,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360FD",
     "H362",
     "H410"
    ],
@@ -34388,6 +34503,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H362",
     "H410"
    ],
@@ -35869,6 +35985,7 @@
    "h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H317",
     "H400",
     "H410"
@@ -35882,6 +35999,7 @@
    "label_h_codes": [
     "H350",
     "H340",
+    "H360FD",
     "H317",
     "H410"
    ],
@@ -36536,6 +36654,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H361fd",
     "H302",
     "H314",
     "H400",
@@ -36549,6 +36668,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H361fd",
     "H302",
     "H314",
     "H410"
@@ -38849,6 +38969,7 @@
    ],
    "h_codes": [
     "H225",
+    "H360FD",
     "H373",
     "H319",
     "H335",
@@ -38863,6 +38984,7 @@
    ],
    "label_h_codes": [
     "H225",
+    "H360FD",
     "H373",
     "H319",
     "H335",
@@ -41277,6 +41399,7 @@
    ],
    "h_codes": [
     "H351",
+    "H361fd",
     "H362",
     "H312",
     "H302",
@@ -41291,6 +41414,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H361fd",
     "H362",
     "H312",
     "H302",
@@ -41947,12 +42071,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360Df"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360Df"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -42916,6 +43044,7 @@
    ],
    "h_codes": [
     "H226",
+    "H360FD",
     "H332",
     "H312",
     "H302"
@@ -42928,6 +43057,7 @@
    ],
    "label_h_codes": [
     "H226",
+    "H360FD",
     "H332",
     "H312",
     "H302"
@@ -42956,6 +43086,7 @@
    ],
    "h_codes": [
     "H226",
+    "H360FD",
     "H331",
     "H302"
    ],
@@ -42967,6 +43098,7 @@
    ],
    "label_h_codes": [
     "H226",
+    "H360FD",
     "H331",
     "H302"
    ],
@@ -43359,6 +43491,7 @@
     "H220",
     "H350",
     "H340",
+    "H360Fd",
     "H331",
     "H301",
     "H335",
@@ -43378,6 +43511,7 @@
     "H220",
     "H350",
     "H340",
+    "H360Fd",
     "H331",
     "H301",
     "H335",
@@ -43714,6 +43848,7 @@
    ],
    "h_codes": [
     "H225",
+    "H360FD",
     "H332"
    ],
    "pictograms": [
@@ -43724,6 +43859,7 @@
    ],
    "label_h_codes": [
     "H225",
+    "H360FD",
     "H332"
    ],
    "supplemental_h_codes": [
@@ -45049,6 +45185,7 @@
     "Repr. 1B Eye Irrit. 2"
    ],
    "h_codes": [
+    "H360Df",
     "H319"
    ],
    "pictograms": [
@@ -45057,6 +45194,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H319"
    ],
    "supplemental_h_codes": [],
@@ -46623,6 +46761,7 @@
     "Aquatic Chronic 2"
    ],
    "h_codes": [
+    "H361fd",
     "H362",
     "H411"
    ],
@@ -46632,6 +46771,7 @@
     "Wng"
    ],
    "label_h_codes": [
+    "H361fd",
     "H362",
     "H411"
    ],
@@ -47818,7 +47958,8 @@
     "Repr. 1B"
    ],
    "h_codes": [
-    "H226"
+    "H226",
+    "H360FD"
    ],
    "pictograms": [
     "GHS02",
@@ -47826,7 +47967,8 @@
     "Dgr"
    ],
    "label_h_codes": [
-    "H226"
+    "H226",
+    "H360FD"
    ],
    "supplemental_h_codes": [
     "EUH019"
@@ -49023,12 +49165,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360Df"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360Df"
+   ],
    "supplemental_h_codes": [
     "EUH019"
    ],
@@ -49614,6 +49760,7 @@
     "Skin Sens. 1"
    ],
    "h_codes": [
+    "H360Df",
     "H314",
     "H317"
    ],
@@ -49624,6 +49771,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H314",
     "H317"
    ],
@@ -50071,6 +50219,7 @@
    ],
    "h_codes": [
     "H225",
+    "H360Df",
     "H319"
    ],
    "pictograms": [
@@ -50081,6 +50230,7 @@
    ],
    "label_h_codes": [
     "H225",
+    "H360Df",
     "H319"
    ],
    "supplemental_h_codes": [
@@ -51042,12 +51192,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -51303,12 +51457,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360Df"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360Df"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -54817,12 +54975,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -56431,12 +56593,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360Fd"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360Fd"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -58008,6 +58174,7 @@
     "Aquatic Chronic 2"
    ],
    "h_codes": [
+    "H360FD",
     "H302",
     "H411"
    ],
@@ -58018,6 +58185,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H302",
     "H411"
    ],
@@ -58932,6 +59100,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H361fd",
     "H302",
     "H315",
     "H400",
@@ -58944,6 +59113,7 @@
     "Wng"
    ],
    "label_h_codes": [
+    "H361fd",
     "H302",
     "H315",
     "H410"
@@ -60384,14 +60554,16 @@
     "Repr. 2"
    ],
    "h_codes": [
-    "H351"
+    "H351",
+    "H361fd"
    ],
    "pictograms": [
     "GHS08",
     "Wng"
    ],
    "label_h_codes": [
-    "H351"
+    "H351",
+    "H361fd"
    ],
    "supplemental_h_codes": [],
    "euh_codes": [],
@@ -61761,6 +61933,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H400",
     "H410"
    ],
@@ -61770,6 +61943,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H410"
    ],
    "supplemental_h_codes": [],
@@ -63241,6 +63415,7 @@
     "Acute Tox. 4 *"
    ],
    "h_codes": [
+    "H360FD",
     "H332",
     "H312",
     "H302"
@@ -63251,6 +63426,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H332",
     "H312",
     "H302"
@@ -63279,6 +63455,7 @@
    ],
    "h_codes": [
     "H226",
+    "H360FD",
     "H332",
     "H312",
     "H302"
@@ -63291,6 +63468,7 @@
    ],
    "label_h_codes": [
     "H226",
+    "H360FD",
     "H332",
     "H312",
     "H302"
@@ -70251,12 +70429,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360Df"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360Df"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -72993,6 +73175,7 @@
    ],
    "h_codes": [
     "H351",
+    "H360FD",
     "H317",
     "H411"
    ],
@@ -73004,6 +73187,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H360FD",
     "H317",
     "H411"
    ],
@@ -73155,6 +73339,7 @@
     "Skin Corr. 1B"
    ],
    "h_codes": [
+    "H360FD",
     "H302",
     "H314"
    ],
@@ -73165,6 +73350,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H302",
     "H314"
    ],
@@ -73331,12 +73517,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -73358,6 +73548,7 @@
     "Aquatic Acute 1"
    ],
    "h_codes": [
+    "H360Df",
     "H400"
    ],
    "pictograms": [
@@ -73366,6 +73557,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H400"
    ],
    "supplemental_h_codes": [],
@@ -75149,6 +75341,7 @@
    ],
    "h_codes": [
     "H351",
+    "H361fd",
     "H302",
     "H373",
     "H400",
@@ -75162,6 +75355,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H361fd",
     "H302",
     "H373",
     "H410"
@@ -76975,6 +77169,7 @@
     "Aquatic Acute 1"
    ],
    "h_codes": [
+    "H360FD",
     "H400"
    ],
    "pictograms": [
@@ -76983,6 +77178,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H400"
    ],
    "supplemental_h_codes": [],
@@ -77113,6 +77309,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H400",
     "H410"
    ],
@@ -77122,6 +77319,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H410"
    ],
    "supplemental_h_codes": [],
@@ -78605,12 +78803,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360Df"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360Df"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -83119,12 +83321,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360Df"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360Df"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -85466,12 +85672,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -85769,12 +85979,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -85798,6 +86012,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H361fd",
     "H335",
     "H319",
     "H317",
@@ -85811,6 +86026,7 @@
     "Wng"
    ],
    "label_h_codes": [
+    "H361fd",
     "H335",
     "H319",
     "H317",
@@ -86157,6 +86373,7 @@
    ],
    "h_codes": [
     "H351",
+    "H360Df",
     "H362",
     "H332",
     "H302",
@@ -86171,6 +86388,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H360Df",
     "H362",
     "H332",
     "H302",
@@ -86234,6 +86452,7 @@
    ],
    "h_codes": [
     "H351",
+    "H360Df",
     "H362"
    ],
    "pictograms": [
@@ -86242,6 +86461,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H360Df",
     "H362"
    ],
    "supplemental_h_codes": [],
@@ -86972,12 +87192,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -87043,12 +87267,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -87193,6 +87421,7 @@
    "h_codes": [
     "H226",
     "H341",
+    "H360FD",
     "H331",
     "H302",
     "H314",
@@ -87209,6 +87438,7 @@
    "label_h_codes": [
     "H226",
     "H341",
+    "H360FD",
     "H331",
     "H302",
     "H314",
@@ -87647,6 +87877,7 @@
    ],
    "h_codes": [
     "H351",
+    "H361fd",
     "H373",
     "H400",
     "H410"
@@ -87658,6 +87889,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H361fd",
     "H373",
     "H410"
    ],
@@ -87908,6 +88140,7 @@
     "Eye Irrit. 2"
    ],
    "h_codes": [
+    "H360FD",
     "H319"
    ],
    "pictograms": [
@@ -87916,6 +88149,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H319"
    ],
    "supplemental_h_codes": [],
@@ -87937,6 +88171,7 @@
     "Eye Irrit. 2"
    ],
    "h_codes": [
+    "H360FD",
     "H319"
    ],
    "pictograms": [
@@ -87945,6 +88180,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H319"
    ],
    "supplemental_h_codes": [],
@@ -87962,12 +88198,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360FD"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360FD"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -88159,6 +88399,7 @@
    ],
    "h_codes": [
     "H350",
+    "H361fd",
     "H317",
     "H411"
    ],
@@ -88170,6 +88411,7 @@
    ],
    "label_h_codes": [
     "H350",
+    "H361fd",
     "H317",
     "H411"
    ],
@@ -91511,6 +91753,7 @@
    ],
    "h_codes": [
     "H200",
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -91526,6 +91769,7 @@
    ],
    "label_h_codes": [
     "H200",
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -91560,6 +91804,7 @@
    ],
    "h_codes": [
     "H201",
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -91575,6 +91820,7 @@
    ],
    "label_h_codes": [
     "H201",
+    "H360Df",
     "H332",
     "H302",
     "H373",
@@ -91855,6 +92101,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H311",
     "H301",
     "H319",
@@ -91868,6 +92115,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H311",
     "H301",
     "H319",
@@ -91898,6 +92146,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H311",
     "H301",
     "H319",
@@ -91911,6 +92160,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H311",
     "H301",
     "H319",
@@ -98568,6 +98818,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360Df",
     "H373",
     "H400",
     "H410"
@@ -98578,6 +98829,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Df",
     "H373",
     "H410"
    ],
@@ -102381,6 +102633,7 @@
     "Skin Sens. 1"
    ],
    "h_codes": [
+    "H361fd",
     "H314",
     "H334",
     "H317"
@@ -102391,6 +102644,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H361fd",
     "H314",
     "H334",
     "H317"
@@ -102418,6 +102672,7 @@
     "Skin Sens. 1"
    ],
    "h_codes": [
+    "H361fd",
     "H314",
     "H334",
     "H317"
@@ -102428,6 +102683,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H361fd",
     "H314",
     "H334",
     "H317"
@@ -109517,6 +109773,7 @@
     "Aquatic Chronic 3"
    ],
    "h_codes": [
+    "H361fd",
     "H319",
     "H315",
     "H334",
@@ -109528,6 +109785,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H361fd",
     "H319",
     "H315",
     "H334",
@@ -111601,6 +111859,7 @@
     "Skin Sens. 1"
    ],
    "h_codes": [
+    "H360FD",
     "H317"
    ],
    "pictograms": [
@@ -111609,6 +111868,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H317"
    ],
    "supplemental_h_codes": [],
@@ -113622,6 +113882,7 @@
    ],
    "h_codes": [
     "H340",
+    "H360FD",
     "H317",
     "H400",
     "H410"
@@ -113634,6 +113895,7 @@
    ],
    "label_h_codes": [
     "H340",
+    "H360FD",
     "H317",
     "H410"
    ],
@@ -113668,6 +113930,7 @@
    ],
    "h_codes": [
     "H340",
+    "H360FD",
     "H335",
     "H315",
     "H317",
@@ -113682,6 +113945,7 @@
    ],
    "label_h_codes": [
     "H340",
+    "H360FD",
     "H335",
     "H315",
     "H317",
@@ -115940,6 +116204,7 @@
     "Eye Irrit. 2"
    ],
    "h_codes": [
+    "H360FD",
     "H302",
     "H319"
    ],
@@ -115949,6 +116214,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H302",
     "H319"
    ],
@@ -118334,6 +118600,7 @@
    ],
    "h_codes": [
     "H351",
+    "H360Df",
     "H411"
    ],
    "pictograms": [
@@ -118343,6 +118610,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H360Df",
     "H411"
    ],
    "supplemental_h_codes": [],
@@ -119290,6 +119558,7 @@
    ],
    "h_codes": [
     "H351",
+    "H361fd",
     "H410"
    ],
    "pictograms": [
@@ -119299,6 +119568,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H361fd",
     "H410"
    ],
    "supplemental_h_codes": [],
@@ -121359,6 +121629,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H361fd",
     "H302",
     "H400",
     "H410"
@@ -121370,6 +121641,7 @@
     "Wng"
    ],
    "label_h_codes": [
+    "H361fd",
     "H302",
     "H410"
    ],
@@ -123513,6 +123785,7 @@
    ],
    "h_codes": [
     "H351",
+    "H360FD",
     "H332",
     "H301",
     "H336",
@@ -123526,6 +123799,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H360FD",
     "H332",
     "H301",
     "H336",
@@ -123729,12 +124003,16 @@
    "hazard_classes": [
     "Repr. 1B"
    ],
-   "h_codes": [],
+   "h_codes": [
+    "H360Df"
+   ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
-   "label_h_codes": [],
+   "label_h_codes": [
+    "H360Df"
+   ],
    "supplemental_h_codes": [],
    "euh_codes": [],
    "limits": [],
@@ -123888,6 +124166,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H360FD",
     "H302",
     "H317",
     "H400",
@@ -123900,6 +124179,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H302",
     "H317",
     "H410"
@@ -124592,14 +124872,16 @@
     "Repr. 1B"
    ],
    "h_codes": [
-    "H350"
+    "H350",
+    "H360Fd"
    ],
    "pictograms": [
     "GHS08",
     "Dgr"
    ],
    "label_h_codes": [
-    "H350"
+    "H350",
+    "H360Fd"
    ],
    "supplemental_h_codes": [],
    "euh_codes": [],
@@ -126302,6 +126584,7 @@
    ],
    "h_codes": [
     "H351",
+    "H361fd",
     "H311",
     "H301",
     "H373",
@@ -126318,6 +126601,7 @@
    ],
    "label_h_codes": [
     "H351",
+    "H361fd",
     "H311",
     "H301",
     "H373",
@@ -128812,6 +129096,7 @@
     "Aquatic Chronic 1"
    ],
    "h_codes": [
+    "H361fd",
     "H302",
     "H373",
     "H317",
@@ -128825,6 +129110,7 @@
     "Wng"
    ],
    "label_h_codes": [
+    "H361fd",
     "H302",
     "H373",
     "H317",
@@ -132479,7 +132765,8 @@
    ],
    "h_codes": [
     "H350",
-    "H340"
+    "H340",
+    "H360FD"
    ],
    "pictograms": [
     "GHS08",
@@ -132487,7 +132774,8 @@
    ],
    "label_h_codes": [
     "H350",
-    "H340"
+    "H340",
+    "H360FD"
    ],
    "supplemental_h_codes": [],
    "euh_codes": [],
@@ -134918,6 +135206,7 @@
     "STOT RE 2"
    ],
    "h_codes": [
+    "H361fd",
     "H362",
     "H373"
    ],
@@ -134926,6 +135215,7 @@
     "Wng"
    ],
    "label_h_codes": [
+    "H361fd",
     "H362",
     "H373"
    ],
@@ -135226,6 +135516,7 @@
     "STOT RE 2"
    ],
    "h_codes": [
+    "H360Fd",
     "H373"
    ],
    "pictograms": [
@@ -135233,6 +135524,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360Fd",
     "H373"
    ],
    "supplemental_h_codes": [],
@@ -136306,6 +136598,7 @@
     "Skin Sens. 1"
    ],
    "h_codes": [
+    "H360FD",
     "H317"
    ],
    "pictograms": [
@@ -136314,6 +136607,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H317"
    ],
    "supplemental_h_codes": [],
@@ -138606,7 +138900,8 @@
    ],
    "h_codes": [
     "H350",
-    "H340"
+    "H340",
+    "H360FD"
    ],
    "pictograms": [
     "GHS08",
@@ -138614,7 +138909,8 @@
    ],
    "label_h_codes": [
     "H350",
-    "H340"
+    "H340",
+    "H360FD"
    ],
    "supplemental_h_codes": [],
    "euh_codes": [],
@@ -161750,6 +162046,7 @@
     "STOT RE 1"
    ],
    "h_codes": [
+    "H360FD",
     "H372"
    ],
    "pictograms": [
@@ -161757,6 +162054,7 @@
     "Dgr"
    ],
    "label_h_codes": [
+    "H360FD",
     "H372"
    ],
    "supplemental_h_codes": [],
