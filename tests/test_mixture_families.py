@@ -115,12 +115,33 @@ def test_the_eye_follows_from_the_skin_where_the_act_says_so():
     assert "Annex I, 3.3.2.2.2" in eye["implied_from"]
 
 
-def test_the_same_sheet_under_a_regulation_that_does_not_say_so():
-    """WHMIS incorporates GHS Rev.7, and neither it nor the Hazardous Products
-    Regulations says a skin corrosive damages the eye. The implication is not
-    borrowed from another regulation, so the eye is a finding there."""
-    assert load("ca_whmis").implied_by("Skin Corr. 1") is None
-    eye = _family(_check("ca_whmis"), "Eye")
+@pytest.mark.parametrize(("regulation", "where"), [
+    ("eu_clp", "Annex I, 3.3.2.2.2"),
+    ("uk_clp", "Annex I, 3.3.2.2"),
+    ("un_ghs", "Table 3.3.5, note a"),
+    ("au_whs", "Table 3.3.5, note a"),
+    ("ca_whmis", "Table 3.3.5, note a"),
+])
+def test_every_regulation_that_says_it_has_it_cited(regulation, where):
+    """CLP and the retained GB act say it outright; the Purple Book says it as
+    the note under its label-elements table, which Australia adopts and the
+    Hazardous Products Regulations incorporate. Each citation is that
+    regulation's own."""
+    found = load(regulation).implied_by("Skin Corr. 1")
+    assert found is not None, f"{regulation} has no implication on file"
+    assert where in found.citation
+    eye = _family(_check(regulation), "Eye")
+    assert eye["verdict"] == "consistent"
+    assert eye["stated_class"] == "Eye Dam. 1"
+    assert where in eye["implied_from"]
+
+
+def test_a_regulation_that_does_not_say_it_does_not_get_it():
+    """Appendix A gives the criteria and no label elements - those are in
+    Appendix C - so nothing in the document on file says a skin corrosive
+    damages the eye, and nothing is borrowed from the ones that do."""
+    assert load("us_osha").implied_by("Skin Corr. 1") is None
+    eye = _family(_check("us_osha"), "Eye")
     assert eye["verdict"] == "inconsistent"
     assert eye["implied_from"] == ""
 

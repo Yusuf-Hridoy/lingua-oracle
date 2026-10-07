@@ -597,22 +597,54 @@ _IMPLIES_EYE = re.compile(
     r"[^.]{0,220}\.", re.I)
 
 
+#: The same rule as the Purple Book states it: not in a sentence of its own
+#: but as the note under the label-elements table, which says the eye
+#: statement may be left off a skin corrosive because the skin statement
+#: already carries it. The note is printed inside a decision figure whose
+#: columns interleave when the page is read as text, so only the half that
+#: survives intact is matched.
+_IMPLIES_EYE_NOTE = re.compile(
+    r"Where a chemical is classified as skin Category 1, labelling for "
+    r"serious eye damage\s*/\s*eye irritation may be", re.I)
+_LABEL_TABLE = re.compile(r"Table (3\.3\.\d+)\s*[::]\s*Label elements", re.I)
+
+
 def _implications(text_by_page: dict[int, str], document: str, table: Table,
                   *, paragraph_prefix: str = "", paged: bool = True) -> None:
-    """Record what a regulation says one classification carries with it."""
+    """Record what a regulation says one classification carries with it.
+
+    Two documents say it two ways. CLP and the retained GB act say it outright
+    in 3.3.2.2: a skin corrosive is to be considered as seriously damaging to
+    the eye. The Purple Book says it as the note under its label-elements
+    table - the eye statement may be omitted from a skin corrosive because the
+    skin statement already covers it - which is the same rule seen from the
+    label. Either will do; neither is assumed.
+    """
     for index, text in sorted(text_by_page.items()):
         match = _IMPLIES_EYE.search(text)
-        if match is None:
+        page = index + 1 if paged else None
+        if match is not None:
+            before = re.findall(r"\b(\d\.\d\.\d(?:\.\d){0,3})\.?\s",
+                                text[:match.start()])
+            section = paragraph_prefix + (before[-1] if before
+                                          else "paragraph not identified")
+            table.implications.append(Implication(
+                source_class="Skin Corr. 1", implied="Eye Dam. 1",
+                place=Place(document, section, page),
+                raw=" ".join(match.group(0).split())))
+            return
+        note = _IMPLIES_EYE_NOTE.search(text)
+        if note is None:
             continue
-        before = re.findall(r"\b(\d\.\d\.\d(?:\.\d){0,3})\.?\s",
-                            text[:match.start()])
+        caption = _LABEL_TABLE.search(text)
+        where = (f"{caption.group(1)}, note a" if caption
+                 else "label elements table, note a")
         table.implications.append(Implication(
             source_class="Skin Corr. 1", implied="Eye Dam. 1",
-            place=Place(document,
-                        paragraph_prefix + (before[-1] if before
-                                            else "paragraph not identified"),
-                        index + 1 if paged else None),
-            raw=" ".join(match.group(0).split())))
+            place=Place(document, f"Table {where}", page),
+            raw=" ".join(note.group(0).split())
+                + " omitted as this information is already included in the "
+                  "hazard statement for skin Category 1"))
         return
     table.notes.append(
         f"{document} was searched and does not say that a skin corrosive is "

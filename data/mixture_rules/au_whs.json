@@ -747,8 +747,17 @@
       ]
     }
   },
-  "implications": [],
-  "notes": [
-    "UN GHS Rev.7 (2017), as adopted by the WHS Regulations was searched and does not say that a skin corrosive is also seriously damaging to the eye, so that is not read into a sheet that states only skin corrosion"
-  ]
+  "implications": [
+    {
+      "class": "Skin Corr. 1",
+      "implies": "Eye Dam. 1",
+      "raw": "Where a chemical is classified as skin Category 1, labelling for serious eye damage/eye irritation may be omitted as this information is already included in the hazard statement for skin Category 1",
+      "source": {
+        "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+        "section": "Table 3.3.5, note a",
+        "page": 152
+      }
+    }
+  ],
+  "notes": []
 }

@@ -745,9 +745,19 @@
       ]
     }
   },
-  "implications": [],
+  "implications": [
+    {
+      "class": "Skin Corr. 1",
+      "implies": "Eye Dam. 1",
+      "raw": "Where a chemical is classified as skin Category 1, labelling for serious eye damage/eye irritation may be omitted as this information is already included in the hazard statement for skin Category 1",
+      "source": {
+        "document": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations (SOR/2015-17)",
+        "section": "Table 3.3.5, note a",
+        "page": 152
+      }
+    }
+  ],
   "notes": [
-    "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations (SOR/2015-17) was searched and does not say that a skin corrosive is also seriously damaging to the eye, so that is not read into a sheet that states only skin corrosion",
     "classes the Hazardous Products Regulations never name, and so do not cover: Aquatic Acute, Aquatic Chronic"
   ]
 }
