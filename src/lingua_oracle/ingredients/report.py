@@ -266,6 +266,10 @@ def _payload(run: Run) -> dict:
                 "missing_codes": s.verdict.missing_codes,
                 "source_ref": s.verdict.source_ref,
                 "data_source": s.verdict.data_source,
+                # Contradictions inside the published entry itself. Not a
+                # finding about the sheet: a fact about the list it was
+                # measured against, and the reader is entitled to it.
+                "list_anomalies": s.verdict.list_anomalies,
             }
             for s in run.substances
         ],

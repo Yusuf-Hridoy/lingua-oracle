@@ -168,6 +168,27 @@ def _classes(text: str) -> list[str]:
 AU_SOURCE = "australia/hcis_hazard_classification_export_2026-10-07.xlsx"
 
 
+#: Australia prints its supplemental statements as AUH. HCIS, built on EU
+#: data, carries them as EUH. Where the Australian key has wording for the AUH
+#: code of the same number, that is what an Australian sheet has to print and
+#: that is what the list says; where it has not, the EUH code is kept as
+#: published and the report says there is no Australian wording for it.
+def _australian_codes(codes: list[str], known: set[str]) -> tuple[list[str], list[str]]:
+    out: list[str] = []
+    without: list[str] = []
+    for code in codes:
+        if not code.startswith("EUH"):
+            out.append(code)
+            continue
+        australian = "AUH" + code[3:]
+        if australian in known:
+            out.append(australian)
+        else:
+            out.append(code)
+            without.append(code)
+    return out, without
+
+
 def _au_entries(path: Path, edition: str) -> tuple[list[AnnexVIEntry], list[str]]:
     """One entry per row of an HCIS export.
 
@@ -176,8 +197,12 @@ def _au_entries(path: Path, edition: str) -> tuple[list[AnnexVIEntry], list[str]
     stay empty rather than being filled from somewhere else: what Australia
     publishes is what Australia publishes.
     """
+    from lingua_oracle.keys.store import load_key
+
+    known = {entry.code for entry in load_key("au_whs", "en").entries}
     entries: list[AnnexVIEntry] = []
     issues: list[str] = []
+    without_wording: set[str] = set()
     started = False
     for row in rows(path):
         if not started:
@@ -189,6 +214,9 @@ def _au_entries(path: Path, edition: str) -> tuple[list[AnnexVIEntry], list[str]
             continue
         classes = _split(row.get("F", ""), ",") + _split(row.get("H", ""), ",")
         codes = CODE.findall(row.get("G", "")) + CODE.findall(row.get("I", ""))
+        supplemental, no_wording = _australian_codes(
+            CODE.findall(row.get("J", "")), known)
+        without_wording.update(no_wording)
         entry = AnnexVIEntry(
             index_no="",
             name=_flat(name),
@@ -199,9 +227,9 @@ def _au_entries(path: Path, edition: str) -> tuple[list[AnnexVIEntry], list[str]
             pictograms=_split(row.get("E", ""), ",")
             + ([row["D"]] if row.get("D") else []),
             label_h_codes=[],
-            supplemental_h_codes=CODE.findall(row.get("J", "")),
-            euh_codes=[c for c in CODE.findall(row.get("J", ""))
-                       if c.startswith("EUH")],
+            supplemental_h_codes=supplemental,
+            euh_codes=[c for c in supplemental
+                       if c.startswith(("EUH", "AUH"))],
             limits=[],
             limit_kinds=[],
             notes=_split(row.get("K", ""), ","),
@@ -213,6 +241,9 @@ def _au_entries(path: Path, edition: str) -> tuple[list[AnnexVIEntry], list[str]
         if not entry.cas and cas:
             issues.append(f"{name}: identifier {cas!r} is not a CAS number")
         entries.append(entry)
+    for code in sorted(without_wording):
+        issues.append(f"{code}: kept as published; no Australian wording on "
+                      "file for the AUH statement of the same number")
     return entries, issues
 
 

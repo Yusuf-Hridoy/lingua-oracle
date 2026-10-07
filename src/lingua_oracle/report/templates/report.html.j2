@@ -278,6 +278,16 @@
         <dt>Where each wording came from</dt>
         <dd>{% for code, detail in cards.provenance %}<b>{{ code }}</b>: {{ detail }}{% if not loop.last %}<br>{% endif %}{% endfor %}</dd>
         {% endif %}
+        {% if ing_anomalies %}
+        <dt>Anomalies in the list itself</dt>
+        <dd>{% for line in ing_anomalies %}{{ line }}<br>{% endfor %}</dd>
+        {% endif %}
+        {% if ing and ing.list_title %}
+        <dt>Ingredients measured against</dt>
+        <dd>{{ ing.list_title }} &mdash;
+          {{ 'binding' if ing.list_binding else 'reference only' }}.
+          {{ ing.list_authority }}</dd>
+        {% endif %}
         {% if mixture and mixture.results %}{{ mix.trace(mixture.results) }}{% endif %}
         {% if mixture and mixture.assumptions %}
         <dt>Mixture assumptions</dt>

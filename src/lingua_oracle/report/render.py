@@ -517,6 +517,8 @@ def render_html(report: Report) -> str:
         ing_tone=_ingredient_tone(ing),
         ing_under=[s for s in substances if s["uses_under_classified"]],
         ing_list=_listing(report.ingredients, report.regulation),
+        ing_anomalies=sorted({line for s in substances
+                              for line in s.get("list_anomalies") or []}),
         ing_inconsistent=[s for s in substances
                           if s["inconsistent"] and not s["uses_under_classified"]],
         ing_matches=[s for s in substances if s["status"] == "ok"

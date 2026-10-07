@@ -421,6 +421,13 @@ def build_all() -> dict[str, Path]:
         FIXTURES / "pattern_stricter_than_declared.pdf"))
     # A Section 3 that gives a share and no CAS number: a trade secret is
     # part of the mixture and nothing can classify it.
+    # A sheet whose Section 3 names a substance the Australian list
+    # contradicts itself about, so the report has something to say about the
+    # list rather than about the sheet.
+    add("pattern_contradicted_substance", _one_substance_sheet(
+        FIXTURES / "pattern_contradicted_substance.pdf",
+        name="Synthetic component T", cas="108-88-3", share="40 %",
+        classification="Flam. Liq. 2, H225"))
     add("pattern_trade_secret", _trade_secret_sheet(
         FIXTURES / "pattern_trade_secret.pdf"))
     add("pattern_aquatic_statement", _supplier_ingredients(
@@ -472,6 +479,24 @@ def build_all() -> dict[str, Path]:
 
     return built
 
+
+
+def _one_substance_sheet(path: Path, *, name: str, cas: str, share: str,
+                         classification: str) -> Path:
+    """One named ingredient, one concentration, one classification."""
+    head = HEADINGS["en"]
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("Classification: Flam. Liq. 2, H225")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.table(["Chemical name", "CAS No", "Concentration", "Classification"],
+                [[name, cas, share, classification]])
+    sheet.save()
+    return path
 
 
 def _trade_secret_sheet(path: Path) -> Path:

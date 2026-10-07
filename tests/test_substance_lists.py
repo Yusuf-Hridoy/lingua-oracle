@@ -121,19 +121,16 @@ def test_every_code_is_one_the_regulation_publishes(table):
         f"{regulation}'s key is missing wording for {sorted(unknown)}")
 
 
-def test_an_eu_supplemental_code_in_a_non_eu_list_is_known_to_be_one(table):
-    """HCIS lists EUH codes; Australia publishes no wording for them. That is
-    worth knowing rather than hiding, and worth failing on if it ever spreads
-    beyond the EUH codes."""
+def test_every_supplemental_code_has_wording_in_its_own_regulation(table):
+    """HCIS's EUH codes are mapped to the AUH statements Australia publishes,
+    so every supplemental code in either list is one its own key can check a
+    sheet against."""
     from lingua_oracle.keys.store import load_key
 
     regulation = "uk_clp" if table.name == "gb_mcl" else "au_whs"
     known = {entry.code for entry in load_key(regulation, "en").entries}
     absent = {c for e in table.entries for c in e.euh_codes if c not in known}
-    if table.name == "gb_mcl":
-        assert not absent, absent
-    else:
-        assert all(c.startswith("EUH") for c in absent), absent
+    assert not absent, f"{table.name}: no {regulation} wording for {absent}"
 
 
 # -- two substances whose classification is known ------------------------------
@@ -206,3 +203,89 @@ def test_the_build_is_deterministic():
     except SourceUnavailable as exc:
         pytest.skip(str(exc))
     assert first.model_dump() == second.model_dump()
+
+
+# -- what the list says about itself -------------------------------------------
+
+
+def test_the_australian_list_contradicts_itself_about_toluene():
+    """H360 and H361d are category 1 and category 2 of the same class, and
+    HCIS's export carries both on the toluene row while its class column says
+    Repr. 1A. It is in the export, not in the reading, so it is kept and
+    reported rather than quietly repaired."""
+    from lingua_oracle.substances.anomalies import contradictions, describe
+
+    entry = _entry(load("au_hcis"), "108-88-3")
+    assert {"H360", "H361d"} <= set(entry.h_codes)
+    said = contradictions(entry)
+    assert said == ["Repr. appears twice: Repr. 1 (H360); Repr. 2 (H361d)"]
+    assert "as published in HCIS" in describe(entry)[0]
+
+
+def test_the_other_two_lists_do_not_contradict_themselves():
+    from lingua_oracle.substances.anomalies import describe
+
+    for name in ("gb_mcl", "annex_vi"):
+        from lingua_oracle.substances.load import load_list
+
+        table = load_list(name)
+        assert not [e.name for e in table.entries if describe(e)]
+
+
+def test_a_category_per_route_is_not_a_contradiction():
+    """Acute toxicity and target organ toxicity carry one category per route
+    and per organ. Two of those on one substance is ordinary."""
+    from lingua_oracle.models import AnnexVIEntry
+    from lingua_oracle.substances.anomalies import contradictions
+
+    entry = AnnexVIEntry(index_no="", name="<x>", source_ref="<test>",
+                         h_codes=["H301", "H312", "H370", "H371"])
+    assert contradictions(entry) == []
+
+
+# -- Australia's own supplemental statements -----------------------------------
+
+
+def test_an_eu_supplemental_code_becomes_the_australian_one():
+    """HCIS is built on EU data and carries EUH codes. An Australian sheet
+    prints AUH, and the Australian key has the wording for it."""
+    from lingua_oracle.keys.store import load_key
+
+    entry = _entry(load("au_hcis"), "67-64-1")
+    assert entry.euh_codes == ["AUH066"]
+    assert "EUH066" not in entry.supplemental_h_codes
+    assert "AUH066" in {e.code for e in load_key("au_whs", "en").entries}
+
+
+def test_every_supplemental_code_in_the_australian_list_is_australian():
+    table = load("au_hcis")
+    codes = {c for e in table.entries for c in e.supplemental_h_codes}
+    assert codes
+    assert all(c.startswith("AUH") for c in codes), sorted(codes)
+
+
+def test_a_code_australia_has_no_wording_for_is_kept_as_published():
+    """The mapping is per code, not wholesale: where the Australian key has no
+    AUH statement of that number, the EU code stays and the build says so."""
+    from lingua_oracle.keys.builders.substance_lists import _australian_codes
+    from lingua_oracle.keys.store import load_key
+
+    known = {e.code for e in load_key("au_whs", "en").entries}
+    assert "AUH201" not in known
+    codes, without = _australian_codes(["EUH066", "EUH201"], known)
+    assert codes == ["AUH066", "EUH201"]
+    assert without == ["EUH201"]
+
+
+def test_the_report_prints_an_anomaly_in_technical_details():
+    from lingua_oracle.pipeline import check_pdf
+    from lingua_oracle.report.render import render_html
+    from tests.conftest import pdf
+    from tests.test_combined_report import FakeApp
+
+    body = render_html(check_pdf(
+        pdf("pattern_contradicted_substance"), "au_whs", ingredients=True,
+        client_factory=lambda: FakeApp(library=[])))
+    assert "Anomalies in the list itself" in body
+    assert "Repr. appears twice" in body
+    assert "as published in HCIS" in body

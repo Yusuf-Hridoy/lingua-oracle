@@ -28,6 +28,13 @@ from lingua_oracle.keys.builders.annex_vi import base_code
 from lingua_oracle.models import AnnexVIEntry, AnnexVITable
 
 
+def _anomalies(entry: AnnexVIEntry) -> list[str]:
+    """What the published entry contradicts about itself, if anything."""
+    from lingua_oracle.substances.anomalies import describe
+
+    return describe(entry)
+
+
 class Status(StrEnum):
     FIX = "fix"                  # the sheet is below the harmonised floor
     OK = "ok"                    # everything Annex VI requires is there
@@ -118,6 +125,9 @@ class Verdict:
     #: the verdict so a report can show what was required beside what was there
     #: without going back to the table.
     required_codes: list[str] = field(default_factory=list)
+    #: Contradictions in the published entry - the same class in two
+    #: categories - which are the list's, not the sheet's.
+    list_anomalies: list[str] = field(default_factory=list)
 
     @property
     def missing_codes(self) -> list[str]:
@@ -182,6 +192,7 @@ def check_ingredient(cas: str | None, stated_codes: list[str],
         return Verdict(cas=cas, status=Status.NOT_CHECKED,
                        reason=Reason.GROUP_ENTRY,
                        entry_index_no=entry.index_no,
+                       list_anomalies=_anomalies(entry),
                        source_ref=entry.source_ref, data_source=data_source,
                        findings=[Finding(
                            Status.NOT_CHECKED, None,
@@ -230,6 +241,7 @@ def check_ingredient(cas: str | None, stated_codes: list[str],
     return Verdict(cas=cas, status=status, findings=findings,
                    entry_index_no=entry.index_no, source_ref=entry.source_ref,
                    data_source=data_source,
+                   list_anomalies=_anomalies(entry),
                    required_codes=[c.strip() for c in
                                    (*entry.h_codes, *entry.euh_codes)])
 
