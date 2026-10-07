@@ -142,7 +142,10 @@ class Run:
             "products": self.products_scanned,
             "substances": len(self.substances),
             "ingredients": len(verdicts),
-            "with_entry": sum(1 for v in verdicts if v.entry_index_no
+            # An entry was found in whichever list this regulation uses. Not
+            # every list numbers its entries - HCIS does not - so what counts
+            # is that the substance was found, not that it has an index.
+            "with_entry": sum(1 for v in verdicts if v.source_ref
                               and v.status is not Status.NOT_CHECKED),
             "fix": sum(1 for v in verdicts if v.status is Status.FIX),
             "info": sum(1 for v in verdicts if v.status is Status.INFO),

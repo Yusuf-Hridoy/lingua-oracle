@@ -181,7 +181,21 @@ def ingredients_in_section_three(path: str | Path) -> list[PdfIngredient]:
                     for text in _rows_of(table):
                         masked = _INDEX_RE.sub(" ", _REACH_RE.sub(" ", text))
                         numbers = CAS_RE.findall(masked)
-                        if not numbers or numbers[0] in seen:
+                        if numbers and numbers[0] in seen:
+                            continue
+                        if not numbers:
+                            # A row with a concentration and no CAS number is
+                            # a trade secret, or a name the author chose not
+                            # to pair with one. The ingredient check can do
+                            # nothing with it, but the mixture has to know
+                            # that this much of the mixture is undisclosed
+                            # rather than absent.
+                            share = _concentration_in(_EC_RE.sub(" ", masked))
+                            if share:
+                                out.append(PdfIngredient(
+                                    cas="", h_codes=[],
+                                    raw=" ".join(text.split())[:300],
+                                    page=number, concentration=share))
                             continue
                         seen.add(numbers[0])
                         out.append(PdfIngredient(

@@ -1,10 +1,21 @@
 {# Substance cards, shared by the ingredient report and the Ingredients section
    of a wording report. One definition, so the two cannot drift apart. #}
 
-{% macro under_card(s, said_by='The app says') %}
-<article class="issue" data-status="fix" data-cas="{{ s.cas }}">
+{# `listing` is which published list this was judged against and whether the
+   regulation makes it binding. A difference from a binding list is a fault;
+   a difference from somebody else's list is worth checking and nothing more,
+   and the card has to say which of the two it is showing. #}
+{% macro under_card(s, said_by='The app says', listing=None) %}
+{% set binding = listing is none or listing.binding %}
+{% set title = listing.title if listing else 'Annex VI' %}
+<article class="issue" data-status="{{ 'fix' if binding else 'check' }}"
+         data-cas="{{ s.cas }}">
   <header>
+    {% if binding %}
     <span class="pill fix"><span aria-hidden="true">&#10005;</span> Fix this</span>
+    {% else %}
+    <span class="pill check"><span aria-hidden="true">!</span> Check this</span>
+    {% endif %}
     <span class="code">{{ s.cas }}</span>
     <span class="where">{{ s.name or 'unnamed' }} &middot;
       {{ s.uses_under_classified }} of {{ s.uses_checked }} uses</span>
@@ -20,8 +31,13 @@
         in {{ n }} use{{ '' if n == 1 else 's' }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
     </div>
     <div class="side official">
-      <header><h3>Annex VI requires</h3></header>
+      <header><h3>{{ title }} {{ 'requires' if binding else 'lists' }}</h3></header>
       <div class="txt">{{ s.harmonised_codes | join(', ') }}</div>
+      {% if not binding %}
+      <p class="note">{{ title }} lists
+        {{ s.missing_code_counts.keys() | join(', ') }};
+        {{ listing.regulation_name }} has no binding list.</p>
+      {% endif %}
     </div>
   </div>
   {% if s.affected_products %}

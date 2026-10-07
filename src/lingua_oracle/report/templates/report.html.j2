@@ -228,7 +228,7 @@
       <div><div class="n">{{ ing.counts.not_checked }}</div><div class="l">Not checked</div></div>
     </div>
   </div>
-  {% for s in ing_under %}{{ sub.under_card(s, ing_said_by) }}{% endfor %}
+  {% for s in ing_under %}{{ sub.under_card(s, ing_said_by, ing_list) }}{% endfor %}
   {% for s in ing_inconsistent %}{{ sub.inconsistent_card(s, ing_said_by) }}{% endfor %}
   {{ sub.collapsed(ing_matches, ing_extra, ing_unchecked, ing_reasons) }}
   {% endif %}

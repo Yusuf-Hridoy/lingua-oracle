@@ -209,9 +209,9 @@ def _mixture_section(report, path, document, spans, regulation,
     Never allowed to cost the rest of the report: a calculation that cannot be
     made is reported as one that was not made.
     """
-    from lingua_oracle.keys.builders.annex_vi import load_table
     from lingua_oracle.mixture import section as mixture_section
     from lingua_oracle.models import MixtureSection
+    from lingua_oracle.substances.load import for_check
 
     try:
         section = report.ingredients
@@ -250,7 +250,7 @@ def _mixture_section(report, path, document, spans, regulation,
             rows = mixture_section.rows_from_pdf(
                 ingredients_in_section_three(path))
         return mixture_section.build(rows, document.lines, spans, regulation,
-                                     load_table())
+                                     for_check(regulation)[1])
     except Exception as exc:  # noqa: BLE001
         return MixtureSection(state="skipped",
                               message=f"Mixture check skipped: {exc}"[:200])

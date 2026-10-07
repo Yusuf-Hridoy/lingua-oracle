@@ -320,6 +320,14 @@ class IngredientSection(BaseModel):
     evidence: str = ""
     #: What the section says when it checked nothing.
     message: str = ""
+    #: Which published list the ingredients were judged against, and whether
+    #: the regulation makes it binding. A difference from a binding list is a
+    #: fault in the sheet; a difference from a reference list is somebody
+    #: else's law, and the report has to say which it is showing.
+    list_name: str = ""
+    list_title: str = ""
+    list_binding: bool = False
+    list_authority: str = ""
     counts: dict[str, int] = Field(default_factory=dict)
     #: Substances in the shape the ingredient report renders.
     substances: list[dict] = Field(default_factory=list)

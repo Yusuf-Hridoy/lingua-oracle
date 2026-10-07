@@ -397,6 +397,20 @@ def display_name_of(regulation: str | None) -> str:
         return regulation
 
 
+def _listing(section, regulation: str) -> dict | None:
+    """Which published list the ingredients were judged against.
+
+    None where the section never got as far as one, in which case the card
+    falls back to naming Annex VI, which is what it used to say.
+    """
+    if section is None or not section.list_title:
+        return None
+    return {"name": section.list_name, "title": section.list_title,
+            "binding": section.list_binding,
+            "authority": section.list_authority,
+            "regulation_name": display_name_of(regulation)}
+
+
 def wording_status(report) -> tuple[str, str]:
     """One line about the wording check: what it did, or why it did nothing."""
     coverage = report.coverage
@@ -417,14 +431,16 @@ def ingredient_status(section) -> tuple[str, str]:
     """One line about the ingredient check, in words rather than in states."""
     if section is None:
         return ("can't check", "the ingredient check was not run")
+    against = (f"{section.list_title} ({'binding' if section.list_binding else 'reference only'})"
+               if section.list_title else "no list")
     if section.source == "app" and section.counts.get("with_entry"):
         return ("checked",
                 f"{section.counts.get('substances', 0)} substances from the "
-                "ExactSDS record for this product, against Annex VI")
+                f"ExactSDS record for this product, against {against}")
     if section.source == "pdf" and section.counts.get("with_entry"):
         return ("checked",
                 f"{section.counts.get('substances', 0)} substances from "
-                "Section 3 of this sheet, against Annex VI")
+                f"Section 3 of this sheet, against {against}")
     if section.match_state == "ambiguous":
         return ("nothing to check",
                 "several products could be this sheet; choose one above")
@@ -494,6 +510,7 @@ def render_html(report: Report) -> str:
                      else "The app says"),
         ing_tone=_ingredient_tone(ing),
         ing_under=[s for s in substances if s["uses_under_classified"]],
+        ing_list=_listing(report.ingredients, report.regulation),
         ing_inconsistent=[s for s in substances
                           if s["inconsistent"] and not s["uses_under_classified"]],
         ing_matches=[s for s in substances if s["status"] == "ok"

@@ -22,8 +22,10 @@ from lingua_oracle.models import IngredientSection
 NO_TABLE = ("Ingredient codes not printed on this sheet, nothing to check.")
 NO_APP = ("ExactSDS not reachable, ingredient check skipped.")
 PENDING = ("Choose the product above to check ingredients.")
-NO_ENTRIES = ("None of the ingredients has a harmonised entry in Annex VI "
-              "Table 3, so there was nothing to check against.")
+NO_ENTRIES = ("None of the ingredients has an entry in the list this "
+              "regulation is checked against, so there was nothing to check.")
+NO_LIST = ("No list of classified substances is on file for this regulation, "
+           "so the ingredients were not checked against one.")
 
 
 def _section_from(substances, source: str, **extra) -> IngredientSection:
@@ -67,19 +69,25 @@ def check(path: str, file_name: str, lines, *, client_factory=None,
           ) -> IngredientSection:
     """The ingredient section for one uploaded document.
 
+    An ingredient is judged against the list the sheet's own regulation
+    publishes - Annex VI for the EU, the GB MCL for Great Britain, HCIS for
+    Australia - and whether a difference from it is a fault depends on whether
+    that regulation makes the list binding. Where a regulation has no list,
+    nothing is borrowed from another one.
+
     `product_id` forces the match, which is what a reader choosing between
     candidates does: the same report is recalculated against the product they
     named, without uploading anything again.
     """
     from lingua_oracle.ingredients.client import session
-    from lingua_oracle.keys.builders.annex_vi import load_table
+    from lingua_oracle.substances.load import for_check
 
-    table = load_table()
-    if table is None:
-        return IngredientSection(
-            source="skipped", message="No Annex VI table on file; run "
-                                      "`lingua keys build annex_vi`.")
+    use, table = for_check(regulation)
+    if use is None or table is None:
+        return IngredientSection(source="nothing", message=NO_LIST)
     index = table.by_cas()
+    about_list = {"list_name": use.name, "list_title": use.title,
+                  "list_binding": use.binding, "list_authority": use.authority}
 
     client = None
     match = Match(state="unavailable", evidence="ExactSDS was not reached")
@@ -110,7 +118,7 @@ def check(path: str, file_name: str, lines, *, client_factory=None,
             section = _section_from(
                 substances, "app", match_state=match.state,
                 product_id=match.product_id, product_name=match.name,
-                evidence=match.evidence)
+                evidence=match.evidence, **about_list)
             if not section.checked_anything:
                 section.message = NO_ENTRIES
             return section
@@ -125,7 +133,7 @@ def check(path: str, file_name: str, lines, *, client_factory=None,
     if match.state == "ambiguous":
         return IngredientSection(
             source="nothing", match_state=match.state, evidence=match.evidence,
-            message=PENDING,
+            message=PENDING, **about_list,
             candidates=[{"product_id": c.product_id, "name": c.name,
                          "regulation": c.regulation}
                         for c in match.candidates])
@@ -138,24 +146,30 @@ def check(path: str, file_name: str, lines, *, client_factory=None,
             source="skipped" if match.state == "unavailable" else "nothing",
             match_state=match.state, evidence=match.evidence, message=message,
             candidates=[{"product_id": c.product_id, "name": c.name}
-                        for c in match.candidates])
+                        for c in match.candidates], **about_list)
 
     substances = _substances_from(rows, table, index)
     section = _section_from(
         substances, "pdf", match_state=match.state, evidence=match.evidence,
         candidates=[{"product_id": c.product_id, "name": c.name}
-                    for c in match.candidates])
+                    for c in match.candidates], **about_list)
     if not section.checked_anything:
         section.message = NO_ENTRIES
     return section
 
 
 def worst(section: IngredientSection | None) -> Status | None:
-    """The hardest thing this section has to say, for the overall verdict."""
+    """The hardest thing this section has to say, for the overall verdict.
+
+    A code missing against a binding list is a fault in the sheet. The same
+    code missing against a list the regulation does not adopt is worth
+    checking and nothing more: no one is obliged to follow another
+    jurisdiction's classification.
+    """
     if section is None or not section.counts:
         return None
     if section.counts.get("fix"):
-        return Status.FIX
+        return Status.FIX if section.list_binding else Status.INFO
     if section.counts.get("inconsistent_substances"):
         return Status.INFO
     if section.counts.get("with_entry"):
@@ -172,8 +186,8 @@ def recheck(report, product_id: int, *, client_factory=None):
     page filled in, rather than being asked to upload again.
     """
     from lingua_oracle.ingredients.client import session
-    from lingua_oracle.keys.builders.annex_vi import load_table
     from lingua_oracle.mixture import section as mixture_section
+    from lingua_oracle.substances.load import for_check
 
     client = (client_factory() if client_factory else session())
     if client_factory is not None:
@@ -181,13 +195,16 @@ def recheck(report, product_id: int, *, client_factory=None):
     detail = client.product(product_id) or {}
     rows = client.ingredients(product_id)
 
-    table = load_table()
+    use, table = for_check(report.regulation)
     index = table.by_cas() if table else {}
     substances = _substances_from(rows, table, index,
                                   name_of=lambda row: row.name) if table else []
     section = _section_from(
         substances, "app", match_state="matched", product_id=product_id,
-        product_name=detail.get("product_name"), evidence="chosen by you")
+        product_name=detail.get("product_name"), evidence="chosen by you",
+        list_name=use.name if use else "", list_title=use.title if use else "",
+        list_binding=bool(use and use.binding),
+        list_authority=use.authority if use else "")
     if not section.checked_anything:
         section.message = NO_ENTRIES
     report.ingredients = section

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from decimal import Decimal
+
 from lingua_oracle.mixture import concentration as conc
 from lingua_oracle.mixture.calculate import calculate, in_scope
 from lingua_oracle.mixture.classes import parse_class
@@ -78,6 +80,12 @@ def build(rows, lines, spans, regulation: str, table,
     ingredients = []
     assumptions: list[str] = []
     without_concentration = 0
+    #: Ingredients whose concentration is known and whose classification is
+    #: not. They are part of the mixture and no rule can use them, which makes
+    #: them undisclosed for the purpose of the calculation - and worth saying
+    #: out loud, because a reader comparing 61 % against 100 % is entitled to
+    #: know which part of the gap is secrecy and which is ignorance.
+    unknown: list[tuple[str, object]] = []
     for row in rows:
         ingredient, parsed = _ingredient(
             row.get("cas"), row.get("name"), row.get("concentration"),
@@ -87,6 +95,9 @@ def build(rows, lines, spans, regulation: str, table,
             continue
         if parsed.assumption:
             assumptions.append(f"{ingredient.label}: {parsed.assumption}")
+        if not ingredient.classes:
+            unknown.append((ingredient.label, ingredient.high))
+            continue
         ingredients.append(ingredient)
 
     if not ingredients:
@@ -106,6 +117,14 @@ def build(rows, lines, spans, regulation: str, table,
         assumptions.append(
             f"{without_concentration} ingredient(s) had no concentration and "
             "were left out of the calculation")
+    if unknown:
+        total = sum((high for _, high in unknown), Decimal(0))
+        assumptions.append(
+            f"{len(unknown)} ingredient(s), up to {total} % between them, have no "
+            "classification on the sheet and none in the list this regulation "
+            "uses, so their hazards are unknown and they are counted with the "
+            "undisclosed part of the mixture: "
+            + ", ".join(label for label, _ in unknown))
     not_covered = summary.get("not_covered") or []
     if not_covered:
         assumptions.append(
