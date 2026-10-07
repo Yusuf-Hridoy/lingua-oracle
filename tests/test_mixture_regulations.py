@@ -257,7 +257,6 @@ def test_the_same_ingredient_is_settled_where_the_regulation_chose():
 
 def _files():
     import json
-    from pathlib import Path
 
     from lingua_oracle.registry import data_dir
 

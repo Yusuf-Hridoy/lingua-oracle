@@ -167,7 +167,12 @@ class AnnexVIEntry(BaseModel):
 
 
 class AnnexVITable(BaseModel):
-    """Annex VI Table 3 as committed data."""
+    """A published list of substance classifications, as committed data.
+
+    Annex VI Table 3 is the original, and the one other lists are shaped to:
+    Great Britain's mandatory classification and labelling list and Safe Work
+    Australia's HCIS say the same kind of thing in the same kind of columns.
+    """
 
     model_config = ConfigDict(extra="forbid")
 

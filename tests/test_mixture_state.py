@@ -12,8 +12,8 @@ from __future__ import annotations
 
 import pytest
 
-from lingua_oracle.mixture.state import applicable, physical_state
 from lingua_oracle.mixture.rule_table import Value, load
+from lingua_oracle.mixture.state import applicable, physical_state
 from lingua_oracle.pipeline import check_pdf
 from tests.conftest import pdf
 from tests.test_combined_report import FakeApp, Line

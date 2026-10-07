@@ -162,6 +162,19 @@ def keys_build(
     from lingua_oracle.keys.store import keys_root, save_key
     from lingua_oracle.registry import load_registry
 
+    if regulation == "substance_lists":
+        # Not an answer key either: the classifications a regulator publishes
+        # for named substances, which an ingredient is judged against.
+        from lingua_oracle.keys.builders import substance_lists
+
+        for name in substance_lists.BY_NAME:
+            path, issues = substance_lists.write(name)
+            table, _ = substance_lists.build(name)
+            typer.secho(f"  {name}: {len(table.entries)} entries -> {path}")
+            for issue in issues:
+                typer.secho(f"      {issue}", fg=typer.colors.YELLOW)
+        return
+
     if regulation == "mixture_rules":
         # Not an answer key either: the cut-off values each regulation sets for
         # mixtures, read out of its own published text.
