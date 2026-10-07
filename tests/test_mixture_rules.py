@@ -56,7 +56,7 @@ def test_skin_corrosive_summation(percent, expected):
     Skin Irrit. 2."""
     result = rules.skin([ing(percent, "H314")], CLP)
     assert (str(result.hazard_class) if result.hazard_class else None) == expected
-    assert result.citation.endswith("Annex I, 3.2.3.3.4, Table 3.2.3")
+    assert "Annex I, Table 3.2.3" in result.citation
 
 
 @pytest.mark.parametrize(("percent", "expected"), [
@@ -118,7 +118,7 @@ def test_eye_damage_summation(percent, expected):
     """Annex I 3.3.3.3.4, Table 3.3.3."""
     result = rules.eye([ing(percent, "H318")], CLP)
     assert (str(result.hazard_class) if result.hazard_class else None) == expected
-    assert result.citation.endswith("Annex I, 3.3.3.3.4, Table 3.3.3")
+    assert "Annex I, Table 3.3.3" in result.citation
 
 
 def test_a_skin_corrosive_is_counted_as_damaging_to_the_eye():
@@ -164,7 +164,7 @@ def test_acute_aquatic_summation(percent, expected):
     """Annex I 4.1.3.5.5, Table 4.1.1: sum of (Acute 1 x M) >= 25 %."""
     result = rules.aquatic_acute([ing(percent, "H400")], CLP)
     assert (str(result.hazard_class) if result.hazard_class else None) == expected
-    assert result.citation.endswith("Annex I, 4.1.3.5.5, Table 4.1.1")
+    assert "Annex I, Table 4.1.1" in result.citation
 
 
 def test_an_m_factor_multiplies_the_contribution():
@@ -217,7 +217,7 @@ def test_the_most_severe_aquatic_category_wins():
 
 @pytest.mark.parametrize(("name", "category", "limit", "code"), [
     ("Skin Sens.", "1", "1.0", "H317"),
-    ("Resp. Sens.", "1", "0.2", "H334"),
+
     ("Carc.", "1", "0.1", "H350"),
     ("Carc.", "2", "1.0", "H351"),
     ("Muta.", "1", "0.1", "H340"),
@@ -297,12 +297,29 @@ def test_one_effect_reaching_twenty_per_cent_classifies():
     result = rules.stot_se_3(ingredients, "narcotic effects", CLP)
     assert str(result.hazard_class) == "STOT SE 3"
     assert result.total == D(20)
-    assert result.citation.endswith("Annex I, 3.8.3.4.5, Table 3.8.3")
+    assert "Annex I, 3.8.3.4.5" in result.citation
 
 
 def test_just_under_twenty_per_cent_does_not():
     assert rules.stot_se_3([ing("19.9", "H336")], "narcotic effects", CLP) \
         .hazard_class is None
+
+
+def test_a_respiratory_sensitiser_limit_depends_on_the_physical_state():
+    """Annex I Table 3.4.5: 1,0 % for a solid or a liquid, 0,2 % for a gas.
+
+    Both are on file and neither is the default: a run that does not know
+    which the mixture is gets both answers, and the calculation reports that
+    they differ rather than taking one.
+    """
+    at_half = [ing("0.5", "H334")]
+    assert rules.generic_limit(at_half, "Resp. Sens.", "1", CLP,
+                               state="solid/liquid").hazard_class is None
+    assert str(rules.generic_limit(at_half, "Resp. Sens.", "1", CLP,
+                                   state="gas").hazard_class) == "Resp. Sens. 1"
+    assert str(rules.generic_limit([ing("1.0", "H334")], "Resp. Sens.", "1",
+                                   CLP, state="solid/liquid").hazard_class) \
+        == "Resp. Sens. 1"
 
 
 def test_every_rule_names_its_document_and_its_paragraph():

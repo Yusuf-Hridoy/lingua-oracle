@@ -22,7 +22,7 @@ def _page(fixture, regulation):
 
 
 @pytest.mark.parametrize(("regulation", "document"), [
-    ("eu_clp", "Regulation (EC) No 1272/2008, Annex I"),
+    ("eu_clp", "Regulation (EC) No 1272/2008, consolidated"),
     ("us_osha", "29 CFR 1910.1200 Appendix A"),
     ("un_ghs", "UN GHS Rev.11 (2025)"),
 ])

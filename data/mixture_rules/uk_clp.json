@@ -1,6 +1,6 @@
 {
   "regulation": "uk_clp",
-  "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
+  "document": "Regulation (EC) No 1272/2008 as retained in GB law",
   "covers": [
     "Aquatic Acute",
     "Aquatic Chronic",
@@ -22,11 +22,11 @@
       "Aquatic Acute 1": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "[F50Classification of a mixture for short-term (acute) hazards based on summation of classified components] Sum of components classified as: Mixture is classified as: Ma Acute 1 Acute 1 × ≥ 25 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.1",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 4.1.1",
+            "page": 219
           }
         }
       ]
@@ -35,77 +35,77 @@
       "Aquatic Chronic 1": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "[F50Classification of a mixture for long-term (chronic) hazards, based on summation of the concentration of classified components] Sum of components classified as: Mixture is classified as: Ma Chronic 1 Chronic 1 × ≥ 25 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 4.1.2",
+            "page": 220
           }
         }
       ],
       "Aquatic Chronic 1 into 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25 % Chronic 2",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 4.1.2",
+            "page": 220
           }
         }
       ],
       "Aquatic Chronic 1 into 3": [
         {
           "amount": "100",
-          "raw": "100 %",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2) + Chronic 3 Chronic 3 ≥ 25 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 4.1.2",
+            "page": 220
           }
         }
       ],
       "Aquatic Chronic 2": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25 % Chronic 2",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 4.1.2",
+            "page": 220
           }
         }
       ],
       "Aquatic Chronic 2 into 3": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2) + Chronic 3 Chronic 3 ≥ 25 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 4.1.2",
+            "page": 220
           }
         }
       ],
       "Aquatic Chronic 3": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2) + Chronic 3 Chronic 3 ≥ 25 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 4.1.2",
+            "page": 220
           }
         }
       ],
       "Aquatic Chronic 4": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "Chronic 1 + Chronic 2 + Chronic 3 + Chronic 4 Chronic 4 ≥ 25 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 4.1.2",
+            "page": 220
           }
         }
       ]
@@ -114,55 +114,55 @@
       "Eye Dam. 1": [
         {
           "amount": "3",
-          "raw": "3 %",
+          "raw": "≥ 3 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.3.3",
+            "page": 158
           }
         }
       ],
       "Eye Dam. 1 multiplier": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "10 × (Skin corrosion Sub- Category 1A, 1B, 1C or Skin corrosion Category 1 + Serious eye damage (Category 1)) + Eye irritation (Category 2) a If an ingredient is classified as both Skin Corrosion Sub-Category 1A, 1B, 1C or Category 1 and Serious Eye Damage (Category 1), its concentration is considered only once in the calculation.",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.3.3",
+            "page": 158
           }
         }
       ],
       "Eye Dam. 1 to Eye Irrit. 2": [
         {
           "amount": "1",
-          "raw": "1 %",
+          "raw": "≥ 1 % but < 3 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.3.3",
+            "page": 158
           }
         }
       ],
       "Eye Irrit. 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.3.3",
+            "page": 158
           }
         }
       ],
       "weighted Eye Irrit. 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.3.3",
+            "page": 158
           }
         }
       ]
@@ -171,276 +171,313 @@
       "Carc. 1": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 % — —",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.6.3.1, Table 3.6.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.6.2",
+            "page": 177
           }
         }
       ],
       "Carc. 1A": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 % — —",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.6.3.1, Table 3.6.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.6.2",
+            "page": 177
           }
         }
       ],
       "Carc. 1B": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 % —",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.6.3.1, Table 3.6.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.6.2",
+            "page": 177
           }
         }
       ],
       "Carc. 2": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "≥ 1,0 % [Note 1]]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.6.3.1, Table 3.6.2",
-            "page": null
-          }
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.6.2",
+            "page": 177
+          },
+          "qualifier": "note 1"
         }
       ],
       "Lact.": [
         {
           "amount": "0.3",
-          "raw": "0.3 %",
+          "raw": "≥ 0,3 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.7.2",
+            "page": 187
           }
         }
       ],
       "Muta. 1": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 % — —",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.5.3.1, Table 3.5.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.5.2",
+            "page": 172
           }
         }
       ],
       "Muta. 1A": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 % — —",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.5.3.1, Table 3.5.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.5.2",
+            "page": 172
           }
         }
       ],
       "Muta. 1B": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 % —",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.5.3.1, Table 3.5.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.5.2",
+            "page": 172
           }
         }
       ],
       "Muta. 2": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "≥ 1,0 %]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.5.3.1, Table 3.5.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.5.2",
+            "page": 172
           }
         }
       ],
       "Repr. 1": [
         {
           "amount": "0.3",
-          "raw": "0.3 %",
+          "raw": "≥ 0,3 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.7.2",
+            "page": 187
           }
         }
       ],
       "Repr. 1A": [
         {
           "amount": "0.3",
-          "raw": "0.3 %",
+          "raw": "≥ 0,3 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.7.2",
+            "page": 187
           }
         }
       ],
       "Repr. 1B": [
         {
           "amount": "0.3",
-          "raw": "0.3 %",
+          "raw": "≥ 0,3 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.7.2",
+            "page": 187
           }
         }
       ],
       "Repr. 2": [
         {
           "amount": "3.0",
-          "raw": "3.0 %",
+          "raw": "≥ 3,0 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.7.2",
+            "page": 187
           }
         }
       ],
       "Resp. Sens. 1": [
         {
-          "amount": "0.2",
-          "raw": "0.2 %",
+          "amount": "1.0",
+          "raw": "≥ 1,0 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
-            "page": null
-          }
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.4.5",
+            "page": 167
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.2",
+          "raw": "≥ 0,2 %",
+          "source": {
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.4.5",
+            "page": 167
+          },
+          "qualifier": "gas"
         }
       ],
       "Resp. Sens. 1A": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
-            "page": null
-          }
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.4.5",
+            "page": 167
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.1",
+          "raw": "≥ 0,1 %",
+          "source": {
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.4.5",
+            "page": 167
+          },
+          "qualifier": "gas"
         }
       ],
       "Resp. Sens. 1B": [
         {
-          "amount": "0.2",
-          "raw": "0.2 %",
+          "amount": "1.0",
+          "raw": "≥ 1,0 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
-            "page": null
-          }
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.4.5",
+            "page": 167
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.2",
+          "raw": "≥ 0,2 %",
+          "source": {
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.4.5",
+            "page": 167
+          },
+          "qualifier": "gas"
         }
       ],
       "STOT RE 1": [
         {
-          "amount": "10.0",
-          "raw": "10.0 %",
+          "amount": "10",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.9.3.4, Table 3.9.4",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.9.4",
+            "page": 203
           }
         }
       ],
       "STOT RE 1 step down": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "1,0 % ≤ concentration < 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.9.3.4, Table 3.9.4",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.9.4",
+            "page": 203
           }
         }
       ],
       "STOT RE 2": [
         {
-          "amount": "10.0",
-          "raw": "10.0 %",
+          "amount": "10",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.9.3.4, Table 3.9.4",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.9.4",
+            "page": 203
           }
         }
       ],
       "STOT SE 1": [
         {
-          "amount": "10.0",
-          "raw": "10.0 %",
+          "amount": "10",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.8.3.4, Table 3.8.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.8.3",
+            "page": 195
           }
         }
       ],
       "STOT SE 1 step down": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "1,0 % ≤ concentration < 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.8.3.4, Table 3.8.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.8.3",
+            "page": 195
           }
         }
       ],
       "STOT SE 2": [
         {
-          "amount": "10.0",
-          "raw": "10.0 %",
+          "amount": "10",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.8.3.4, Table 3.8.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.8.3",
+            "page": 195
           }
         }
       ],
       "Skin Sens. 1": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "≥ 1,0 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
-            "page": null
-          }
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.4.5",
+            "page": 167
+          },
+          "qualifier": "all physical states"
         }
       ],
       "Skin Sens. 1A": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
-            "page": null
-          }
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.4.5",
+            "page": 167
+          },
+          "qualifier": "all physical states"
         }
       ],
       "Skin Sens. 1B": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "≥ 1,0 %]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
-            "page": null
-          }
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.4.5",
+            "page": 167
+          },
+          "qualifier": "all physical states"
         }
       ]
     },
@@ -448,55 +485,55 @@
       "Skin Corr. 1": [
         {
           "amount": "5",
-          "raw": "5 %",
+          "raw": "≥ 5 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.2.3",
+            "page": 152
           }
         }
       ],
       "Skin Corr. 1 multiplier": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "(10 × Skin corrosion Sub- Category 1A, 1B, 1C or Category 1) + Skin irritation Category 2",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.2.3",
+            "page": 152
           }
         }
       ],
       "Skin Corr. 1 to Skin Irrit. 2": [
         {
           "amount": "1",
-          "raw": "1 %",
+          "raw": "≥ 1 % but < 5 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.2.3",
+            "page": 152
           }
         }
       ],
       "Skin Irrit. 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.2.3",
+            "page": 152
           }
         }
       ],
       "weighted Skin Irrit. 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
-            "page": null
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, Table 3.2.3",
+            "page": 152
           }
         }
       ]
@@ -505,17 +542,16 @@
       "STOT SE 3": [
         {
           "amount": "20",
-          "raw": "20 %",
+          "raw": "generic concentration limit of 20 % is appropriate; however, it shall be recognised that this concentration limit may be higher or lower depending on the Category 3 ingredient(s) and that some effects",
           "source": {
-            "document": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
-            "section": "3.8.3.4.5, Table 3.8.3",
-            "page": null
-          }
+            "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+            "section": "Annex I, 3.8.3.4.5",
+            "page": 196
+          },
+          "qualifier": "given as an appropriate limit"
         }
       ]
     }
   },
-  "notes": [
-    "carried over from the Annex I rules this tool already implemented; every value names the paragraph and table it comes from, and no page because Annex I is not on file as a text this builder reads"
-  ]
+  "notes": []
 }

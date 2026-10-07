@@ -22,7 +22,7 @@
       "Aquatic Acute 1": [
         {
           "amount": "25",
-          "raw": "Acute 1 × Ma ≥ 25%",
+          "raw": "Acute 1 × Ma ≥ 25% Acute 1",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.3",
@@ -33,7 +33,7 @@
       "Aquatic Acute 1 into 2": [
         {
           "amount": "10",
-          "raw": "(M × 10 × Acute 1) + Acute 2 ≥ 25%",
+          "raw": "(M × 10 × Acute 1) + Acute 2 ≥ 25% Acute 2",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.3",
@@ -44,7 +44,7 @@
       "Aquatic Acute 1 into 3": [
         {
           "amount": "100",
-          "raw": "(M × 100 × Acute 1) + (10 × Acute 2) + Acute 3 ≥ 25%",
+          "raw": "(M × 100 × Acute 1) + (10 × Acute 2) + Acute 3 ≥ 25% Acute 3",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.3",
@@ -55,7 +55,7 @@
       "Aquatic Acute 2": [
         {
           "amount": "25",
-          "raw": "(M × 10 × Acute 1) + Acute 2 ≥ 25%",
+          "raw": "(M × 10 × Acute 1) + Acute 2 ≥ 25% Acute 2",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.3",
@@ -66,7 +66,7 @@
       "Aquatic Acute 2 into 3": [
         {
           "amount": "10",
-          "raw": "(M × 100 × Acute 1) + (10 × Acute 2) + Acute 3 ≥ 25%",
+          "raw": "(M × 100 × Acute 1) + (10 × Acute 2) + Acute 3 ≥ 25% Acute 3",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.3",
@@ -77,7 +77,7 @@
       "Aquatic Acute 3": [
         {
           "amount": "25",
-          "raw": "(M × 100 × Acute 1) + (10 × Acute 2) + Acute 3 ≥ 25%",
+          "raw": "(M × 100 × Acute 1) + (10 × Acute 2) + Acute 3 ≥ 25% Acute 3",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.3",
@@ -90,7 +90,7 @@
       "Aquatic Chronic 1": [
         {
           "amount": "25",
-          "raw": "Chronic 1 × Ma ≥ 25%",
+          "raw": "Chronic 1 × Ma ≥ 25% Chronic 1",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.4",
@@ -101,7 +101,7 @@
       "Aquatic Chronic 1 into 2": [
         {
           "amount": "10",
-          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25%",
+          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25% Chronic 2",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.4",
@@ -112,7 +112,7 @@
       "Aquatic Chronic 1 into 3": [
         {
           "amount": "100",
-          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2)+ Chronic 3 ≥ 25%",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2)+ Chronic 3 ≥ 25% Chronic 3",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.4",
@@ -123,7 +123,7 @@
       "Aquatic Chronic 2": [
         {
           "amount": "25",
-          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25%",
+          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25% Chronic 2",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.4",
@@ -134,7 +134,7 @@
       "Aquatic Chronic 2 into 3": [
         {
           "amount": "10",
-          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2)+ Chronic 3 ≥ 25%",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2)+ Chronic 3 ≥ 25% Chronic 3",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.4",
@@ -145,7 +145,7 @@
       "Aquatic Chronic 3": [
         {
           "amount": "25",
-          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2)+ Chronic 3 ≥ 25%",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2)+ Chronic 3 ≥ 25% Chronic 3",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.4",
@@ -156,7 +156,7 @@
       "Aquatic Chronic 4": [
         {
           "amount": "25",
-          "raw": "Chronic 1 + Chronic 2 + Chronic 3 + Chronic 4 ≥ 25%",
+          "raw": "Chronic 1 + Chronic 2 + Chronic 3 + Chronic 4 ≥ 25% Chronic 4",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "Table 4.1.4",
@@ -736,11 +736,11 @@
       "STOT SE 3": [
         {
           "amount": "20",
-          "raw": "cut-off value/concentration limit of 20% has been suggested; however, it should be recognized that this cut-off value concentration limit may be higher or less depending on the Category 3 ingredient(s",
+          "raw": "concentration limit of 20% has been suggested; however, it should be recognized that this cut-offvalue concentration limitmay be higher or less depending on the Category3 ingredient(s) and that some e",
           "source": {
             "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
             "section": "3.8.3.4.5",
-            "page": 203
+            "page": 202
           },
           "qualifier": "given as a suggested limit"
         }

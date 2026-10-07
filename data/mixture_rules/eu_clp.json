@@ -1,6 +1,6 @@
 {
   "regulation": "eu_clp",
-  "document": "Regulation (EC) No 1272/2008, Annex I",
+  "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
   "covers": [
     "Aquatic Acute",
     "Aquatic Chronic",
@@ -22,10 +22,10 @@
       "Aquatic Acute 1": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "Acute 1 × M () ≥ 25 % Acute 1",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.1",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 4.1.1",
             "page": null
           }
         }
@@ -35,10 +35,10 @@
       "Aquatic Chronic 1": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "Chronic 1 × M () ≥ 25 % Chronic 1",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 4.1.2",
             "page": null
           }
         }
@@ -46,10 +46,10 @@
       "Aquatic Chronic 1 into 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25 % Chronic 2",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 4.1.2",
             "page": null
           }
         }
@@ -57,10 +57,10 @@
       "Aquatic Chronic 1 into 3": [
         {
           "amount": "100",
-          "raw": "100 %",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2) + Chronic 3 ≥ 25 % Chronic 3",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 4.1.2",
             "page": null
           }
         }
@@ -68,10 +68,10 @@
       "Aquatic Chronic 2": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "(M × 10 × Chronic 1) + Chronic 2 ≥ 25 % Chronic 2",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 4.1.2",
             "page": null
           }
         }
@@ -79,10 +79,10 @@
       "Aquatic Chronic 2 into 3": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2) + Chronic 3 ≥ 25 % Chronic 3",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 4.1.2",
             "page": null
           }
         }
@@ -90,10 +90,10 @@
       "Aquatic Chronic 3": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "(M × 100 × Chronic 1) + (10 × Chronic 2) + Chronic 3 ≥ 25 % Chronic 3",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 4.1.2",
             "page": null
           }
         }
@@ -101,10 +101,10 @@
       "Aquatic Chronic 4": [
         {
           "amount": "25",
-          "raw": "25 %",
+          "raw": "Chronic 1 + Chronic 2 + Chronic 3 + Chronic 4 ≥ 25 % Chronic 4",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "4.1.3.5.5, Table 4.1.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 4.1.2",
             "page": null
           }
         }
@@ -114,10 +114,10 @@
       "Eye Dam. 1": [
         {
           "amount": "3",
-          "raw": "3 %",
+          "raw": "≥ 3 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.3.3",
             "page": null
           }
         }
@@ -125,10 +125,10 @@
       "Eye Dam. 1 multiplier": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "10 × (Skin corrosion Sub-Category 1A, 1B, 1C or Skin corrosion Category 1 + Serious eye damage (Category 1)) + Eye irritation (Category 2)",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.3.3",
             "page": null
           }
         }
@@ -136,10 +136,10 @@
       "Eye Dam. 1 to Eye Irrit. 2": [
         {
           "amount": "1",
-          "raw": "1 %",
+          "raw": "≥ 1 % but < 3 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.3.3",
             "page": null
           }
         }
@@ -147,10 +147,10 @@
       "Eye Irrit. 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.3.3",
             "page": null
           }
         }
@@ -158,10 +158,10 @@
       "weighted Eye Irrit. 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.3.3.3.4, Table 3.3.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.3.3",
             "page": null
           }
         }
@@ -171,10 +171,10 @@
       "Carc. 1": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.6.3.1, Table 3.6.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.6.2",
             "page": null
           }
         }
@@ -182,10 +182,10 @@
       "Carc. 1A": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.6.3.1, Table 3.6.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.6.2",
             "page": null
           }
         }
@@ -193,10 +193,10 @@
       "Carc. 1B": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.6.3.1, Table 3.6.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.6.2",
             "page": null
           }
         }
@@ -204,32 +204,34 @@
       "Carc. 2": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "≥ 1,0 % [Note 1]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.6.3.1, Table 3.6.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.6.2",
             "page": null
-          }
+          },
+          "qualifier": "note 1"
         }
       ],
       "Lact.": [
         {
           "amount": "0.3",
-          "raw": "0.3 %",
+          "raw": "≥ 0,3 % [Note 1]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.7.2",
             "page": null
-          }
+          },
+          "qualifier": "note 1"
         }
       ],
       "Muta. 1": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.5.3.1, Table 3.5.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.5.2",
             "page": null
           }
         }
@@ -237,10 +239,10 @@
       "Muta. 1A": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.5.3.1, Table 3.5.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.5.2",
             "page": null
           }
         }
@@ -248,10 +250,10 @@
       "Muta. 1B": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.5.3.1, Table 3.5.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.5.2",
             "page": null
           }
         }
@@ -259,10 +261,10 @@
       "Muta. 2": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "≥ 1,0 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.5.3.1, Table 3.5.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.5.2",
             "page": null
           }
         }
@@ -270,87 +272,124 @@
       "Repr. 1": [
         {
           "amount": "0.3",
-          "raw": "0.3 %",
+          "raw": "≥ 0,3 % [Note 1]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.7.2",
             "page": null
-          }
+          },
+          "qualifier": "note 1"
         }
       ],
       "Repr. 1A": [
         {
           "amount": "0.3",
-          "raw": "0.3 %",
+          "raw": "≥ 0,3 % [Note 1]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.7.2",
             "page": null
-          }
+          },
+          "qualifier": "note 1"
         }
       ],
       "Repr. 1B": [
         {
           "amount": "0.3",
-          "raw": "0.3 %",
+          "raw": "≥ 0,3 % [Note 1]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.7.2",
             "page": null
-          }
+          },
+          "qualifier": "note 1"
         }
       ],
       "Repr. 2": [
         {
           "amount": "3.0",
-          "raw": "3.0 %",
+          "raw": "≥ 3,0 % [Note 1]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.7.3.1, Table 3.7.2",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.7.2",
             "page": null
-          }
+          },
+          "qualifier": "note 1"
         }
       ],
       "Resp. Sens. 1": [
         {
-          "amount": "0.2",
-          "raw": "0.2 %",
+          "amount": "1.0",
+          "raw": "≥ 1,0 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.4.5",
             "page": null
-          }
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.2",
+          "raw": "≥ 0,2 %",
+          "source": {
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.4.5",
+            "page": null
+          },
+          "qualifier": "gas"
         }
       ],
       "Resp. Sens. 1A": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.4.5",
             "page": null
-          }
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.1",
+          "raw": "≥ 0,1 %",
+          "source": {
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.4.5",
+            "page": null
+          },
+          "qualifier": "gas"
         }
       ],
       "Resp. Sens. 1B": [
         {
-          "amount": "0.2",
-          "raw": "0.2 %",
+          "amount": "1.0",
+          "raw": "≥ 1,0 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.4.5",
             "page": null
-          }
+          },
+          "qualifier": "solid/liquid"
+        },
+        {
+          "amount": "0.2",
+          "raw": "≥ 0,2 %",
+          "source": {
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.4.5",
+            "page": null
+          },
+          "qualifier": "gas"
         }
       ],
       "STOT RE 1": [
         {
-          "amount": "10.0",
-          "raw": "10.0 %",
+          "amount": "10",
+          "raw": "Concentration ≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.9.3.4, Table 3.9.4",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.9.4",
             "page": null
           }
         }
@@ -358,32 +397,33 @@
       "STOT RE 1 step down": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "1,0 % ≤ concentration < 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.9.3.4, Table 3.9.4",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.9.4",
             "page": null
           }
         }
       ],
       "STOT RE 2": [
         {
-          "amount": "10.0",
-          "raw": "10.0 %",
+          "amount": "10",
+          "raw": "Concentration ≥ 10 % [(Note 1)]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.9.3.4, Table 3.9.4",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.9.4",
             "page": null
-          }
+          },
+          "qualifier": "note 1"
         }
       ],
       "STOT SE 1": [
         {
-          "amount": "10.0",
-          "raw": "10.0 %",
+          "amount": "10",
+          "raw": "Concentration ≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.8.3.4, Table 3.8.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.8.3",
             "page": null
           }
         }
@@ -391,56 +431,60 @@
       "STOT SE 1 step down": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "1,0 % ≤ concentration < 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.8.3.4, Table 3.8.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.8.3",
             "page": null
           }
         }
       ],
       "STOT SE 2": [
         {
-          "amount": "10.0",
-          "raw": "10.0 %",
+          "amount": "10",
+          "raw": "Concentration ≥ 10 % [(Note 1)]",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.8.3.4, Table 3.8.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.8.3",
             "page": null
-          }
+          },
+          "qualifier": "note 1"
         }
       ],
       "Skin Sens. 1": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "≥ 1,0 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.4.5",
             "page": null
-          }
+          },
+          "qualifier": "all physical states"
         }
       ],
       "Skin Sens. 1A": [
         {
           "amount": "0.1",
-          "raw": "0.1 %",
+          "raw": "≥ 0,1 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.4.5",
             "page": null
-          }
+          },
+          "qualifier": "all physical states"
         }
       ],
       "Skin Sens. 1B": [
         {
           "amount": "1.0",
-          "raw": "1.0 %",
+          "raw": "≥ 1,0 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.4.3.3, Table 3.4.6",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.4.5",
             "page": null
-          }
+          },
+          "qualifier": "all physical states"
         }
       ]
     },
@@ -448,10 +492,10 @@
       "Skin Corr. 1": [
         {
           "amount": "5",
-          "raw": "5 %",
+          "raw": "≥ 5 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.2.3",
             "page": null
           }
         }
@@ -459,10 +503,10 @@
       "Skin Corr. 1 multiplier": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "(10 × Skin corrosion Sub-Category 1A, 1B, 1C or Category 1) + Skin irritation Category 2",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.2.3",
             "page": null
           }
         }
@@ -470,10 +514,10 @@
       "Skin Corr. 1 to Skin Irrit. 2": [
         {
           "amount": "1",
-          "raw": "1 %",
+          "raw": "≥ 1 % but < 5 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.2.3",
             "page": null
           }
         }
@@ -481,10 +525,10 @@
       "Skin Irrit. 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.2.3",
             "page": null
           }
         }
@@ -492,10 +536,10 @@
       "weighted Skin Irrit. 2": [
         {
           "amount": "10",
-          "raw": "10 %",
+          "raw": "≥ 10 %",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.2.3.3.4, Table 3.2.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, Table 3.2.3",
             "page": null
           }
         }
@@ -505,17 +549,16 @@
       "STOT SE 3": [
         {
           "amount": "20",
-          "raw": "20 %",
+          "raw": "generic concentration limit of 20 % is appropriate; however, it shall be recognised that this concentration limit may be higher or lower depending on the Category 3 ingredient(s) and that some effects",
           "source": {
-            "document": "Regulation (EC) No 1272/2008, Annex I",
-            "section": "3.8.3.4.5, Table 3.8.3",
+            "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+            "section": "Annex I, 3.8.3.4.5",
             "page": null
-          }
+          },
+          "qualifier": "given as an appropriate limit"
         }
       ]
     }
   },
-  "notes": [
-    "carried over from the Annex I rules this tool already implemented; every value names the paragraph and table it comes from, and no page because Annex I is not on file as a text this builder reads"
-  ]
+  "notes": []
 }

@@ -386,9 +386,9 @@
           "source": {
             "document": "29 CFR 1910.1200 Appendix A",
             "section": "3.8.3.4 (paragraph not identified)",
-            "page": 1
+            "page": null
           },
-          "qualifier": "given as a suggested limit"
+          "qualifier": "given as an appropriate limit"
         }
       ]
     }

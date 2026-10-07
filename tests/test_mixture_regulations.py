@@ -23,8 +23,8 @@ from lingua_oracle.mixture.rule_table import load
 #: Every regulation a table was built for, with the document each was read
 #: from. If a regulation is added without rules, this list fails first.
 TABLES = {
-    "eu_clp": "Regulation (EC) No 1272/2008, Annex I",
-    "uk_clp": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I",
+    "eu_clp": "Regulation (EC) No 1272/2008, consolidated",
+    "uk_clp": "Regulation (EC) No 1272/2008 as retained in GB law",
     "un_ghs": "UN GHS Rev.11 (2025)",
     "au_whs": "UN GHS Rev.7 (2017)",
     "ca_whmis": "UN GHS Rev.7 (2017)",
@@ -175,7 +175,7 @@ def test_the_target_organ_limit_is_the_regulations_own(regulation, percent,
 
 
 @pytest.mark.parametrize(("regulation", "section"), [
-    ("eu_clp", "3.8.3.4, Table 3.8.3"), ("us_osha", "Table A.8.2")])
+    ("eu_clp", "Annex I, Table 3.8.3"), ("us_osha", "Table A.8.2")])
 def test_a_limit_cites_the_table_it_came_from(regulation, section):
     result = rules.generic_limit([ing(2, "H370")], "STOT SE", "1",
                                  table(regulation))
@@ -206,14 +206,16 @@ def test_a_category_1_carcinogen_at_a_tenth_of_a_per_cent(regulation, percent,
     (20, "STOT SE 3"), ("19.9", None)])
 def test_narcotic_effects_are_additive_to_twenty_per_cent(regulation, percent,
                                                           expected):
-    """CLP sets 20 % in Annex I 3.8.3.4.5. GHS and Appendix A give the same
-    number in a sentence, and hedge it - "has been suggested", "is appropriate"
-    - which the rule records as an assumption rather than hiding."""
+    """Every one of these documents gives 20 %, and none of them gives it as a
+    flat rule: CLP and Appendix A call it appropriate, the Purple Book says it
+    has been suggested. The rule records which, rather than flattening both
+    into a limit the text does not quite set."""
     result = rules.stot_se_3([ing(percent, "H336")], "narcotic effects",
                              table(regulation))
     assert said(result) == expected
-    if regulation not in ("eu_clp", "uk_clp"):
-        assert any("suggested" in a for a in result.assumptions)
+    hedge = "suggested" if regulation in ("un_ghs", "au_whs", "ca_whmis") \
+        else "appropriate"
+    assert any(hedge in a for a in result.assumptions)
 
 
 # -- where a published table gives two limits ---------------------------------
@@ -248,3 +250,75 @@ def test_the_same_ingredient_is_settled_where_the_regulation_chose():
     results, _ = calculate(ingredients, [], "us_osha")
     carc = next(r for r in results if r.hazard_class == "Carc. 2")
     assert carc.verdict == "inconsistent"
+
+
+# -- what every file on disk has to hold ---------------------------------------
+
+
+def _files():
+    import json
+    from pathlib import Path
+
+    from lingua_oracle.registry import data_dir
+
+    for path in sorted((data_dir() / "mixture_rules").glob("*.json")):
+        yield path.name, json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_there_is_a_file_for_every_regulation_with_rules():
+    assert {name for name, _ in _files()} == {f"{r}.json" for r in ALL}
+
+
+def test_every_value_on_disk_names_the_document_and_the_section():
+    """A number without a source is a number somebody has to take on trust,
+    and the trouble with trusting one is that it is how a gas's limit came to
+    be used for a liquid."""
+    for name, raw in _files():
+        for rule, keys in raw["rules"].items():
+            for key, values in keys.items():
+                for value in values:
+                    where = f"{name} {rule} {key}"
+                    assert value["source"]["document"], where
+                    assert value["source"]["section"], where
+                    assert value["amount"], where
+
+
+#: Documents that have no pages to name: the EU act is served as XHTML and
+#: Appendix A as a web page. A page number for either would be an invention.
+UNPAGED = ("consolidated 02008R1272", "1910.1200 Appendix A")
+
+
+def test_a_value_read_from_a_paginated_document_names_its_page():
+    for name, raw in _files():
+        for rule, keys in raw["rules"].items():
+            for key, values in keys.items():
+                for value in values:
+                    document = value["source"]["document"]
+                    if any(x in document for x in UNPAGED):
+                        assert value["source"]["page"] is None
+                        continue
+                    assert value["source"]["page"], f"{name} {rule} {key}"
+
+
+#: Where a published table splits its limits by physical state, and both halves
+#: have to survive into the file. Written out rather than derived: deriving it
+#: from the file is how a missing half would pass unnoticed.
+STATE_SPLIT = ("Resp. Sens. 1", "Resp. Sens. 1A", "Resp. Sens. 1B")
+
+
+@pytest.mark.parametrize("regulation", ALL)
+def test_a_table_split_by_physical_state_keeps_both_halves(regulation):
+    for key in STATE_SPLIT:
+        values = table(regulation).variants("generic_limits", key)
+        assert values, f"{regulation} has no {key}"
+        states = {v.qualifier.split()[0] for v in values if v.qualifier}
+        assert {"solid/liquid", "gas"} <= states, f"{regulation} {key}: {states}"
+
+
+@pytest.mark.parametrize("regulation", ALL)
+def test_a_limit_given_for_all_states_says_so(regulation):
+    """The skin sensitiser column is "All physical states", and a limit whose
+    qualifier is blank would be indistinguishable from one whose state nobody
+    read."""
+    for value in table(regulation).variants("generic_limits", "Skin Sens. 1"):
+        assert "physical states" in value.qualifier, str(value)

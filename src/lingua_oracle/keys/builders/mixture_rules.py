@@ -67,7 +67,7 @@ _ANY_NUMBER = re.compile(r"(\d+(?:[.,]\d+)?)")
 #: "1.0 \u2264 ingredient < 10 %" and "\u2265 1 % but < 5 %" are bands. The number
 #: that matters is the bottom of the band, and the published tables do not
 #: always print a per cent sign on it.
-_BAND = re.compile(r"\u2264\s*ingredient|but\s*<")
+_BAND = re.compile(r"\u2264\s*(ingredient|concentration)|but\s*<")
 
 
 def _amount(cell: str) -> Decimal | None:
@@ -168,118 +168,117 @@ class Table:
 #: Row label -> the class and category of the ingredient that row is about.
 #: One pattern per class, written to match both the UN's spelling and OSHA's.
 _INGREDIENT_ROWS = (
-    (re.compile(r"respiratory sensitizer.*sub[- ]?category 1a"), ("Resp. Sens.", "1A")),
-    (re.compile(r"respiratory sensitizer.*sub[- ]?category 1b"), ("Resp. Sens.", "1B")),
-    (re.compile(r"respiratory sensitizer.*category 1$"), ("Resp. Sens.", "1")),
-    (re.compile(r"skin sensitizer.*sub[- ]?category 1a"), ("Skin Sens.", "1A")),
-    (re.compile(r"skin sensitizer.*sub[- ]?category 1b"), ("Skin Sens.", "1B")),
-    (re.compile(r"skin sensitizer.*category 1$"), ("Skin Sens.", "1")),
-    (re.compile(r"category 1a/b mutagen"), ("Muta.", "1A/1B")),
-    (re.compile(r"category 1a mutagen"), ("Muta.", "1A")),
-    (re.compile(r"category 1b mutagen"), ("Muta.", "1B")),
-    (re.compile(r"category 2 mutagen"), ("Muta.", "2")),
-    (re.compile(r"category 1a/b carcinogen"), ("Carc.", "1A/1B")),
-    (re.compile(r"category 1a carcinogen"), ("Carc.", "1A")),
-    (re.compile(r"category 1b carcinogen"), ("Carc.", "1B")),
-    (re.compile(r"category 1 carcinogen"), ("Carc.", "1")),
-    (re.compile(r"category 2 carcinogen"), ("Carc.", "2")),
-    (re.compile(r"additional category for effects on or via lactation"), ("Lact.", "")),
-    (re.compile(r"category 1a reproductive"), ("Repr.", "1A")),
-    (re.compile(r"category 1b reproductive"), ("Repr.", "1B")),
-    (re.compile(r"category 1 reproductive"), ("Repr.", "1")),
-    (re.compile(r"category 2 reproductive"), ("Repr.", "2")),
-    (re.compile(r"category 1 target organ toxicant"), ("TARGET", "1")),
-    (re.compile(r"category 2 target organ toxicant"), ("TARGET", "2")),
+    # The acts spell it "sensitiser", the Purple Book "sensitizer". Each
+    # pattern is anchored at the start of the row's own label: a footnote
+    # saying "If a Category 2 specific target organ toxicant is present at
+    # 1,0 %" names the class too, and that number is not a limit.
+    (re.compile(r"^respiratory sensiti[sz]er.*sub[- ]?category 1a"), ("Resp. Sens.", "1A")),
+    (re.compile(r"^respiratory sensiti[sz]er.*sub[- ]?category 1b"), ("Resp. Sens.", "1B")),
+    (re.compile(r"^respiratory sensiti[sz]er.*category 1$"), ("Resp. Sens.", "1")),
+    (re.compile(r"^skin sensiti[sz]er.*sub[- ]?category 1a"), ("Skin Sens.", "1A")),
+    (re.compile(r"^skin sensiti[sz]er.*sub[- ]?category 1b"), ("Skin Sens.", "1B")),
+    (re.compile(r"^skin sensiti[sz]er.*category 1$"), ("Skin Sens.", "1")),
+    (re.compile(r"^category 1a/b mutagen"), ("Muta.", "1A/1B")),
+    (re.compile(r"^category 1a.*mutagen"), ("Muta.", "1A")),
+    (re.compile(r"^category 1b.*mutagen"), ("Muta.", "1B")),
+    (re.compile(r"^category 2.*mutagen"), ("Muta.", "2")),
+    (re.compile(r"^category 1a/b carcinogen"), ("Carc.", "1A/1B")),
+    (re.compile(r"^category 1a.*carcinogen"), ("Carc.", "1A")),
+    (re.compile(r"^category 1b.*carcinogen"), ("Carc.", "1B")),
+    (re.compile(r"^category 1 carcinogen"), ("Carc.", "1")),
+    (re.compile(r"^category 2.*carcinogen"), ("Carc.", "2")),
+    (re.compile(r"^additional category for.*lactation"), ("Lact.", "")),
+    (re.compile(r"^category 1a.*reproduct"), ("Repr.", "1A")),
+    (re.compile(r"^category 1b.*reproduct"), ("Repr.", "1B")),
+    (re.compile(r"^category 1 reproduct"), ("Repr.", "1")),
+    (re.compile(r"^category 2.*reproduct"), ("Repr.", "2")),
+    # The GB rendering drops an amendment marker between "Organ" and
+    # "Toxicant", so the class is recognised by the words that survive it.
+    (re.compile(r"^category 1\b.*target organ"), ("TARGET", "1")),
+    (re.compile(r"^category 2\b.*target organ"), ("TARGET", "2")),
 )
 
-#: Column header -> the category of the mixture that column classifies into.
-_COLUMN_CATEGORIES = (
-    (re.compile(r"sub[- ]?category 1a|category 1a"), "1A"),
-    (re.compile(r"sub[- ]?category 1b|category 1b"), "1B"),
-    (re.compile(r"lactation"), ""),
-    (re.compile(r"category 1"), "1"),
-    (re.compile(r"category 2"), "2"),
-    (re.compile(r"category 3"), "3"),
+#: What a column heading says about the physical state of the ingredient,
+#: where a table splits its limits on one. Nothing else about a column is
+#: needed: the published tables are diagonal, and a row's limits are its own.
+_STATES = (
+    (re.compile(r"solid\s*/\s*liquid|liquid\s*/\s*solid"), "solid/liquid"),
+    (re.compile(r"^gas$"), "gas"),
+    (re.compile(r"all physical states"), "all physical states"),
 )
+
+
+#: A footnote printed as the last row of a table. Its text names classes and
+#: carries numbers - CLP's note under Table 3.7.2 gives the 0,1 % at which a
+#: safety data sheet must be available - and none of them are limits.
+_FOOTNOTE = re.compile(r"^\(?\d*\)?\s*note\b")
 
 
 def _row_class(label: str) -> tuple[str, str] | None:
+    if _FOOTNOTE.match(label):
+        return None
     for pattern, found in _INGREDIENT_ROWS:
         if pattern.search(label):
             return found
     return None
 
 
-def _column_category(header: str) -> str | None:
-    for pattern, category in _COLUMN_CATEGORIES:
-        if pattern.search(header):
-            return category
-    return None
+def _state(heading: str) -> str:
+    for pattern, state in _STATES:
+        if pattern.search(heading):
+            return state
+    return ""
 
 
 def _cut_offs(rows: list[list[str]], hazard: str, place: Place, table: Table,
               rule: str) -> None:
-    """A cut-off table: one ingredient class per row, one mixture category per
-    column, and the limit where they meet.
+    """A cut-off table: one ingredient class per row, its limits along the row.
 
-    Only the cells where the row's class and the column's category are the same
-    are limits this tool uses - the rest of the grid is "--". The one exception
-    is the band a category 1 target organ toxicant falls into, which classifies
-    the mixture in category 2 and is recorded as a step down.
+    These tables are diagonal - the cell where a row's class meets its own
+    category holds the limit, and the rest of the grid is dashes - so a limit
+    on a row belongs to that row's class and nothing has to be inferred from
+    which column it sits in. What the column does say is what the limit is
+    qualified by: the sensitiser tables split solid or liquid from gas, and
+    both halves are kept, because a mixture is one or the other and the report
+    is not entitled to pick.
+
+    The one cell that is not its row's own category is the band a category 1
+    target organ toxicant falls into - "1,0 % <= concentration < 10 %" - which
+    classifies the mixture category 2 and is recorded as a step down.
     """
-    own: list[list[str]] = []
-    above: list[list[str]] = []
+    states: dict[int, str] = {}
     last: tuple[str, str] | None = None
     for raw_row in rows:
         cells = [_tidy(c) for c in raw_row]
         label = _label(cells[0] if cells else "")
         found = _row_class(label)
-        if found is None and not (label == "" and last is not None):
-            # Still in the header. A heading that spans several columns is
-            # published once with the cells beside it empty, so each column
-            # keeps what stood above it as well as its own words - and its own
-            # words win, or the "Category 2" column would answer to the
-            # "Category 1B" heading printed to its left.
-            while len(own) < len(cells):
-                own.append([])
-                above.append([])
-            spanning = ""
-            for index, cell in enumerate(cells):
-                if _tidy(cell):
-                    own[index].append(_label(cell))
-                    spanning = _label(cell)
-                elif spanning:
-                    above[index].append(spanning)
+        values = [(index, cell) for index, cell in enumerate(cells[1:], start=1)
+                  if _amount(cell) is not None]
+        if _FOOTNOTE.match(label):
+            last = None
+            continue
+        if found is None and (last is None or not values):
+            # A heading. The only thing worth remembering from one is which
+            # physical state each column is for.
+            for index, cell in enumerate(cells[1:], start=1):
+                state = _state(_label(cell))
+                if state:
+                    states[index] = state
             continue
         if found is not None:
             last = found
-        assert last is not None
         name, category = (hazard, last[1]) if last[0] == "TARGET" else last
-        for index, cell in enumerate(cells[1:], start=1):
-            if index >= len(own):
-                continue
-            amount = _amount(_tidy(cell))
-            if amount is None:
-                continue
-            column = _column_category(" ".join(own[index]))
-            if column is None:
-                column = _column_category(" ".join(above[index]))
-            if column is None:
+        for index, cell in values:
+            amount = _amount(cell)
+            if (name.startswith("STOT") and category == "1"
+                    and _BAND.search(cell)):
+                table.put(rule, f"{name} 1 step down",
+                          Value(amount, cell, place))
                 continue
             for part in category.split("/"):
-                # A column headed "Category 1" covers its sub-categories: the
-                # 1A row beneath it gives the limit for 1A.
-                if (part == column or (not part and not column)
-                        or (column and part and part.startswith(column))):
-                    table.put(rule, f"{name} {part}".strip(), Value(
-                        amount, _tidy(cell), place,
-                        qualifier=_qualifier(own[index] + above[index], cell)))
-                elif (name.startswith("STOT") and part == "1" and column == "2"
-                      and "<" in cell):
-                    # "1.0 <= ingredient < 10 %": a category 1 ingredient below
-                    # the category 1 limit classifies the mixture category 2.
-                    table.put(rule, f"{name} 1 step down", Value(
-                        amount, _tidy(cell), place))
+                table.put(rule, f"{name} {part}".strip(), Value(
+                    amount, cell, place,
+                    qualifier=_qualifier(states.get(index, ""), cell)))
 
 
 def _parent_categories(table: Table) -> None:
@@ -288,9 +287,9 @@ def _parent_categories(table: Table) -> None:
     The published tables list a row per sub-category - 1A, 1B - under a column
     headed "Category 1 carcinogen". A sheet that says only "Carc. 1" is
     claiming that column, and where every sub-category under it carries the
-    same limit, that limit is the column's. Where the sub-categories differ -
-    the sensitizers - nothing is derived: those tables print their own
-    category 1 row.
+    same limits, those are the column's. Where the sub-categories differ - the
+    sensitisers, whose 1A is ten times stricter - nothing is derived: those
+    tables print their own category 1 row.
     """
     limits = table.rules.get("generic_limits", {})
     for name in ("Muta.", "Carc.", "Repr."):
@@ -309,18 +308,17 @@ def _parent_categories(table: Table) -> None:
                 qualifier=value.qualifier))
 
 
-def _qualifier(headers: list[str], cell: str) -> str:
-    """What distinguishes one value in a cell from another in the same cell.
+def _qualifier(state: str, cell: str) -> str:
+    """What one limit is conditional on, where the same class has more than one.
 
-    The published tables give more than one limit for the same class where the
-    answer depends on something this tool cannot see - the physical state of
-    the ingredient, or which of two options an authority took. The distinction
-    is kept so the report can show it rather than pick one silently.
+    Two things do that in the published tables: the physical state of the
+    ingredient, and a note leaving the choice to the adopting authority. Both
+    are kept with the number, so the report can say which limit it used rather
+    than picking one silently.
     """
-    state = next((h for h in headers
-                  if "solid" in h or h == "gas" or "physical state" in h), "")
-    note = re.search(r"\((?:see )?(note[^)]*)\)", cell)
-    return " ".join(x for x in (state, note.group(1) if note else "") if x)
+    note = re.search(r"[\[(](?:see )?(note[^\])]*)[\])]", cell, re.I)
+    return " ".join(x for x in (state, note.group(1).lower() if note else "")
+                    if x)
 
 
 # -- UN GHS -------------------------------------------------------------------
@@ -417,40 +415,19 @@ _HAZARD_OF = {"sensitisation": "", "mutagenicity": "", "carcinogenicity": "",
               "reproductive": "", "stot_se": "STOT SE", "stot_re": "STOT RE"}
 
 
+def _weighted(label: str) -> bool:
+    """A row that weights the severe class into the milder one."""
+    return bool(re.match(r"^\(?\s*10\s*×", label))
+
+
 def _skin(rows: list[list[str]], place: Place, table: Table) -> None:
-    """Table 3.2.3 / A.2.3: skin corrosion and irritation by summation."""
-    wanted = {
-        r"^skin category 1$": ("Skin Corr. 1", "Skin Corr. 1 to Skin Irrit. 2"),
-        r"^skin category 2$": ("Skin Irrit. 2", None),
-    }
-    seen: set[str] = set()
-    for row in rows:
-        label = _label(row[0] if row else "")
-        for pattern, keys in wanted.items():
-            if not re.search(pattern, label):
-                continue
-            amounts = [(_amount(_tidy(c)), _tidy(c)) for c in row[1:]
-                       if _amount(_tidy(c))]
-            for key, (amount, raw) in zip(keys, amounts, strict=False):
-                if key:
-                    table.put("skin", key, Value(amount, raw, place))
-                    seen.add(key)
-        if label.startswith(("10 ×", "(10 ×")) and "category 3" not in label:
-            amounts = [(_amount(_tidy(c)), _tidy(c)) for c in row[1:]
-                       if _amount(_tidy(c))]
-            if amounts:
-                table.put("skin", "weighted Skin Irrit. 2",
-                          Value(amounts[0][0], amounts[0][1], place))
-                table.put("skin", "Skin Corr. 1 multiplier",
-                          Value(Decimal(10), _tidy(row[0]), place))
-                seen.add("weighted Skin Irrit. 2")
-    for key in ("Skin Corr. 1", "Skin Irrit. 2", "weighted Skin Irrit. 2"):
-        if key not in seen:
-            raise NotInTheText(f"{place.document}: {place.section} has no {key}")
+    """Table 3.2.3 / A.2.3: skin corrosion and irritation by summation.
 
-
-def _eye(rows: list[list[str]], place: Place, table: Table) -> None:
-    """Table 3.3.3 / A.3.3: eye damage and irritation by summation."""
+    Three rows matter, and each document names them its own way - "Skin
+    Category 1" in the Purple Book, "Skin corrosion Sub-Category 1A, 1B, 1C or
+    Category 1" in CLP - so they are told apart by which category they are
+    about, and by the one that opens with the multiplier.
+    """
     seen: set[str] = set()
     for row in rows:
         label = _label(row[0] if row else "")
@@ -458,7 +435,44 @@ def _eye(rows: list[list[str]], place: Place, table: Table) -> None:
                    if _amount(_tidy(c))]
         if not amounts:
             continue
-        if label.startswith(("10 ×", "(10 ×")):
+        if _weighted(label):
+            if "category 3" in label:
+                continue
+            table.put("skin", "weighted Skin Irrit. 2",
+                      Value(amounts[0][0], amounts[0][1], place))
+            table.put("skin", "Skin Corr. 1 multiplier",
+                      Value(Decimal(10), _tidy(row[0]), place))
+            seen.add("weighted Skin Irrit. 2")
+        elif "category 1" in label:
+            table.put("skin", "Skin Corr. 1",
+                      Value(amounts[0][0], amounts[0][1], place))
+            seen.add("Skin Corr. 1")
+            if len(amounts) > 1:
+                table.put("skin", "Skin Corr. 1 to Skin Irrit. 2",
+                          Value(amounts[1][0], amounts[1][1], place))
+        elif "category 2" in label:
+            table.put("skin", "Skin Irrit. 2",
+                      Value(amounts[0][0], amounts[0][1], place))
+            seen.add("Skin Irrit. 2")
+    for key in ("Skin Corr. 1", "Skin Irrit. 2", "weighted Skin Irrit. 2"):
+        if key not in seen:
+            raise NotInTheText(f"{place.document}: {place.section} has no {key}")
+
+
+def _eye(rows: list[list[str]], place: Place, table: Table) -> None:
+    """Table 3.3.3 / A.3.3: eye damage and irritation by summation.
+
+    The damaging row is the one that adds skin corrosion to serious eye damage,
+    whichever words a document uses for either.
+    """
+    seen: set[str] = set()
+    for row in rows:
+        label = _label(row[0] if row else "")
+        amounts = [(_amount(_tidy(c)), _tidy(c)) for c in row[1:]
+                   if _amount(_tidy(c))]
+        if not amounts:
+            continue
+        if _weighted(label):
             table.put("eye", "weighted Eye Irrit. 2",
                       Value(amounts[0][0], amounts[0][1], place))
             table.put("eye", "Eye Dam. 1 multiplier",
@@ -490,25 +504,30 @@ def _aquatic(rows: list[list[str]], place: Place, table: Table,
     """
     family = "Aquatic Acute" if rule == "aquatic_acute" else "Aquatic Chronic"
     for row in rows:
-        text = _tidy(row[0] if row else "")
+        # Whole row: one document prints the expression and the classification
+        # it gives in two columns, another runs them together on a line.
+        text = _tidy(" ".join(row))
         amount = _amount(text)
-        outcome = _label(row[1] if len(row) > 1 else "")
-        category = re.search(r"(acute|chronic) ([1-4])", outcome)
-        if amount is None or category is None:
+        outcome = _label(text)
+        # The last one named: where a row and its outcome share a line, the
+        # expression comes first and the classification it gives comes last.
+        named = re.findall(r"(acute|chronic) ([1-4])", outcome)
+        if amount is None or not named:
             continue
-        table.put(rule, f"{family} {category.group(2)}",
-                  Value(amount, text, place))
-        for weight in re.finditer(r"(\d+) ×\s*(?:M ×\s*)?(?:acute|chronic) ([1-4])",
-                                  _label(text)):
-            table.put(rule,
-                      f"{family} {weight.group(2)} into {category.group(2)}",
+        category = named[-1]
+        table.put(rule, f"{family} {category[1]}", Value(amount, text, place))
+        for weight in re.finditer(
+                r"(\d+) ×\s*(?:M ×\s*)?(?:acute|chronic) ([1-4])",
+                _label(text)):
+            table.put(rule, f"{family} {weight.group(2)} into {category[1]}",
                       Value(Decimal(weight.group(1)), text, place))
     if not table.rules.get(rule):
         raise NotInTheText(f"{place.document}: {place.section} gave no rows")
 
 
 _SUGGESTED = re.compile(
-    r"cut-?off value\s*/?\s*concentration limit of (\d+(?:\.\d+)?)\s*%", re.I)
+    r"(?:cut-?off value\s*/?\s*)?(?:generic\s+)?concentration limit of "
+    r"(\d+(?:[.,]\d+)?)\s*%", re.I)
 #: The paragraph that carries this rule, in either document's numbering. The
 #: Purple Book's pages are two columns and extract interleaved, so the nearest
 #: preceding paragraph number is not reliably this rule's - only a number from
@@ -516,8 +535,8 @@ _SUGGESTED = re.compile(
 _PARAGRAPH = re.compile(r"\b((?:A\.)?\d\.8\.3\.4\.\d)\b")
 
 
-def _stot_se_3(text_by_page: dict[int, str], document: str,
-               table: Table) -> None:
+def _stot_se_3(text_by_page: dict[int, str], document: str, table: Table,
+               *, paragraph_prefix: str = "", paged: bool = True) -> None:
     """The additive cut-off for category 3 target organ toxicity.
 
     Both the Purple Book and Appendix A give this one in a sentence rather than
@@ -530,11 +549,19 @@ def _stot_se_3(text_by_page: dict[int, str], document: str,
         if match is None:
             continue
         before = _PARAGRAPH.findall(text[:match.start()])
-        section = before[-1] if before else "3.8.3.4 (paragraph not identified)"
+        section = paragraph_prefix + (
+            before[-1] if before else "3.8.3.4 (paragraph not identified)")
         sentence = text[match.start():match.start() + 200].split(". ")[0]
+        # What the document commits to. The Purple Book suggests this number,
+        # CLP and Appendix A call it appropriate; neither is a flat rule, and
+        # the report says which was said rather than flattening both.
+        hedge = ("given as a suggested limit" if "suggest" in sentence.lower()
+                 else "given as an appropriate limit"
+                 if "appropriate" in sentence.lower() else "")
         table.put("stot_se_3", "STOT SE 3", Value(
-            Decimal(match.group(1)), sentence, Place(document, section, index + 1),
-            qualifier="given as a suggested limit"))
+            Decimal(match.group(1).replace(",", ".")), sentence,
+            Place(document, section, index + 1 if paged else None),
+            qualifier=hedge))
         return
     # Not an error: a regulation need not have this rule at all.
     table.notes.append(
@@ -611,7 +638,9 @@ def _osha(body: bytes) -> Table:
         raise NotInTheText(
             f"{OSHA_DOCUMENT}: no table found for {', '.join(missing)}")
     text = " ".join(doc.text_content().split())
-    _stot_se_3({0: text}, OSHA_DOCUMENT, table)
+    # Appendix A is a web page: it has no pages to cite, and the paragraph
+    # number it prints is what a reader looks the sentence up by.
+    _stot_se_3({0: text}, OSHA_DOCUMENT, table, paged=False)
     _parent_categories(table)
     table.notes.append(
         "Appendix A has no cut-off table for the aquatic classes: the standard "
@@ -714,68 +743,343 @@ def _hpr_covers(path: Path) -> tuple[list[str], str]:
 
 # -- EU and GB CLP ------------------------------------------------------------
 
-#: Annex I, paragraph by paragraph, as this tool already implemented it. Every
-#: entry names the paragraph and table the number comes from; Annex I is not on
-#: file as a text this builder can parse, so there is no page, and saying so is
-#: better than printing one that was never checked.
-_ANNEX_I: tuple[tuple[str, str, str, str], ...] = (
-    ("skin", "Skin Corr. 1", "5", "3.2.3.3.4, Table 3.2.3"),
-    ("skin", "Skin Corr. 1 to Skin Irrit. 2", "1", "3.2.3.3.4, Table 3.2.3"),
-    ("skin", "Skin Irrit. 2", "10", "3.2.3.3.4, Table 3.2.3"),
-    ("skin", "weighted Skin Irrit. 2", "10", "3.2.3.3.4, Table 3.2.3"),
-    ("skin", "Skin Corr. 1 multiplier", "10", "3.2.3.3.4, Table 3.2.3"),
-    ("eye", "Eye Dam. 1", "3", "3.3.3.3.4, Table 3.3.3"),
-    ("eye", "Eye Dam. 1 to Eye Irrit. 2", "1", "3.3.3.3.4, Table 3.3.3"),
-    ("eye", "Eye Irrit. 2", "10", "3.3.3.3.4, Table 3.3.3"),
-    ("eye", "weighted Eye Irrit. 2", "10", "3.3.3.3.4, Table 3.3.3"),
-    ("eye", "Eye Dam. 1 multiplier", "10", "3.3.3.3.4, Table 3.3.3"),
-    ("aquatic_acute", "Aquatic Acute 1", "25", "4.1.3.5.5, Table 4.1.1"),
-    ("aquatic_chronic", "Aquatic Chronic 1", "25", "4.1.3.5.5, Table 4.1.2"),
-    ("aquatic_chronic", "Aquatic Chronic 2", "25", "4.1.3.5.5, Table 4.1.2"),
-    ("aquatic_chronic", "Aquatic Chronic 3", "25", "4.1.3.5.5, Table 4.1.2"),
-    ("aquatic_chronic", "Aquatic Chronic 4", "25", "4.1.3.5.5, Table 4.1.2"),
-    ("aquatic_chronic", "Aquatic Chronic 1 into 2", "10", "4.1.3.5.5, Table 4.1.2"),
-    ("aquatic_chronic", "Aquatic Chronic 1 into 3", "100", "4.1.3.5.5, Table 4.1.2"),
-    ("aquatic_chronic", "Aquatic Chronic 2 into 3", "10", "4.1.3.5.5, Table 4.1.2"),
-    ("generic_limits", "Skin Sens. 1", "1.0", "3.4.3.3, Table 3.4.6"),
-    ("generic_limits", "Skin Sens. 1A", "0.1", "3.4.3.3, Table 3.4.6"),
-    ("generic_limits", "Skin Sens. 1B", "1.0", "3.4.3.3, Table 3.4.6"),
-    ("generic_limits", "Resp. Sens. 1", "0.2", "3.4.3.3, Table 3.4.6"),
-    ("generic_limits", "Resp. Sens. 1A", "0.1", "3.4.3.3, Table 3.4.6"),
-    ("generic_limits", "Resp. Sens. 1B", "0.2", "3.4.3.3, Table 3.4.6"),
-    ("generic_limits", "Muta. 1", "0.1", "3.5.3.1, Table 3.5.2"),
-    ("generic_limits", "Muta. 1A", "0.1", "3.5.3.1, Table 3.5.2"),
-    ("generic_limits", "Muta. 1B", "0.1", "3.5.3.1, Table 3.5.2"),
-    ("generic_limits", "Muta. 2", "1.0", "3.5.3.1, Table 3.5.2"),
-    ("generic_limits", "Carc. 1", "0.1", "3.6.3.1, Table 3.6.2"),
-    ("generic_limits", "Carc. 1A", "0.1", "3.6.3.1, Table 3.6.2"),
-    ("generic_limits", "Carc. 1B", "0.1", "3.6.3.1, Table 3.6.2"),
-    ("generic_limits", "Carc. 2", "1.0", "3.6.3.1, Table 3.6.2"),
-    ("generic_limits", "Repr. 1", "0.3", "3.7.3.1, Table 3.7.2"),
-    ("generic_limits", "Repr. 1A", "0.3", "3.7.3.1, Table 3.7.2"),
-    ("generic_limits", "Repr. 1B", "0.3", "3.7.3.1, Table 3.7.2"),
-    ("generic_limits", "Repr. 2", "3.0", "3.7.3.1, Table 3.7.2"),
-    ("generic_limits", "Lact.", "0.3", "3.7.3.1, Table 3.7.2"),
-    ("generic_limits", "STOT SE 1", "10.0", "3.8.3.4, Table 3.8.3"),
-    ("generic_limits", "STOT SE 2", "10.0", "3.8.3.4, Table 3.8.3"),
-    ("generic_limits", "STOT SE 1 step down", "1.0", "3.8.3.4, Table 3.8.3"),
-    ("generic_limits", "STOT RE 1", "10.0", "3.9.3.4, Table 3.9.4"),
-    ("generic_limits", "STOT RE 2", "10.0", "3.9.3.4, Table 3.9.4"),
-    ("generic_limits", "STOT RE 1 step down", "1.0", "3.9.3.4, Table 3.9.4"),
-    ("stot_se_3", "STOT SE 3", "20", "3.8.3.4.5, Table 3.8.3"),
-)
+#: Annex I's own numbering for the tables this tool calculates. CLP numbers
+#: them differently from the Purple Book - the sensitiser limits are 3.4.5
+#: here and 3.4.5 there, but the mutagen limits are 3.5.2 against 3.5.1 - so
+#: the mapping is written out rather than assumed to be shared.
+_CLP_TABLES = {
+    "3.2.3": ("skin", None),
+    "3.3.3": ("eye", None),
+    "3.4.5": ("generic_limits", ""),
+    "3.5.2": ("generic_limits", ""),
+    "3.6.2": ("generic_limits", ""),
+    "3.7.2": ("generic_limits", ""),
+    "3.8.3": ("generic_limits", "STOT SE"),
+    "3.9.4": ("generic_limits", "STOT RE"),
+    "4.1.1": ("aquatic_acute", None),
+    "4.1.2": ("aquatic_chronic", None),
+}
+
+#: What the first cell of an Annex I cut-off table says. The act writes
+#: "ingredient" in some tables and "component" in others.
+_CLP_FIRST_CELL = ("sum of ingredients", "sum of components",
+                   "ingredient classified as", "component classified as")
 
 
-def _clp(regulation: str, document: str) -> Table:
+def _clp_tables(doc) -> dict[str, list[list[str]]]:
+    """Annex I's cut-off tables, each under the number the act prints above it.
+
+    The act is one long XHTML document whose paragraphs are themselves tables,
+    so a table is found by what its first column says and then given its number
+    by the nearest caption before it. Two of the tables - single and repeated
+    exposure - are word for word identical, which is why the caption is read by
+    position in the text rather than by matching on content.
+    """
+    flat = " ".join(doc.text_content().split())
+    captions = [(m.start(), m.group(1))
+                for m in re.finditer(r"Table (\d+\.\d+\.\d+)", flat)]
+    found: dict[str, list[list[str]]] = {}
+    cursor = 0
+    for element in doc.xpath("//table"):
+        rows = _html_rows(element)
+        first = _label(rows[0][0] if rows and rows[0] else "")
+        if not first.startswith(_CLP_FIRST_CELL):
+            continue
+        signature = " ".join(" ".join(row) for row in rows)[:60]
+        at = flat.find(signature, cursor)
+        if at < 0:
+            continue
+        cursor = at + len(signature)
+        before = [number for position, number in captions if position < at]
+        if before and before[-1] in _CLP_TABLES and before[-1] not in found:
+            found[before[-1]] = rows
+    return found
+
+
+def _eu(doc, regulation: str, document: str) -> Table:
     table = Table(regulation=regulation, document=document)
-    for rule, key, amount, section in _ANNEX_I:
-        table.put(rule, key, Value(
-            Decimal(amount), f"{amount} %", Place(document, section, None)))
+    tables = _clp_tables(doc)
+    missing = sorted(set(_CLP_TABLES) - set(tables))
+    if missing:
+        raise NotInTheText(
+            f"{document}: no table found for {', '.join(missing)}")
+    for number, (rule, hazard) in _CLP_TABLES.items():
+        # Annex I has no pages: it is a text, and saying "page 1" of it would
+        # be an invention. The table number is what a reader looks it up by.
+        place = Place(document, f"Annex I, Table {number}", None)
+        _read(tables[number], rule, hazard, place, table)
+    _stot_se_3({0: " ".join(doc.text_content().split())}, document, table,
+               paragraph_prefix="Annex I, ", paged=False)
+    _parent_categories(table)
     table.covers = _covered(table)
-    table.notes.append(
-        "carried over from the Annex I rules this tool already implemented; "
-        "every value names the paragraph and table it comes from, and no page "
-        "because Annex I is not on file as a text this builder reads")
+    return table
+
+
+def _read(rows, rule: str, hazard: str | None, place: Place,
+          table: Table) -> None:
+    """One table, through whichever parser its rule needs."""
+    if rule == "skin":
+        _skin(rows, place, table)
+    elif rule == "eye":
+        _eye(rows, place, table)
+    elif rule in ("aquatic_acute", "aquatic_chronic"):
+        _aquatic(rows, place, table, rule)
+    else:
+        _cut_offs(rows, hazard or "", place, table, rule)
+
+
+# -- GB CLP, which is a PDF ---------------------------------------------------
+
+#: A token that opens a value cell in the GB rendering: "at least", or the
+#: bottom of a band written as "1,0 % <= concentration < 10 %". Nothing else
+#: does - a bare whole number ends "Category 1", and the <= and < inside a band
+#: are interior - and taking any of those for a column start would cut the
+#: labels, or the bands, in half.
+_CELL_START = re.compile(r"^\u2265|^\d+,\d+$")
+
+#: Where a table stops and the act goes back to prose.
+_GB_AFTER_TABLE = re.compile(
+    r"^(Note\b|\[?F?\d*TABLE\b|\d+\.\d+\.\d+\.|[a-z] For\b)", re.I)
+
+
+def _gb_lines(page, top: float, bottom: float) -> list[list[str]]:
+    """One table on one page of the GB PDF, rebuilt from where the words are.
+
+    legislation.gov.uk's PDF draws no ruling lines a table extractor can use,
+    and its own column guesses split words in half. The words themselves are
+    placed accurately, so the grid is rebuilt from them: the columns are where
+    the value cells begin, everything to the left of the first of them is the
+    row's label, and a line carrying no value is the rest of the label above
+    it, which is how the act prints a label too long for one line.
+    """
+    words = page.crop((0, top, page.width, bottom)).extract_words()
+    lines: list[list[dict]] = []
+    for word in sorted(words, key=lambda w: (round(w["top"], 1), w["x0"])):
+        if lines and abs(word["top"] - lines[-1][0]["top"]) <= 2.5:
+            lines[-1].append(word)
+        else:
+            lines.append([word])
+    # Sorting by top alone puts a superscript ahead of the words beside it;
+    # within a line the order is left to right.
+    lines = [sorted(line, key=lambda w: w["x0"]) for line in lines]
+    lines = [line for line in lines
+             if not _GB_FURNITURE.search(" ".join(w["text"] for w in line))]
+
+    starts = sorted({round(word["x0"]) for line in lines for word in line
+                     if _CELL_START.match(word["text"])})
+    if not starts:
+        return []
+    columns: list[float] = []
+    for x in starts:
+        if not columns or x - columns[-1] > 30:
+            columns.append(x)
+    edge = columns[0] - 5
+
+    rows: list[list[str]] = []
+    for line in lines:
+        label = " ".join(w["text"] for w in line if w["x0"] < edge)
+        cells = [""] * len(columns)
+        for word in line:
+            if word["x0"] < edge:
+                continue
+            index = max(i for i, x in enumerate(columns) if word["x0"] >= x - 12)
+            cells[index] = (cells[index] + " " + word["text"]).strip()
+        # Only on a row that states a limit: a heading row's columns are what
+        # say which physical state each limit is for, and must stay apart.
+        if any(_amount(c) for c in cells):
+            cells = _rejoin(cells)
+        rows.append([label, *cells])
+    return rows
+
+
+def _merge_wrapped(rows: list[list[str]]) -> list[list[str]]:
+    """Put a label the act wrapped over two lines back together.
+
+    A line carrying no limit, under one that does, is the rest of the row
+    above - and the act wraps a label across columns as readily as across
+    lines, so whatever is on it joins the label. Run over the whole table at
+    once, because a table can wrap over the foot of its page too.
+    """
+    out: list[list[str]] = []
+    for row in rows:
+        label, cells = row[0], row[1:]
+        if (out and not any(_amount(c) for c in cells)
+                and any(_amount(c) for c in out[-1][1:])):
+            rest = " ".join(x for x in (label, *cells) if x)
+            out[-1][0] = f"{out[-1][0]} {rest}".strip()
+            continue
+        out.append(list(row))
+    return out
+
+
+def _caption(number: str) -> re.Pattern:
+    """The act's caption line for one table, as the PDF prints it.
+
+    legislation.gov.uk stamps amendment markers onto the caption - "[F61Table
+    3.4.5" - and switches between "TABLE" and "Table" from one to the next.
+    Matching the whole line keeps the references in the running text, which say
+    things like "Table 3.2.3 provides the generic concentration limits", from
+    being taken for the table itself.
+    """
+    return re.compile(rf"^\[?F?\d*TABLE\s*{re.escape(number)}\]?$", re.I)
+
+
+def _gb_lines_of(page) -> list[tuple[float, float, str]]:
+    """(top, bottom, text) for each line of a page, in order."""
+    lines: list[list[dict]] = []
+    for word in sorted(page.extract_words(), key=lambda w: (round(w["top"], 1),
+                                                            w["x0"])):
+        if lines and abs(word["top"] - lines[-1][0]["top"]) <= 2.5:
+            lines[-1].append(word)
+        else:
+            lines.append([word])
+    return [(line[0]["top"], max(w["bottom"] for w in line),
+             " ".join(w["text"] for w in line)) for line in lines]
+
+
+def _gb_bounds(page, number: str) -> tuple[float, float] | None:
+    """The strip of the page one table occupies: its caption to the next one."""
+    caption = _caption(number)
+    any_caption = re.compile(r"^\[?F?\d*TABLE\s*\d+\.\d+\.\d+\]?$", re.I)
+    top: float | None = None
+    for line_top, line_bottom, text in _gb_lines_of(page):
+        if top is None:
+            if caption.match(text.strip()):
+                top = line_bottom
+            continue
+        if any_caption.match(text.strip()) or _GB_AFTER_TABLE.match(text.strip()):
+            return top, line_top - 2
+    return (top, page.height) if top is not None else None
+
+
+#: The running header legislation.gov.uk stamps on every page. It is not part
+#: of any table, and a table that runs over a page break would otherwise take
+#: it into the label of whatever row the break fell on.
+_GB_FURNITURE = re.compile(
+    r"Regulation \(EC\) No 1272/2008 of the European|ANNEX I|"
+    r"Document Generated|Changes to legislation|See end of Document")
+
+
+def _gb_text_rows(page, top: float, bottom: float) -> list[list[str]]:
+    """The lines of a table whose rows are expressions, not cells.
+
+    The aquatic tables put a formula in one column and the classification it
+    gives in the other, and the formula is long enough to wrap. Columns are no
+    help here - the row is the sentence - so the lines are taken whole, and a
+    line that states no percentage is the start of one that does.
+    """
+    rows: list[list[str]] = []
+    carried = ""
+    for line_top, _, text in _gb_lines_of(page):
+        if not (top <= line_top <= bottom):
+            continue
+        if _GB_FURNITURE.search(text):
+            continue
+        joined = f"{carried} {text}".strip()
+        if _amount(joined) is None:
+            carried = joined
+            continue
+        rows.append([joined])
+        carried = ""
+    return rows
+
+
+def _gb_rows(pdf, index: int, number: str, *, as_text: bool = False
+             ) -> list[list[str]]:
+    """One table, which may run over the foot of its page.
+
+    The caption is on the page that starts the table; where the rows continue
+    overleaf, the continuation is everything above that page's first caption,
+    less the running header.
+    """
+    page = pdf.pages[index]
+    bounds = _gb_bounds(page, number)
+    if bounds is None:
+        return []
+    if as_text:
+        return _gb_text_rows(page, *bounds)
+    rows = _gb_lines(page, *bounds)
+    if bounds[1] < page.height - 2 or index + 1 >= len(pdf.pages):
+        return _merge_wrapped(rows)
+    following = pdf.pages[index + 1]
+    stop = following.height
+    for line_top, _, text in _gb_lines_of(following):
+        if (re.match(r"^\[?F?\d*TABLE\s*\d+\.\d+\.\d+\]?$", text.strip(),
+                     re.I)
+                or _GB_AFTER_TABLE.match(text.strip())):
+            stop = line_top - 2
+            break
+    return _merge_wrapped(rows + _gb_lines(following, 0, stop))
+
+
+def _rejoin(cells: list[str]) -> list[str]:
+    """Put back a cell the column guess cut in half.
+
+    Columns are taken from where cells begin, and one row can begin its cells
+    further right than another - the category 2 column of Table 3.8.3 does -
+    which leaves a boundary running through the middle of a band on the row
+    above. A piece that does not open a cell belongs to the one before it.
+    """
+    out = list(cells)
+    for index in range(1, len(out)):
+        if not out[index] or _CELL_START.match(out[index].split()[0]):
+            continue
+        for previous in range(index - 1, -1, -1):
+            if out[previous]:
+                out[previous] = f"{out[previous]} {out[index]}".strip()
+                out[index] = ""
+                break
+        else:
+            out[index - 1] = out[index]
+            out[index] = ""
+    return out
+
+
+def _gb(path: Path, regulation: str, document: str) -> Table:
+    import pdfplumber
+
+    table = Table(regulation=regulation, document=document)
+    found: set[str] = set()
+    with pdfplumber.open(path) as pdf:
+        for page in pdf.pages:
+            text = page.extract_text() or ""
+            for number, (rule, hazard) in _CLP_TABLES.items():
+                if number in found:
+                    continue
+                if not any(_caption(number).match(line.strip())
+                           for line in text.splitlines()):
+                    continue
+                rows = _gb_rows(pdf, page.page_number - 1, number,
+                                as_text=rule.startswith("aquatic"))
+                if not rows:
+                    continue
+                place = Place(document, f"Annex I, Table {number}",
+                              page.page_number)
+                # Into a table of its own first: a page that turned out not to
+                # carry the table must leave nothing behind.
+                scratch = Table(regulation=regulation, document=document)
+                try:
+                    _read(rows, rule, hazard, place, scratch)
+                except NotInTheText:
+                    continue
+                if not scratch.rules:
+                    continue
+                for scratch_rule, keys in scratch.rules.items():
+                    for key, values in keys.items():
+                        for value in values:
+                            table.put(scratch_rule, key, value)
+                found.add(number)
+            if len(found) == len(_CLP_TABLES):
+                break
+        text_by_page = {i: " ".join((p.extract_text() or "").split())
+                        for i, p in enumerate(pdf.pages)}
+    missing = sorted(set(_CLP_TABLES) - found)
+    if missing:
+        raise NotInTheText(
+            f"{document}: no table found for {', '.join(missing)}")
+    _stot_se_3(text_by_page, document, table, paragraph_prefix="Annex I, ")
+    _parent_categories(table)
+    table.covers = _covered(table)
     return table
 
 
@@ -788,10 +1092,13 @@ def rules_dir() -> Path:
 def build(regulation: str, *, use_cache: bool = True) -> Table:
     """One regulation's rule table, read from the documents on file."""
     if regulation == "eu_clp":
-        return _clp("eu_clp", "Regulation (EC) No 1272/2008, Annex I")
+        from lingua_oracle.keys.builders.eu_clp import CELEX, _doc
+
+        return _eu(_doc("eng", use_cache=use_cache), "eu_clp",
+                   f"Regulation (EC) No 1272/2008, consolidated {CELEX}")
     if regulation == "uk_clp":
-        return _clp("uk_clp",
-                    "Regulation (EC) No 1272/2008 as retained in GB law, Annex I")
+        return _gb(sources.require("uk-gb-clp/gb_clp_full.pdf"), "uk_clp",
+                   "Regulation (EC) No 1272/2008 as retained in GB law")
     if regulation == "un_ghs":
         return _ghs(sources.require("un-ghs/GHS_Rev11_en.pdf"), "un_ghs",
                     "UN GHS Rev.11 (2025)")

@@ -144,7 +144,7 @@ def test_japan_has_no_rules_on_file_and_is_not_guessed_at():
 def test_a_result_names_the_paragraph_it_came_from():
     results, _ = calculate([ing(30, 30, "H400")], [], "eu_clp")
     result = next(r for r in results if r.hazard_class == "Aquatic Acute 1")
-    assert result.citation.endswith("Annex I, 4.1.3.5.5, Table 4.1.1")
+    assert result.citation.endswith("Annex I, Table 4.1.1")
     assert result.citation.startswith("Regulation (EC) No 1272/2008")
 
 

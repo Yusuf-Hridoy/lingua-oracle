@@ -22,6 +22,7 @@ from decimal import Decimal
 
 from lingua_oracle.mixture.classes import HazardClass
 from lingua_oracle.mixture.rule_table import RuleTable, Value
+from lingua_oracle.mixture.state import applicable as for_state
 
 ZERO = Decimal(0)
 
@@ -416,7 +417,7 @@ def limit_key(name: str, category: str) -> str:
 
 
 def generic_limit(ingredients, name: str, category: str, table: RuleTable,
-                  variant: int = 0) -> RuleResult:
+                  variant: int = 0, state: str | None = None) -> RuleResult:
     """One class whose limit is a concentration, not a sum.
 
     These classes are not additive: a single ingredient at or above the limit
@@ -427,10 +428,11 @@ def generic_limit(ingredients, name: str, category: str, table: RuleTable,
     because the answer turns on the physical state, or on which option an
     authority took - `variant` picks which of them this run uses. The
     calculation runs them all and reports the disagreement rather than
-    choosing.
+    choosing. A `state` the sheet stated settles the physical half of that:
+    the limits for the other state are not this mixture's.
     """
     key = limit_key(name, category)
-    values = table.variants("generic_limits", key)
+    values = for_state(table.variants("generic_limits", key), state)
     if not values:
         return _not_on_file("generic_limits", [key])
     value = values[min(variant, len(values) - 1)]
@@ -491,14 +493,14 @@ def generic_limit(ingredients, name: str, category: str, table: RuleTable,
 
 
 def stot_se_3(ingredients, effect: str, table: RuleTable,
-              variant: int = 0) -> RuleResult:
+              variant: int = 0, state: str | None = None) -> RuleResult:
     """Single-exposure narcotic effects and respiratory irritation.
 
     These two effects are additive, and each is summed on its own - a mixture
     is classified when the ingredients causing one of them reach the limit
     between them.
     """
-    values = table.variants("stot_se_3", "STOT SE 3")
+    values = for_state(table.variants("stot_se_3", "STOT SE 3"), state)
     if not values:
         return _not_on_file("stot_se_3", ["STOT SE 3"])
     value = values[min(variant, len(values) - 1)]
@@ -506,8 +508,8 @@ def stot_se_3(ingredients, effect: str, table: RuleTable,
                         limit=value.amount)
     if value.qualifier:
         result.assumptions.append(
-            f"{value.document} gives the {value.amount} % limit as "
-            f"{value.qualifier}")
+            f"the {value.amount} % limit is {value.qualifier} by "
+            f"{value.document}")
     total = ZERO
     for ingredient in ingredients:
         share = ingredient.stot_se_3_share(effect)
