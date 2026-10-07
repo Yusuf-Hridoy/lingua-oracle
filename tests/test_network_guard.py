@@ -54,3 +54,11 @@ def test_exactsds_is_off_for_the_whole_suite():
     from lingua_oracle.ingredients.client import disabled
 
     assert disabled()
+
+
+def test_no_proxy_can_carry_a_request_past_the_guard():
+    import os
+
+    assert not any(os.environ.get(name) for name in (
+        "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY",
+        "http_proxy", "https_proxy", "all_proxy"))

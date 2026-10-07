@@ -18,6 +18,14 @@ FIXTURES = Path(__file__).parent / "fixtures"
 # on every run, and passing, because the client treats a failure as "offline".
 os.environ["LINGUA_EXACTSDS"] = "off"
 
+# No proxy either. A proxy on this machine is a loopback address, which the
+# guard below has to allow for the browser tests' own server - so a client
+# honouring HTTPS_PROXY=http://127.0.0.1:... would reach the internet through
+# it unseen. Without one, every client connects to the real host and is caught.
+for _name in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy",
+              "https_proxy", "all_proxy"):
+    os.environ.pop(_name, None)
+
 _LOOPBACK = {"127.0.0.1", "::1", "localhost"}
 
 #: Every attempt to reach a host other than this machine, as "kind: target".
