@@ -404,6 +404,13 @@ def build_all() -> dict[str, Path]:
     # regulation that has aquatic classes that is something to check; under one
     # that has none - OSHA, WHMIS - it is not a finding, and the report has to
     # say which of those it is.
+    # The same mixture, said to be a liquid on one sheet and a gas on the
+    # other. CLP sets a respiratory sensitiser's limit at 1,0 % for a solid or
+    # a liquid and 0,2 % for a gas, so 0,5 % of one classifies the gas and not
+    # the liquid - and a sheet that does not say cannot be told either way.
+    for state in ("liquid", "gas", None):
+        add(f"pattern_sensitiser_{state or 'unstated'}", _sensitiser_sheet(
+            FIXTURES / f"pattern_sensitiser_{state or 'unstated'}.pdf", state))
     add("pattern_aquatic_statement", _supplier_ingredients(
         FIXTURES / "pattern_aquatic_statement.pdf",
         classification="Flam. Liq. 2, H225; Aquatic Chronic 2, H411"))
@@ -453,6 +460,39 @@ def build_all() -> dict[str, Path]:
 
     return built
 
+
+
+def _sensitiser_sheet(path: Path, state: str | None) -> Path:
+    """A mixture with one respiratory sensitiser in it, at half a per cent.
+
+    Section 9 says what it is, or says nothing, which is the whole point of
+    the fixture: the limit it has to clear depends on that answer.
+    """
+    head = HEADINGS["en"]
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("Classification: Flam. Liq. 2, H225")
+    sheet.line("Signal word: Danger")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.table(
+        ["Chemical name", "CAS No", "Concentration", "Classification"],
+        [["Synthetic component D", "584-84-9", "0,5 %", "Resp. Sens. 1, H334"],
+         ["Synthetic component E", "67-64-1", "40 %", "Flam. Liq. 2, H225"]])
+    sheet.blank()
+    sheet.line("SECTION 9: Physical and chemical properties", bold=True, size=11)
+    sheet.line("9.1 Information on basic physical and chemical properties")
+    if state:
+        sheet.line(f"Physical state : {state}")
+    sheet.line("Odour : characteristic")
+    sheet.blank()
+    sheet.line("SECTION 10: Stability and reactivity", bold=True, size=11)
+    sheet.line("No dangerous reactions known.")
+    sheet.save()
+    return path
 
 
 def _supplier_ingredients(path: Path, *, labelled: bool = False,

@@ -21,6 +21,7 @@ from lingua_oracle.mixture import rule_table, rules
 from lingua_oracle.mixture.classes import HazardClass
 from lingua_oracle.mixture.rule_table import RuleTable
 from lingua_oracle.mixture.rules import RuleResult
+from lingua_oracle.mixture.state import applicable, state_of
 
 
 def in_scope(regulation: str) -> bool:
@@ -56,8 +57,8 @@ RULE_CLASSES = {
 }
 
 
-def _run_all(ingredients, table: RuleTable, variant: int = 0
-             ) -> dict[str, RuleResult]:
+def _run_all(ingredients, table: RuleTable, variant: int = 0,
+             state: str | None = None) -> dict[str, RuleResult]:
     """Every rule this regulation has classes for, keyed by what it decides."""
     out: dict[str, RuleResult] = {}
     if table.covers_class("Skin Corr.") or table.covers_class("Skin Irrit."):
@@ -75,15 +76,15 @@ def _run_all(ingredients, table: RuleTable, variant: int = 0
         if not table.variants("generic_limits", key):
             continue
         out[key] = rules.generic_limit(ingredients, name, category, table,
-                                       variant)
+                                       variant, state)
     if table.covers_class("STOT SE"):
         for effect in ("respiratory irritation", "narcotic effects"):
             out[f"STOT SE 3 {effect}"] = rules.stot_se_3(
-                ingredients, effect, table, variant)
+                ingredients, effect, table, variant, state)
     return out
 
 
-def _variants(table: RuleTable) -> int:
+def _variants(table: RuleTable, state: str | None = None) -> int:
     """How many readings the regulation's own table supports.
 
     A published table that gives two limits for the same class is read both
@@ -91,7 +92,7 @@ def _variants(table: RuleTable) -> int:
     readings agree there is an answer; where they do not, that is what the
     report says.
     """
-    return max((len(values)
+    return max((len(applicable(values, state))
                 for keys in table.values.values()
                 for values in keys.values()), default=1)
 
@@ -100,18 +101,24 @@ def _declared_total(ingredients) -> Decimal:
     return sum((i.high for i in ingredients), Decimal(0))
 
 
-def calculate(ingredients, stated: list[HazardClass], regulation: str
-              ) -> tuple[list[ClassResult], dict]:
-    """Compare what the ingredients give with what Section 2 states."""
+def calculate(ingredients, stated: list[HazardClass], regulation: str,
+              state: str | None = None) -> tuple[list[ClassResult], dict]:
+    """Compare what the ingredients give with what Section 2 states.
+
+    `state` is what Section 9 says the mixture is - a gas, or a solid or a
+    liquid - where it says anything. Two of the sensitisation limits depend on
+    it; where it is not known, both are calculated and the disagreement, if
+    there is one, is what the report says.
+    """
     table = rule_table.load(regulation)
     if table is None:
         return [], {"scope": regulation, "in_scope": False}
 
     ends = {"low": [i.at("low") for i in ingredients],
             "high": [i.at("high") for i in ingredients]}
-    readings = _variants(table)
+    readings = _variants(table, state)
     runs: list[tuple[str, int, dict[str, RuleResult]]] = [
-        (end, variant, _run_all(ingredients_at, table, variant))
+        (end, variant, _run_all(ingredients_at, table, variant, state))
         for end, ingredients_at in ends.items()
         for variant in range(readings)]
 
@@ -155,7 +162,7 @@ def calculate(ingredients, stated: list[HazardClass], regulation: str
                 verdict="cannot_tell", hazard_class=name,
                 citation=winner.citation, stated=name in stated_names,
                 calculated_low=_at(by_run, "low"), calculated_high=_at(by_run, "high"),
-                message=_depends(by_run, readings),
+                message=_depends(by_run, readings, state),
                 contributions=_as_dicts(winner),
                 assumptions=assumptions, trace=trace))
             continue
@@ -259,7 +266,8 @@ def _at(by_run: dict[tuple[str, int], RuleResult], end: str) -> str:
     return ", ".join(sorted(found)) if found else "no classification"
 
 
-def _depends(by_run: dict[tuple[str, int], RuleResult], readings: int) -> str:
+def _depends(by_run: dict[tuple[str, int], RuleResult], readings: int,
+             state: str | None = None) -> str:
     """Why the answer is not one answer, in the words that caused it."""
     low, high = _at(by_run, "low"), _at(by_run, "high")
     reasons = []
@@ -275,9 +283,20 @@ def _depends(by_run: dict[tuple[str, int], RuleResult], readings: int) -> str:
         if len({frozenset(v) for v in by_variant.values()}) > 1:
             limits = sorted({str(r.limit) for r in by_run.values()
                              if r.limit is not None})
-            reasons.append("the published table gives more than one limit for "
-                           f"this class ({' and '.join(limits)} %) and the "
-                           "answer differs between them")
+            states = sorted({s for s in (state_of(a) for r in by_run.values()
+                                         for a in r.assumptions)
+                             if s and s != "all physical states"})
+            if state is None and len(states) > 1:
+                reasons.append(
+                    "the physical state: the table sets a different limit for "
+                    + " and for ".join(states)
+                    + f" ({', '.join(limits)} %), and Section 9 does not say "
+                      "which this mixture is")
+            else:
+                reasons.append(
+                    "the published table gives more than one limit for this "
+                    f"class ({' and '.join(limits)} %) and the answer differs "
+                    "between them")
     if not reasons:
         reasons.append("the rules do not agree on one answer")
     return "Depends on " + "; and ".join(reasons) + "."

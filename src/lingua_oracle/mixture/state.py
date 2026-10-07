@@ -1,0 +1,114 @@
+"""Whether the mixture is a gas, read from Section 9.
+
+Two of the limits in the sensitisation tables depend on it: a respiratory
+sensitiser classifies a solid or liquid mixture at 1,0 % and a gas at 0,2 %,
+and nothing in a composition says which the mixture is. Section 9 does, under
+"Physical state" or "Appearance", so that is where this looks.
+
+Only the distinction the tables draw is read - gas, or solid or liquid - and
+only where the sheet says so plainly. A sheet that does not say is reported as
+not saying: the calculation then runs both ways and the report says the answer
+depends on it, which is the truth and is more use than a guess.
+"""
+
+from __future__ import annotations
+
+import re
+
+#: The labels Section 9 puts in front of the answer, in the languages the
+#: application issues sheets in.
+_LABELS = (
+    r"physical state", r"state", r"form", r"appearance", r"physical form",
+    r"aggregatzustand", r"form", r"état physique", r"forme",
+    r"estado físico", r"stato fisico", r"fysisk tilstand",
+    r"fysische toestand", r"estado físico",
+)
+_LABEL_RE = re.compile(
+    r"^\s*(?:9\.1\.?\s*)?(?:" + "|".join(_LABELS) + r")\s*[:–-]\s*(?P<value>.*)$",
+    re.IGNORECASE)
+
+#: Where Section 9 starts and where it stops. The section detector tracks only
+#: the sections the wording check needs, so this finds its own.
+_SECTION_9 = re.compile(
+    r"^\s*(?:section\s*)?9[.):]?\s*(physical and chemical|"
+    r"physikalische und chemische|propriétés physiques|"
+    r"propiedades físicas|proprietà fisiche|fysiske og kemiske|"
+    r"fysische en chemische)", re.IGNORECASE)
+_SECTION_10 = re.compile(
+    r"^\s*(?:section\s*)?10[.):]?\s*(stability|stabilität|stabilité|"
+    r"estabilidad|stabilità|stabilitet|stabiliteit)", re.IGNORECASE)
+
+#: What the value has to say for each answer. "Gas" and "gaseous" only: an
+#: aerosol is a liquid or a solid dispersed in a propellant, and the tables do
+#: not call it a gas.
+_GAS = re.compile(r"\b(gas|gases|gaseous|gasförmig|gaz|gaseoso|gassoso)\b",
+                  re.IGNORECASE)
+_SOLID_OR_LIQUID = re.compile(
+    r"\b(liquid|liquide|líquido|liquido|væske|vloeistof|flüssig|"
+    r"solid|solide|sólido|solido|fast|vast|feststoff|"
+    r"powder|poudre|polvo|polvere|pulver|poeder|"
+    r"granule|granules|granulat|pellet|pellets|flake|flakes|"
+    r"paste|pâte|pasta|gel|aerosol|aérosol|wax|wachs)\b",
+    re.IGNORECASE)
+
+#: What the rule tables call each answer.
+GAS = "gas"
+SOLID_OR_LIQUID = "solid/liquid"
+
+
+def physical_state(lines, spans=None) -> str | None:
+    """"gas", "solid/liquid", or nothing where Section 9 does not say.
+
+    Section 9 is found here rather than taken from the section detector, which
+    tracks only the sections the wording check needs. The value may follow its
+    label or sit on the line below it: a two-column layout flattens to
+    "State :" and then "liquid", and both are the same sentence.
+    """
+    inside = False
+    for index, line in enumerate(lines):
+        text = (line.text or "").strip()
+        if _SECTION_9.match(text):
+            inside = True
+            continue
+        if inside and _SECTION_10.match(text):
+            break
+        if not inside:
+            continue
+        match = _LABEL_RE.match(text)
+        if match is None:
+            continue
+        value = match.group("value").strip()
+        if not value and index + 1 < len(lines):
+            value = (lines[index + 1].text or "").strip()
+        if _GAS.search(value):
+            return GAS
+        if _SOLID_OR_LIQUID.search(value):
+            return SOLID_OR_LIQUID
+    return None
+
+
+def state_of(qualifier: str) -> str | None:
+    """The physical state a limit is given for, if it is given for one."""
+    text = (qualifier or "").casefold()
+    if "all physical states" in text:
+        return "all physical states"
+    if "solid" in text or "liquid" in text:
+        return SOLID_OR_LIQUID
+    if "gas" in text:
+        return GAS
+    return None
+
+
+def applicable(values, state: str | None):
+    """The limits that apply to a mixture in this state.
+
+    A limit given for all physical states applies whatever the mixture is; one
+    given for a state applies only to that state. Where the sheet does not say
+    what state the mixture is in, every limit stays in play and the calculation
+    is run against each of them.
+    """
+    if state is None:
+        return tuple(values)
+    kept = tuple(v for v in values
+                 if state_of(v.qualifier) in (None, "all physical states", state))
+    return kept or tuple(values)

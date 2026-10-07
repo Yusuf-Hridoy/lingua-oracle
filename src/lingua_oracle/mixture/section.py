@@ -7,6 +7,7 @@ from lingua_oracle.mixture.calculate import calculate, in_scope
 from lingua_oracle.mixture.classes import parse_class
 from lingua_oracle.mixture.limits import parse as parse_limits
 from lingua_oracle.mixture.model import from_annex_vi, from_codes
+from lingua_oracle.mixture.state import physical_state
 from lingua_oracle.mixture.stated import stated_classes
 from lingua_oracle.models import MixtureSection
 
@@ -41,7 +42,8 @@ def display_name(regulation: str) -> str:
 
 
 def build(rows, lines, spans, regulation: str, table,
-          stated_override: list[str] | None = None) -> MixtureSection:
+          stated_override: list[str] | None = None,
+          state_override: str | None = None) -> MixtureSection:
     """The mixture section for one document.
 
     `rows` carry a CAS number, a name, the codes and the concentration as
@@ -52,18 +54,24 @@ def build(rows, lines, spans, regulation: str, table,
     stated = ([parse_class(c) for c in stated_override] if stated_override
               else stated_classes(lines, spans))
     stated_names = [str(c) for c in stated if c]
+    # Section 9's answer is kept for the same reason: two of the sensitisation
+    # limits turn on it, and a re-run must not need the file back to know it.
+    state = state_override or physical_state(lines, spans)
 
     if not in_scope(regulation):
         return MixtureSection(
             state="out_of_scope", stated=stated_names,
+            physical_state=state or "",
             message="Mixture check not available for "
                     f"{display_name(regulation)} yet: no document on file "
                     "sets its mixture rules.")
     if table is None:
         return MixtureSection(state="skipped", stated=stated_names,
+            physical_state=state or "",
                               message="No Annex VI table on file.")
     if not rows:
         return MixtureSection(state="nothing", stated=stated_names,
+            physical_state=state or "",
                               message=NO_COMPOSITION)
 
     index = table.by_cas()
@@ -83,9 +91,10 @@ def build(rows, lines, spans, regulation: str, table,
 
     if not ingredients:
         return MixtureSection(state="nothing", stated=stated_names,
+            physical_state=state or "",
                               message=NO_CONCENTRATIONS)
 
-    results, summary = calculate(ingredients, stated, regulation)
+    results, summary = calculate(ingredients, stated, regulation, state)
     counts = {
         "inconsistent": sum(1 for r in results if r.verdict == "inconsistent"),
         "cannot_tell": sum(1 for r in results if r.verdict == "cannot_tell"),
@@ -107,6 +116,7 @@ def build(rows, lines, spans, regulation: str, table,
         declared_total=summary.get("declared_total", "0"),
         undisclosed=summary.get("undisclosed", "0"),
         stated=stated_names,
+        physical_state=state or "",
         source_document=summary.get("document", ""),
         assumptions=assumptions,
         results=[_as_dict(r) for r in results])

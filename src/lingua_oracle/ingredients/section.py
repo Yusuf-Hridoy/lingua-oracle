@@ -194,7 +194,9 @@ def recheck(report, product_id: int, *, client_factory=None):
 
     report.mixture = mixture_section.build(
         mixture_section.rows_from_app(rows), [], [], report.regulation, table,
-        stated_override=(report.mixture.stated if report.mixture else []))
+        stated_override=(report.mixture.stated if report.mixture else []),
+        state_override=(report.mixture.physical_state if report.mixture
+                        else None))
     if client_factory is not None:
         client.close()
     return report

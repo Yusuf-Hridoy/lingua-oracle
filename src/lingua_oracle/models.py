@@ -346,6 +346,9 @@ class MixtureSection(BaseModel):
     declared_total: str = "0"
     undisclosed: str = "0"
     stated: list[str] = Field(default_factory=list)
+    #: What Section 9 says the mixture is - "gas", "solid/liquid", or nothing
+    #: where it does not say. Two sensitisation limits depend on it.
+    physical_state: str = ""
     #: The document the rules were read from, named for the reader.
     source_document: str = ""
     assumptions: list[str] = Field(default_factory=list)

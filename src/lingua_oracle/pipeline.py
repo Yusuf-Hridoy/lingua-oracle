@@ -233,13 +233,15 @@ def _mixture_section(report, path, document, spans, regulation,
         elif section is not None and section.match_state == "ambiguous":
             # A choice is pending. Calculating from Section 3 now would answer
             # a question the reader is still being asked.
+            from lingua_oracle.mixture.state import physical_state
             from lingua_oracle.mixture.stated import stated_classes
 
             return MixtureSection(
                 state="nothing",
                 message="Choose the product above to calculate the mixture.",
                 stated=[str(c) for c in
-                        stated_classes(document.lines, spans)])
+                        stated_classes(document.lines, spans)],
+                physical_state=physical_state(document.lines, spans) or "")
         else:
             from lingua_oracle.ingredients.from_pdf import (
                 ingredients_in_section_three,
