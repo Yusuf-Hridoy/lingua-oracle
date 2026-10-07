@@ -193,7 +193,16 @@ def test_an_index_number_is_kept_where_the_publisher_gives_one():
 
 
 def test_the_build_is_deterministic():
-    """Same file in, same entries out, in the same order."""
-    first, _ = lists.build("gb_mcl")
-    second, _ = lists.build("gb_mcl")
+    """Same file in, same entries out, in the same order.
+
+    Needs the published spreadsheet, which is not committed - it is a source
+    document like the rest of data/sources - so a clone without it skips.
+    """
+    from lingua_oracle.keys.builders.common import SourceUnavailable
+
+    try:
+        first, _ = lists.build("gb_mcl")
+        second, _ = lists.build("gb_mcl")
+    except SourceUnavailable as exc:
+        pytest.skip(str(exc))
     assert first.model_dump() == second.model_dump()

@@ -419,6 +419,10 @@ def build_all() -> dict[str, Path]:
     # mixture it discloses.
     add("pattern_stricter_than_declared", _stricter_sheet(
         FIXTURES / "pattern_stricter_than_declared.pdf"))
+    # A Section 3 that gives a share and no CAS number: a trade secret is
+    # part of the mixture and nothing can classify it.
+    add("pattern_trade_secret", _trade_secret_sheet(
+        FIXTURES / "pattern_trade_secret.pdf"))
     add("pattern_aquatic_statement", _supplier_ingredients(
         FIXTURES / "pattern_aquatic_statement.pdf",
         classification="Flam. Liq. 2, H225; Aquatic Chronic 2, H411"))
@@ -468,6 +472,25 @@ def build_all() -> dict[str, Path]:
 
     return built
 
+
+
+def _trade_secret_sheet(path: Path) -> Path:
+    """Half the mixture named, half of it withheld."""
+    head = HEADINGS["en"]
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("Classification: Flam. Liq. 2, H225")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.table(
+        ["Chemical name", "CAS No", "Concentration", "Classification"],
+        [["Synthetic component H", "67-64-1", "20 %", "Flam. Liq. 2, H225"],
+         ["Proprietary fragrance", "Trade Secret", "50 %", "Trade Secret"]])
+    sheet.save()
+    return path
 
 
 def _stricter_sheet(path: Path) -> Path:

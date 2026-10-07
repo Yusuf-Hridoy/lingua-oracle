@@ -139,9 +139,10 @@ def test_the_mixture_classifies_an_ingredient_as_its_own_list_does():
 def test_an_ingredient_with_no_classification_anywhere_is_undisclosed():
     """A trade secret is part of the mixture and no rule can use it. Counting
     it as declared would make the calculation look better informed than it is."""
-    report = check_pdf("data/validation/third_party/us_osha_1.pdf", "us_osha",
-                       ingredients=True, client_factory=lambda: FakeApp(library=[]))
+    report = _check("us_osha", "pattern_trade_secret")
     said = [a for a in report.mixture.assumptions if "no classification" in a]
     assert said, report.mixture.assumptions
     assert "counted with the undisclosed part" in said[0]
-    assert int(report.mixture.undisclosed) > 50
+    # 20 % is classified; the 50 % trade secret is not, so 80 % is undisclosed.
+    assert report.mixture.declared_total == "20"
+    assert report.mixture.undisclosed == "80"
