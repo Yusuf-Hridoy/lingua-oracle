@@ -146,6 +146,7 @@ def check_pdf(
             report.ingredients = IngredientSection(
                 source="skipped",
                 message=f"Ingredient check skipped: {exc}"[:200])
+    report.sources = sources_used(report)
     # Anything a check wants a reviewer to know but that is not a finding about
     # the document - an allowance made for the official text, say.
     report.notes.extend(ctx.notes)
@@ -199,7 +200,35 @@ def compare_pdfs(
     )
 
 
-__all__ = ["Tier", "check_pdf", "compare_pdfs"]
+__all__ = ["Tier", "check_pdf", "compare_pdfs", "sources_used"]
+
+
+def sources_used(report: Report) -> list[str]:
+    """The sources this report was judged against, each with its version.
+
+    The ingredient list and the mixture rules are named only where those
+    halves actually ran: a skipped half used nothing. Called again when a
+    reader chooses the product later, since that is when those halves run.
+    """
+    from lingua_oracle.keys.builders import sources
+
+    reg = load_registry().get(report.regulation)
+    section = report.ingredients
+    ingredient_list = annex_vi_source = ""
+    if section is not None and section.source not in {"skipped", "nothing"}:
+        ingredient_list = section.list_name
+        if ingredient_list == "annex_vi":
+            from lingua_oracle.keys.builders.annex_vi import load_table
+
+            table = load_table()
+            annex_vi_source = table.source if table else reg.revision
+    mixture = report.mixture
+    mixture_document = (mixture.source_document
+                        if mixture is not None and mixture.results else "")
+    return sources.used(reg.id, report.language, reg.revision,
+                        ingredient_list=ingredient_list,
+                        annex_vi_source=annex_vi_source,
+                        mixture_document=mixture_document)
 
 
 def _mixture_section(report, path, document, spans, regulation,

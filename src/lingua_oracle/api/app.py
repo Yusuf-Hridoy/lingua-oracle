@@ -333,6 +333,7 @@ def choose_product(report_id: str, product_id: int = Form(...)) -> RedirectRespo
     is kept with it.
     """
     from lingua_oracle.ingredients.section import recheck
+    from lingua_oracle.pipeline import sources_used
     from lingua_oracle.report.render import save
 
     report = load_report(report_id)
@@ -345,6 +346,7 @@ def choose_product(report_id: str, product_id: int = Form(...)) -> RedirectRespo
 
         report.ingredients = IngredientSection(
             source="skipped", message=f"Could not check that product: {exc}"[:200])
+    report.sources = sources_used(report)
     save(report)
     return RedirectResponse(url=f"/reports/{report_id}", status_code=303)
 

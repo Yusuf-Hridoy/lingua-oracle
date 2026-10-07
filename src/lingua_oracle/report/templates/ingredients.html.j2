@@ -76,7 +76,12 @@
   <details class="block">
     <summary>Technical details</summary>
     <div class="inner"><dl class="tech">
+      {% if run.sources %}
+      <dt>Sources used</dt>
+      <dd class="sources">{% for line in run.sources %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</dd>
+      {% else %}
       <dt>Annex VI source</dt><dd>{{ run.annex_vi_source }}</dd>
+      {% endif %}
       <dt>Run at</dt><dd>{{ run.started_at }}</dd>
       <dt>Products read</dt><dd>{{ counts.products }}</dd>
       <dt>Substances checked</dt><dd>{{ counts.substances }}</dd>

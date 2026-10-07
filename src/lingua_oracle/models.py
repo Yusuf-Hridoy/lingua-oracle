@@ -393,6 +393,10 @@ class Report(BaseModel):
     #: The mixture half: the classification the ingredients give, against what
     #: Section 2 states. None when it did not run.
     mixture: MixtureSection | None = None
+    #: Every source this report was judged against, each with its version or
+    #: edition and date - "Wording: EU CLP, ..., consolidated version of
+    #: 01/07/2026". Empty on a report made before this was recorded.
+    sources: list[str] = Field(default_factory=list)
 
     def recount(self) -> None:
         s = Summary()

@@ -271,6 +271,10 @@
         <dt>{{ L.META.language }}</dt><dd>{{ report.language }}</dd>
         <dt>{{ L.META.set_by }}</dt><dd>{{ set_by }}</dd>
         <dt>{{ L.META.id }}</dt><dd>{{ report.id }}</dd>
+        {% if report.sources %}
+        <dt>Sources used</dt>
+        <dd class="sources">{% for line in report.sources %}{{ line }}{% if not loop.last %}<br>{% endif %}{% endfor %}</dd>
+        {% endif %}
         {% for note in report.notes %}<dt>&nbsp;</dt><dd>{{ note }}</dd>{% endfor %}
         <dt>Checks that reported</dt>
         <dd>{% for cid in report.findings|map(attribute='check_id')|unique|sort %}{{ cid }}{% if not loop.last %}, {% endif %}{% endfor %}</dd>

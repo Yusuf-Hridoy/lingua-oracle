@@ -14,6 +14,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from lingua_oracle.ingredients.compare import Status, Verdict
+from lingua_oracle.keys.builders.sources import list_version
 from lingua_oracle.report.render import report_css
 
 
@@ -243,6 +244,8 @@ def _payload(run: Run) -> dict:
         "started_at": run.started_at.isoformat(),
         "label": run.label,
         "annex_vi_source": run.annex_vi_source,
+        # The library run always measures against Annex VI.
+        "sources": ["Ingredients: " + list_version("annex_vi", run.annex_vi_source)],
         "counts": run.counts(),
         "not_checked_reasons": run.reasons(),
         "missing_code_patterns": run.missing_patterns(),
