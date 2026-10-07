@@ -19,6 +19,7 @@ from lingua_oracle.models import Severity
 from lingua_oracle.registry import load_registry
 from lingua_oracle.report import labels
 from tests.ui.manifest import CASES, Case
+from tests.ui.waits import submit_for_report
 
 FIXTURES = "tests/fixtures"
 
@@ -57,11 +58,9 @@ def _upload(page, base: str, case: Case) -> None:
     page.select_option("#regulation", case.regulation)
     page.select_option("#language", case.language)
     page.set_input_files("input[name=file]", f"{FIXTURES}/{case.name}.pdf")
-    # The form posts to /check/html, which answers 303 to /reports/<id>: two
-    # navigations, so wait for the destination rather than for "a navigation".
-    page.click("#check-form button[type=submit]")
-    page.wait_for_url(re.compile(r"/reports/"), timeout=60_000)
-    page.wait_for_load_state("load")
+    # The form posts to /check/html, which answers 303 to /reports/<id>: wait
+    # for the report itself, not for the click (tests/ui/waits.py).
+    submit_for_report(page, page.locator("#check-form button[type=submit]"))
 
 
 def _compare(page, base: str, case: Case) -> None:
@@ -71,9 +70,7 @@ def _compare(page, base: str, case: Case) -> None:
     page.select_option("#clang", case.language)
     page.set_input_files("#file_a", f"{FIXTURES}/{case.name}.pdf")
     page.set_input_files("#file_b", f"{FIXTURES}/{case.compare_with}.pdf")
-    page.click("#compare-form button[type=submit]")
-    page.wait_for_url(re.compile(r"/reports/"), timeout=60_000)
-    page.wait_for_load_state("load")
+    submit_for_report(page, page.locator("#compare-form button[type=submit]"))
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda c: c.name)

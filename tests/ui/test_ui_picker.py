@@ -12,6 +12,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.ui.waits import submit_and_wait_until_gone, submit_for_report
+
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "tests" / "fixtures"
 SHEET = "pattern_named_with_ingredients"
@@ -27,8 +29,7 @@ def _upload(page, app_server):
     page.goto(app_server + "/", wait_until="domcontentloaded")
     page.set_input_files('input[type="file"]', str(FIXTURES / f"{SHEET}.pdf"))
     page.select_option('select[name="regulation"]', "eu_clp")
-    page.locator('form button[type="submit"]').first.click()
-    page.wait_for_load_state("domcontentloaded")
+    submit_for_report(page, page.locator('form button[type="submit"]').first)
 
 
 def test_several_candidates_are_offered_above_the_verdict(page, app_server):
@@ -44,8 +45,8 @@ def test_several_candidates_are_offered_above_the_verdict(page, app_server):
 def _choose(page, product_id: int) -> None:
     """Pick one candidate by its id, whatever order they were offered in."""
     page.locator(f'form.picker input[name=product_id][value="{product_id}"]').check()
-    page.locator("form.picker button[type=submit]").click()
-    page.wait_for_load_state("domcontentloaded")
+    submit_and_wait_until_gone(
+        page, page.locator("form.picker button[type=submit]"), "form.picker")
 
 
 def test_choosing_a_product_fills_both_sections_on_the_same_page(

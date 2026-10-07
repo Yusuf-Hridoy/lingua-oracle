@@ -10,6 +10,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from playwright.sync_api import expect
+
+from tests.ui.waits import submit_for_report
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "tests" / "fixtures"
@@ -19,8 +22,7 @@ def _upload(page, server, name: str) -> None:
     page.goto(server + "/", wait_until="domcontentloaded")
     page.set_input_files('input[type="file"]', str(FIXTURES / f"{name}.pdf"))
     page.select_option('select[name="regulation"]', "eu_clp")
-    page.locator('form button[type="submit"]').first.click()
-    page.wait_for_load_state("domcontentloaded")
+    submit_for_report(page, page.locator('form button[type="submit"]').first)
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -33,9 +35,11 @@ def fixtures_exist():
 
 def test_one_upload_produces_both_sections(page, server):
     _upload(page, server, "pattern_supplier_ingredients")
-    body = page.inner_text("body")
-    assert "Wording" in body
-    assert "Ingredients" in body
+    # The report's own sections, not words the upload page could also show.
+    expect(page.locator(".verdict h2").first).to_be_visible()
+    expect(page.locator("#ingredients")).to_be_visible()
+    expect(page.locator("#mixture")).to_be_visible()
+    assert "Wording" in page.inner_text("body")
 
 
 def test_the_wording_half_survives_whatever_the_app_does(page, server):

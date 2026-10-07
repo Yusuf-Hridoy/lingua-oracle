@@ -8,13 +8,13 @@ when that folder is not present, which is the normal state of a fresh clone.
 
 from __future__ import annotations
 
-import re
 import shutil
 from pathlib import Path
 
 import pytest
 
 from lingua_oracle.registry import load_registry
+from tests.ui.waits import submit_for_report
 
 ROOT = Path(__file__).resolve().parents[2]
 SHOTS = ROOT / "data" / "validation" / "ui_review"
@@ -62,9 +62,7 @@ def test_real_document_renders(rel, regulation, language, page, server, real_sho
     page.select_option("#regulation", regulation)
     page.select_option("#language", language)
     page.set_input_files("input[name=file]", str(validation_dir() / rel))
-    page.click("#check-form button[type=submit]")
-    page.wait_for_url(re.compile(r"/reports/"), timeout=60_000)
-    page.wait_for_load_state("load")
+    submit_for_report(page, page.locator("#check-form button[type=submit]"))
 
     # The regulation lives in the collapsed technical block, where inner_text()
     # returns nothing for hidden elements.
