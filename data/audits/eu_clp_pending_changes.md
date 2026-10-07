@@ -4,10 +4,10 @@ Consolidation on file: `02008R1272-20260701` (EUR-Lex: consolidated version of
 01/07/2026; created in CELLAR 2026-07-09). It is what the `eu_clp` keys, the
 EU mixture rules and `data/annex_vi/table3.json` are built from.
 
-Checked 2026-10-07, read-only, against the Publications Office's CELLAR (the
-acts themselves, as XHTML, and their metadata via the SPARQL endpoint).
-**Nothing has been applied.** This records what was found, with the evidence,
-so the decision of what to do and when is made on it.
+Checked 2026-10-07 against the Publications Office's CELLAR (the acts
+themselves, as XHTML, and their metadata via the SPARQL endpoint). Recorded
+first as findings only; what has since been done about each is at the end of
+its section.
 
 ---
 
@@ -48,11 +48,20 @@ Evidence that the consolidation does not contain it:
   created in CELLAR 2026-09-29), which is expected: it applies a month later.
   No 01/02/2027 consolidation exists yet.
 
-What it means here: the ingredient check judges an EU sheet against Table 3 as
-of 01/07/2026. A supplier already applying the 23rd ATP early is measured
-against the old entries — for 015-012-00-1, a sheet carrying the new H251
-would be reported as missing H260 and H400. From 1 February 2027 the table
-on file is out of date for these 32 entries.
+What it meant here: the ingredient check judged an EU sheet against Table 3
+as of 01/07/2026 only. A supplier already applying the 23rd ATP early was
+measured against the old entries — for 015-012-00-1, a sheet carrying the new
+H251 was reported as missing H260 and H400 — and from 1 February 2027 the table
+on file would have been out of date for these 32 entries.
+
+**Done.** The ATP is read from the act and held as
+`data/annex_vi/upcoming.json` (22 inserted, 10 replaced, "It shall apply from
+1 February 2027", quoted from Article 2). Before that date a sheet meeting the
+entry in force or the amended one passes, and one meeting only the entry in
+force is told what the amended entry will require; from the date, the amended
+entry binds. The mixture calculation does the same per hazard family — the ATP
+lowers IPDI's (615-008-00-5) Skin Sens. limit from 0,5 % to 0,001 % and raises
+IPBC's (616-212-00-7) chronic M-factor from 1 to 10.
 
 ---
 
@@ -97,10 +106,64 @@ carry either.
 
 What it means here: no builder reads Articles 30, 48 or 48a. The keys come
 from Annexes III and IV, the mixture rules from Annex I, the ingredient list
-from Annex VI. **Not yet checked:** whether 2024/2865's Annex II point (2) —
-one of the postponed provisions — touches any supplemental statement wording
-the keys hold. Building the keys from both consolidations and diffing them
-would settle it.
+from Annex VI.
+
+**The open question, answered.** Whether 2024/2865's Annex II point (2) — one
+of the postponed provisions — touches any supplemental statement wording the
+keys hold. The EU CLP keys (all 24 languages) and Table 3 were built from the
+01/01/2027 consolidation with the same builders and diffed against ours:
+
+| | differences |
+| --- | --- |
+| Keys, every language | **EUH211 and EUH212 only**, absent from 01/01/2027 — 48 entries. No other statement's wording differs in any language. |
+| Table 3 | **022-006-00-2 only** (titanium dioxide), absent from 01/01/2027. No other entry differs. |
+
+No EUH wording changes under 2024/2865 between the two consolidations. The
+three differences there are all come from **►M39**, the titanium dioxide
+notice — section 3 below.
+
+---
+
+## 3. Titanium dioxide — annulled, and still printed by the 01/07/2026 consolidation
+
+Commission notice C/2025/6670 (OJ C, 10.12.2025): the General Court, by its
+judgment of 23 November 2022 in Joined Cases T-279/20, T-283/20 and T-288/20,
+partially annulled Delegated Regulation (EU) 2020/217 as regards titanium
+dioxide; the Court of Justice dismissed the appeals on 1 August 2025 (Joined
+Cases C-71/23 P and C-82/23 P). In the notice's words, the row for index number
+022-006-00-2 "is annulled", and "Annex I", "Annex II" and, in Annex III, "Note
+W and Note 10" of 2020/217 "are also considered annulled".
+
+Annex II of 2020/217 is where Annex II section 2.13 of CLP, *Mixtures
+containing titanium dioxide*, came from — the statements EUH211 ("Warning!
+Hazardous respirable droplets may be formed when sprayed. ...") and EUH212
+("Warning! Hazardous respirable dust may be formed when used. ...").
+
+| | 01/07/2026 (ours) | 01/01/2027 |
+| --- | --- | --- |
+| `EUH211` / `EUH212` in the text | 2 occurrences each | 0 |
+| `022-006-00-2` in Table 3 | present (Carc. 2, H351; notes V, W, 10) | absent |
+| ►M39 in the amendment list | no | yes |
+
+This is not a change that applies later: it is the law since the judgment,
+which the 01/01/2027 consolidation is the first to reflect. So it is not held
+as upcoming. Table 3 as we held it had titanium dioxide as a binding Carc. 2,
+and a correct EU sheet without H351 was reported under-classified.
+
+**Done.** `keys/builders/annulled.py` names the three items with this citation
+and stops applying from the 01/01/2027 consolidation. 022-006-00-2 is left out
+of Table 3; EUH211 and EUH212 stay in every key language as `not_on_file`,
+the citation in their `source_ref` — visible, never used for a verdict.
+
+---
+
+## Found on the way: the reproductive toxicity codes
+
+The Table 3 parser accepted one letter after a code's number, so H360FD,
+H360Df, H360Fd and H361fd — printed 276 times in the act — failed the word
+boundary and were dropped, leaving 114 entries with a Repr. class and no
+H360/H361/H362. **Done:** two letters are read; every Repr. entry now carries
+its code, and the ATP's own entries (604-103-00-7, H360FD) are read with it.
 
 ---
 
@@ -115,3 +178,7 @@ would settle it.
   AWS WAF challenge and were not used.
 * Act metadata (entry into force, publication, what each amends) from CELLAR:
   2025/1222 amends 32008R1272; 2025/2439 amends 32024R2865.
+* The 01/01/2027 diff: `eu_clp.build()` and `annex_vi.parse_table3()` run
+  against `02008R1272-20270101` into a scratch directory, compared entry by
+  entry with the committed keys and table (before the annulment was applied).
+* The titanium dioxide notice fetched as `52025XC06670`.
