@@ -439,9 +439,12 @@ def mixture_status(section) -> tuple[str, str]:
     if section is None:
         return ("can't check", "the mixture calculation was not run")
     if section.state == "calculated":
+        read_as = {"gas": ", read as a gas",
+                   "solid/liquid": ", read as a solid or a liquid"}
         return ("checked",
                 f"{section.counts.get('ingredients', 0)} ingredients summed "
-                f"against {section.source_document}")
+                f"against {section.source_document}"
+                + read_as.get(section.physical_state, ""))
     if section.state == "out_of_scope":
         return ("can't check", section.message)
     if section.state == "skipped":

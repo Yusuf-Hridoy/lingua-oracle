@@ -61,7 +61,7 @@ def test_choosing_a_product_fills_both_sections_on_the_same_page(
     assert "checked" in ingredients
     assert "ExactSDS record" in ingredients
     assert "checked" in mixture
-    assert "Annex I" in mixture
+    assert "Regulation (EC) No 1272/2008" in mixture
 
 
 def test_the_chosen_products_own_composition_is_what_was_checked(
