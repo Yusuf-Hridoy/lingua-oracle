@@ -1086,9 +1086,14 @@ def test_only_the_superseded_codes_are_withheld_in_irish():
     Where the two Parts say the same thing everywhere they can be read, nothing
     was superseded and the Irish entry stands.
     """
+    from lingua_oracle.keys.builders import annulled
+
     audit = _part_audit()
     expected = {code for code, record in audit.items()
                 if record["languages"].get("ga", {}).get("status") == "not_on_file"}
+    # Withheld in every language, for a reason of their own: the courts
+    # annulled them. See tests/test_annulled.py.
+    expected |= annulled.STATEMENTS
     withheld = {
         code for code, entry in load_key("eu_clp", "ga").by_code().items()
         if entry.status is Status.NOT_ON_FILE

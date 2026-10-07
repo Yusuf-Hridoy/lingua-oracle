@@ -26,6 +26,7 @@ from pathlib import Path
 
 from lxml import html as LH
 
+from lingua_oracle.keys.builders import annulled
 from lingua_oracle.keys.builders.common import (
     SourceUnavailable,
     fetch,
@@ -857,6 +858,17 @@ def build(languages: list[str] | None = None, *, use_cache: bool = True,
             else:
                 updated.append(entry)
         entries = updated
+        if annulled.applies_to(CELEX):
+            # Printed by this consolidation, annulled by the courts: kept so the
+            # gap is visible, never used for a verdict.
+            entries = [
+                e.model_copy(update={
+                    "status": Status.NOT_ON_FILE,
+                    "source_ref": f"{e.source_ref}; {annulled.why()} - not used "
+                                  "for a verdict",
+                }) if e.code in annulled.STATEMENTS else e
+                for e in entries
+            ]
         if with_signal_words:
             words, note = _signal_words_for(lang, iso3, en_doc, positions, en_tables,
                                             entries, use_cache=use_cache)

@@ -5,7 +5,7 @@
   "status": "ok",
   "status_reason": null,
   "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-  "retrieved_at": "2026-10-02T12:15:38.786073Z",
+  "retrieved_at": "2026-10-07T11:39:33.018037Z",
   "notes": [],
   "entries": [
     {
@@ -3686,9 +3686,9 @@
       "internal_id": false,
       "text_defects": [],
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for EUH211",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
-      "status": "ok"
+      "source_ref": "Annex III/IV table for EUH211; annulled - Commission notice C/2025/6670 (OJ C, 10.12.2025): the General Court's judgment of 23 November 2022 in Joined Cases T-279/20, T-283/20 and T-288/20, upheld by the Court of Justice on 1 August 2025 in Joined Cases C-71/23 P and C-82/23 P, annulled Delegated Regulation (EU) 2020/217 as regards titanium dioxide (http://data.europa.eu/eli/C/2025/6670/oj) - not used for a verdict",
+      "retrieved_at": "2026-10-07T11:39:32.424330Z",
+      "status": "not_on_file"
     },
     {
       "regulation": "eu_clp",
@@ -3702,9 +3702,9 @@
       "internal_id": false,
       "text_defects": [],
       "source_url": "http://publications.europa.eu/resource/celex/02008R1272-20260701",
-      "source_ref": "Annex III/IV table for EUH212",
-      "retrieved_at": "2026-09-29T12:09:09.105309Z",
-      "status": "ok"
+      "source_ref": "Annex III/IV table for EUH212; annulled - Commission notice C/2025/6670 (OJ C, 10.12.2025): the General Court's judgment of 23 November 2022 in Joined Cases T-279/20, T-283/20 and T-288/20, upheld by the Court of Justice on 1 August 2025 in Joined Cases C-71/23 P and C-82/23 P, annulled Delegated Regulation (EU) 2020/217 as regards titanium dioxide (http://data.europa.eu/eli/C/2025/6670/oj) - not used for a verdict",
+      "retrieved_at": "2026-10-07T11:39:32.424330Z",
+      "status": "not_on_file"
     },
     {
       "regulation": "eu_clp",

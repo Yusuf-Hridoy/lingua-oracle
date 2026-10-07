@@ -1,7 +1,7 @@
 {
  "source": "02008R1272-20260701",
- "note": "CLP Annex VI Part 3 Table 3, the harmonised classifications. Values are stored exactly as the act prints them, including the '*' that marks a minimum classification and the [n] suffixes that tie an identifier to one substance of a multi-substance entry.",
- "retrieved_at": "2026-10-06T08:50:54.042033Z",
+ "note": "CLP Annex VI Part 3 Table 3, the harmonised classifications. Values are stored exactly as the act prints them, including the '*' that marks a minimum classification and the [n] suffixes that tie an identifier to one substance of a multi-substance entry. Left out as annulled: 022-006-00-2 (Commission notice C/2025/6670 (OJ C, 10.12.2025): the General Court's judgment of 23 November 2022 in Joined Cases T-279/20, T-283/20 and T-288/20, upheld by the Court of Justice on 1 August 2025 in Joined Cases C-71/23 P and C-82/23 P, annulled Delegated Regulation (EU) 2020/217 as regards titanium dioxide).",
+ "retrieved_at": "2026-10-07T11:39:31.742943Z",
  "entries": [
   {
    "index_no": "001-001-00-9",
@@ -21965,37 +21965,6 @@
    "limit_kinds": [],
    "notes": [],
    "source_ref": "Annex VI, Table 3, Index No 022-005-00-7 (02008R1272-20260701)"
-  },
-  {
-   "index_no": "022-006-00-2",
-   "name": "titanium dioxide; [in powder form containing 1 % or more of particles with aerodynamic diameter ≤ 10 μm]",
-   "ec": [
-    "236-675-5"
-   ],
-   "cas": [
-    "13463-67-7"
-   ],
-   "hazard_classes": [
-    "Carc. 2"
-   ],
-   "h_codes": [
-    "H351"
-   ],
-   "pictograms": [
-    "GHS08",
-    "Wng"
-   ],
-   "label_h_codes": [
-    "H351"
-   ],
-   "supplemental_h_codes": [],
-   "euh_codes": [],
-   "limits": [],
-   "limit_kinds": [],
-   "notes": [
-    "V, W, 10"
-   ],
-   "source_ref": "Annex VI, Table 3, Index No 022-006-00-2 (02008R1272-20260701)"
   },
   {
    "index_no": "023-001-00-8",

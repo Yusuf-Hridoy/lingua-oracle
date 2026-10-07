@@ -22,6 +22,7 @@ import json
 import re
 from pathlib import Path
 
+from lingua_oracle.keys.builders import annulled
 from lingua_oracle.keys.builders.common import now, strip_markers
 from lingua_oracle.models import AnnexVIEntry, AnnexVITable
 from lingua_oracle.registry import data_dir
@@ -230,13 +231,24 @@ def build(*, use_cache: bool = True) -> tuple[AnnexVITable, Path, Path]:
 
     doc = _doc("eng", use_cache=use_cache)
     entries, issues = parse_table3(doc, celex=CELEX)
+    note = ("CLP Annex VI Part 3 Table 3, the harmonised classifications. "
+            "Values are stored exactly as the act prints them, including the "
+            "'*' that marks a minimum classification and the [n] suffixes "
+            "that tie an identifier to one substance of a multi-substance "
+            "entry.")
+    if annulled.applies_to(CELEX):
+        # A row the courts have annulled is not a harmonised classification,
+        # whatever the consolidation still prints.
+        dropped = sorted(e.index_no for e in entries
+                         if e.index_no in annulled.ANNEX_VI_ENTRIES)
+        entries = [e for e in entries if e.index_no not in annulled.ANNEX_VI_ENTRIES]
+        for index_no in dropped:
+            issues.append(f"{index_no}: left out, {annulled.why()}")
+        if dropped:
+            note += f" Left out as annulled: {', '.join(dropped)} ({annulled.NOTICE})."
     table = AnnexVITable(
         source=CELEX,
-        note=("CLP Annex VI Part 3 Table 3, the harmonised classifications. "
-              "Values are stored exactly as the act prints them, including the "
-              "'*' that marks a minimum classification and the [n] suffixes "
-              "that tie an identifier to one substance of a multi-substance "
-              "entry."),
+        note=note,
         retrieved_at=now(),
         entries=sorted(entries, key=lambda e: e.index_no),
     )
