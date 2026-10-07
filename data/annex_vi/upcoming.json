@@ -1,0 +1,1425 @@
+{
+ "act": "32025R1222",
+ "title": "Delegated Regulation (EU) 2025/1222 (23rd ATP)",
+ "applies_from": "2027-02-01",
+ "applies_from_text": "It shall apply from 1 February 2027.",
+ "source_url": "http://publications.europa.eu/resource/celex/32025R1222",
+ "retrieved_at": "2026-10-07T11:52:19.205823Z",
+ "inserted": [
+  {
+   "index_no": "607-776-00-5",
+   "name": "2-ethylhexanoic acid, monoester with propane-1,2-diol",
+   "ec": [
+    "285-503-5"
+   ],
+   "cas": [
+    "85114-00-7"
+   ],
+   "hazard_classes": [
+    "Repr. 1B"
+   ],
+   "h_codes": [
+    "H360D"
+   ],
+   "pictograms": [
+    "GHS08",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H360D"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 607-776-00-5 (32025R1222)"
+  },
+  {
+   "index_no": "612-300-00-4",
+   "name": "N-1-naphthylaniline; N-phenylnaphthalen-1-amine",
+   "ec": [
+    "201-983-0"
+   ],
+   "cas": [
+    "90-30-2"
+   ],
+   "hazard_classes": [
+    "Acute Tox. 4",
+    "STOT RE 2",
+    "Skin Sens. 1"
+   ],
+   "h_codes": [
+    "H302",
+    "H373",
+    "H317"
+   ],
+   "pictograms": [
+    "GHS07",
+    "GHS08",
+    "Wng"
+   ],
+   "label_h_codes": [
+    "H373",
+    "H317"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "oral: ATE = 1 200 mg/kg bw"
+   ],
+   "limit_kinds": [
+    "ate"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 612-300-00-4 (32025R1222)"
+  },
+  {
+   "index_no": "026-005-00-8",
+   "name": "tetrairon tris(pyrophosphate); ferric pyrophosphate",
+   "ec": [
+    "233-190-0"
+   ],
+   "cas": [
+    "10058-44-3"
+   ],
+   "hazard_classes": [
+    "Eye Irrit. 2"
+   ],
+   "h_codes": [
+    "H319"
+   ],
+   "pictograms": [
+    "GHS07",
+    "Wng"
+   ],
+   "label_h_codes": [
+    "H319"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 026-005-00-8 (32025R1222)"
+  },
+  {
+   "index_no": "604-103-00-7",
+   "name": "α,α’-propylenedinitrilodi-o-cresol",
+   "ec": [
+    "202-374-2"
+   ],
+   "cas": [
+    "94-91-7"
+   ],
+   "hazard_classes": [
+    "Repr. 1B"
+   ],
+   "h_codes": [
+    "H360FD"
+   ],
+   "pictograms": [
+    "GHS08",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H360FD"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 604-103-00-7 (32025R1222)"
+  },
+  {
+   "index_no": "008-004-00-4",
+   "name": "ozone",
+   "ec": [
+    "233-069-2"
+   ],
+   "cas": [
+    "10028-15-6"
+   ],
+   "hazard_classes": [
+    "Ox. Gas 1",
+    "Carc. 2",
+    "Muta. 2",
+    "Acute Tox. 1",
+    "STOT SE 1",
+    "STOT RE 1",
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H270",
+    "H351",
+    "H341",
+    "H330",
+    "H370",
+    "H372",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS03",
+    "GHS08",
+    "GHS06",
+    "GHS09",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H270",
+    "H351",
+    "H341",
+    "H330",
+    "H370",
+    "H372",
+    "H410"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "inhalation: ATE = 10 ppmV",
+    "STOT SE 1; H370: C ≥ 0,002 %",
+    "STOT SE 2; H371: 0,0005 % ≤ C < 0,002 %",
+    "STOT RE 1; H372: C ≥ 0,05 %",
+    "STOT RE 2; H373: 0,01 % ≤ C < 0,05 %",
+    "M = 100",
+    "M = 1"
+   ],
+   "limit_kinds": [
+    "ate",
+    "scl",
+    "scl",
+    "scl",
+    "scl",
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 008-004-00-4 (32025R1222)"
+  },
+  {
+   "index_no": "007-031-00-9",
+   "name": "dinitrogen oxide",
+   "ec": [
+    "233-032-0"
+   ],
+   "cas": [
+    "10024-97-2"
+   ],
+   "hazard_classes": [
+    "Repr. 1B",
+    "STOT SE 3",
+    "STOT RE 1",
+    "Ozone 1"
+   ],
+   "h_codes": [
+    "H360Df",
+    "H336",
+    "H372",
+    "H420"
+   ],
+   "pictograms": [
+    "GHS08",
+    "GHS07",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H360Df",
+    "H336",
+    "H372",
+    "H420"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 007-031-00-9 (32025R1222)"
+  },
+  {
+   "index_no": "056-006-00-9",
+   "name": "barium chromate",
+   "ec": [
+    "233-660-5"
+   ],
+   "cas": [
+    "10294-40-3"
+   ],
+   "hazard_classes": [
+    "Carc. 1B"
+   ],
+   "h_codes": [
+    "H350"
+   ],
+   "pictograms": [
+    "GHS08",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H350"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 056-006-00-9 (32025R1222)"
+  },
+  {
+   "index_no": "650-060-00-2",
+   "name": "Chrysanthemum cinerariaefolium, extract from open and mature flowers of Tanacetum cinerariifolium obtained with supercritical CO2",
+   "ec": [
+    "289-699-3"
+   ],
+   "cas": [
+    "89997-63-7"
+   ],
+   "hazard_classes": [
+    "Acute Tox. 4",
+    "Acute Tox. 4",
+    "STOT SE 1",
+    "STOT RE 2",
+    "Skin Sens. 1",
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H332",
+    "H302",
+    "H370",
+    "H373",
+    "H317",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS07",
+    "GHS08",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H332",
+    "H302",
+    "H370",
+    "H373",
+    "H317",
+    "H410"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "inhalation: ATE = 2,6 mg/L (dusts or mists)",
+    "oral: ATE = 730 mg/kg bw",
+    "M = 1 000",
+    "M = 100"
+   ],
+   "limit_kinds": [
+    "ate",
+    "ate",
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 650-060-00-2 (32025R1222)"
+  },
+  {
+   "index_no": "650-059-00-7",
+   "name": "Chrysanthemum cinerariaefolium, extract from open and mature flowers of Tanacetum cinerariifolium obtained with hydrocarbon solvents",
+   "ec": [
+    "289-699-3"
+   ],
+   "cas": [
+    "89997-63-7"
+   ],
+   "hazard_classes": [
+    "Acute Tox. 4",
+    "Acute Tox. 4",
+    "STOT SE 1",
+    "STOT RE 2",
+    "Skin Sens. 1",
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H332",
+    "H302",
+    "H370",
+    "H373",
+    "H317",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS07",
+    "GHS08",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H332",
+    "H302",
+    "H370",
+    "H373",
+    "H317",
+    "H410"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "inhalation: ATE = 2,6 mg/L (dusts or mists)",
+    "oral: ATE = 730 mg/kg bw",
+    "M = 1 000",
+    "M = 100"
+   ],
+   "limit_kinds": [
+    "ate",
+    "ate",
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 650-059-00-7 (32025R1222)"
+  },
+  {
+   "index_no": "607-777-00-0",
+   "name": "barium bis[2-chloro-5-[(2-hydroxy-1-naphthyl)azo]toluene-4-sulphonate]; C.I. Pigment Red 53:1",
+   "ec": [
+    "225-935-3"
+   ],
+   "cas": [
+    "5160-02-1"
+   ],
+   "hazard_classes": [
+    "Carc. 2"
+   ],
+   "h_codes": [
+    "H351"
+   ],
+   "pictograms": [
+    "GHS08",
+    "Wng"
+   ],
+   "label_h_codes": [
+    "H351"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 607-777-00-0 (32025R1222)"
+  },
+  {
+   "index_no": "608-070-00-X",
+   "name": "2-bromo-2-(bromomethyl)pentanedinitrile; [DBDCB]",
+   "ec": [
+    "252-681-0"
+   ],
+   "cas": [
+    "35691-65-7"
+   ],
+   "hazard_classes": [
+    "Acute Tox. 2",
+    "Acute Tox. 4",
+    "STOT RE 2",
+    "Eye Dam. 1",
+    "Skin Sens. 1A",
+    "Aquatic Chronic 2"
+   ],
+   "h_codes": [
+    "H330",
+    "H302",
+    "H373",
+    "H318",
+    "H317",
+    "H411"
+   ],
+   "pictograms": [
+    "GHS06",
+    "GHS08",
+    "GHS05",
+    "GHS09",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H330",
+    "H302",
+    "H373",
+    "H318",
+    "H317",
+    "H411"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "inhalation: ATE = 0,27 mg/L (dusts or mists)",
+    "oral: ATE = 500 mg/kg bw",
+    "Skin Sens. 1A; H317: C ≥ 0,001 %"
+   ],
+   "limit_kinds": [
+    "ate",
+    "ate",
+    "scl"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 608-070-00-X (32025R1222)"
+  },
+  {
+   "index_no": "607-779-00-1",
+   "name": "9-octadecenoic acid (Z)-, sulfonated, potassium salts [1]; Reaction products of fatty acids, C18 (unsaturated) alkyl with sulfur trioxide, potassium salts [2]; 9(or 10)-sulphooctadecanoic acid, potassium salt [3]",
+   "ec": [
+    "271-843-1 [1];",
+    "- [2];",
+    "267-966-5 [3]"
+   ],
+   "cas": [
+    "68609-93-8 [1];",
+    "- [2];",
+    "67968-63-2 [3]"
+   ],
+   "hazard_classes": [
+    "Repr. 1B"
+   ],
+   "h_codes": [
+    "H360D"
+   ],
+   "pictograms": [
+    "GHS08",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H360D"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 607-779-00-1 (32025R1222)"
+  },
+  {
+   "index_no": "613-352-00-0",
+   "name": "bixlozone (ISO); 2-(2,4-dichlorobenzyl)-4,4-dimethyl-1,2-oxazolidin-3-one",
+   "ec": [],
+   "cas": [
+    "81777-95-9"
+   ],
+   "hazard_classes": [
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS09",
+    "Wng"
+   ],
+   "label_h_codes": [
+    "H410"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "M = 1",
+    "M = 10"
+   ],
+   "limit_kinds": [
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 613-352-00-0 (32025R1222)"
+  },
+  {
+   "index_no": "603-248-00-3",
+   "name": "2,3-epoxypropyl isopropyl ether",
+   "ec": [
+    "223-672-9"
+   ],
+   "cas": [
+    "4016-14-2"
+   ],
+   "hazard_classes": [
+    "Repr. 1B"
+   ],
+   "h_codes": [
+    "H360F"
+   ],
+   "pictograms": [
+    "GHS08",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H360F"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 603-248-00-3 (32025R1222)"
+  },
+  {
+   "index_no": "607-778-00-6",
+   "name": "tetrahydrofurfuryl methacrylate",
+   "ec": [
+    "219-529-5"
+   ],
+   "cas": [
+    "2455-24-5"
+   ],
+   "hazard_classes": [
+    "Repr. 1B",
+    "Skin Sens. 1A"
+   ],
+   "h_codes": [
+    "H360Df",
+    "H317"
+   ],
+   "pictograms": [
+    "GHS08",
+    "GHS07",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H360Df",
+    "H317"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 607-778-00-6 (32025R1222)"
+  },
+  {
+   "index_no": "015-209-00-2",
+   "name": "trimethyl phosphate",
+   "ec": [
+    "208-144-8"
+   ],
+   "cas": [
+    "512-56-1"
+   ],
+   "hazard_classes": [
+    "Carc. 1B",
+    "Muta. 1B",
+    "Repr. 1B",
+    "Acute Tox. 4",
+    "STOT RE 2"
+   ],
+   "h_codes": [
+    "H350",
+    "H340",
+    "H360FD",
+    "H302",
+    "H373"
+   ],
+   "pictograms": [
+    "GHS08",
+    "GHS07",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H350",
+    "H340",
+    "H360FD",
+    "H302",
+    "H373"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "oral: ATE = 1 300 mg/kg bw"
+   ],
+   "limit_kinds": [
+    "ate"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 015-209-00-2 (32025R1222)"
+  },
+  {
+   "index_no": "602-111-00-5",
+   "name": "fluoroethylene",
+   "ec": [
+    "200-832-6"
+   ],
+   "cas": [
+    "75-02-5"
+   ],
+   "hazard_classes": [
+    "Carc. 1A",
+    "Muta. 2"
+   ],
+   "h_codes": [
+    "H350",
+    "H341"
+   ],
+   "pictograms": [
+    "GHS08",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H350",
+    "H341"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [
+    "D"
+   ],
+   "source_ref": "Annex VI, Table 3, Index No 602-111-00-5 (32025R1222)"
+  },
+  {
+   "index_no": "602-112-00-0",
+   "name": "2-bromo-3,3,3-trifluoroprop-1-ene",
+   "ec": [],
+   "cas": [
+    "1514-82-5"
+   ],
+   "hazard_classes": [
+    "Repr. 1B",
+    "STOT SE 3",
+    "STOT SE 3"
+   ],
+   "h_codes": [
+    "H360FD",
+    "H335",
+    "H336"
+   ],
+   "pictograms": [
+    "GHS08",
+    "GHS07",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H360FD",
+    "H335",
+    "H336"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 602-112-00-0 (32025R1222)"
+  },
+  {
+   "index_no": "613-353-00-6",
+   "name": "2-methyl-2H-isothiazol-3-one hydrochloride; 2-methyl-2,3-dihydro-1,2-thiazol-3-one hydrochloride",
+   "ec": [
+    "247-499-3"
+   ],
+   "cas": [
+    "26172-54-3"
+   ],
+   "hazard_classes": [
+    "Acute Tox. 2",
+    "Acute Tox. 3",
+    "Acute Tox. 3",
+    "Skin Corr. 1",
+    "Eye Dam. 1",
+    "Skin Sens. 1A",
+    "Acute Aquatic 1",
+    "Acute Chronic 1"
+   ],
+   "h_codes": [
+    "H330",
+    "H311",
+    "H301",
+    "H314",
+    "H318",
+    "H317",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS06",
+    "GHS05",
+    "GHS09",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H330",
+    "H311",
+    "H301",
+    "H314",
+    "H317",
+    "H410"
+   ],
+   "supplemental_h_codes": [
+    "EUH071"
+   ],
+   "euh_codes": [
+    "EUH071"
+   ],
+   "limits": [
+    "inhalation: ATE = 0,15 mg/L (dusts or mists)",
+    "dermal: ATE = 320 mg/kg bw",
+    "oral: ATE = 180 mg/kg bw",
+    "Skin. Sens 1A; H317: C ≥ 0,0015 %",
+    "M = 10",
+    "M = 1"
+   ],
+   "limit_kinds": [
+    "ate",
+    "ate",
+    "ate",
+    "scl",
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 613-353-00-6 (32025R1222)"
+  },
+  {
+   "index_no": "603-249-00-9",
+   "name": "2,3-epoxypropyl o-tolyl ether",
+   "ec": [
+    "218-645-3"
+   ],
+   "cas": [
+    "2210-79-9"
+   ],
+   "hazard_classes": [
+    "Skin Irrit. 2",
+    "Skin Sens. 1A",
+    "Muta. 2",
+    "Aquatic Chronic 2"
+   ],
+   "h_codes": [
+    "H315",
+    "H317",
+    "H341",
+    "H411"
+   ],
+   "pictograms": [
+    "GHS07",
+    "GHS08",
+    "GHS09",
+    "Wng"
+   ],
+   "label_h_codes": [
+    "H315",
+    "H317",
+    "H341",
+    "H411"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [
+    "C"
+   ],
+   "source_ref": "Annex VI, Table 3, Index No 603-249-00-9 (32025R1222)"
+  },
+  {
+   "index_no": "607-780-00-7",
+   "name": "methyl oct-2-ynoate",
+   "ec": [
+    "203-836-6"
+   ],
+   "cas": [
+    "111-12-6"
+   ],
+   "hazard_classes": [
+    "Skin Sens. 1A"
+   ],
+   "h_codes": [
+    "H317"
+   ],
+   "pictograms": [
+    "GHS07",
+    "Wng"
+   ],
+   "label_h_codes": [
+    "H317"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 607-780-00-7 (32025R1222)"
+  },
+  {
+   "index_no": "612-301-00-X",
+   "name": "dinotefuran (ISO); (RS)-1-methyl-2-nitro-3-(tetrahydro-3-furylmethyl)guanidine",
+   "ec": [],
+   "cas": [
+    "165252-70-0"
+   ],
+   "hazard_classes": [
+    "Acute Tox. 4",
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H302",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS07",
+    "GHS09",
+    "Wng"
+   ],
+   "label_h_codes": [
+    "H302",
+    "H410"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "oral: ATE = 2 000 mg/kg bw",
+    "M = 10",
+    "M = 10"
+   ],
+   "limit_kinds": [
+    "ate",
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 612-301-00-X (32025R1222)"
+  }
+ ],
+ "replaced": [
+  {
+   "index_no": "601-027-00-6",
+   "name": "2-phenylpropene; α-methylstyrene",
+   "ec": [
+    "202-705-0"
+   ],
+   "cas": [
+    "98-83-9"
+   ],
+   "hazard_classes": [
+    "Flam. Liq. 3",
+    "Carc. 2",
+    "STOT SE 3",
+    "Eye Irrit. 2",
+    "Skin Sens. 1B",
+    "Aquatic Chronic 2"
+   ],
+   "h_codes": [
+    "H226",
+    "H351",
+    "H335",
+    "H319",
+    "H317",
+    "H411"
+   ],
+   "pictograms": [
+    "GHS02",
+    "GHS08",
+    "GHS07",
+    "GHS09",
+    "Wng"
+   ],
+   "label_h_codes": [
+    "H226",
+    "H351",
+    "H335",
+    "H319",
+    "H317",
+    "H411"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "STOT SE 3; H335: C ≥ 25 %"
+   ],
+   "limit_kinds": [
+    "scl"
+   ],
+   "notes": [
+    "D"
+   ],
+   "source_ref": "Annex VI, Table 3, Index No 601-027-00-6 (32025R1222)"
+  },
+  {
+   "index_no": "616-145-00-3",
+   "name": "pethoxamid (ISO); 2-chloro-N-(2-ethoxyethyl)-N-(2-methyl-1-phenylprop-1-enyl)acetamide",
+   "ec": [],
+   "cas": [
+    "106700-29-2"
+   ],
+   "hazard_classes": [
+    "Acute Tox. 4",
+    "Skin Sens. 1A",
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H302",
+    "H317",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS07",
+    "GHS09",
+    "Wng"
+   ],
+   "label_h_codes": [
+    "H302",
+    "H317",
+    "H410"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "oral: ATE = 980 mg/kg bw",
+    "M = 100",
+    "M = 10"
+   ],
+   "limit_kinds": [
+    "ate",
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 616-145-00-3 (32025R1222)"
+  },
+  {
+   "index_no": "015-012-00-1",
+   "name": "tetraphosphorus trisulphide; phosphorus sesquisulphid",
+   "ec": [
+    "215-245-0"
+   ],
+   "cas": [
+    "1314-85-8"
+   ],
+   "hazard_classes": [
+    "Flam. Sol. 1",
+    "Self-heat. 1",
+    "Acute Tox. 4*"
+   ],
+   "h_codes": [
+    "H228",
+    "H251",
+    "H302"
+   ],
+   "pictograms": [
+    "GHS02",
+    "GHS07",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H228",
+    "H251",
+    "H302"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [],
+   "limit_kinds": [],
+   "notes": [
+    "T"
+   ],
+   "source_ref": "Annex VI, Table 3, Index No 015-012-00-1 (32025R1222)"
+  },
+  {
+   "index_no": "602-025-00-8",
+   "name": "1,1-dichloroethylene; vinylidene chloride",
+   "ec": [
+    "200-864-0"
+   ],
+   "cas": [
+    "75-35-4"
+   ],
+   "hazard_classes": [
+    "Flam. Liq. 1",
+    "Carc. 1B",
+    "Muta. 2",
+    "Acute Tox. 1",
+    "Acute Tox. 3",
+    "STOT RE 1",
+    "Aquatic Chronic 3"
+   ],
+   "h_codes": [
+    "H224",
+    "H350",
+    "H341",
+    "H330",
+    "H301",
+    "H372",
+    "H412"
+   ],
+   "pictograms": [
+    "GHS02",
+    "GHS08",
+    "GHS06",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H224",
+    "H350",
+    "H341",
+    "H330",
+    "H301",
+    "H372",
+    "H412"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "inhalation: ATE = 0,5 mg/L (vapours)",
+    "oral: ATE = 300 mg/kg bw"
+   ],
+   "limit_kinds": [
+    "ate",
+    "ate"
+   ],
+   "notes": [
+    "D"
+   ],
+   "source_ref": "Annex VI, Table 3, Index No 602-025-00-8 (32025R1222)"
+  },
+  {
+   "index_no": "615-008-00-5",
+   "name": "3-isocyanatomethyl-3,5,5-trimethylcyclohexyl isocyanate; isophorone di-isocyanate",
+   "ec": [
+    "223-861-6"
+   ],
+   "cas": [
+    "4098-71-9"
+   ],
+   "hazard_classes": [
+    "Acute Tox. 1",
+    "Skin Corr. 1",
+    "Eye Dam. 1",
+    "Resp. Sens. 1",
+    "Skin Sens. 1A",
+    "Aquatic Chronic 2"
+   ],
+   "h_codes": [
+    "H330",
+    "H314",
+    "H334",
+    "H317",
+    "H411"
+   ],
+   "pictograms": [
+    "GHS06",
+    "GHS05",
+    "GHS08",
+    "GHS09",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H330",
+    "H314",
+    "H318",
+    "H334",
+    "H317",
+    "H411"
+   ],
+   "supplemental_h_codes": [
+    "EUH071"
+   ],
+   "euh_codes": [
+    "EUH071"
+   ],
+   "limits": [
+    "inhalation: ATE = 0,03 mg/L (dusts or mists)",
+    "Resp. Sens. 1; H334: C ≥ 0,5 % Skin Sens. 1A; H317: C ≥ 0,001 %"
+   ],
+   "limit_kinds": [
+    "ate",
+    "scl"
+   ],
+   "notes": [
+    "2"
+   ],
+   "source_ref": "Annex VI, Table 3, Index No 615-008-00-5 (32025R1222)"
+  },
+  {
+   "index_no": "613-045-00-1",
+   "name": "folpet (ISO); N-(trichloromethylthio)phthalimide",
+   "ec": [
+    "205-088-6"
+   ],
+   "cas": [
+    "133-07-3"
+   ],
+   "hazard_classes": [
+    "Carc. 2",
+    "Acute Tox. 2",
+    "STOT RE 1",
+    "Eye Dam. 1",
+    "Skin Sens. 1A",
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H351",
+    "H330",
+    "H372",
+    "H318",
+    "H317",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS08",
+    "GHS06",
+    "GHS05",
+    "GHS09",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H351",
+    "H330",
+    "H372",
+    "H318",
+    "H317",
+    "H410"
+   ],
+   "supplemental_h_codes": [
+    "EUH066"
+   ],
+   "euh_codes": [
+    "EUH066"
+   ],
+   "limits": [
+    "inhalation: ATE = 0,30 mg/L (dusts or mists)",
+    "STOT RE 1: C ≥ 5 %",
+    "STOT RE 2: 0,5 % ≤ C < 5 %",
+    "Skin Sens. 1A; H317: C ≥ 0,001 %",
+    "M = 10",
+    "M = 10"
+   ],
+   "limit_kinds": [
+    "ate",
+    "scl",
+    "scl",
+    "scl",
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 613-045-00-1 (32025R1222)"
+  },
+  {
+   "index_no": "613-044-00-6",
+   "name": "captan (ISO); 1,2,3,6-tetrahydro-N-(trichloromethylthio)phthalimide",
+   "ec": [
+    "205-087-0"
+   ],
+   "cas": [
+    "133-06-2"
+   ],
+   "hazard_classes": [
+    "Carc. 2",
+    "Repr. 2",
+    "Acute Tox. 2",
+    "STOT RE 1",
+    "Eye Dam. 1",
+    "Skin Sens. 1A",
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H351",
+    "H361f",
+    "H330",
+    "H372",
+    "H318",
+    "H317",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS08",
+    "GHS06",
+    "GHS05",
+    "GHS09",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H351",
+    "H361f",
+    "H330",
+    "H372",
+    "H318",
+    "H317",
+    "H410"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "inhalation: ATE",
+    "= 0,22 mg/L",
+    "(dusts or",
+    "mists)",
+    "Skin Sens. 1A; H317: C≥ 0,001 %",
+    "M = 10",
+    "M = 10"
+   ],
+   "limit_kinds": [
+    "ate",
+    "scl",
+    "scl",
+    "scl",
+    "scl",
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 613-044-00-6 (32025R1222)"
+  },
+  {
+   "index_no": "607-231-00-1",
+   "name": "clopyralid (ISO); 3,6-dichloropyridine-2-carboxylic acid",
+   "ec": [
+    "216-935-4"
+   ],
+   "cas": [
+    "1702-17-6"
+   ],
+   "hazard_classes": [
+    "Eye Dam. 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H318",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS05",
+    "GHS09",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H318",
+    "H410"
+   ],
+   "supplemental_h_codes": [
+    "EUH066"
+   ],
+   "euh_codes": [
+    "EUH066"
+   ],
+   "limits": [
+    "M = 10"
+   ],
+   "limit_kinds": [
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 607-231-00-1 (32025R1222)"
+  },
+  {
+   "index_no": "616-211-00-1",
+   "name": "proquinazid (ISO); 6-iodo-2-propoxy-3-propylquinazolin-4(3H)-one",
+   "ec": [],
+   "cas": [
+    "189278-12-4"
+   ],
+   "hazard_classes": [
+    "Carc. 2",
+    "STOT RE 1",
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H351",
+    "H372",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS08",
+    "GHS09",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H351",
+    "H372",
+    "H410"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "M = 1",
+    "M = 10"
+   ],
+   "limit_kinds": [
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 616-211-00-1 (32025R1222)"
+  },
+  {
+   "index_no": "616-212-00-7",
+   "name": "3-iodo-2-propynyl butylcarbamate; 3-iodoprop-2-yn-1-yl butylcarbamate",
+   "ec": [
+    "259-627-5"
+   ],
+   "cas": [
+    "55406-53-6"
+   ],
+   "hazard_classes": [
+    "Acute Tox. 2",
+    "Acute Tox. 4",
+    "STOT RE 1",
+    "Eye Dam. 1",
+    "Skin Sens. 1",
+    "Aquatic Acute 1",
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H330",
+    "H302",
+    "H372",
+    "H318",
+    "H317",
+    "H400",
+    "H410"
+   ],
+   "pictograms": [
+    "GHS06",
+    "GHS08",
+    "GHS05",
+    "GHS09",
+    "Dgr"
+   ],
+   "label_h_codes": [
+    "H330",
+    "H302",
+    "H372",
+    "H318",
+    "H317",
+    "H410"
+   ],
+   "supplemental_h_codes": [],
+   "euh_codes": [],
+   "limits": [
+    "inhalation: ATE",
+    "= 0,17 mg/L",
+    "(dusts or mists)",
+    "M = 10",
+    "M = 10"
+   ],
+   "limit_kinds": [
+    "ate",
+    "scl",
+    "scl",
+    "m_factor",
+    "m_factor"
+   ],
+   "notes": [],
+   "source_ref": "Annex VI, Table 3, Index No 616-212-00-7 (32025R1222)"
+  }
+ ]
+}

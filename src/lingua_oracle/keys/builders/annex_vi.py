@@ -24,7 +24,7 @@ from pathlib import Path
 
 from lingua_oracle.keys.builders import annulled
 from lingua_oracle.keys.builders.common import now, strip_markers
-from lingua_oracle.models import AnnexVIEntry, AnnexVITable
+from lingua_oracle.models import AnnexVIAmendment, AnnexVIEntry, AnnexVITable
 from lingua_oracle.registry import data_dir
 
 #: The header that identifies Table 3 among the act's 544 tables. Matched on the
@@ -123,20 +123,54 @@ def parse_table3(doc, *, celex: str) -> tuple[list[AnnexVIEntry], list[str]]:
     table = find_table(doc)
     if table is None:
         return [], ["Annex VI Table 3 was not found in the consolidation."]
-
-    entries: list[AnnexVIEntry] = []
     issues: list[str] = []
-    for position, row in enumerate(table.xpath(".//tr")):
+    return _entries(table.xpath(".//tr"), celex, issues), issues
+
+
+#: An Annex VI index number, "607-776-00-5".
+_INDEX = re.compile(r"^\d{3}-\d{3}-\d{2}-[\dX]$")
+#: The quotation marks an amending act wraps each new row in: "‘" opens the
+#: first cell, "’" closes the last one that holds anything.
+_OPENING, _CLOSING = "\u2018", "\u2019"
+
+
+def _unquote(values: list[list[str]]) -> list[list[str]]:
+    """A row as an amending act prints it, without the quotation around it."""
+    values = [list(v) for v in values]
+    if values and values[0]:
+        values[0][0] = values[0][0].lstrip(_OPENING).strip()
+    for column in reversed(values):
+        if column:
+            column[-1] = column[-1].rstrip(_CLOSING).strip()
+            break
+    return values
+
+
+def _entries(rows, celex: str, issues: list[str], *,
+             quoted: bool = False) -> list[AnnexVIEntry]:
+    """The entries in Table 3's eleven-column rows.
+
+    `quoted` is for an amending act, whose rows are quotations: the quotation
+    marks are taken off, and a row whose first cell is not an index number - a
+    repeated header - is skipped rather than reported.
+    """
+    entries: list[AnnexVIEntry] = []
+    for position, row in enumerate(rows):
         cells = row.xpath("./td")
         if len(cells) == 1:
             continue  # a consolidation marker row (▼M16) between blocks
         if len(cells) != 11:
             text = " ".join(" ".join(row.itertext()).split())
-            if text and not text.lower().startswith(("index no", "hazard class")):
+            if (text and not quoted
+                    and not text.lower().startswith(("index no", "hazard class"))):
                 issues.append(f"row {position}: {len(cells)} cells, expected 11 - "
                               f"{text[:120]}")
             continue
         values = [_paragraphs(cell) for cell in cells]
+        if quoted:
+            values = _unquote(values)
+            if not _INDEX.match(" ".join(values[0]).strip()):
+                continue
         index_no = " ".join(values[0]).strip()
         if not index_no:
             issues.append(f"row {position}: no index number")
@@ -163,7 +197,114 @@ def parse_table3(doc, *, celex: str) -> tuple[list[AnnexVIEntry], list[str]]:
             issues.append(f"{index_no}: no classification in either column")
             continue
         entries.append(entry)
-    return entries, issues
+    return entries
+
+
+# -- an amending act that does not apply yet ----------------------------------
+
+#: The amending acts held as upcoming, by CELEX number, with the name a reader
+#: knows them by. Each is read from the act as published in the Official
+#: Journal; no consolidation carries an ATP before it applies.
+UPCOMING = {"32025R1222": "Delegated Regulation (EU) 2025/1222 (23rd ATP)"}
+_APPLIES = re.compile(r"(?:It|This Regulation) shall apply from "
+                      r"(\d{1,2}) (\w+) (\d{4})")
+_MONTHS = ("january", "february", "march", "april", "may", "june", "july",
+           "august", "september", "october", "november", "december")
+
+
+def applies_from(doc):
+    """The date the act says it applies from, and the sentence that says so."""
+    from datetime import date
+
+    text = " ".join(" ".join(doc.itertext()).split())
+    match = _APPLIES.search(text)
+    if match is None:
+        return None, ""
+    day, month, year = match.groups()
+    if month.lower() not in _MONTHS:
+        return None, ""
+    return (date(int(year), _MONTHS.index(month.lower()) + 1, int(day)),
+            match.group(0) + ".")
+
+
+def parse_amendment(doc, *, celex: str):
+    """The entries an ATP inserts and the entries it replaces, with issues.
+
+    The act's Annex quotes its new rows inside two numbered points: "(1) the
+    following entries are inserted ..." and "(2) the entries corresponding to
+    index numbers ... are replaced by the following". Each point holds one
+    table that opens with Table 3's own header; which point a table belongs to
+    is read from the point's own words, and the index numbers point (2) names
+    are checked against the rows it gives.
+    """
+    inserted: list[AnnexVIEntry] = []
+    replaced: list[AnnexVIEntry] = []
+    issues: list[str] = []
+    named: list[str] = []
+    for table in doc.xpath("//table"):
+        rows = table.xpath("./tr|./tbody/tr|./thead/tr")
+        if not rows:
+            continue
+        head = " ".join(" ".join(rows[0].itertext()).split()).lower()
+        if not head.startswith("index no"):
+            continue
+        point = table.xpath("ancestor::table[1]")
+        intro = (" ".join(" ".join(point[0].itertext()).split()).lower()[:400]
+                 if point else "")
+        found = _entries(rows, celex, issues, quoted=True)
+        if "are inserted" in intro:
+            inserted += found
+        elif "are replaced" in intro:
+            replaced += found
+            named += re.findall(r"\d{3}-\d{3}-\d{2}-[\dX]", intro)
+        else:
+            issues.append(f"a table of {len(found)} entries under neither "
+                          "point: " + intro[:120])
+    given = {e.index_no for e in replaced}
+    for index_no in sorted(set(named) - given):
+        issues.append(f"{index_no}: named as replaced, but no row given for it")
+    for index_no in sorted(given - set(named)):
+        issues.append(f"{index_no}: a replacement row the act does not name")
+    return inserted, replaced, issues
+
+
+def upcoming_path() -> Path:
+    return data_dir() / "annex_vi" / "upcoming.json"
+
+
+def load_upcoming() -> AnnexVIAmendment | None:
+    """The committed upcoming amendment, or None. Check time reads only this."""
+    path = upcoming_path()
+    if not path.exists():
+        return None
+    return AnnexVIAmendment.model_validate_json(path.read_text(encoding="utf-8"))
+
+
+def build_upcoming(*, use_cache: bool = True) -> tuple[AnnexVIAmendment, Path, list[str]]:
+    """data/annex_vi/upcoming.json, read from the amending act itself."""
+    from lingua_oracle.keys.builders.eu_clp import _doc
+
+    (celex, title), = UPCOMING.items()
+    url = f"http://publications.europa.eu/resource/celex/{celex}"
+    doc = _doc("eng", use_cache=use_cache, url=url)
+    when, sentence = applies_from(doc)
+    if when is None:
+        raise ValueError(f"{celex}: no date of application found in the act")
+    inserted, replaced, issues = parse_amendment(doc, celex=celex)
+    amendment = AnnexVIAmendment(
+        act=celex, title=title, applies_from=when, applies_from_text=sentence,
+        source_url=url, retrieved_at=now(), inserted=inserted, replaced=replaced)
+    existing = load_upcoming()
+    if existing is not None and existing.model_dump(exclude={"retrieved_at"}) \
+            == amendment.model_dump(exclude={"retrieved_at"}):
+        amendment = amendment.model_copy(
+            update={"retrieved_at": existing.retrieved_at})
+    target = upcoming_path()
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        json.dumps(amendment.model_dump(mode="json"), ensure_ascii=False,
+                   indent=1) + "\n", encoding="utf-8")
+    return amendment, target, issues
 
 
 def table_path() -> Path:

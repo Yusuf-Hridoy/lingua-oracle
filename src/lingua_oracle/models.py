@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from enum import StrEnum
 from typing import Literal
 
@@ -164,6 +164,31 @@ class AnnexVIEntry(BaseModel):
         for value in self.cas:
             out += _re.findall(r"\b\d{2,7}-\d{2}-\d\b", value)
         return out
+
+
+class AnnexVIAmendment(BaseModel):
+    """An act that amends Table 3 and does not apply yet, read from the act.
+
+    An ATP is adopted months before it applies, and no consolidation carries it
+    until it does. Until then it is held here, beside the table it amends,
+    with the date its own text gives.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    #: CELEX number of the amending act, e.g. 32025R1222.
+    act: str
+    #: How a reader names it - "Delegated Regulation (EU) 2025/1222 (23rd ATP)".
+    title: str
+    #: The date the act says it applies from, read from its own text.
+    applies_from: date
+    #: The sentence that date was read from, quoted.
+    applies_from_text: str
+    source_url: str
+    retrieved_at: datetime | None = None
+    #: Entries the act adds to Table 3, and entries it replaces whole.
+    inserted: list[AnnexVIEntry] = Field(default_factory=list)
+    replaced: list[AnnexVIEntry] = Field(default_factory=list)
 
 
 class AnnexVITable(BaseModel):
@@ -366,6 +391,9 @@ class MixtureSection(BaseModel):
     source_document: str = ""
     assumptions: list[str] = Field(default_factory=list)
     results: list[dict] = Field(default_factory=list)
+    #: What an adopted amendment to the list that does not apply yet changes
+    #: about this calculation, with its date.
+    upcoming: list[str] = Field(default_factory=list)
 
     @property
     def inconsistent(self) -> int:

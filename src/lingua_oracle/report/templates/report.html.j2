@@ -230,6 +230,7 @@
   </div>
   {% for s in ing_under %}{{ sub.under_card(s, ing_said_by, ing_list) }}{% endfor %}
   {% for s in ing_inconsistent %}{{ sub.inconsistent_card(s, ing_said_by) }}{% endfor %}
+  {{ sub.upcoming(ing.substances) }}
   {{ sub.collapsed(ing_matches, ing_extra, ing_unchecked, ing_reasons) }}
   {% endif %}
 
@@ -252,6 +253,14 @@
     </div>
   </div>
   {% for r in mixture.results %}{{ mix.card(r) }}{% endfor %}
+  {% if mixture.upcoming %}
+  <details class="block upcoming" open>
+    <summary>Changes coming to Annex VI &middot; {{ mixture.upcoming|length }}</summary>
+    <div class="inner"><ul class="statements">
+      {% for note in mixture.upcoming %}<li><span>{{ note }}</span></li>{% endfor %}
+    </ul></div>
+  </details>
+  {% endif %}
   {% endif %}
 
   <details class="block">

@@ -71,6 +71,7 @@
   {% for s in inconsistent %}{{ cards.inconsistent_card(s) }}{% endfor %}
   {% endif %}
 
+  {{ cards.upcoming(run.substances or []) }}
   {{ cards.collapsed(matches, extra, unchecked, reasons) }}
 
   <details class="block">

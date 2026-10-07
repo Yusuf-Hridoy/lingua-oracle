@@ -45,12 +45,90 @@ def display_name(regulation: str) -> str:
 
 def build(rows, lines, spans, regulation: str, table,
           stated_override: list[str] | None = None,
-          state_override: str | None = None) -> MixtureSection:
+          state_override: str | None = None, *,
+          upcoming=None, on=None) -> MixtureSection:
     """The mixture section for one document.
 
     `rows` carry a CAS number, a name, the codes and the concentration as
     printed - whether they came from the application or from Section 3.
+
+    `upcoming` is the list's adopted amendment that does not apply yet. From
+    its date on, the amended table is the one calculated with. Before it, the
+    calculation is made with both where the amendment touches an ingredient: a
+    hazard family consistent with either passes, and whatever the amendment
+    changes is said, with its date.
     """
+    from lingua_oracle.substances.upcoming import today
+
+    on = on or today()
+    if upcoming is not None and upcoming.binding_on(on):
+        return _build(rows, lines, spans, regulation, upcoming.table,
+                      stated_override, state_override)
+    section = _build(rows, lines, spans, regulation, table,
+                     stated_override, state_override)
+    touched = upcoming is not None and section.state == "calculated" and any(
+        (row.get("cas") or "").strip() in upcoming.changed_cas for row in rows)
+    if not touched:
+        return section
+    later = _build(rows, lines, spans, regulation, upcoming.table,
+                   stated_override, state_override)
+    return _reconcile(section, later, upcoming)
+
+
+def _family(result: dict) -> str:
+    return result.get("family") or str(result.get("hazard_class") or "")
+
+
+def _reconcile(now: MixtureSection, later: MixtureSection,
+               upcoming) -> MixtureSection:
+    """One section from the calculation in force and the amended one."""
+    amended = {_family(r): r for r in later.results}
+    results: list[dict] = []
+    notes: list[str] = []
+    for result in now.results:
+        family = _family(result)
+        alt = amended.pop(family, None)
+        meets_amended = alt["verdict"] == "consistent" if alt else True
+        if result["verdict"] == "inconsistent" and meets_amended:
+            # The amended calculation either agrees with Section 2 or does not
+            # raise this family at all - which, with nothing stated, is
+            # agreement too.
+            if alt is not None:
+                results.append(alt)
+            notes.append(
+                f"{family}: consistent with Annex VI as amended by the "
+                f"{upcoming.short}, which applies from {upcoming.when} and may "
+                "be followed now.")
+            continue
+        if alt is None:
+            results.append(result)
+            notes.append(
+                f"From {upcoming.when} ({upcoming.short}): {family} - the "
+                "calculation no longer raises it.")
+            continue
+        results.append(result)
+        if (alt["verdict"] != result["verdict"]
+                or alt.get("calculated_class") != result.get("calculated_class")):
+            notes.append(
+                f"From {upcoming.when} ({upcoming.short}): {family} - the "
+                f"calculation gives {alt.get('calculated_class') or 'no classification'}"
+                f", {alt['verdict'].replace('_', ' ')} with Section 2.")
+    for family, alt in amended.items():
+        notes.append(
+            f"From {upcoming.when} ({upcoming.short}): {family} - the "
+            f"calculation gives {alt.get('calculated_class') or 'no classification'}"
+            f", {alt['verdict'].replace('_', ' ')} with Section 2.")
+    counts = dict(now.counts)
+    for verdict in ("inconsistent", "cannot_tell", "consistent", "not_calculated"):
+        counts[verdict] = sum(1 for r in results if r["verdict"] == verdict)
+    return now.model_copy(update={"results": results, "counts": counts,
+                                  "upcoming": notes})
+
+
+def _build(rows, lines, spans, regulation: str, table,
+           stated_override: list[str] | None = None,
+           state_override: str | None = None) -> MixtureSection:
+    """The calculation against one table."""
     # Read first and keep, whatever happens next: a re-run after the reader
     # picks a product must not need the uploaded file back.
     stated = ([parse_class(c) for c in stated_override] if stated_override

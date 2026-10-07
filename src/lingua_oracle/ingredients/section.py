@@ -11,7 +11,7 @@ finding about the document.
 from __future__ import annotations
 
 from lingua_oracle.ingredients import report as ingredient_report
-from lingua_oracle.ingredients.compare import Status, check_ingredient
+from lingua_oracle.ingredients.compare import Status, check_ingredient_on
 from lingua_oracle.ingredients.from_pdf import (
     has_anything_to_check,
     ingredients_in_section_three,
@@ -37,8 +37,11 @@ def _section_from(substances, source: str, **extra) -> IngredientSection:
     return section
 
 
-def _substances_from(rows, table, index, *, name_of=None):
-    """Group (cas, codes) readings into the shape the report renders."""
+def _substances_from(rows, table, index, *, name_of=None, upcoming=None):
+    """Group (cas, codes) readings into the shape the report renders.
+
+    `upcoming` is the list's adopted amendment that does not apply yet, if any.
+    """
     from lingua_oracle.ingredients.report import SubstanceResult, Use
 
     uses: dict[str, list[tuple[int, tuple[str, ...]]]] = {}
@@ -54,7 +57,8 @@ def _substances_from(rows, table, index, *, name_of=None):
     out = []
     for cas in sorted(uses):
         verdicts = {
-            codes: check_ingredient(cas, list(codes), table, index)
+            codes: check_ingredient_on(cas, list(codes), table, index,
+                                       upcoming=upcoming)
             for codes in {c for _position, c in uses[cas]}
         }
         out.append(SubstanceResult(
@@ -81,11 +85,13 @@ def check(path: str, file_name: str, lines, *, client_factory=None,
     """
     from lingua_oracle.ingredients.client import session
     from lingua_oracle.substances.load import for_check
+    from lingua_oracle.substances.upcoming import for_list
 
     use, table = for_check(regulation)
     if use is None or table is None:
         return IngredientSection(source="nothing", message=NO_LIST)
     index = table.by_cas()
+    upcoming = for_list(use.name)
     about_list = {"list_name": use.name, "list_title": use.title,
                   "list_binding": use.binding, "list_authority": use.authority}
 
@@ -114,7 +120,8 @@ def check(path: str, file_name: str, lines, *, client_factory=None,
         if match.state == "matched" and client is not None:
             rows = client.ingredients(match.product_id)
             substances = _substances_from(rows, table, index,
-                                          name_of=lambda row: row.name)
+                                          name_of=lambda row: row.name,
+                                          upcoming=upcoming)
             section = _section_from(
                 substances, "app", match_state=match.state,
                 product_id=match.product_id, product_name=match.name,
@@ -148,7 +155,7 @@ def check(path: str, file_name: str, lines, *, client_factory=None,
             candidates=[{"product_id": c.product_id, "name": c.name}
                         for c in match.candidates], **about_list)
 
-    substances = _substances_from(rows, table, index)
+    substances = _substances_from(rows, table, index, upcoming=upcoming)
     section = _section_from(
         substances, "pdf", match_state=match.state, evidence=match.evidence,
         candidates=[{"product_id": c.product_id, "name": c.name}
@@ -188,6 +195,7 @@ def recheck(report, product_id: int, *, client_factory=None):
     from lingua_oracle.ingredients.client import session
     from lingua_oracle.mixture import section as mixture_section
     from lingua_oracle.substances.load import for_check
+    from lingua_oracle.substances.upcoming import for_list
 
     client = (client_factory() if client_factory else session())
     if client_factory is not None:
@@ -197,8 +205,10 @@ def recheck(report, product_id: int, *, client_factory=None):
 
     use, table = for_check(report.regulation)
     index = table.by_cas() if table else {}
+    upcoming = for_list(use.name) if use else None
     substances = _substances_from(rows, table, index,
-                                  name_of=lambda row: row.name) if table else []
+                                  name_of=lambda row: row.name,
+                                  upcoming=upcoming) if table else []
     section = _section_from(
         substances, "app", match_state="matched", product_id=product_id,
         product_name=detail.get("product_name"), evidence="chosen by you",
@@ -213,7 +223,8 @@ def recheck(report, product_id: int, *, client_factory=None):
         mixture_section.rows_from_app(rows), [], [], report.regulation, table,
         stated_override=(report.mixture.stated if report.mixture else []),
         state_override=(report.mixture.physical_state if report.mixture
-                        else None))
+                        else None),
+        upcoming=upcoming)
     if client_factory is not None:
         client.close()
     return report

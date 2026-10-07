@@ -211,9 +211,16 @@ def list_version(name: str, annex_vi_source: str = "") -> str:
     return _version(path) if path else name
 
 
+def upcoming_version(upcoming) -> str:
+    """An adopted amendment to Annex VI, named with the date it applies."""
+    return (f"{upcoming.title}, amending Annex VI Table 3 from "
+            f"{upcoming.applies_from:%d/%m/%Y}, read from the act "
+            f"(CELEX {upcoming.act})")
+
+
 def used(regulation: str, language: str, revision: str, *,
          ingredient_list: str = "", annex_vi_source: str = "",
-         mixture_document: str = "") -> list[str]:
+         mixture_document: str = "", upcoming=None) -> list[str]:
     """Every source a report was judged against, each with its version.
 
     Only what this report actually used: the ingredient list and the mixture
@@ -241,6 +248,8 @@ def used(regulation: str, language: str, revision: str, *,
         elif regulation in _MIXTURE_SOURCES:
             mixture_document = _version(_MIXTURE_SOURCES[regulation])
         lines.append(f"Mixture rules: {mixture_document}")
+    if upcoming is not None:
+        lines.append(f"Upcoming: {upcoming_version(upcoming)}")
     return lines
 
 

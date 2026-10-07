@@ -225,10 +225,14 @@ def sources_used(report: Report) -> list[str]:
     mixture = report.mixture
     mixture_document = (mixture.source_document
                         if mixture is not None and mixture.results else "")
+    from lingua_oracle.substances.upcoming import for_list
+
+    upcoming = for_list("annex_vi") if ingredient_list == "annex_vi" else None
     return sources.used(reg.id, report.language, reg.revision,
                         ingredient_list=ingredient_list,
                         annex_vi_source=annex_vi_source,
-                        mixture_document=mixture_document)
+                        mixture_document=mixture_document,
+                        upcoming=upcoming)
 
 
 def _mixture_section(report, path, document, spans, regulation,
@@ -278,8 +282,12 @@ def _mixture_section(report, path, document, spans, regulation,
 
             rows = mixture_section.rows_from_pdf(
                 ingredients_in_section_three(path))
+        from lingua_oracle.substances.upcoming import for_list
+
+        use, table = for_check(regulation)
         return mixture_section.build(rows, document.lines, spans, regulation,
-                                     for_check(regulation)[1])
+                                     table,
+                                     upcoming=for_list(use.name) if use else None)
     except Exception as exc:  # noqa: BLE001
         return MixtureSection(state="skipped",
                               message=f"Mixture check skipped: {exc}"[:200])

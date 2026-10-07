@@ -245,7 +245,7 @@ def _payload(run: Run) -> dict:
         "label": run.label,
         "annex_vi_source": run.annex_vi_source,
         # The library run always measures against Annex VI.
-        "sources": ["Ingredients: " + list_version("annex_vi", run.annex_vi_source)],
+        "sources": _library_sources(run),
         "counts": run.counts(),
         "not_checked_reasons": run.reasons(),
         "missing_code_patterns": run.missing_patterns(),
@@ -273,12 +273,27 @@ def _payload(run: Run) -> dict:
                 # finding about the sheet: a fact about the list it was
                 # measured against, and the reader is entitled to it.
                 "list_anomalies": s.verdict.list_anomalies,
+                # What an adopted amendment that does not apply yet changes,
+                # from every use - one use can meet it where another does not.
+                "upcoming": sorted({note for u in s.uses
+                                    for note in u.verdict.upcoming}),
             }
             for s in run.substances
         ],
         "under_classified_reach": run.reach(),
         "missing_code_by_substance": run.missing_by_substance(),
     }
+
+
+def _library_sources(run: Run) -> list[str]:
+    from lingua_oracle.keys.builders.sources import upcoming_version
+    from lingua_oracle.substances.upcoming import for_list
+
+    lines = ["Ingredients: " + list_version("annex_vi", run.annex_vi_source)]
+    upcoming = for_list("annex_vi")
+    if upcoming is not None:
+        lines.append(f"Upcoming: {upcoming_version(upcoming)}")
+    return lines
 
 
 def write_json(run: Run, path: Path) -> Path:

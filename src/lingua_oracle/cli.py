@@ -203,6 +203,13 @@ def keys_build(
         table, path, issues = annex_vi.build(use_cache=not no_cache)
         typer.secho(f"  wrote {len(table.entries)} Annex VI entries -> {path}")
         typer.secho(f"  parse report -> {issues}")
+        # The adopted amendment that does not apply yet, from its own act.
+        amendment, path, problems = annex_vi.build_upcoming(use_cache=not no_cache)
+        typer.secho(f"  wrote {amendment.title}: {len(amendment.inserted)} "
+                    f"inserted, {len(amendment.replaced)} replaced, applies from "
+                    f"{amendment.applies_from} -> {path}")
+        for problem in problems:
+            typer.secho(f"      {problem}", fg=typer.colors.YELLOW)
         return
 
     wanted = load_registry().ids() if regulation == "all" else [regulation]
@@ -376,15 +383,18 @@ def _group(client, table, index, run, uses_for, names_for, seen_sources):
     that share it: the verdict is a function of the codes, so checking the same
     set again cannot say anything different.
     """
-    from lingua_oracle.ingredients.compare import check_ingredient
+    from lingua_oracle.ingredients.compare import check_ingredient_on
     from lingua_oracle.ingredients.report import SubstanceResult, Use
+    from lingua_oracle.substances.upcoming import for_list
 
+    upcoming = for_list("annex_vi")
     for cas in sorted(uses_for):
         if cas not in seen_sources:
             seen_sources[cas] = client.substance_source(cas)
         verdicts = {
-            codes: check_ingredient(cas, list(codes), table, index,
-                                    data_source=seen_sources[cas])
+            codes: check_ingredient_on(cas, list(codes), table, index,
+                                       upcoming=upcoming,
+                                       data_source=seen_sources[cas])
             for codes in {c for _pid, c in uses_for[cas]}
         }
         run.substances.append(SubstanceResult(

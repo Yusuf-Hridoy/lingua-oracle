@@ -90,6 +90,20 @@
 </article>
 {% endmacro %}
 
+{% macro upcoming(substances) %}
+{% set items = substances | selectattr('upcoming') | list %}
+{% if items %}
+<details class="block upcoming" open>
+  <summary>Changes coming to Annex VI &middot; {{ items|length }}</summary>
+  <div class="inner"><ul class="statements">
+    {% for s in items %}{% for note in s.upcoming %}
+    <li><span class="code">{{ s.cas }}</span><span>{{ s.name or 'unnamed' }} &mdash; {{ note }}</span></li>
+    {% endfor %}{% endfor %}
+  </ul></div>
+</details>
+{% endif %}
+{% endmacro %}
+
 {% macro collapsed(matches, extra, unchecked, reasons) %}
 {% if matches %}
 <details class="block good">

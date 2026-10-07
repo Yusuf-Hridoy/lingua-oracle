@@ -158,12 +158,23 @@ def test_an_unchanged_rebuild_keeps_its_timestamp(table):
 
 def test_check_time_reads_the_file_and_never_the_act():
     """The table is committed data. Nothing in the check path may fetch it."""
+    import ast
+
     from lingua_oracle.keys.builders import annex_vi
 
     text = Path(annex_vi.__file__).read_text(encoding="utf-8")
-    # The only fetch is inside build(), via the EU CLP builder's own _doc().
-    assert text.count("_doc(") == 1
+    # Every fetch is inside a build function - build() for the table,
+    # build_upcoming() for the amending act - via the EU CLP builder's _doc().
+    fetching = [
+        function.name
+        for function in ast.walk(ast.parse(text))
+        if isinstance(function, ast.FunctionDef)
+        for node in ast.walk(function)
+        if isinstance(node, ast.Call) and getattr(node.func, "id", "") == "_doc"
+    ]
+    assert sorted(fetching) == ["build", "build_upcoming"]
     assert "def load_table()" in text
+    assert "def load_upcoming()" in text
 
 
 def test_the_supplemental_column_is_parsed_into_its_own_field(table):

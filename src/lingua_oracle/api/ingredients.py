@@ -74,9 +74,10 @@ def start(scope: str, product_id: int | None = None,
 
 def _work(progress: Progress, product_id: int | None, client_factory) -> None:
     from lingua_oracle.ingredients.client import AppUnavailable, ExactSdsClient
-    from lingua_oracle.ingredients.compare import check_ingredient
+    from lingua_oracle.ingredients.compare import check_ingredient_on
     from lingua_oracle.ingredients.report import SubstanceResult, Use
     from lingua_oracle.keys.builders.annex_vi import load_table
+    from lingua_oracle.substances.upcoming import for_list
 
     try:
         table = load_table()
@@ -107,11 +108,13 @@ def _work(progress: Progress, product_id: int | None, client_factory) -> None:
 
         progress.state = "grouping"
         sources: dict[str, str | None] = {}
+        upcoming = for_list("annex_vi")
         for cas in sorted(uses_for):
             sources[cas] = client.substance_source(cas)
             verdicts = {
-                codes: check_ingredient(cas, list(codes), table, index,
-                                        data_source=sources[cas])
+                codes: check_ingredient_on(cas, list(codes), table, index,
+                                           upcoming=upcoming,
+                                           data_source=sources[cas])
                 for codes in {c for _pid, c in uses_for[cas]}
             }
             run.substances.append(SubstanceResult(

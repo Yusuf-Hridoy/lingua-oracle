@@ -128,6 +128,10 @@ class Verdict:
     #: Contradictions in the published entry - the same class in two
     #: categories - which are the list's, not the sheet's.
     list_anomalies: list[str] = field(default_factory=list)
+    #: What an adopted amendment that does not apply yet changes for this
+    #: substance - "From 1 February 2027 Annex VI requires H251 ..." Said
+    #: beside the verdict, never instead of it.
+    upcoming: list[str] = field(default_factory=list)
 
     @property
     def missing_codes(self) -> list[str]:
@@ -244,6 +248,49 @@ def check_ingredient(cas: str | None, stated_codes: list[str],
                    list_anomalies=_anomalies(entry),
                    required_codes=[c.strip() for c in
                                    (*entry.h_codes, *entry.euh_codes)])
+
+
+def _meets(verdict: Verdict) -> bool:
+    return verdict.status in (Status.OK, Status.INFO)
+
+
+def check_ingredient_on(cas: str | None, stated_codes: list[str],
+                        table: AnnexVITable,
+                        index: dict[str, list[AnnexVIEntry]] | None = None,
+                        *, upcoming=None, on=None,
+                        data_source: str | None = None) -> Verdict:
+    """`check_ingredient`, with an adopted amendment taken into account.
+
+    `upcoming` is a `substances.upcoming.Upcoming`, `on` the date of the check.
+    Before the amendment applies, a sheet meeting either the entry in force or
+    the amended entry meets Annex VI; where it meets only the one in force, the
+    verdict says what the amended entry will require and from when. From the
+    date on, the amended entry is the one that binds.
+    """
+    from lingua_oracle.substances.upcoming import today
+
+    current = check_ingredient(cas, stated_codes, table, index,
+                               data_source=data_source)
+    if upcoming is None or (cas or "").strip() not in upcoming.changed_cas:
+        return current
+    later = check_ingredient(cas, stated_codes, upcoming.table,
+                             data_source=data_source)
+    if upcoming.binding_on(on or today()):
+        return later
+
+    if not _meets(current) and _meets(later):
+        later.upcoming.append(
+            f"Meets Annex VI as amended by the {upcoming.short} "
+            f"({upcoming.title.split(' (')[0]}), which applies from "
+            f"{upcoming.when} and may be followed now.")
+        return later
+    if later.missing_codes and set(later.missing_codes) != set(current.missing_codes):
+        note = (f"From {upcoming.when} Annex VI requires "
+                f"{', '.join(later.missing_codes)} for this substance "
+                f"({upcoming.short}).")
+        current.upcoming.append(note)
+        current.findings.append(Finding(Status.INFO, None, note))
+    return current
 
 
 def compare_categories(stated: str, harmonised: str) -> str:
