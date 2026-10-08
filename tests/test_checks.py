@@ -32,7 +32,9 @@ DEFECTS = {
     "defect_a06_placeholder": ("A-06", Severity.FAIL, set()),
     "defect_a07_broken": ("A-07", Severity.FAIL, set()),
     "defect_b08_missing_s16": ("B-08", Severity.FAIL, set()),
-    "defect_b09_label": ("B-09", Severity.FAIL, set()),
+    # A fragment: the Section 2 a label is held against, and the label on a
+    # page of its own. The structure checks find the rest of the sheet missing.
+    "defect_b09_label": ("B-09", Severity.FAIL, {"B-12", "B-13", "B-14"}),
     "defect_b10_signal_fit": ("B-10", Severity.FAIL, set()),
     "defect_c12_euh_on_osha": ("C-12", Severity.FAIL, set()),
     # A missing language is a question, not a verdict on the wording: the
@@ -60,7 +62,7 @@ def _fired(report, severity: Severity) -> set[str]:
 def test_every_check_is_registered():
     """Importing lingua_oracle.checks is what registers them; a module left out
     of that package's import list disappears silently."""
-    assert len(all_checks()) == 16
+    assert len(all_checks()) == 19
 
 
 @pytest.mark.parametrize(("name", "regulation", "language"), CLEAN)

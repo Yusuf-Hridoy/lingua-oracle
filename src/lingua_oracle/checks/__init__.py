@@ -1,4 +1,4 @@
-"""The 15 checks, registered by ID.
+"""The checks, registered by ID.
 
 Importing this package registers every check. Order here is the order findings
 are produced in.
@@ -14,6 +14,7 @@ from lingua_oracle.checks import (  # noqa: F401
     b09_label_vs_section2,
     b10_signal_fits_codes,
     b11_compare,
+    b12_b14_structure,
     c02_consistency,
     c12_valid_for_regulation,
     c13_revision,

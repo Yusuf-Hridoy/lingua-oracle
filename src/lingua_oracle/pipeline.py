@@ -102,6 +102,10 @@ def check_pdf(
         compare_hits=compare_hits or [],
         compare_language=compare_lang,
     )
+    if not ctx.is_label():
+        from lingua_oracle.structure.reader import read as read_structure
+
+        ctx.structure = read_structure(document, reg.id, lang)
     findings = run_all(ctx, only=only)
 
     codes = {hit.code for hit in hits}
@@ -135,6 +139,7 @@ def check_pdf(
     report.sections_found = sorted({span.name for span in spans},
                                    key=lambda n: (not n.isdigit(), int(n) if n.isdigit() else 0))
     report.physical_state = physical_state(document.lines, spans) or ""
+    report.structure = ctx.structure
     if ingredients:
         # Never allowed to cost the wording result. Whatever happens here, the
         # report that has already been built is what the reader gets.

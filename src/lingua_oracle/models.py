@@ -440,6 +440,48 @@ class SubstanceSection(BaseModel):
     message: str = ""
 
 
+class StructureRow(BaseModel):
+    """One thing the regulation's text requires of the sheet's structure,
+    and what the sheet does about it."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    check: str                  # B-12 sections, B-13 sub-sections/empty, B-14 items
+    key: str                    # what the row is about, in plain words
+    status: Literal["ok", "fix", "check", "na"]
+    text: str
+    quote: str = ""             # the requirement, as the text prints it
+    citation: str = ""
+    found: str = ""             # what the sheet prints, where it matters
+    expected: str = ""          # what the text prints, where it matters
+
+
+class StructureSectionResult(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    number: str
+    heading: str = ""           # the heading as printed on the sheet, "" if not found
+    required_heading: str = ""  # in the sheet's language, where the text has it
+    found: bool = False
+    page: int | None = None
+    rows: list[StructureRow] = Field(default_factory=list)
+
+
+class StructureReport(BaseModel):
+    """The sheet's 16 sections against what the regulation's text requires."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    regulation: str
+    document: str = ""
+    state: Literal["checked", "not_available"] = "checked"
+    message: str = ""
+    sections: list[StructureSectionResult] = Field(default_factory=list)
+    #: Requirements on the sheet as a whole: date, page numbering, and items
+    #: the text places nowhere in particular.
+    document_rows: list[StructureRow] = Field(default_factory=list)
+
+
 class Report(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -477,6 +519,9 @@ class Report(BaseModel):
     #: What Section 9 says the product is: "gas", "liquid", "solid",
     #: "solid/liquid" (an aerosol, paste or gel) or "".
     physical_state: str = ""
+    #: The 16 sections, sub-sections and required items, against the
+    #: regulation's own text on safety data sheets. None on an older report.
+    structure: StructureReport | None = None
 
     def recount(self) -> None:
         s = Summary()

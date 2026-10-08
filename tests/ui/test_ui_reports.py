@@ -557,7 +557,7 @@ def test_the_placeholder_has_air_before_it(page, server, shots_dir):
 def test_an_undetectable_regulation_shows_the_page(page, server, shots_dir):
     """No raw JSON in the browser, ever."""
     page.goto(server + "/", wait_until="domcontentloaded")
-    page.set_input_files("#file", f"{FIXTURES}/defect_a02_hazard.pdf")
+    page.set_input_files("#file", f"{FIXTURES}/pattern_undetectable.pdf")
     page.click("#check-form button[type=submit]")
     page.wait_for_load_state("load")
     notice = page.locator(".notice")

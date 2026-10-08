@@ -11,7 +11,13 @@ from lingua_oracle.detect.codes import CodeHit
 from lingua_oracle.detect.sections import LABEL, SectionSpan, section_of
 from lingua_oracle.extract.base import Document
 from lingua_oracle.keys.tierb import Borrowed
-from lingua_oracle.models import AnswerKeyEntry, Finding, StatementVerdict, Tier
+from lingua_oracle.models import (
+    AnswerKeyEntry,
+    Finding,
+    StatementVerdict,
+    StructureReport,
+    Tier,
+)
 from lingua_oracle.registry import Regulation
 
 
@@ -38,6 +44,9 @@ class CheckContext:
     #: report's statement cards are both built from this, so a code that gets
     #: no entry here is genuinely not checked.
     statements: dict[str, StatementVerdict] = field(default_factory=dict)
+    #: The sheet's 16 sections against the regulation's text on SDS structure,
+    #: read once by the pipeline (structure/reader.py). None for a label.
+    structure: StructureReport | None = None
 
     def record(self, verdict: StatementVerdict) -> None:
         """Keep the strongest opinion held about a code.

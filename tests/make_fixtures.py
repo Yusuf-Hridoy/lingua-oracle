@@ -55,15 +55,46 @@ HEADINGS = {
 class Sheet:
     """A very small PDF text layout helper."""
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, *, numbered: bool = False,
+                 structure: tuple[str, str] | None = None,
+                 composition: str = "mixture"):
         self.canvas = canvas.Canvas(str(path), pagesize=A4)
         self.y = TOP
         self.canvas.setFont("Helvetica", 9)
+        # A fragment written section by section can be made a whole sheet: with
+        # `structure` set, every section, sub-section and item the regulation's
+        # text requires that the builder does not write is filled in around it,
+        # from data/sds_structure/ - see _Completion.
+        self.completion = _Completion(self, *structure, composition) if structure else None
+        numbered = numbered or structure is not None
+        # "SDS 1 / 3" at the foot of every page, the total filled in at save.
+        # Not opening with a digit - "2 / 3" would read as a Section 2 heading -
+        # and in capitals, so it is never taken as the end of a statement.
+        self.numbered = numbered
+        self.page = 1
+
+    def _footer(self) -> None:
+        if not self.numbered:
+            return
+        self.canvas.setFont("Helvetica", 7)
+        self.canvas.drawString(WIDTH / 2 - 20, 30, f"SDS {self.page} / ")
+        self.canvas.doForm("page_total")
+        self.canvas.setFont("Helvetica", 9)
+
+    def _new_page(self) -> None:
+        self._footer()
+        self.canvas.showPage()
+        self.page += 1
+        self.y = TOP
 
     def line(self, text: str = "", *, bold: bool = False, size: int = 9) -> None:
+        if self.completion is not None and self.completion.heading(text):
+            return
+        self._draw(text, bold=bold, size=size)
+
+    def _draw(self, text: str = "", *, bold: bool = False, size: int = 9) -> None:
         if self.y < 60:
-            self.canvas.showPage()
-            self.y = TOP
+            self._new_page()
         font = "Helvetica-Bold" if bold else "Helvetica"
         # Keep a statement on one line, shrinking the type to fit, the way a real
         # SDS fits text into a table cell. Wrapping a long statement would split
@@ -132,11 +163,122 @@ class Sheet:
         self.y -= LINE * n
 
     def page_break(self) -> None:
-        self.canvas.showPage()
-        self.y = TOP
+        self._new_page()
 
     def save(self) -> None:
+        if self.completion is not None:
+            self.completion.finish()
+        self._footer()
+        if self.numbered:
+            self.canvas.beginForm("page_total")
+            self.canvas.setFont("Helvetica", 7)
+            self.canvas.drawString(WIDTH / 2 - 20 + self.canvas.stringWidth(
+                f"SDS {self.page} / ", "Helvetica", 7), 30, f"{self.page}")
+            self.canvas.endForm()
         self.canvas.save()
+
+
+_SECTION_LINE_RE = re.compile(
+    r"^\s*(?:SECTION|PUNKT|AFSNIT|ABSCHNITT|RUBRIQUE|SECCIÓN)\s+(\d{1,2})\s*[:.]")
+
+
+class _Completion:
+    """Completes a fragment into a whole sheet, as its regulation's text requires.
+
+    The builder writes the sections it is about ("SECTION 2: ...", "SECTION
+    3: ..."); everything else - the sections between them, the sub-section
+    headings around its content, the contact items, the date - is drawn from
+    the structure table in the same order a real sheet has them. A builder's
+    heading is printed in the table's own wording. Section 3 takes 3.1 or 3.2
+    as `composition` says.
+    """
+
+    def __init__(self, sheet: Sheet, regulation: str, language: str, composition: str):
+        self.sheet, self.regulation, self.language = sheet, regulation, language
+        self.table = structure_table(regulation)
+        self.composition = composition
+        self.last = 0
+        self.pending: list[dict] = []
+        self.started = False
+
+    def _subs(self, number: str) -> list[dict]:
+        subs = list(self.table["sections"][int(number) - 1].get("subsections") or [])
+        for group in self.table.get("one_of", []):
+            if any(x["number"] in group for x in subs):
+                keep = "3.1" if self.composition == "substance" else group[-1]
+                subs = [x for x in subs if x["number"] not in group or x["number"] == keep]
+        return subs
+
+    def _sub_heading(self, sub: dict) -> None:
+        tag = self.language.split("-")[0].split("+")[0]
+        words = sub["heading"].get(tag) or sub["heading"]["en"]
+        self.sheet._draw(f"{sub['number']}. {words}", bold=True)
+
+    def _items(self, scope: str) -> list[str]:
+        return _item_lines(self.table, self.language, scope)
+
+    def _open(self, number: str, *, whole: bool) -> None:
+        """A section's heading, and its sub-sections up to where the
+        builder's own content goes; the rest wait for the next heading."""
+        self.sheet._draw(section_title(self.regulation, self.language, number),
+                         bold=True, size=11)
+        subs = self._subs(number)
+        self.pending = []
+        if not subs:
+            for line in self._items(number):
+                self.sheet._draw(line)
+            if whole:
+                self.sheet._draw(FILLER)
+            return
+        if whole:
+            self.pending = subs
+            self._close()
+            return
+        numbers = [x["number"] for x in subs]
+        body_at = _BODY_AT.get(number, numbers[0])
+        at = numbers.index(body_at) if body_at in numbers else 0
+        self.pending = subs[:at]
+        self._close()
+        self._sub_heading(subs[at])
+        for line in self._items(subs[at]["number"]):
+            self.sheet._draw(line)
+        self.pending = subs[at + 1:]
+
+    def _close(self) -> None:
+        for sub in self.pending:
+            self._sub_heading(sub)
+            for line in self._items(sub["number"]) or [FILLER]:
+                self.sheet._draw(line)
+        self.pending = []
+
+    def _start(self) -> None:
+        if not self.started:
+            self.started = True
+            for line in self._items("first_page") + self._items("document"):
+                self.sheet._draw(line)
+
+    def heading(self, text: str) -> bool:
+        found = _SECTION_LINE_RE.match(text or "")
+        if found is None:
+            return False
+        number = int(found.group(1))
+        if not 1 <= number <= 16 or number <= self.last:
+            return False
+        self._start()
+        self._close()
+        for between in range(self.last + 1, number):
+            self._open(str(between), whole=True)
+        self._open(str(number), whole=False)
+        self.last = number
+        return True
+
+    def finish(self) -> None:
+        if not self.started:
+            return
+        self._close()
+        for after in range(self.last + 1, 17):
+            self._open(str(after), whole=True)
+        self.last = 16
 
 
 def _wrap(text: str, width: int) -> list[str]:
@@ -191,6 +333,149 @@ def close_open_options(text: str) -> str:
     return closed if closed.endswith((".", "!", "?")) else closed + "."
 
 
+# -- the 16 sections, as each regulation's own text requires them -------------------
+#
+# Headings, labels and sub-headings come from data/sds_structure/, which is read
+# out of the regulation's text, the way statement wording comes from the answer
+# keys: a fixture cannot drift from what it is judged against. The contact
+# details are fictional and cannot be dialled or mailed.
+
+STRUCTURE_DATE = "2026-01-15"
+PHONE = "+00 000 000 000"
+EMERGENCY_PHONE = "+00 000 000 999"
+EMAIL = "sds@example.invalid"
+FILLER = "—"
+_EMERGENCY_WORD = {"en": "Emergency telephone", "fr": "Numéro d'urgence",
+                   "es": "Teléfono de emergencia"}
+#: Where a section's own content goes when its text has sub-sections.
+_BODY_AT = {"1": "1.1", "2": "2.2", "3": "3.2"}
+
+
+def structure_table(regulation: str) -> dict:
+    from lingua_oracle.structure.reader import load
+
+    table = load(regulation)
+    if table is None:
+        raise SystemExit(f"no SDS structure for {regulation}; run `lingua keys build sds_structure`")
+    return table
+
+
+def section_title(regulation: str, language: str, number: str) -> str:
+    """A section's heading, label and number as the text prints them."""
+    section = structure_table(regulation)["sections"][int(number) - 1]
+    heading = section["heading"]
+    if regulation == "ca_whmis":
+        # The item number, then the heading - in both languages for a sheet
+        # written in both ("en+fr"). Printed "3." rather than "3": a bare number
+        # opening a line reads as the rest of the line above to a text reader,
+        # on a real sheet as here.
+        if "+" in language:
+            return f"{number}. {heading['en']} / {heading['fr']}"
+        return f"{number}. {heading[language.split('-')[0]]}"
+    lang = language if language in heading else "en"
+    label = section["label"].get(lang) or section["label"]["en"]
+    # "Hazard(s)" is either; a sheet prints one of them.
+    return f"{label.replace('{n}', number)} {heading[lang].replace('(s)', 's')}".strip()
+
+
+def _item_lines(table: dict, language: str, scope: str) -> list[str]:
+    out = []
+    for item in table.get("items", []):
+        if item["scope"] != scope:
+            continue
+        kind = item["kind"]
+        if kind == "telephone":
+            out.append(f"Tel.: {EMERGENCY_PHONE if scope.endswith('.4') else PHONE}")
+        elif kind == "emergency_telephone":
+            word = _EMERGENCY_WORD.get(language.split("-")[0].split("+")[0],
+                                       _EMERGENCY_WORD["en"])
+            out.append(f"{word}: {EMERGENCY_PHONE}")
+        elif kind == "email":
+            out.append(EMAIL)
+        elif kind == "date":
+            out.append(STRUCTURE_DATE)
+    return list(dict.fromkeys(out))
+
+
+def structured_sheet(path: Path, *, regulation: str, language: str,
+                     bodies: dict[str, list] | None = None,
+                     omit: set[str] | None = None, order: list[str] | None = None,
+                     printed: dict[str, str] | None = None,
+                     headings: dict[str, str] | None = None,
+                     blank: set[str] | None = None) -> Path:
+    """A sheet with every section and sub-section the regulation's text
+    requires, each carrying its own content or a filler, and the items where
+    the text puts them. `bodies` maps a section number to its lines - plain
+    text, or (text, {"bold": True, "size": 11}) - placed under the
+    section's first content sub-section where the text has sub-sections.
+
+    For the structure tests, a sheet can be made wrong on purpose: `omit`
+    leaves out sections, sub-sections or items (by number or item id),
+    `order` prints the sections in another order, `printed` prints a
+    section under another number, `headings` gives a section other words,
+    `blank` prints sub-sections (or sections) with nothing under them."""
+    table = structure_table(regulation)
+    bodies = bodies or {}
+    omit, printed, headings = omit or set(), printed or {}, headings or {}
+    blank = blank or set()
+    if omit & {i["id"] for i in table.get("items", [])}:
+        table = dict(table, items=[i for i in table["items"] if i["id"] not in omit])
+    tag = language.split("-")[0].split("+")[0]
+    sheet = Sheet(path, numbered=True)
+    sheet.line(PRODUCT, bold=True, size=12)
+    for line in _item_lines(table, language, "first_page") + _item_lines(
+            table, language, "document"):
+        sheet.line(line)
+
+    def write(lines):
+        for line in lines:
+            if isinstance(line, tuple):
+                sheet.line(line[0], **line[1])
+            elif line == "":
+                sheet.blank()
+            else:
+                sheet.line(line)
+
+    sections = {s["number"]: s for s in table["sections"]}
+    for number in order or list(sections):
+        section = sections[number]
+        if number in omit:
+            continue
+        title = section_title(regulation, language, number)
+        if number in headings:
+            words = section["heading"].get(language.split("-")[0]) or section["heading"]["en"]
+            title = title.replace(words.replace("(s)", "s"), headings[number])
+        if number in printed:
+            title = re.sub(rf"(?<!\d){number}(?!\d)", printed[number], title, count=1)
+        sheet.line(title, bold=True, size=11)
+        body = list(bodies.get(number, []))
+        subs = section.get("subsections") or []
+        if not subs:
+            # Items first: a statement printed last would otherwise run on into
+            # them, the way an unpunctuated line runs into the next.
+            if number not in blank:
+                write(_item_lines(table, language, number) + body or [FILLER])
+            sheet.blank()
+            continue
+        skip = set()
+        for group in table.get("one_of", []):
+            if subs[0]["number"] in group or any(x["number"] in group for x in subs):
+                keep = _BODY_AT.get(number, group[-1])
+                skip |= {n for n in group if n != keep}
+        for sub in subs:
+            if sub["number"] in skip or sub["number"] in omit:
+                continue
+            words = sub["heading"].get(tag) or sub["heading"]["en"]
+            sheet.line(f"{sub['number']}. {words}", bold=True)
+            content = _item_lines(table, language, sub["number"]) + \
+                (body if _BODY_AT.get(number) == sub["number"] else [])
+            if sub["number"] not in blank:
+                write(content or [FILLER])
+        sheet.blank()
+    sheet.save()
+    return path
+
+
 def write_sds(
     path: Path,
     *,
@@ -208,10 +493,11 @@ def write_sds(
     include_s16: bool = True,
     bare_in_s3: list[str] | None = None,
 ) -> Path:
-    """Write a minimal but realistic three-section SDS.
+    """Write a complete SDS: all 16 sections as the regulation's text requires.
 
     `bare_in_s3` codes are printed in Section 3's classification only, as
-    codes, and nowhere else.
+    codes, and nowhere else. `include_s16=False` leaves Section 16's
+    statements out (its heading stays: the structure is not what is tested).
     """
     head = HEADINGS[language]
     supplemental = supplemental or []
@@ -222,44 +508,24 @@ def write_sds(
     official = {code: close_open_options(text) for code, text in official.items()}
     official.update({k: v for k, v in overrides.items() if k in official})
 
-    sheet = Sheet(path)
-    sheet.line(PRODUCT, bold=True, size=12)
+    two = [f"{head['signal']}: {signal_override or signal_text(regulation, language, danger)}",
+           "", (head["haz"], {"bold": True})]
+    two += [f"{code} {official[code]}" for code in h_codes + supplemental]
+    two += ["", (head["prec"], {"bold": True})]
+    two += [f"{code} {official[code]}" for code in p_codes]
+    two += list(extra_lines_s2 or [])
+    three = ["Synthetic component A  CAS 000-00-0  30-60%",
+             "Classification: " + ", ".join(h_codes + (bare_in_s3 or []))]
+    sixteen = []
+    if include_s16:
+        sixteen = [f"{code} {official[code]}" for code in h_codes + supplemental
+                   if code not in omit_from_s16]
+        sixteen += list(extra_lines_s16 or [])
     # Section 1's product identifier, which is where the product name is read
     # from. A sheet without one cannot be matched to anything.
-    sheet.line("SECTION 1: Identification of the substance/mixture")
-    sheet.line(f"Product name: {PRODUCT}")
-    sheet.line(SUPPLIER)
-    sheet.blank()
-
-    sheet.line(head["2"], bold=True, size=11)
-    sheet.line(f"{head['signal']}: {signal_override or signal_text(regulation, language, danger)}")
-    sheet.blank()
-    sheet.line(head["haz"], bold=True)
-    for code in h_codes + supplemental:
-        sheet.line(f"{code} {official[code]}")
-    sheet.blank()
-    sheet.line(head["prec"], bold=True)
-    for code in p_codes:
-        sheet.line(f"{code} {official[code]}")
-    for extra in extra_lines_s2 or []:
-        sheet.line(extra)
-    sheet.blank()
-
-    sheet.line(head["3"], bold=True, size=11)
-    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
-    sheet.line("Classification: " + ", ".join(h_codes + (bare_in_s3 or [])))
-    sheet.blank()
-
-    if include_s16:
-        sheet.line(head["16"], bold=True, size=11)
-        for code in h_codes + supplemental:
-            if code in omit_from_s16:
-                continue
-            sheet.line(f"{code} {official[code]}")
-        for extra in extra_lines_s16 or []:
-            sheet.line(extra)
-    sheet.save()
-    return path
+    one = [f"Product name: {PRODUCT}", SUPPLIER]
+    return structured_sheet(path, regulation=regulation, language=language,
+                            bodies={"1": one, "2": two, "3": three, "16": sixteen})
 
 
 # --------------------------------------------------------------------------
@@ -347,6 +613,12 @@ def build_all() -> dict[str, Path]:
         h_codes=EU_H, p_codes=EU_P, bare_in_s3=["H302"]))
 
     add("defect_b09_label", _label_mismatch(FIXTURES / "defect_b09_label.pdf"))
+
+    # A complete sheet that names no regulation anywhere: GHS headings are
+    # everyone's, so nothing on it says which regulation governs it.
+    add("pattern_undetectable", write_sds(
+        FIXTURES / "pattern_undetectable.pdf", regulation="un_ghs", language="en",
+        h_codes=["H225", "H319"], p_codes=["P210"]))
 
     # B-10: H225 requires Danger, but the document states Warning.
     add("defect_b10_signal_fit", write_sds(
@@ -504,7 +776,7 @@ def _one_substance_sheet(path: Path, *, name: str, cas: str, share: str,
                          classification: str) -> Path:
     """One named ingredient, one concentration, one classification."""
     head = HEADINGS["en"]
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.blank()
@@ -521,7 +793,7 @@ def _one_substance_sheet(path: Path, *, name: str, cas: str, share: str,
 def _trade_secret_sheet(path: Path) -> Path:
     """Half the mixture named, half of it withheld."""
     head = HEADINGS["en"]
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.blank()
@@ -545,7 +817,7 @@ def _stricter_sheet(path: Path) -> Path:
     organ toxicant. Both can be true: 39 % of the mixture is not declared.
     """
     head = HEADINGS["en"]
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.blank()
@@ -577,7 +849,7 @@ def _sensitiser_sheet(path: Path, state: str | None) -> Path:
     the fixture: the limit it has to clear depends on that answer.
     """
     head = HEADINGS["en"]
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.blank()
@@ -613,7 +885,7 @@ def _supplier_ingredients(path: Path, *, labelled: bool = False,
     product and the company are invented.
     """
     head = HEADINGS["en"]
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     if labelled:
         sheet.line(f"Product name: {PRODUCT}")
@@ -656,7 +928,7 @@ def _substance_sheet(path: Path, *, classes: list[str], codes: list[str]) -> Pat
     """
     head = HEADINGS["en"]
     official = texts("eu_clp", "en", codes + ["P210", "P233"])
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"), composition="substance")
     sheet.line("2-Propanol", bold=True, size=12)
     sheet.line("SECTION 1: Identification of the substance/mixture")
     sheet.line("Product name: 2-Propanol")
@@ -703,7 +975,7 @@ def _no_concentrations(path: Path) -> Path:
     """
     head = HEADINGS["en"]
     official = texts("eu_clp", "en", ["H225", "H319"])
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.line("Prepared according to Regulation (EC) No 1272/2008.", size=8)
@@ -741,7 +1013,7 @@ def _glycol_coolant(path: Path, *, section_eleven: list[str] | None = None,
     classified = section_two or [("Acute Tox. 4", "H302"), ("STOT RE 2", "H373")]
     codes = [code for _, code in classified]
     official = texts("uk_clp", "en", codes + ["P260", "P301+P312"])
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("uk_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line("SECTION 1: Identification of the substance/mixture")
     sheet.line(f"Product name: {PRODUCT}")
@@ -965,7 +1237,7 @@ def _newer_ghs_codes(path: Path) -> Path:
 
     head = HEADINGS["en"]
     official = texts("eu_clp", "en", ["H225", "H319", "P210"])
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.line("Classified under Regulation (EC) No 1272/2008 (CLP)")
@@ -1016,7 +1288,7 @@ def _newer_ghs_on_osha(path: Path) -> Path:
     # In Appendix C but not in our key: must stay "not checked", never C-15.
     p243 = ghs_index.text_in("P243", "GHS Rev.7")
 
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("us_osha", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.line("Prepared under 29 CFR 1910.1200 (OSHA Hazard Communication)")
@@ -1056,7 +1328,7 @@ def _legend_after_statement(path: Path) -> Path:
     codes = ["H302", "H373"]
     official = texts("ca_whmis", "en", codes + ["P262", "P270"])
 
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("ca_whmis", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.line("Prepared under the Hazardous Products Regulations (WHMIS 2015)")
@@ -1100,7 +1372,7 @@ def _conditional_slots(path: Path) -> Path:
     official = texts("ca_whmis", "en", ["H302", "H373", "P262", "P270"])
     bare = "May cause damage to organs through prolonged or repeated exposure."
 
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("ca_whmis", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.line("Prepared under the Hazardous Products Regulations (WHMIS 2015)")
@@ -1140,7 +1412,7 @@ def _classification_table(path: Path) -> Path:
     codes = ["H225", "H319", "H336", "EUH018", "EUH066"]
     official = texts("eu_clp", "en", codes + ["P210"])
 
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.line("Classified under Regulation (EC) No 1272/2008 (CLP)")
@@ -1194,7 +1466,7 @@ def _unfilled_blanks(path: Path) -> Path:
     codes = ["H225", "H319"]
     official = texts("us_osha", "en", codes + ["P210", "P280", "P501"])
 
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("us_osha", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.line("Prepared under 29 CFR 1910.1200 (OSHA Hazard Communication)")
@@ -1240,7 +1512,7 @@ def _out_of_scope(path: Path) -> Path:
     if not h303 or not p273:
         raise SystemExit("out-of-scope fixture: H303/P273 missing from the GHS index")
 
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("us_osha", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.line("Prepared under 29 CFR 1910.1200 (OSHA Hazard Communication)")
@@ -1308,7 +1580,7 @@ def _negative_declaration(path: Path) -> Path:
     words "signal word" and took the rest of the sentence as the value, turning a
     declaration that there is NO signal word into a claim that there is one.
     """
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line(SUPPLIER)
     sheet.blank()
@@ -1335,7 +1607,7 @@ def _reach_registration_number(path: Path) -> Path:
     company-specific suffix, not an unfilled placeholder.
     """
     en = texts("eu_clp", "en", EU_H + EU_P)
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("eu_clp", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line("REACH registration number: 01-2119485491-33-XXXX")
     sheet.blank()
@@ -1363,42 +1635,26 @@ def _whmis_bilingual(path: Path) -> Path:
 
     WHMIS statements are GHS Rev.7 statements, which differ from EU CLP's, so the
     text has to come from the WHMIS key or the sheet would fail its own check.
+    Each heading is printed in both languages, as Schedule 1 gives them.
     """
     en = texts("ca_whmis", "en", EU_H + EU_P)
     fr = texts("ca_whmis", "fr", EU_H + EU_P)
-    sheet = Sheet(path)
-    sheet.line(PRODUCT, bold=True, size=12)
-    sheet.line("Hazardous Products Regulations (SOR/2015-17) - WHMIS", size=8)
-    sheet.blank()
-    sheet.line(HEADINGS["en"]["2"], bold=True, size=11)
-    sheet.line(f"Signal word: {signal_text('ca_whmis','en')}")
-    for code in EU_H:
-        sheet.line(f"{code} {en[code]}")
-    for code in EU_P:
-        sheet.line(f"{code} {en[code]}")
-    sheet.blank()
-    sheet.line(HEADINGS["fr"]["2"], bold=True, size=11)
-    sheet.line(f"Mention d'avertissement: {signal_text('ca_whmis','fr')}")
-    for code in EU_H:
-        sheet.line(f"{code} {fr[code]}")
-    for code in EU_P:
-        sheet.line(f"{code} {fr[code]}")
-    sheet.blank()
-    sheet.line(HEADINGS["en"]["3"], bold=True, size=11)
-    sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
-    sheet.line("Classification: " + ", ".join(EU_H))
-    sheet.blank()
-    sheet.line(HEADINGS["en"]["16"], bold=True, size=11)
-    for code in EU_H:
-        sheet.line(f"{code} {en[code]}")
-        sheet.line(f"{code} {fr[code]}")
-    sheet.save()
-    return path
+    two = [f"Signal word: {signal_text('ca_whmis','en')}"]
+    two += [f"{code} {en[code]}" for code in EU_H + EU_P]
+    two += ["", f"Mention d'avertissement: {signal_text('ca_whmis','fr')}"]
+    two += [f"{code} {fr[code]}" for code in EU_H + EU_P]
+    three = ["Synthetic component A  CAS 000-00-0  30-60%",
+             "Classification: " + ", ".join(EU_H)]
+    sixteen = [line for code in EU_H for line in (f"{code} {en[code]}", f"{code} {fr[code]}")]
+    one = [f"Product name: {PRODUCT}", SUPPLIER,
+           "Hazardous Products Regulations (SOR/2015-17) - WHMIS"]
+    return structured_sheet(path, regulation="ca_whmis", language="en+fr",
+                            bodies={"1": one, "2": two, "3": three, "16": sixteen})
 
 
 def _whmis_english_only(path: Path) -> Path:
     en = texts("ca_whmis", "en", EU_H + EU_P)
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("ca_whmis", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line("Hazardous Products Regulations (SOR/2015-17) - WHMIS", size=8)
     sheet.blank()
@@ -1442,7 +1698,7 @@ def _euh_on_osha(path: Path) -> Path:
     key = load_key("us_osha", "en")
     by_code = key.by_code() if key else {}
     codes = [c for c in ("H228", "H240") if c in by_code]
-    sheet = Sheet(path)
+    sheet = Sheet(path, structure=("us_osha", "en"))
     sheet.line(PRODUCT, bold=True, size=12)
     sheet.line("Prepared under 29 CFR 1910.1200 (Hazard Communication).", size=8)
     sheet.blank()

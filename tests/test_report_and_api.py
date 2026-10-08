@@ -281,8 +281,8 @@ def test_recent_checks_show_a_result_pill(client):
 
 
 def _post_undetectable(client):
-    """defect_a02_hazard carries no governing statement, so detection fails."""
-    with open(pdf("defect_a02_hazard"), "rb") as handle:
+    """pattern_undetectable carries no governing statement, so detection fails."""
+    with open(pdf("pattern_undetectable"), "rb") as handle:
         return client.post(
             "/check/html",
             files={"file": ("a.pdf", handle, "application/pdf")},
