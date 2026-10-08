@@ -7,7 +7,8 @@ every edition in every clone forever is not worth it.
 
 Download what you need and put it at the path below. Builders that
 cannot find their file say which file and where it comes from; only
-`eu_clp` and the OSHA fallback reach the network on their own.
+`eu_clp`, REACH Annex II and the OSHA fallbacks reach the network on
+their own.
 
 This file is generated from `keys/builders/sources.py`. Edit that.
 
@@ -27,6 +28,8 @@ This file is generated from `keys/builders/sources.py`. Edit that.
 | `australia/hcis_hazard_classification_export_2026-10-07.xlsx` | Safe Work Australia HCIS, hazard classification data export | 7 062 chemicals, exported 2026-10-07 | [link](https://hcis.safeworkaustralia.gov.au/search/?filter=all) | 2026-10-07 | nothing yet |
 | `us-osha/appendix_c.html` | OSHA 29 CFR 1910.1200 Appendix C | as published | [link](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC) | 2026-09-29 | us_osha (falls back to the network if absent) |
 | `us-osha/appendix_a.html` | OSHA 29 CFR 1910.1200 Appendix A | as published | [link](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppA) | 2026-10-06 | us_osha mixture rules (falls back to the network if absent) |
+| `us-osha/appendix_d.html` | OSHA 29 CFR 1910.1200 Appendix D | as published | [link](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppD) | 2026-10-08 | section16 (falls back to the network if absent) |
+| `uk-gb-reach/gb_reach_annex_ii.pdf` | GB REACH - Regulation (EC) No 1907/2006 as retained, Annex II | as published by legislation.gov.uk | [link](https://www.legislation.gov.uk/eur/2006/1907/annex/II) | 2026-10-08 | section16 (download by hand: the site answers scripts with a WAF challenge) |
 | `japan/GHS_Rev9_ja_annex2-3.pdf` | UN GHS (Purple Book), Japanese - NOT JIS | Rev.9 (2021) | _not recorded_ | 2026-09-29 | nothing: see builders/pending.py |
 
 ## Notes
@@ -37,5 +40,9 @@ This file is generated from `keys/builders/sources.py`. Edit that.
   case: the PDF carries no ToUnicode map for its Japanese font.
 * `us-osha/appendix_c.html` is a convenience copy. The OSHA builder
   fetches the page itself when the file is absent.
+* EU REACH Annex II (what Section 16 must say) is read from the
+  Publications Office like EU CLP, and is not a file here. GB REACH
+  Annex II has to be downloaded by hand: legislation.gov.uk answers a
+  script with a WAF challenge.
 * "Added" is the date the file was first committed to this repository,
   which is the closest record we have of when it was downloaded.

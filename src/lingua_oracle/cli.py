@@ -207,6 +207,18 @@ def keys_build(
             typer.secho(f"  {reg_id}: -> {path}")
         return
 
+    if regulation == "section16":
+        # Not an answer key: what each regulation requires Section 16 to say
+        # about hazard statements, quoted from its own text on safety data
+        # sheets - or that it says nothing, or that the text is not on file.
+        from lingua_oracle.keys.builders import section16
+
+        for reg_id in section16.REGULATIONS:
+            path = section16.write(reg_id, use_cache=not no_cache)
+            rule = section16.load(reg_id)
+            typer.secho(f"  {reg_id}: {rule.status} ({rule.citation}) -> {path}")
+        return
+
     if regulation == "annex_vi":
         # Not an answer key: the harmonised classifications a substance is
         # judged against, which live in their own file.

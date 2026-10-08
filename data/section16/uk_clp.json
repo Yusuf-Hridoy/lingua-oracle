@@ -1,0 +1,8 @@
+{
+  "regulation": "uk_clp",
+  "status": "pending_source",
+  "document": "GB REACH (Regulation (EC) No 1907/2006 as retained)",
+  "section": "Annex II",
+  "text": "",
+  "why": "not on file: data/sources/uk-gb-reach/gb_reach_annex_ii.pdf - GB REACH - Regulation (EC) No 1907/2006 as retained, Annex II, as published by legislation.gov.uk. Download it from https://www.legislation.gov.uk/eur/2006/1907/annex/II and put it at that path. See data/sources/README.md."
+}
