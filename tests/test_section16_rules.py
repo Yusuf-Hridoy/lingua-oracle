@@ -16,7 +16,7 @@ from lingua_oracle.keys.builders import section16
     ("us_osha", "no_rule", "Table D.1, item 16"),
     ("ca_whmis", "no_rule", "Schedule 1, item 16"),
     ("un_ghs", "no_rule", "Annex 4, A4.3.16"),
-    ("uk_clp", "pending_source", "Annex II"),
+    ("uk_clp", "rule", "Annex II, Part A, Section 16(e)"),
     ("au_whs", "pending_source", ""),
 ])
 def test_each_regulation_has_its_own_finding(regulation, status, where):
@@ -44,3 +44,10 @@ def test_a_passage_on_section_16_is_a_rule_only_if_it_says_one():
         "x", "Act", "16", "16. Other information The date of preparation.")
     assert said.status == "rule" and silent.status == "no_rule"
     assert silent.text == "16. Other information The date of preparation."
+
+
+def test_the_gb_rule_is_read_from_the_gb_text_and_names_both_kinds():
+    rule = section16.load("uk_clp")
+    assert rule.document.startswith("GB REACH") and "legislation.gov.uk" in rule.document
+    assert "hazard statements and/or precautionary statements" in rule.text
+    assert rule.text.endswith("not written out in full under Sections 2 to 15")

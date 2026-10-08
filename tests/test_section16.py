@@ -72,8 +72,16 @@ def test_a_regulation_with_no_such_rule_gets_no_finding(tmp_path):
         assert _b08(tmp_path, regulation) == {}, regulation
 
 
+def test_gb_applies_its_own_rule(tmp_path):
+    found = _b08(tmp_path, "uk_clp")
+    assert "H319" not in found and "H225" not in found
+    severity, message = found["H302"]
+    assert severity == "fail" and "GB REACH" in message
+    assert "Annex II, Part A, Section 16(e)" in message
+
+
 def test_a_regulation_whose_rule_is_not_on_file_gets_no_finding(tmp_path):
-    assert _b08(tmp_path, "uk_clp") == {}
+    assert _b08(tmp_path, "au_whs") == {}
 
 
 def _summary(tmp_path, regulation):
@@ -93,7 +101,7 @@ def test_the_report_says_when_a_regulation_asks_nothing_of_section_16(tmp_path):
 
 
 def test_the_report_says_when_the_rule_is_not_on_file(tmp_path):
-    row = _summary(tmp_path, "uk_clp")
+    row = _summary(tmp_path, "au_whs")
     assert row.status == "na" and "not on file" in row.text
 
 

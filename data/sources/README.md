@@ -29,7 +29,7 @@ This file is generated from `keys/builders/sources.py`. Edit that.
 | `us-osha/appendix_c.html` | OSHA 29 CFR 1910.1200 Appendix C | as published | [link](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppC) | 2026-09-29 | us_osha (falls back to the network if absent) |
 | `us-osha/appendix_a.html` | OSHA 29 CFR 1910.1200 Appendix A | as published | [link](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppA) | 2026-10-06 | us_osha mixture rules (falls back to the network if absent) |
 | `us-osha/appendix_d.html` | OSHA 29 CFR 1910.1200 Appendix D | as published | [link](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppD) | 2026-10-08 | section16 (falls back to the network if absent) |
-| `uk-gb-reach/gb_reach_annex_ii.pdf` | GB REACH - Regulation (EC) No 1907/2006 as retained, Annex II | as published by legislation.gov.uk | [link](https://www.legislation.gov.uk/eur/2006/1907/annex/II) | 2026-10-08 | section16 (download by hand: the site answers scripts with a WAF challenge) |
+| `uk-gb-reach/gb_reach_annex_ii.pdf` | GB REACH - Regulation (EC) No 1907/2006 as retained, Annex II | legislation.gov.uk PDF, document generated 2026-10-08 | [link](https://www.legislation.gov.uk/eur/2006/1907/annex/II) | 2026-10-08 | section16 (download by hand: the site answers scripts with a WAF challenge) |
 | `japan/GHS_Rev9_ja_annex2-3.pdf` | UN GHS (Purple Book), Japanese - NOT JIS | Rev.9 (2021) | _not recorded_ | 2026-09-29 | nothing: see builders/pending.py |
 
 ## Notes

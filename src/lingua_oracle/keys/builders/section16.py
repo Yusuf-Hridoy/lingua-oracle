@@ -114,7 +114,8 @@ def _eu(use_cache: bool) -> Section16Rule:
 
 def _gb() -> Section16Rule:
     source = sources.BY_PATH["uk-gb-reach/gb_reach_annex_ii.pdf"]
-    document = "GB REACH (Regulation (EC) No 1907/2006 as retained)"
+    document = ("GB REACH (Regulation (EC) No 1907/2006 as retained), "
+                "legislation.gov.uk, document generated 2026-10-08")
     if not source.where.exists():
         return Section16Rule("uk_clp", "pending_source", document, "Annex II",
                              why="not on file: " + sources.describe(source.path))
@@ -123,7 +124,7 @@ def _gb() -> Section16Rule:
         found = _RULE.search(text)
         if found:
             return Section16Rule("uk_clp", "rule", document,
-                                 f"Annex II, Section 16(e), page {number}",
+                                 f"Annex II, Part A, Section 16(e), page {number}",
                                  found.group(0))
     for number, text in pages:
         at = text.find("SECTION 16: Other information")

@@ -133,11 +133,12 @@ SOURCES: tuple[Source, ...] = (
                    "on file since 2026-10-08"),
     Source("uk-gb-reach/gb_reach_annex_ii.pdf",
            "GB REACH - Regulation (EC) No 1907/2006 as retained, Annex II",
-           "as published by legislation.gov.uk",
+           "legislation.gov.uk PDF, document generated 2026-10-08",
            "https://www.legislation.gov.uk/eur/2006/1907/annex/II",
            "2026-10-08", "section16 (download by hand: the site answers "
                          "scripts with a WAF challenge)",
-           version="GB REACH Annex II (legislation.gov.uk)"),
+           version="GB REACH Annex II (Regulation (EC) No 1907/2006 as "
+                   "retained), legislation.gov.uk, document generated 2026-10-08"),
     Source("japan/GHS_Rev9_ja_annex2-3.pdf",
            "UN GHS (Purple Book), Japanese - NOT JIS", "Rev.9 (2021)",
            None,
