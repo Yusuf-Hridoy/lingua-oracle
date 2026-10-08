@@ -224,3 +224,47 @@ def test_spaces_and_hyphens_inside_a_heading_are_punctuation():
     assert same_heading("First Aid Measures", "First-aid measures")
     assert same_heading("Fire Fighting Measures", "Firefighting measures")
     assert not same_heading("Hazards Identification", "Hazard identification")
+
+
+# -- how strictly a heading's words are held ---------------------------------------
+
+@pytest.mark.parametrize(("regulation", "number", "words"), [
+    ("us_osha", "16", "Other information"),               # (xvi)'s tail is content
+    ("us_osha", "1", "Product and company identification"),
+    ("ca_whmis", "2", "Hazards identification"),
+    ("au_whs", "16", "Other information"),
+    ("un_ghs", "1", "Identification of the substance/mixture and of the company/undertaking"),
+])
+def test_the_same_section_in_other_words_is_one_to_check(tmp_path, regulation, number, words):
+    _, found = _structure(tmp_path, regulation=regulation, headings={number: words})
+    heading = [f for f in found if f.check_id == "B-12" and f.section == number]
+    assert [f.severity.value for f in heading] in ([], ["warn"]), heading
+    for f in heading:
+        assert f.message.startswith(f"Names Section {number} in other words")
+
+
+def test_osha_16_headed_other_information_is_correct_once_its_tail_is_content(tmp_path):
+    _, found = _structure(tmp_path, regulation="us_osha", headings={"16": "Other information"})
+    assert not [f for f in found if f.section == "16"]
+
+
+def test_a_heading_naming_another_section_is_a_fault_everywhere(tmp_path):
+    # Read as Section 6 printed under 7: the number is wrong.
+    _, found = _structure(tmp_path, regulation="us_osha", name="a.pdf",
+                          headings={"7": "Accidental release measures"}, omit={"6"})
+    assert any(f.section == "6" and "numbered 7" in f.message and f.severity.value == "fail"
+               for f in found), [f.message[:80] for f in found]
+    # Closer to another section's heading than its own, without being it.
+    _, found = _structure(tmp_path, regulation="us_osha", name="b.pdf",
+                          headings={"7": "Accidental release"})
+    seven = [f for f in found if f.section == "7" and f.check_id == "B-12"]
+    assert [(f.severity.value, f.message[:39]) for f in seven] == [
+        ("fail", "The heading names Section 6 (Accidental")]
+
+
+def test_eu_and_gb_hold_the_heading_to_the_text_word_for_word(tmp_path):
+    for regulation in ("eu_clp", "uk_clp"):
+        _, found = _structure(tmp_path, regulation=regulation, name=f"{regulation}.pdf",
+                              headings={"4": "First aid"})
+        heading = [f for f in found if f.check_id == "B-12" and f.section == "4"]
+        assert [f.severity.value for f in heading] == ["fail"], regulation

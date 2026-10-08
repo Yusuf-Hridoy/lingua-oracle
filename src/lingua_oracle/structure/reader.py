@@ -415,9 +415,8 @@ def read(document: Document, regulation: str, language: str) -> StructureReport:
             result.rows.append(_row(SECTIONS, "Heading", heading_binding, "As the text "
                                     "prints it.", rules["headings"], ok=True))
         else:
-            result.rows.append(_row(SECTIONS, "Heading", heading_binding,
-                                    "The heading differs from the text's.", rules["headings"],
-                                    found=heading.text, expected=" / ".join(required[:2])))
+            result.rows.append(_heading_differs(regulation, table, number, heading.text,
+                                                required, heading_binding, rules["headings"]))
         start, end = spans[number]
         _section_body(result, table, section, lines, start, end, rules, language,
                       wording_on_file)
@@ -425,6 +424,35 @@ def read(document: Document, regulation: str, language: str) -> StructureReport:
 
     _items(report, table, document, spans, headings)
     return report
+
+
+#: Where the text prints the headings a sheet "shall include" - REACH Annex
+#: II, Part B, EU and GB - any other wording is a fault. Elsewhere a heading
+#: that names the same section in other words ("Hazards identification",
+#: "Product and company identification") is one to check; only a missing
+#: heading, a wrong number or words naming another section are faults.
+_WORDING_EXACT = {"eu_clp", "uk_clp"}
+
+
+def _heading_differs(regulation, table, number, found, required, binding, rule):
+    """A heading in other words than the text's: which section do they name?"""
+    own = _overlap(found, number)
+    other, score = number, own
+    for k in range(1, 17):
+        if str(k) != number and _overlap(found, str(k)) > score:
+            other, score = str(k), _overlap(found, str(k))
+    expected = " / ".join(required[:2])
+    if other != number and score >= 0.5:
+        title = table["sections"][int(other) - 1]["heading"].get("en", "")
+        return _row(SECTIONS, "Heading", binding,
+                    f"The heading names Section {other} ({title}), not Section {number}.",
+                    rule, found=found, expected=expected)
+    if regulation in _WORDING_EXACT:
+        return _row(SECTIONS, "Heading", binding, "The heading differs from the text's.",
+                    rule, found=found, expected=expected)
+    return _row(SECTIONS, "Heading", False,
+                f"Names Section {number} in other words than the text's.", rule,
+                found=found, expected=expected)
 
 
 def _section_body(result, table, section, lines, start, end, rules, language,
