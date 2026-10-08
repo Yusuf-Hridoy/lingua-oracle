@@ -39,7 +39,7 @@ def _class(report, name):
 
 
 @pytest.mark.parametrize(("fixture", "expected"), [
-    ("pattern_sensitiser_liquid", "solid/liquid"),
+    ("pattern_sensitiser_liquid", "liquid"),
     ("pattern_sensitiser_gas", "gas"),
     ("pattern_sensitiser_unstated", ""),
 ])
@@ -51,7 +51,7 @@ def test_a_value_on_the_line_below_its_label_is_still_the_answer():
     """A two-column Section 9 flattens to "State :" and then "liquid"."""
     lines = [Line("SECTION 9: Physical and chemical properties"),
              Line("State :"), Line("liquid")]
-    assert physical_state(lines) == "solid/liquid"
+    assert physical_state(lines) == "liquid"
 
 
 def test_nothing_is_read_from_outside_section_nine():
@@ -97,7 +97,6 @@ def test_the_report_says_which_state_it_read():
     from lingua_oracle.report.render import render_html
 
     body = render_html(_check("pattern_sensitiser_liquid"))
-    assert "read as a solid or a liquid" in body
     assert "Read as a solid or liquid (Section 9)" in body
 
 
@@ -139,3 +138,21 @@ def test_both_halves_of_a_state_split_are_on_file(regulation, hazard_class):
     values = load(regulation).variants("generic_limits", hazard_class)
     states = {v.qualifier.split()[0] for v in values if v.qualifier}
     assert {"solid/liquid", "gas"} <= states, [str(v) for v in values]
+
+
+@pytest.mark.parametrize(("value", "expected"), [
+    ("Liquid", "liquid"), ("Form: liquid", "liquid"), ("solid", "solid"),
+    ("powder", "solid"), ("Gas", "gas"), ("aerosol", "solid/liquid"),
+    ("paste", "solid/liquid"),
+])
+def test_the_actual_state_is_read(value, expected):
+    lines = [Line("SECTION 9: Physical and chemical properties"),
+             Line(f"Physical state : {value}" if ":" not in value else value)]
+    assert physical_state(lines) == expected
+
+
+def test_the_limits_still_see_two_states():
+    from lingua_oracle.mixture.state import bucket
+
+    assert bucket("liquid") == bucket("solid") == "solid/liquid"
+    assert bucket("gas") == "gas"

@@ -484,8 +484,10 @@ def test_out_of_scope_wording_sits_with_the_matches(page, server, shots_dir):
     assert "outside US OSHA HazCom's scope" in text
     assert "allowed as extra information" in text
     # And it is not something to do.
-    todo = page.locator(".todo")
-    assert todo.count() == 0 or "H303" not in todo.inner_text()
+    # Nothing to do about its wording; Section 16 not writing it out is a
+    # separate thing to check, said in Section 16's own line.
+    todo = page.locator(".todo li").all_inner_texts()
+    assert not [t for t in todo if "H303" in t and not t.startswith("Section 16")], todo
 
 
 def test_a_newer_ghs_card_explains_itself(page, server, shots_dir):

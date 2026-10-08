@@ -43,21 +43,40 @@ _SECTION_10 = re.compile(
 #: not call it a gas.
 _GAS = re.compile(r"\b(gas|gases|gaseous|gasförmig|gaz|gaseoso|gassoso)\b",
                   re.IGNORECASE)
-_SOLID_OR_LIQUID = re.compile(
-    r"\b(liquid|liquide|líquido|liquido|væske|vloeistof|flüssig|"
-    r"solid|solide|sólido|solido|fast|vast|feststoff|"
+_LIQUID = re.compile(
+    r"\b(liquid|liquide|líquido|liquido|væske|vloeistof|flüssig|fluid)\b",
+    re.IGNORECASE)
+_SOLID = re.compile(
+    r"\b(solid|solide|sólido|solido|fast|vast|feststoff|"
     r"powder|poudre|polvo|polvere|pulver|poeder|"
     r"granule|granules|granulat|pellet|pellets|flake|flakes|"
-    r"paste|pâte|pasta|gel|aerosol|aérosol|wax|wachs)\b",
+    r"crystals?|crystalline|wax|wachs)\b",
     re.IGNORECASE)
+#: Forms that are a solid or a liquid without saying which: dispersed in a
+#: propellant, or between the two.
+_EITHER = re.compile(r"\b(paste|pâte|pasta|gel|aerosol|aérosol)\b", re.IGNORECASE)
 
 #: What the rule tables call each answer.
 GAS = "gas"
 SOLID_OR_LIQUID = "solid/liquid"
+LIQUID = "liquid"
+SOLID = "solid"
+
+
+def bucket(state: str | None) -> str | None:
+    """The two states the rule tables distinguish: gas, or solid or liquid."""
+    if state in (LIQUID, SOLID, SOLID_OR_LIQUID):
+        return SOLID_OR_LIQUID
+    return state
 
 
 def physical_state(lines, spans=None) -> str | None:
-    """"gas", "solid/liquid", or nothing where Section 9 does not say.
+    """"gas", "liquid", "solid" - "solid/liquid" for an aerosol, paste or gel,
+    which the sheet does not put in either - or nothing where it does not say.
+
+    The answer as the sheet gives it: the limits that turn on it only
+    distinguish a gas from everything else (`bucket`), but inhalation toxicity
+    is a vapour for a liquid and a dust for a solid.
 
     Section 9 is found here rather than taken from the section detector, which
     tracks only the sections the wording check needs. The value may follow its
@@ -82,7 +101,12 @@ def physical_state(lines, spans=None) -> str | None:
             value = (lines[index + 1].text or "").strip()
         if _GAS.search(value):
             return GAS
-        if _SOLID_OR_LIQUID.search(value):
+        liquid, solid = _LIQUID.search(value), _SOLID.search(value)
+        if liquid and not solid:
+            return LIQUID
+        if solid and not liquid:
+            return SOLID
+        if liquid or solid or _EITHER.search(value):
             return SOLID_OR_LIQUID
     return None
 
@@ -109,6 +133,7 @@ def applicable(values, state: str | None):
     """
     if state is None:
         return tuple(values)
+    state = bucket(state)
     kept = tuple(v for v in values
                  if state_of(v.qualifier) in (None, "all physical states", state))
     return kept or tuple(values)

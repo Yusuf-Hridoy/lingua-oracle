@@ -384,7 +384,8 @@ class MixtureSection(BaseModel):
     declared_total: str = "0"
     undisclosed: str = "0"
     stated: list[str] = Field(default_factory=list)
-    #: What Section 9 says the mixture is - "gas", "solid/liquid", or nothing
+    #: What Section 9 says the mixture is - "gas", "liquid", "solid",
+    #: "solid/liquid" where it does not say which of the two, or nothing
     #: where it does not say. Two sensitisation limits depend on it.
     physical_state: str = ""
     #: The document the rules were read from, named for the reader.
@@ -473,7 +474,8 @@ class Report(BaseModel):
     #: The SDS sections the document was found to have, by number ("2", "3",
     #: "16"), or "label" for label artwork - what the report can show.
     sections_found: list[str] = Field(default_factory=list)
-    #: What Section 9 says the product is: "gas", "solid/liquid" or "".
+    #: What Section 9 says the product is: "gas", "liquid", "solid",
+    #: "solid/liquid" (an aerosol, paste or gel) or "".
     physical_state: str = ""
 
     def recount(self) -> None:

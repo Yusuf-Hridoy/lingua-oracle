@@ -469,9 +469,12 @@ def test_an_out_of_scope_match_raises_no_finding_and_no_action():
     assert by_code["H303"].status == "correct", by_code["H303"].why
     assert "outside US OSHA HazCom's scope" in by_code["H303"].match_note
     assert "allowed as extra information" in by_code["H303"].match_note
-    assert not [f for f in report.findings if f.code == "H303"]
+    # No wording finding. Section 16 not writing H303 out is its own matter:
+    # Section 2 prints it in full, so that is one to check, not a fault.
+    h303 = [f for f in report.findings if f.code == "H303"]
+    assert [(f.check_id, f.severity.value) for f in h303] == [("B-08", "warn")]
     actions = sections.build(report, "US OSHA HazCom", "chosen by you").actions
-    assert not any("H303" in text for text in actions), actions
+    assert not any("H303" in text and "Section 2" in text for text in actions), actions
 
 
 def test_a_wording_mismatch_against_ghs_is_still_a_finding():
