@@ -1,0 +1,78 @@
+{
+ "regulation": "ca_whmis",
+ "document": "Hazardous Products Regulations (SOR/2015-17)",
+ "flammable_liquids": {
+  "status": "ok",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), section 7.6.1(2)",
+  "quote": "TABLE Column 1 Column 2 Item Category Criteria 1 Flammable Liquids — Category 1 A liquid that has a flash point < 23°C and initial boiling point ≤ 35°C 2 Flammable Liquids — Category 2 A liquid that has a flash point < 23°C and initial boiling point > 35°C 3 Flammable Liquids — Category 3 A liquid that has a flash point ≥ 23°C and ≤ 60°C 4 Flammable Liquids — Category 4 A liquid that has a flash point > 60°C and ≤ 93°C",
+  "why": "",
+  "categories": [
+   {
+    "category": "1",
+    "flash": [
+     [
+      "<",
+      "23"
+     ]
+    ],
+    "raw": "A liquid that has a flash point < 23°C and initial boiling point ≤ 35°C",
+    "boiling": [
+     "<=",
+     "35"
+    ]
+   },
+   {
+    "category": "2",
+    "flash": [
+     [
+      "<",
+      "23"
+     ]
+    ],
+    "raw": "A liquid that has a flash point < 23°C and initial boiling point > 35°C",
+    "boiling": [
+     ">",
+     "35"
+    ]
+   },
+   {
+    "category": "3",
+    "flash": [
+     [
+      ">=",
+      "23"
+     ],
+     [
+      "<=",
+      "60"
+     ]
+    ],
+    "raw": "A liquid that has a flash point ≥ 23°C and ≤ 60°C"
+   },
+   {
+    "category": "4",
+    "flash": [
+     [
+      ">",
+      "60"
+     ],
+     [
+      "<=",
+      "93"
+     ]
+    ],
+    "raw": "A liquid that has a flash point > 60°C and ≤ 93°C"
+   }
+  ],
+  "notes": []
+ },
+ "aquatic": {
+  "status": "not_adopted",
+  "citation": "Hazardous Products Regulations (SOR/2015-17)",
+  "quote": "",
+  "why": "The Hazardous Products Regulations define no hazard class for the aquatic environment (Parts 7 and 8 list the classes).",
+  "categories": [],
+  "notes": []
+ },
+ "aquatic_mixture": {}
+}

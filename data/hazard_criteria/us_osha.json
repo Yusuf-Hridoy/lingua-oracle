@@ -1,0 +1,78 @@
+{
+ "regulation": "us_osha",
+ "document": "29 CFR 1910.1200 Appendix B",
+ "flammable_liquids": {
+  "status": "ok",
+  "citation": "29 CFR 1910.1200 Appendix B, Table B.6.1",
+  "quote": "Table B.6.1—Criteria for Flammable Liquids Category Criteria 1 Flash point <23 °C (73.4 °F) and initial boiling point ≤35 °C (95 °F). 2 Flash point <23 °C (73.4 °F) and initial boiling point >35 °C (95 °F). 3 Flash point ≥23 °C (73.4 °F) and ≤60 °C (140 °F). 4 Flash point >60 °C (140 °F) and ≤93 °C (199.4 °F).",
+  "why": "",
+  "categories": [
+   {
+    "category": "1",
+    "flash": [
+     [
+      "<",
+      "23"
+     ]
+    ],
+    "raw": "Flash point <23 °C (73.4 °F) and initial boiling point ≤35 °C (95 °F).",
+    "boiling": [
+     "<=",
+     "35"
+    ]
+   },
+   {
+    "category": "2",
+    "flash": [
+     [
+      "<",
+      "23"
+     ]
+    ],
+    "raw": "Flash point <23 °C (73.4 °F) and initial boiling point >35 °C (95 °F).",
+    "boiling": [
+     ">",
+     "35"
+    ]
+   },
+   {
+    "category": "3",
+    "flash": [
+     [
+      ">=",
+      "23"
+     ],
+     [
+      "<=",
+      "60"
+     ]
+    ],
+    "raw": "Flash point ≥23 °C (73.4 °F) and ≤60 °C (140 °F)."
+   },
+   {
+    "category": "4",
+    "flash": [
+     [
+      ">",
+      "60"
+     ],
+     [
+      "<=",
+      "93"
+     ]
+    ],
+    "raw": "Flash point >60 °C (140 °F) and ≤93 °C (199.4 °F)."
+   }
+  ],
+  "notes": []
+ },
+ "aquatic": {
+  "status": "not_adopted",
+  "citation": "29 CFR 1910.1200 Appendices A and B",
+  "quote": "",
+  "why": "OSHA's Appendices A (health) and B (physical) define no hazard class for the aquatic environment.",
+  "categories": [],
+  "notes": []
+ },
+ "aquatic_mixture": {}
+}

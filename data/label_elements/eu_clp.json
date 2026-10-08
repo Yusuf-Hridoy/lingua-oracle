@@ -1,0 +1,1876 @@
+{
+ "regulation": "eu_clp",
+ "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+ "status": "ok",
+ "why": "",
+ "pictogram_kind": "code",
+ "pictogram_names": [
+  "GHS01",
+  "GHS02",
+  "GHS03",
+  "GHS04",
+  "GHS05",
+  "GHS06",
+  "GHS07",
+  "GHS08",
+  "GHS09"
+ ],
+ "entries": [
+  {
+   "section": "2.1",
+   "hazard_class": "explosives",
+   "category": [
+    "Unst."
+   ],
+   "subclass": "",
+   "codes": [
+    "Unst. Expl."
+   ],
+   "h_codes": [
+    "H200"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS01"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.1.2"
+  },
+  {
+   "section": "2.1",
+   "hazard_class": "explosives",
+   "category": [
+    "1.1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Expl. 1.1"
+   ],
+   "h_codes": [
+    "H201"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS01"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.1.2"
+  },
+  {
+   "section": "2.1",
+   "hazard_class": "explosives",
+   "category": [
+    "1.2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Expl. 1.2"
+   ],
+   "h_codes": [
+    "H202"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS01"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.1.2"
+  },
+  {
+   "section": "2.1",
+   "hazard_class": "explosives",
+   "category": [
+    "1.3"
+   ],
+   "subclass": "",
+   "codes": [
+    "Expl. 1.3"
+   ],
+   "h_codes": [
+    "H203"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS01"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.1.2"
+  },
+  {
+   "section": "2.1",
+   "hazard_class": "explosives",
+   "category": [
+    "1.4"
+   ],
+   "subclass": "",
+   "codes": [
+    "Expl. 1.4"
+   ],
+   "h_codes": [
+    "H204"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS01"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.1.2"
+  },
+  {
+   "section": "2.1",
+   "hazard_class": "explosives",
+   "category": [
+    "1.5"
+   ],
+   "subclass": "",
+   "codes": [
+    "Expl. 1.5"
+   ],
+   "h_codes": [
+    "H205"
+   ],
+   "signal": "Danger",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.1.2"
+  },
+  {
+   "section": "2.3",
+   "hazard_class": "aerosols",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Aerosol 1"
+   ],
+   "h_codes": [
+    "H222",
+    "H229"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.3.1"
+  },
+  {
+   "section": "2.3",
+   "hazard_class": "aerosols",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Aerosol 2"
+   ],
+   "h_codes": [
+    "H223",
+    "H229"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.3.1"
+  },
+  {
+   "section": "2.3",
+   "hazard_class": "aerosols",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [
+    "Aerosol 3"
+   ],
+   "h_codes": [
+    "H229"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.3.1"
+  },
+  {
+   "section": "2.4",
+   "hazard_class": "oxidising gases",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Ox. Gas 1"
+   ],
+   "h_codes": [
+    "H270"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS03"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.4.2"
+  },
+  {
+   "section": "2.5",
+   "hazard_class": "gases under pressure",
+   "category": [
+    "compressed gas"
+   ],
+   "subclass": "",
+   "codes": [
+    "Press. Gas"
+   ],
+   "h_codes": [
+    "H280"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS04"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.5.2"
+  },
+  {
+   "section": "2.5",
+   "hazard_class": "gases under pressure",
+   "category": [
+    "liquefied gas"
+   ],
+   "subclass": "",
+   "codes": [
+    "Press. Gas"
+   ],
+   "h_codes": [
+    "H280"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS04"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.5.2"
+  },
+  {
+   "section": "2.5",
+   "hazard_class": "gases under pressure",
+   "category": [
+    "refrigerated liquefied gas"
+   ],
+   "subclass": "",
+   "codes": [
+    "Press. Gas"
+   ],
+   "h_codes": [
+    "H281"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS04"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.5.2"
+  },
+  {
+   "section": "2.5",
+   "hazard_class": "gases under pressure",
+   "category": [
+    "dissolved gas"
+   ],
+   "subclass": "",
+   "codes": [
+    "Press. Gas"
+   ],
+   "h_codes": [
+    "H280"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS04"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.5.2"
+  },
+  {
+   "section": "2.6",
+   "hazard_class": "flammable liquids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Flam. Liq. 1"
+   ],
+   "h_codes": [
+    "H224"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.6.2"
+  },
+  {
+   "section": "2.6",
+   "hazard_class": "flammable liquids",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Flam. Liq. 2"
+   ],
+   "h_codes": [
+    "H225"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.6.2"
+  },
+  {
+   "section": "2.6",
+   "hazard_class": "flammable liquids",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [
+    "Flam. Liq. 3"
+   ],
+   "h_codes": [
+    "H226"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.6.2"
+  },
+  {
+   "section": "2.7",
+   "hazard_class": "flammable solids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Flam. Sol. 1"
+   ],
+   "h_codes": [
+    "H228"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.7.2"
+  },
+  {
+   "section": "2.7",
+   "hazard_class": "flammable solids",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Flam. Sol. 2"
+   ],
+   "h_codes": [
+    "H228"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.7.2"
+  },
+  {
+   "section": "2.8",
+   "hazard_class": "self-reactive substances and mixtures",
+   "category": [
+    "A"
+   ],
+   "subclass": "",
+   "codes": [
+    "Self-react. A"
+   ],
+   "h_codes": [
+    "H240"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS01"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.8.1"
+  },
+  {
+   "section": "2.8",
+   "hazard_class": "self-reactive substances and mixtures",
+   "category": [
+    "B"
+   ],
+   "subclass": "",
+   "codes": [
+    "Self-react. B"
+   ],
+   "h_codes": [
+    "H241"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS01",
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.8.1"
+  },
+  {
+   "section": "2.8",
+   "hazard_class": "self-reactive substances and mixtures",
+   "category": [
+    "C",
+    "D",
+    "CD"
+   ],
+   "subclass": "",
+   "codes": [
+    "Self-react. CD"
+   ],
+   "h_codes": [
+    "H242"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.8.1"
+  },
+  {
+   "section": "2.8",
+   "hazard_class": "self-reactive substances and mixtures",
+   "category": [
+    "E",
+    "F",
+    "EF"
+   ],
+   "subclass": "",
+   "codes": [
+    "Self-react. EF"
+   ],
+   "h_codes": [
+    "H242"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.8.1"
+  },
+  {
+   "section": "2.9",
+   "hazard_class": "pyrophoric liquids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Pyr. Liq. 1"
+   ],
+   "h_codes": [
+    "H250"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.9.2"
+  },
+  {
+   "section": "2.10",
+   "hazard_class": "pyrophoric solids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Pyr. Sol. 1"
+   ],
+   "h_codes": [
+    "H250"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.10.2"
+  },
+  {
+   "section": "2.11",
+   "hazard_class": "self-heating substances and mixtures",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Self-heat. 1"
+   ],
+   "h_codes": [
+    "H251"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.11.2"
+  },
+  {
+   "section": "2.11",
+   "hazard_class": "self-heating substances and mixtures",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Self-heat. 2"
+   ],
+   "h_codes": [
+    "H252"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.11.2"
+  },
+  {
+   "section": "2.12",
+   "hazard_class": "substances and mixtures which in contact with water emit flammable gases",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Water-react. 1"
+   ],
+   "h_codes": [
+    "H260"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.12.2"
+  },
+  {
+   "section": "2.12",
+   "hazard_class": "substances and mixtures which in contact with water emit flammable gases",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Water-react. 2"
+   ],
+   "h_codes": [
+    "H261"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.12.2"
+  },
+  {
+   "section": "2.12",
+   "hazard_class": "substances and mixtures which in contact with water emit flammable gases",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [
+    "Water-react. 3"
+   ],
+   "h_codes": [
+    "H261"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.12.2"
+  },
+  {
+   "section": "2.13",
+   "hazard_class": "oxidising liquids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Ox. Liq. 1"
+   ],
+   "h_codes": [
+    "H271"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS03"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.13.2"
+  },
+  {
+   "section": "2.13",
+   "hazard_class": "oxidising liquids",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Ox. Liq. 2"
+   ],
+   "h_codes": [
+    "H272"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS03"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.13.2"
+  },
+  {
+   "section": "2.13",
+   "hazard_class": "oxidising liquids",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [
+    "Ox. Liq. 3"
+   ],
+   "h_codes": [
+    "H272"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS03"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.13.2"
+  },
+  {
+   "section": "2.14",
+   "hazard_class": "oxidising solids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Ox. Sol. 1"
+   ],
+   "h_codes": [
+    "H271"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS03"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.14.2"
+  },
+  {
+   "section": "2.14",
+   "hazard_class": "oxidising solids",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Ox. Sol. 2"
+   ],
+   "h_codes": [
+    "H272"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS03"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.14.2"
+  },
+  {
+   "section": "2.14",
+   "hazard_class": "oxidising solids",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [
+    "Ox. Sol. 3"
+   ],
+   "h_codes": [
+    "H272"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS03"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.14.2"
+  },
+  {
+   "section": "2.15",
+   "hazard_class": "organic peroxides",
+   "category": [
+    "A"
+   ],
+   "subclass": "",
+   "codes": [
+    "Org. Perox. A"
+   ],
+   "h_codes": [
+    "H240"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS01"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.15.1"
+  },
+  {
+   "section": "2.15",
+   "hazard_class": "organic peroxides",
+   "category": [
+    "B"
+   ],
+   "subclass": "",
+   "codes": [
+    "Org. Perox. B"
+   ],
+   "h_codes": [
+    "H241"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS01",
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.15.1"
+  },
+  {
+   "section": "2.15",
+   "hazard_class": "organic peroxides",
+   "category": [
+    "C",
+    "D",
+    "CD"
+   ],
+   "subclass": "",
+   "codes": [
+    "Org. Perox. CD"
+   ],
+   "h_codes": [
+    "H242"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.15.1"
+  },
+  {
+   "section": "2.15",
+   "hazard_class": "organic peroxides",
+   "category": [
+    "E",
+    "F",
+    "EF"
+   ],
+   "subclass": "",
+   "codes": [
+    "Org. Perox. EF"
+   ],
+   "h_codes": [
+    "H242"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.15.1"
+  },
+  {
+   "section": "2.16",
+   "hazard_class": "substances and mixtures corrosive to metals",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Met. Corr. 1"
+   ],
+   "h_codes": [
+    "H290"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS05"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.16.2"
+  },
+  {
+   "section": "2.17",
+   "hazard_class": "desensitised explosives",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Desen. Expl. 1"
+   ],
+   "h_codes": [
+    "H206"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.17.2"
+  },
+  {
+   "section": "2.17",
+   "hazard_class": "desensitised explosives",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Desen. Expl. 2"
+   ],
+   "h_codes": [
+    "H207"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.17.2"
+  },
+  {
+   "section": "2.17",
+   "hazard_class": "desensitised explosives",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [
+    "Desen. Expl. 3"
+   ],
+   "h_codes": [
+    "H207"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.17.2"
+  },
+  {
+   "section": "2.17",
+   "hazard_class": "desensitised explosives",
+   "category": [
+    "4"
+   ],
+   "subclass": "",
+   "codes": [
+    "Desen. Expl. 4"
+   ],
+   "h_codes": [
+    "H208"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS02"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.17.2"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "oral",
+   "codes": [
+    "Acute Tox. 1"
+   ],
+   "h_codes": [
+    "H300"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS06"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "dermal",
+   "codes": [
+    "Acute Tox. 1"
+   ],
+   "h_codes": [
+    "H310"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS06"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "inhalation",
+   "codes": [
+    "Acute Tox. 1"
+   ],
+   "h_codes": [
+    "H330"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS06"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "oral",
+   "codes": [
+    "Acute Tox. 2"
+   ],
+   "h_codes": [
+    "H300"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS06"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "dermal",
+   "codes": [
+    "Acute Tox. 2"
+   ],
+   "h_codes": [
+    "H310"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS06"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "inhalation",
+   "codes": [
+    "Acute Tox. 2"
+   ],
+   "h_codes": [
+    "H330"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS06"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "3"
+   ],
+   "subclass": "oral",
+   "codes": [
+    "Acute Tox. 3"
+   ],
+   "h_codes": [
+    "H301"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS06"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "3"
+   ],
+   "subclass": "dermal",
+   "codes": [
+    "Acute Tox. 3"
+   ],
+   "h_codes": [
+    "H311"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS06"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "3"
+   ],
+   "subclass": "inhalation",
+   "codes": [
+    "Acute Tox. 3"
+   ],
+   "h_codes": [
+    "H331"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS06"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "4"
+   ],
+   "subclass": "oral",
+   "codes": [
+    "Acute Tox. 4"
+   ],
+   "h_codes": [
+    "H302"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS07"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "4"
+   ],
+   "subclass": "dermal",
+   "codes": [
+    "Acute Tox. 4"
+   ],
+   "h_codes": [
+    "H312"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS07"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "4"
+   ],
+   "subclass": "inhalation",
+   "codes": [
+    "Acute Tox. 4"
+   ],
+   "h_codes": [
+    "H332"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS07"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.1.3"
+  },
+  {
+   "section": "3.2",
+   "hazard_class": "skin corrosion/irritation",
+   "category": [
+    "1A",
+    "1B",
+    "1C",
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Skin Corr. 1",
+    "Skin Corr. 1A",
+    "Skin Corr. 1B",
+    "Skin Corr. 1C"
+   ],
+   "h_codes": [
+    "H314"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS05"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.2.5"
+  },
+  {
+   "section": "3.2",
+   "hazard_class": "skin corrosion/irritation",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Skin Irrit. 2"
+   ],
+   "h_codes": [
+    "H315"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS07"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.2.5"
+  },
+  {
+   "section": "3.3",
+   "hazard_class": "serious eye damage/eye irritation",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Eye Dam. 1"
+   ],
+   "h_codes": [
+    "H318"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS05"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.3.5"
+  },
+  {
+   "section": "3.3",
+   "hazard_class": "serious eye damage/eye irritation",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Eye Irrit. 2"
+   ],
+   "h_codes": [
+    "H319"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS07"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.3.5"
+  },
+  {
+   "section": "3.4",
+   "hazard_class": "respiratory or skin sensitisation",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "respiratory sensitisation",
+   "codes": [
+    "Resp. Sens. 1",
+    "Resp. Sens. 1A",
+    "Resp. Sens. 1B"
+   ],
+   "h_codes": [
+    "H334"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.4.7"
+  },
+  {
+   "section": "3.4",
+   "hazard_class": "respiratory or skin sensitisation",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "skin sensitisation",
+   "codes": [
+    "Skin. Sens. 1",
+    "Skin. Sens. 1A",
+    "Skin. Sens. 1B"
+   ],
+   "h_codes": [
+    "H317"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS07"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.4.7"
+  },
+  {
+   "section": "3.5",
+   "hazard_class": "germ cell mutagenicity",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [
+    "Muta. 1A",
+    "Muta. 1B"
+   ],
+   "h_codes": [
+    "H340"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.5.3"
+  },
+  {
+   "section": "3.5",
+   "hazard_class": "germ cell mutagenicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Muta. 2"
+   ],
+   "h_codes": [
+    "H341"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.5.3"
+  },
+  {
+   "section": "3.6",
+   "hazard_class": "carcinogenicity",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [
+    "Carc. 1A",
+    "Carc. 1B"
+   ],
+   "h_codes": [
+    "H350"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.6.3"
+  },
+  {
+   "section": "3.6",
+   "hazard_class": "carcinogenicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Carc. 2"
+   ],
+   "h_codes": [
+    "H351"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.6.3"
+  },
+  {
+   "section": "3.7",
+   "hazard_class": "reproductive toxicity",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [
+    "Repr. 1A",
+    "Repr. 1B"
+   ],
+   "h_codes": [
+    "H360"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.7.3"
+  },
+  {
+   "section": "3.7",
+   "hazard_class": "reproductive toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "Repr. 2"
+   ],
+   "h_codes": [
+    "H361"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.7.3"
+  },
+  {
+   "section": "3.7",
+   "hazard_class": "reproductive toxicity",
+   "category": [
+    "Lact."
+   ],
+   "subclass": "",
+   "codes": [
+    "Lact."
+   ],
+   "h_codes": [
+    "H362"
+   ],
+   "signal": "",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.7.3"
+  },
+  {
+   "section": "3.8",
+   "hazard_class": "specific target organ toxicity after single exposure",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "STOT SE 1"
+   ],
+   "h_codes": [
+    "H370"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.8.4"
+  },
+  {
+   "section": "3.8",
+   "hazard_class": "specific target organ toxicity after single exposure",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "STOT SE 2"
+   ],
+   "h_codes": [
+    "H371"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.8.4"
+  },
+  {
+   "section": "3.8",
+   "hazard_class": "specific target organ toxicity after single exposure",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [
+    "STOT SE 3"
+   ],
+   "h_codes": [
+    "H335",
+    "H336"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS07"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.8.4"
+  },
+  {
+   "section": "3.9",
+   "hazard_class": "specific target organ toxicity after repeated exposure",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "STOT RE 1"
+   ],
+   "h_codes": [
+    "H372"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.9.5"
+  },
+  {
+   "section": "3.9",
+   "hazard_class": "specific target organ toxicity after repeated exposure",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "STOT RE 2"
+   ],
+   "h_codes": [
+    "H373"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.9.5"
+  },
+  {
+   "section": "3.10",
+   "hazard_class": "aspiration toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "Asp. Tox. 1"
+   ],
+   "h_codes": [
+    "H304"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "GHS08"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.10.2"
+  },
+  {
+   "section": "3.11",
+   "hazard_class": "endocrine disruption for human health",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "ED HH 1"
+   ],
+   "h_codes": [
+    "EUH380"
+   ],
+   "signal": "Danger",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.11.3"
+  },
+  {
+   "section": "3.11",
+   "hazard_class": "endocrine disruption for human health",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "ED HH 2"
+   ],
+   "h_codes": [
+    "EUH381"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.11.3"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "1"
+   ],
+   "subclass": "aquatic acute",
+   "codes": [
+    "Aquatic Acute 1"
+   ],
+   "h_codes": [
+    "H400"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS09"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.1.4"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "1"
+   ],
+   "subclass": "aquatic chronic",
+   "codes": [
+    "Aquatic Chronic 1"
+   ],
+   "h_codes": [
+    "H410"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "GHS09"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.1.4"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "2"
+   ],
+   "subclass": "aquatic chronic",
+   "codes": [
+    "Aquatic Chronic 2"
+   ],
+   "h_codes": [
+    "H411"
+   ],
+   "signal": "",
+   "pictograms": [
+    "GHS09"
+   ],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.1.4"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "3"
+   ],
+   "subclass": "aquatic chronic",
+   "codes": [
+    "Aquatic Chronic 3"
+   ],
+   "h_codes": [
+    "H412"
+   ],
+   "signal": "",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.1.4"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "4"
+   ],
+   "subclass": "aquatic chronic",
+   "codes": [
+    "Aquatic Chronic 4"
+   ],
+   "h_codes": [
+    "H413"
+   ],
+   "signal": "",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.1.4"
+  },
+  {
+   "section": "4.2",
+   "hazard_class": "endocrine disruption for the environment",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [
+    "ED ENV 1"
+   ],
+   "h_codes": [
+    "EUH430"
+   ],
+   "signal": "Danger",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.2.3"
+  },
+  {
+   "section": "4.2",
+   "hazard_class": "endocrine disruption for the environment",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [
+    "ED ENV 2"
+   ],
+   "h_codes": [
+    "EUH431"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.2.3"
+  },
+  {
+   "section": "4.3",
+   "hazard_class": "pbt and vpvb properties",
+   "category": [
+    "PBT"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "EUH440"
+   ],
+   "signal": "Danger",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.3.1"
+  },
+  {
+   "section": "4.3",
+   "hazard_class": "pbt and vpvb properties",
+   "category": [
+    "vPvB"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "EUH441"
+   ],
+   "signal": "Danger",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.3.1"
+  },
+  {
+   "section": "4.4",
+   "hazard_class": "pmt and vpvm properties",
+   "category": [
+    "PMT"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "EUH450"
+   ],
+   "signal": "Danger",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.4.1"
+  },
+  {
+   "section": "4.4",
+   "hazard_class": "pmt and vpvm properties",
+   "category": [
+    "vPvM"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "EUH451"
+   ],
+   "signal": "Danger",
+   "pictograms": [],
+   "source": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.4.1"
+  }
+ ],
+ "signal_rule": {
+  "binding": true,
+  "quote": "Where the signal word ‘Danger’ is used on the label, the signal word ‘Warning’ shall not appear on the label.",
+  "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Article 20(3)"
+ },
+ "pictogram_rules": [
+  {
+   "when": [
+    "GHS01"
+   ],
+   "drop": "GHS02",
+   "effect": "optional",
+   "only_for": [],
+   "rule": {
+    "binding": true,
+    "quote": "(a) if the hazard pictogram ‘GHS01’ applies, the use of the hazard pictograms ‘GHS02’ and ‘GHS03’ shall be optional, except in cases where more than one of these hazard pictograms are compulsory",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Article 26(1)(a)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "GHS01"
+   ],
+   "drop": "GHS03",
+   "effect": "optional",
+   "only_for": [],
+   "rule": {
+    "binding": true,
+    "quote": "(a) if the hazard pictogram ‘GHS01’ applies, the use of the hazard pictograms ‘GHS02’ and ‘GHS03’ shall be optional, except in cases where more than one of these hazard pictograms are compulsory",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Article 26(1)(a)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "GHS06"
+   ],
+   "drop": "GHS07",
+   "effect": "not_appear",
+   "only_for": [],
+   "rule": {
+    "binding": true,
+    "quote": "(b) if the hazard pictogram ‘GHS06’ applies, the hazard pictogram ‘GHS07’ shall not appear",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Article 26(1)(b)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "GHS05"
+   ],
+   "drop": "GHS07",
+   "effect": "not_appear",
+   "only_for": [
+    "skin irritation",
+    "eye irritation"
+   ],
+   "rule": {
+    "binding": true,
+    "quote": "(c) if the hazard pictogram ‘GHS05’ applies, the hazard pictogram ‘GHS07’ shall not appear for skin or eye irritation",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Article 26(1)(c)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "GHS08"
+   ],
+   "drop": "GHS07",
+   "effect": "not_appear",
+   "only_for": [
+    "skin sensitisation",
+    "skin irritation",
+    "eye irritation"
+   ],
+   "rule": {
+    "binding": true,
+    "quote": "(d) if the hazard pictogram ‘GHS08’ applies for respiratory sensitisation, the hazard pictogram ‘GHS07’ shall not appear for skin sensitisation or for skin and eye irritation",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Article 26(1)(d)"
+   },
+   "when_for": [
+    "respiratory sensitisation"
+   ]
+  },
+  {
+   "when": [
+    "GHS02",
+    "GHS06"
+   ],
+   "drop": "GHS04",
+   "effect": "optional",
+   "only_for": [],
+   "rule": {
+    "binding": true,
+    "quote": "(e) if the hazard pictogram ‘GHS02’ or ‘GHS06’ applies, the use of the hazard pictogram ‘GHS04’ shall be optional.",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Article 26(1)(e)"
+   },
+   "when_for": []
+  }
+ ],
+ "statement_rules": [
+  {
+   "when": [
+    "H410"
+   ],
+   "drop": "H400",
+   "effect": "may_omit",
+   "only_for": [],
+   "rule": {
+    "binding": false,
+    "quote": "(a) if the hazard statement H410 ‘Very toxic to aquatic life with long lasting effects’ is assigned, the statement H400 ‘Very toxic to aquatic life’ may be omitted",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, the paragraph applying Article 27, (a)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "H314"
+   ],
+   "drop": "H318",
+   "effect": "may_omit",
+   "only_for": [],
+   "rule": {
+    "binding": false,
+    "quote": "(b) if the statement H314 ‘Causes severe skin burns and eye damage’ is assigned, the statement H318 ‘Causes serious eye damage’ may be omitted",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, the paragraph applying Article 27, (b)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "EUH441"
+   ],
+   "drop": "EUH440",
+   "effect": "may_omit",
+   "only_for": [],
+   "rule": {
+    "binding": false,
+    "quote": "(c) if the hazard statement EUH441 ‘Strongly accumulates in the environment and living organisms including in humans’ is assigned, the statement EUH440 ‘Accumulates in the environment and living organisms including in humans’ may be omitted",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, the paragraph applying Article 27, (c)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "EUH451"
+   ],
+   "drop": "EUH450",
+   "effect": "may_omit",
+   "only_for": [],
+   "rule": {
+    "binding": false,
+    "quote": "(d) if the hazard statement EUH451 ‘Can cause very long-lasting and diffuse contamination of water resources’ is assigned, the statement EUH450 ‘Can cause long-lasting and diffuse contamination of water resources’ may be omitted",
+    "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, the paragraph applying Article 27, (d)"
+   },
+   "when_for": []
+  }
+ ],
+ "not_adopted": [],
+ "unparsed": [
+  "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Table 2.2.2 (flammable gases): columns not read"
+ ]
+}

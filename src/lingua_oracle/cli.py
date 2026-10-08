@@ -207,6 +207,27 @@ def keys_build(
             typer.secho(f"  {reg_id}: -> {path}")
         return
 
+    if regulation == "hazard_criteria":
+        # Not an answer key: flammable-liquid and aquatic criteria a sheet's
+        # own data is held against, from each regulation's text.
+        from lingua_oracle.keys.builders import hazard_criteria
+
+        for reg_id in hazard_criteria.REGULATIONS:
+            path = hazard_criteria.write(reg_id, use_cache=not no_cache)
+            typer.secho(f"  {reg_id}: -> {path}")
+        return
+
+    if regulation == "label_elements":
+        # Not an answer key: signal word, hazard statement codes and pictograms
+        # per hazard class and category, with the precedence rules, each from
+        # the regulation's own text.
+        from lingua_oracle.keys.builders import label_elements
+
+        for reg_id in label_elements.REGULATIONS:
+            path = label_elements.write(reg_id, use_cache=not no_cache)
+            typer.secho(f"  {reg_id}: -> {path}")
+        return
+
     if regulation == "sds_structure":
         # Not an answer key: the sections, sub-sections and items each
         # regulation's own text requires of a safety data sheet.

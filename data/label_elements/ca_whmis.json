@@ -1,0 +1,1150 @@
+{
+ "regulation": "ca_whmis",
+ "document": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c)",
+ "status": "ok",
+ "why": "",
+ "pictogram_kind": "name",
+ "pictogram_names": [
+  "Flame",
+  "Flame over circle",
+  "Exploding bomb",
+  "Corrosion",
+  "Gas cylinder",
+  "Skull and crossbones",
+  "Exclamation mark",
+  "Environment",
+  "Health hazard"
+ ],
+ "entries": [
+  {
+   "section": "2.17",
+   "hazard_class": "desensitized explosives",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H206"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.17.2"
+  },
+  {
+   "section": "2.17",
+   "hazard_class": "desensitized explosives",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H207"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.17.2"
+  },
+  {
+   "section": "2.17",
+   "hazard_class": "desensitized explosives",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H207"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.17.2"
+  },
+  {
+   "section": "2.17",
+   "hazard_class": "desensitized explosives",
+   "category": [
+    "4"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H208"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.17.2"
+  },
+  {
+   "section": "2.3",
+   "hazard_class": "aerosols",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H222"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.3.1"
+  },
+  {
+   "section": "2.3",
+   "hazard_class": "aerosols",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H223"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.3.1"
+  },
+  {
+   "section": "2.6",
+   "hazard_class": "flammable liquids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H224"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.6.2"
+  },
+  {
+   "section": "2.6",
+   "hazard_class": "flammable liquids",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H225"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.6.2"
+  },
+  {
+   "section": "2.6",
+   "hazard_class": "flammable liquids",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H226"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.6.2"
+  },
+  {
+   "section": "2.6",
+   "hazard_class": "flammable liquids",
+   "category": [
+    "4"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H227"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.6.2"
+  },
+  {
+   "section": "2.7",
+   "hazard_class": "flammable solids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H228"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.7.2"
+  },
+  {
+   "section": "2.7",
+   "hazard_class": "flammable solids",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H228"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.7.2"
+  },
+  {
+   "section": "2.3",
+   "hazard_class": "aerosols",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H229"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.3.1"
+  },
+  {
+   "section": "2.3",
+   "hazard_class": "aerosols",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H229"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.3.1"
+  },
+  {
+   "section": "2.3",
+   "hazard_class": "aerosols",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H229"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.3.1"
+  },
+  {
+   "section": "2.11",
+   "hazard_class": "self-heating substances and mixtures",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H251"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.11.2"
+  },
+  {
+   "section": "2.11",
+   "hazard_class": "self-heating substances and mixtures",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H252"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.11.2"
+  },
+  {
+   "section": "2.12",
+   "hazard_class": "substances and mixtures which",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H260"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.12.2"
+  },
+  {
+   "section": "2.12",
+   "hazard_class": "substances and mixtures which",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H261"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.12.2"
+  },
+  {
+   "section": "2.12",
+   "hazard_class": "substances and mixtures which",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H261"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.12.2"
+  },
+  {
+   "section": "2.4",
+   "hazard_class": "oxidizing gases",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H270"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame over circle"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.4.2"
+  },
+  {
+   "section": "2.5",
+   "hazard_class": "gases under pressure",
+   "category": [
+    "refrigerated liquefied gas"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H281"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Gas cylinder"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.5.2"
+  },
+  {
+   "section": "2.16",
+   "hazard_class": "corrosive to metals",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H290"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Corrosion"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 2.16.2"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "oral",
+   "codes": [],
+   "h_codes": [
+    "H300"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Skull and crossbones"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "oral",
+   "codes": [],
+   "h_codes": [
+    "H300"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Skull and crossbones"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "3"
+   ],
+   "subclass": "oral",
+   "codes": [],
+   "h_codes": [
+    "H301"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Skull and crossbones"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "4"
+   ],
+   "subclass": "oral",
+   "codes": [],
+   "h_codes": [
+    "H302"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "5"
+   ],
+   "subclass": "oral",
+   "codes": [],
+   "h_codes": [
+    "H303"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.10",
+   "hazard_class": "aspiration hazard",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H304"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.10.2"
+  },
+  {
+   "section": "3.10",
+   "hazard_class": "aspiration hazard",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H305"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.10.2"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "dermal",
+   "codes": [],
+   "h_codes": [
+    "H310"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Skull and crossbones"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "dermal",
+   "codes": [],
+   "h_codes": [
+    "H310"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Skull and crossbones"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "3"
+   ],
+   "subclass": "dermal",
+   "codes": [],
+   "h_codes": [
+    "H311"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Skull and crossbones"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "4"
+   ],
+   "subclass": "dermal",
+   "codes": [],
+   "h_codes": [
+    "H312"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "5"
+   ],
+   "subclass": "dermal",
+   "codes": [],
+   "h_codes": [
+    "H313"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.2",
+   "hazard_class": "skin corrosion/irritation",
+   "category": [
+    "1A"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H314"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Corrosion"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.2.5"
+  },
+  {
+   "section": "3.2",
+   "hazard_class": "skin corrosion/irritation",
+   "category": [
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H314"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Corrosion"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.2.5"
+  },
+  {
+   "section": "3.2",
+   "hazard_class": "skin corrosion/irritation",
+   "category": [
+    "1C"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H314"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Corrosion"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.2.5"
+  },
+  {
+   "section": "3.2",
+   "hazard_class": "skin corrosion/irritation",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H315"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.2.5"
+  },
+  {
+   "section": "3.2",
+   "hazard_class": "skin corrosion/irritation",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H316"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.2.5"
+  },
+  {
+   "section": "3.4",
+   "hazard_class": "sensitisation",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "skin sensitization",
+   "codes": [],
+   "h_codes": [
+    "H317"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.4.6"
+  },
+  {
+   "section": "3.3",
+   "hazard_class": "serious eye damage/eye irritation",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H318"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Corrosion"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.3.5"
+  },
+  {
+   "section": "3.3",
+   "hazard_class": "serious eye damage/eye irritation",
+   "category": [
+    "2A"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H319"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.3.5"
+  },
+  {
+   "section": "3.3",
+   "hazard_class": "serious eye damage/eye irritation",
+   "category": [
+    "2B"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H320"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.3.5"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "inhalation",
+   "codes": [],
+   "h_codes": [
+    "H330"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Skull and crossbones"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "inhalation",
+   "codes": [],
+   "h_codes": [
+    "H330"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Skull and crossbones"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "3"
+   ],
+   "subclass": "inhalation",
+   "codes": [],
+   "h_codes": [
+    "H331"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Skull and crossbones"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "4"
+   ],
+   "subclass": "inhalation",
+   "codes": [],
+   "h_codes": [
+    "H332"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.1",
+   "hazard_class": "acute toxicity",
+   "category": [
+    "5"
+   ],
+   "subclass": "inhalation",
+   "codes": [],
+   "h_codes": [
+    "H333"
+   ],
+   "signal": "Warning",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.1.3"
+  },
+  {
+   "section": "3.4",
+   "hazard_class": "sensitisation",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "respiratory sensitization",
+   "codes": [],
+   "h_codes": [
+    "H334"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.4.6"
+  },
+  {
+   "section": "3.8",
+   "hazard_class": "narcotic effects",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H336"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.8.3"
+  },
+  {
+   "section": "3.7",
+   "hazard_class": "reproductive toxicity",
+   "category": [
+    "Lact."
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H362"
+   ],
+   "signal": "",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 3.7.2"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "1"
+   ],
+   "subclass": "short-term (acute)",
+   "codes": [],
+   "h_codes": [
+    "H400"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Environment"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 4.1.6"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "2"
+   ],
+   "subclass": "short-term (acute)",
+   "codes": [],
+   "h_codes": [
+    "H401"
+   ],
+   "signal": "",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 4.1.6"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "3"
+   ],
+   "subclass": "short-term (acute)",
+   "codes": [],
+   "h_codes": [
+    "H402"
+   ],
+   "signal": "",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 4.1.6"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "1"
+   ],
+   "subclass": "long-term (chronic)",
+   "codes": [],
+   "h_codes": [
+    "H410"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Environment"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 4.1.6"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "2"
+   ],
+   "subclass": "long-term (chronic)",
+   "codes": [],
+   "h_codes": [
+    "H411"
+   ],
+   "signal": "",
+   "pictograms": [
+    "Environment"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 4.1.6"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "3"
+   ],
+   "subclass": "long-term (chronic)",
+   "codes": [],
+   "h_codes": [
+    "H412"
+   ],
+   "signal": "",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 4.1.6"
+  },
+  {
+   "section": "4.1",
+   "hazard_class": "hazardous to the aquatic environment",
+   "category": [
+    "4"
+   ],
+   "subclass": "long-term (chronic)",
+   "codes": [],
+   "h_codes": [
+    "H413"
+   ],
+   "signal": "",
+   "pictograms": [],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 4.1.6"
+  },
+  {
+   "section": "4.2",
+   "hazard_class": "hazardous to the ozone layer",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H420"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), Table A3.1.1 and Table 4.2.2"
+  }
+ ],
+ "signal_rule": {
+  "binding": false,
+  "quote": "If the signal word “Danger” applies, the signal word “Warning” should not appear.",
+  "citation": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), 1.4.10.5.3.2"
+ },
+ "pictogram_rules": [
+  {
+   "when": [
+    "Skull and crossbones"
+   ],
+   "drop": "Exclamation mark",
+   "effect": "not_appear",
+   "only_for": [],
+   "rule": {
+    "binding": false,
+    "quote": "(a) if the skull and crossbones applies, the exclamation mark should not appear;",
+    "citation": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), 1.4.10.5.3.1(a)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "Corrosion"
+   ],
+   "drop": "Exclamation mark",
+   "effect": "not_appear",
+   "only_for": [
+    "skin irritation",
+    "eye irritation"
+   ],
+   "rule": {
+    "binding": false,
+    "quote": "(b) if the corrosive symbol applies, the exclamation mark should not appear where it is used for skin or eye irritation;",
+    "citation": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), 1.4.10.5.3.1(b)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "Health hazard"
+   ],
+   "drop": "Exclamation mark",
+   "effect": "not_appear",
+   "only_for": [
+    "skin sensitisation",
+    "skin irritation",
+    "eye irritation"
+   ],
+   "rule": {
+    "binding": false,
+    "quote": "(c) if the health hazard symbol appears for respiratory sensitisation, the exclamation mark should not appear where it is used for skin sensitisation or for skin or eye irritation.",
+    "citation": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), 1.4.10.5.3.1(c)"
+   },
+   "when_for": [
+    "respiratory sensitisation"
+   ]
+  }
+ ],
+ "statement_rules": [
+  {
+   "when": [
+    "H410"
+   ],
+   "drop": "H400",
+   "effect": "may_omit",
+   "only_for": [],
+   "rule": {
+    "binding": false,
+    "quote": "(a) If the statement H410 “Very toxic to aquatic life with long lasting effects” is assigned, the statement H400 “Very toxic to aquatic life” may be omitted",
+    "citation": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), 1.4.10.5.3.3(a)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "H411"
+   ],
+   "drop": "H401",
+   "effect": "may_omit",
+   "only_for": [],
+   "rule": {
+    "binding": false,
+    "quote": "(b) If the statement H411 “Toxic to aquatic life with long lasting effects” is assigned, the statement H401 “Toxic to aquatic life” may be omitted",
+    "citation": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), 1.4.10.5.3.3(b)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "H412"
+   ],
+   "drop": "H402",
+   "effect": "may_omit",
+   "only_for": [],
+   "rule": {
+    "binding": false,
+    "quote": "(c) If the statement H412 “Harmful to aquatic life with long lasting effects” is assigned, the statement H402 “Harmful to aquatic life” may be omitted",
+    "citation": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), 1.4.10.5.3.3(c)"
+   },
+   "when_for": []
+  },
+  {
+   "when": [
+    "H314"
+   ],
+   "drop": "H318",
+   "effect": "may_omit",
+   "only_for": [],
+   "rule": {
+    "binding": false,
+    "quote": "(d) If the statement H314 “Causes severe skin burns and eye damage” is assigned, the statement H318 “Causes serious eye damage” may be omitted",
+    "citation": "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c), 1.4.10.5.3.3(d)"
+   },
+   "when_for": []
+  }
+ ],
+ "not_adopted": [],
+ "unparsed": [
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H201 (Explosives, chapter 2.1) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H202 (Explosives, chapter 2.1) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H203 (Explosives, chapter 2.1) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H204 (Explosives, chapter 2.1) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H205 (Explosives, chapter 2.1) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H220 (Flammable gases, chapter 2.2) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H221 (Flammable gases, chapter 2.2) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H230 (Flammable gases, chapter 2.2) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H231 (Flammable gases, chapter 2.2) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H232 (Flammable gases, chapter 2.2) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as incorporated by the Hazardous Products Regulations, section 3(1)(c): H280 (Gases under pressure, chapter 2.5) - no label table column for its category"
+ ]
+}

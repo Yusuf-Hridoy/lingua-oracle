@@ -1,0 +1,106 @@
+{
+ "regulation": "eu_clp",
+ "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+ "flammable_liquids": {
+  "status": "ok",
+  "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 2.6.1",
+  "quote": "Table 2.6.1 Criteria for flammable liquids Category Criteria 1 Flash point < 23 o C and initial boiling point ≤ 35 o C 2 Flash point < 23 o C and initial boiling point > 35 o C 3 Flash point ≥ 23 o C and ≤ 60 o C",
+  "why": "",
+  "categories": [
+   {
+    "category": "1",
+    "flash": [
+     [
+      "<",
+      "23"
+     ]
+    ],
+    "raw": "Flash point < 23 o C and initial boiling point ≤ 35 o C",
+    "boiling": [
+     "<=",
+     "35"
+    ]
+   },
+   {
+    "category": "2",
+    "flash": [
+     [
+      "<",
+      "23"
+     ]
+    ],
+    "raw": "Flash point < 23 o C and initial boiling point > 35 o C",
+    "boiling": [
+     ">",
+     "35"
+    ]
+   },
+   {
+    "category": "3",
+    "flash": [
+     [
+      ">=",
+      "23"
+     ],
+     [
+      "<=",
+      "60"
+     ]
+    ],
+    "raw": "Flash point ≥ 23 o C and ≤ 60 o C"
+   }
+  ],
+  "notes": [
+   "For the purpose of this Regulation gas oils, diesel and light heating oils having a flash point between ≥ 55 o C and ≤ 75 o C may be regarded as Category 3."
+  ]
+ },
+ "aquatic": {
+  "status": "ok",
+  "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 4.1.0",
+  "quote": "Table 4.1.0 Classification categories for substances hazardous to the aquatic environment (a) Short-term (acute) aquatic hazard Category Acute 1: (Note 1) 96 hr LC 50 (for fish) ≤ 1 mg/l and/or 48 hr EC 50 (for crustacea) ≤ 1 mg/l and/or 72 or 96 hr ErC 50 (for algae or other aquatic plants) ≤ 1 mg/l. (Note 2) (b) Long-term (chronic) aquatic hazard (i) Non-rapidly degradable substances (Note 3) for which there are adequate chronic toxicity data available Category Chronic 1: (Note 1) Chronic NOEC or EC x (for fish) ≤ 0,1 mg/l and/or Chronic NOEC or EC x (for crustacea) ≤ 0,1 mg/l and/or Chronic NOEC or EC x (for algae or other aquatic plants) ≤ 0,1 mg/l. Category Chronic 2: Chronic NOEC or EC x (for fish) ≤ 1 mg/l and/or Chronic NOEC or EC x (for crustacea) ≤ 1 mg/l and/or Chronic NOEC or EC x (for algae or other aquatic plants) ≤ 1 mg/l. (ii) Rapidly degradable substances (Note 3) for which there are adequate chronic toxicity data available Category Chronic 1: (Note 1) Chronic NOEC or EC x (for fish) ≤ 0,01 mg/l and/or Chronic NOEC or EC x (for crustacea) ≤ 0,01 mg/l and/or Chronic NOEC or EC x (for algae or other aquatic plants) ≤ 0,01 mg/l. Category Chronic 2: Chronic NOEC or EC x (for fish) ≤ 0,1 mg/l and/or Chronic NOEC or EC x (for crustacea) ≤ 0,1 mg/l and/or Chronic NOEC or EC x (for algae or other aquatic plants) ≤ 0,1 mg/l. Category Chronic 3: Chronic NOEC or EC x (for fish) ≤ 1 mg/l and/or Chronic NOEC or EC x (for crustacea) ≤ 1 mg/l and/or Chronic NOEC or EC x (for algae or other aquatic plants) ≤ 1 mg",
+  "why": "",
+  "categories": [
+   {
+    "category": "1",
+    "upper": "1",
+    "lower": null,
+    "kind": "acute"
+   },
+   {
+    "category": "1",
+    "upper": "0.1",
+    "lower": null,
+    "kind": "chronic_nonrapid"
+   },
+   {
+    "category": "2",
+    "upper": "1",
+    "lower": null,
+    "kind": "chronic_nonrapid"
+   },
+   {
+    "category": "1",
+    "upper": "0.01",
+    "lower": null,
+    "kind": "chronic_rapid"
+   },
+   {
+    "category": "2",
+    "upper": "0.1",
+    "lower": null,
+    "kind": "chronic_rapid"
+   },
+   {
+    "category": "3",
+    "upper": "1",
+    "lower": null,
+    "kind": "chronic_rapid"
+   }
+  ],
+  "notes": []
+ },
+ "aquatic_mixture": {
+  "quote": "When the mixture as a whole has been tested to determine its aquatic toxicity, this information can be used for classifying the mixture according to the criteria that have been agreed for substances.",
+  "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, 4.1.3.3.1"
+ }
+}

@@ -1,0 +1,80 @@
+{
+ "regulation": "au_whs",
+ "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+ "flammable_liquids": {
+  "status": "ok",
+  "citation": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table 2.6.1",
+  "quote": "Table 2.6.1: Criteria for flammable liquids Category Criteria 1 Flash point < 23 °C and initial boiling point ≤ 35 °C 2 Flash point < 23 °C and initial boiling point > 35 °C 3 Flash point ≥ 23 °C and ≤ 60 °C 4 Flash point > 60 °C and ≤ 93 °C",
+  "why": "",
+  "categories": [
+   {
+    "category": "1",
+    "flash": [
+     [
+      "<",
+      "23"
+     ]
+    ],
+    "raw": "Flash point < 23 °C and initial boiling point ≤ 35 °C",
+    "boiling": [
+     "<=",
+     "35"
+    ]
+   },
+   {
+    "category": "2",
+    "flash": [
+     [
+      "<",
+      "23"
+     ]
+    ],
+    "raw": "Flash point < 23 °C and initial boiling point > 35 °C",
+    "boiling": [
+     ">",
+     "35"
+    ]
+   },
+   {
+    "category": "3",
+    "flash": [
+     [
+      ">=",
+      "23"
+     ],
+     [
+      "<=",
+      "60"
+     ]
+    ],
+    "raw": "Flash point ≥ 23 °C and ≤ 60 °C"
+   },
+   {
+    "category": "4",
+    "flash": [
+     [
+      ">",
+      "60"
+     ],
+     [
+      "<=",
+      "93"
+     ]
+    ],
+    "raw": "Flash point > 60 °C and ≤ 93 °C"
+   }
+  ],
+  "notes": [
+   "Gas oils, diesel and light heating oils in the flash point range of 55 °C to 75 °C may be regarded as a special group for some regulatory purposes."
+  ]
+ },
+ "aquatic": {
+  "status": "not_adopted",
+  "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 12",
+  "quote": "Hazardous chemical means a substance, mixture or article that satisfies the criteria for a hazard class in the GHS (including a classification referred to in Schedule 6), but does not include a substance, mixture or article that satisfies the criteria solely for the following hazard classes: a. acute toxicity – oral, dermal and inhalation – category 5; b. skin corrosion/irritation – category 3; c. serious eye damage/eye irritation – category 2B; d. aspiration hazard – category 2; e. flammable gas – category 2; f. acute hazard to the aquatic environment – categories 1, 2 and 3; g. chronic hazard to the aquatic environment – categories 1, 2, 3 and 4; h. hazardous to the ozone layer.",
+  "why": "The WHS Regulations leave the aquatic hazard classes out of \"hazardous chemical\".",
+  "categories": [],
+  "notes": []
+ },
+ "aquatic_mixture": {}
+}
