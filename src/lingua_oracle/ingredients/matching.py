@@ -30,6 +30,10 @@ _FILE_ID_RE = re.compile(r"(?:^|[_-])(\d{3,8})(?=\.|_|$)")
 #: Boilerplate that follows the label on some sheets instead of a name.
 _NOT_A_NAME = re.compile(r"^(see section|n/?a|not applicable|-{1,3})$",
                          re.IGNORECASE)
+#: A numbered sub-section or section heading: the next part of the sheet,
+#: not a product name.
+_HEADING_LIKE = re.compile(r"^\s*\d{1,2}\.\d{1,2}\b|^\s*(?:SECTION|ABSCHNITT|PUNKT|"
+                           r"RUBRIQUE)\s+\d", re.IGNORECASE)
 
 
 def normalised(name: str) -> str:
@@ -89,13 +93,21 @@ def product_name_in(lines) -> str | None:
             continue
         value = " ".join((match.group("value") or "").split())
         if not value or _NOT_A_NAME.match(value):
-            # Several producers put the label and the value on separate lines.
+            # Several producers put the label and the value on separate lines;
+            # others head 1.1 "Product identifier" and give the name under its
+            # own label, "Product name: ...". A heading or a filler is neither.
             for following in lines[index + 1:index + 3]:
                 candidate = " ".join((following.text or "").split())
-                if candidate and not _LABEL_RE.match(candidate) \
-                        and not _NOT_A_NAME.match(candidate):
-                    value = candidate
+                inner = _LABEL_RE.match(candidate)
+                if inner:
+                    candidate = " ".join((inner.group("value") or "").split())
+                if not candidate or _NOT_A_NAME.match(candidate) \
+                        or not re.search(r"[^\W_]", candidate):
+                    continue
+                if _HEADING_LIKE.match(candidate):
                     break
+                value = candidate
+                break
         value = value.strip(" :–-")
         if value and not _NOT_A_NAME.match(value):
             return value[:120]

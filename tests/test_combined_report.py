@@ -87,6 +87,11 @@ def test_an_application_download_carries_its_product_id(file_name, expected):
     (["Trade name : <fictional product>"], "<fictional product>"),
     (["Produktname: <fictional product>"], "<fictional product>"),
     (["Nothing useful here"], None),
+    # 1.1's heading is a label too; the name is under its own label below it,
+    # and the supplier line after that is not the product.
+    (["1.1. Product identifier", "Product name: <fictional product>",
+      "Fictional Supplier Ltd"], "<fictional product>"),
+    (["1.1. Product identifier", "—", "1.2. Relevant identified uses"], None),
 ])
 def test_the_product_name_is_read_from_its_label(lines, expected):
     assert product_name_in([Line(t) for t in lines]) == expected
