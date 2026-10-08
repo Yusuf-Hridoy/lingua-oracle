@@ -403,6 +403,8 @@ def build_all() -> dict[str, Path]:
         classes=["Flam. Liq. 2", "Eye Irrit. 2"], codes=["H225", "H319"]))
     add("pattern_mixture_no_concentrations", _no_concentrations(
         FIXTURES / "pattern_mixture_no_concentrations.pdf"))
+    add("pattern_glycol_coolant_gb", _glycol_coolant(
+        FIXTURES / "pattern_glycol_coolant_gb.pdf"))
     # The same table, on a sheet that names its product the way ours do. Where
     # the product is one of ours its record is what gets checked, and this is
     # the fixture that can tell the two apart: the table here is nothing like
@@ -712,6 +714,69 @@ def _no_concentrations(path: Path) -> Path:
     sheet.blank()
     sheet.line(head["16"], bold=True, size=11)
     for code in ("H225", "H319"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.save()
+    return path
+
+
+def _glycol_coolant(path: Path, *, section_eleven: list[str] | None = None,
+                    section_two: list[tuple[str, str]] | None = None,
+                    extra_s2: list[str] | None = None) -> Path:
+    """A GB CLP engine coolant in the shape real ones take.
+
+    Ethylene glycol 40-60 %, water 40-60 %, diethylene glycol < 2.5 % and two
+    minor salts. The upper bounds add up to more than 100 %, so nothing is
+    undisclosed: the uncertainty is the ranges'. The substances are real and
+    their GB MCL entries public; the product and supplier are invented.
+    """
+    head = HEADINGS["en"]
+    classified = section_two or [("Acute Tox. 4", "H302"), ("STOT RE 2", "H373")]
+    codes = [code for _, code in classified]
+    official = texts("uk_clp", "en", codes + ["P260", "P301+P312"])
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line("SECTION 1: Identification of the substance/mixture")
+    sheet.line(f"Product name: {PRODUCT}")
+    sheet.line(SUPPLIER)
+    sheet.line("Classified according to GB CLP.", size=8)
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("2.1 Classification of the substance or mixture")
+    for hazard_class, code in classified:
+        sheet.line(f"{hazard_class}; {code}")
+    for extra in extra_s2 or []:
+        sheet.line(extra)
+    sheet.line("2.2 Label elements")
+    sheet.line(f"{head['signal']}: {signal_text('uk_clp', 'en', danger=False)}")
+    sheet.line(head["haz"], bold=True)
+    for code in codes:
+        sheet.line(f"{code} {official[code]}")
+    sheet.line(head["prec"], bold=True)
+    for code in ("P260", "P301+P312"):
+        sheet.line(f"{code} {official[code]}")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("3.2 Mixtures")
+    sheet.table(["Chemical name", "CAS No", "Concentration", "Classification"],
+                [["Ethylene glycol", "107-21-1", "40 - 60 %", "Acute Tox. 4, H302"],
+                 ["Water", "7732-18-5", "40 - 60 %", ""],
+                 ["Diethylene glycol", "111-46-6", "< 2.5 %", "Acute Tox. 4, H302"],
+                 ["Sodium benzoate", "532-32-1", "< 1 %", ""],
+                 ["Disodium sebacate", "17265-14-4", "< 1 %", ""]])
+    sheet.blank()
+    sheet.line("SECTION 9: Physical and chemical properties", bold=True, size=11)
+    sheet.line("Physical state : Liquid")
+    sheet.line("Colour : green")
+    sheet.blank()
+    sheet.line("SECTION 10: Stability and reactivity", bold=True, size=11)
+    sheet.line("Stable under normal conditions.")
+    sheet.blank()
+    sheet.line("SECTION 11: Toxicological information", bold=True, size=11)
+    for line in section_eleven or ["No data available for the mixture."]:
+        sheet.line(line)
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    for code in codes:
         sheet.line(f"{code} {official[code]}")
     sheet.save()
     return path

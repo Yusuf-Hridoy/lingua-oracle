@@ -138,13 +138,14 @@ def test_the_mixture_classifies_an_ingredient_as_its_own_list_does():
         assert ingredient.high == Decimal(50)
 
 
-def test_an_ingredient_with_no_classification_anywhere_is_undisclosed():
-    """A trade secret is part of the mixture and no rule can use it. Counting
-    it as declared would make the calculation look better informed than it is."""
+def test_an_ingredient_with_no_classification_anywhere_is_declared_and_named():
+    """A trade secret's range is printed, so it is declared: undisclosed is
+    100 minus the upper bounds of every range. No rule can use it, and the
+    assumptions say so by name."""
     report = _check("us_osha", "pattern_trade_secret")
     said = [a for a in report.mixture.assumptions if "no classification" in a]
     assert said, report.mixture.assumptions
-    assert "counted with the undisclosed part" in said[0]
-    # 20 % is classified; the 50 % trade secret is not, so 80 % is undisclosed.
-    assert report.mixture.declared_total == "20"
-    assert report.mixture.undisclosed == "80"
+    assert "no rule can use them" in said[0]
+    # 20 % classified and the 50 % trade secret: 70 % declared, 30 % not.
+    assert report.mixture.declared_total == "70"
+    assert report.mixture.undisclosed == "30"

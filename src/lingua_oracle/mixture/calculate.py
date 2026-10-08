@@ -114,7 +114,8 @@ def _declared_total(ingredients) -> Decimal:
 
 
 def calculate(ingredients, stated: list[HazardClass], regulation: str,
-              state: str | None = None) -> tuple[list[ClassResult], dict]:
+              state: str | None = None, *,
+              declared: Decimal | None = None) -> tuple[list[ClassResult], dict]:
     """Compare what the ingredients give with what Section 2 states.
 
     The comparison is per hazard family, not per class: a sheet that states
@@ -126,6 +127,11 @@ def calculate(ingredients, stated: list[HazardClass], regulation: str,
     liquid - where it says anything. Two of the sensitisation limits depend on
     it; where it is not known, both are calculated and the disagreement, if
     there is one, is what the report says.
+
+    `declared` is the sum of the upper bounds of every range Section 3 gives,
+    the ingredients no rule can use (water, say) included. What is undisclosed
+    is what that leaves of 100 %, and nothing when the upper bounds reach it:
+    then the uncertainty is the ranges', and both ends of each are evaluated.
     """
     table = rule_table.load(regulation)
     if table is None:
@@ -139,7 +145,8 @@ def calculate(ingredients, stated: list[HazardClass], regulation: str,
         for end, ingredients_at in ends.items()
         for variant in range(readings)]
 
-    declared = _declared_total(ingredients)
+    if declared is None:
+        declared = _declared_total(ingredients)
     undisclosed = max(Decimal(100) - declared, Decimal(0))
 
     results: list[ClassResult] = []

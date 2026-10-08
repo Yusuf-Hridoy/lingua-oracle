@@ -160,10 +160,8 @@ def _build(rows, lines, spans, regulation: str, table,
     assumptions: list[str] = []
     without_concentration = 0
     #: Ingredients whose concentration is known and whose classification is
-    #: not. They are part of the mixture and no rule can use them, which makes
-    #: them undisclosed for the purpose of the calculation - and worth saying
-    #: out loud, because a reader comparing 61 % against 100 % is entitled to
-    #: know which part of the gap is secrecy and which is ignorance.
+    #: not - water, say. They are declared, so they count towards the total
+    #: and are not undisclosed; no rule can use them, and that is said.
     unknown: list[tuple[str, object]] = []
     for row in rows:
         ingredient, parsed = _ingredient(
@@ -188,7 +186,12 @@ def _build(rows, lines, spans, regulation: str, table,
             message=(NO_CONCENTRATIONS if without_concentration == len(rows)
                      else NO_CLASSIFIED))
 
-    results, summary = calculate(ingredients, stated, regulation, state)
+    # Every range Section 3 gives, unclassified ingredients included: what is
+    # undisclosed is what the upper bounds leave of 100 %, and no more.
+    declared = (sum((i.high for i in ingredients), Decimal(0))
+                + sum((high for _, high in unknown), Decimal(0)))
+    results, summary = calculate(ingredients, stated, regulation, state,
+                                 declared=declared)
     counts = {
         "inconsistent": sum(1 for r in results if r.verdict == "inconsistent"),
         "cannot_tell": sum(1 for r in results if r.verdict == "cannot_tell"),
@@ -205,8 +208,8 @@ def _build(rows, lines, spans, regulation: str, table,
         assumptions.append(
             f"{len(unknown)} ingredient(s), up to {total} % between them, have no "
             "classification on the sheet and none in the list this regulation "
-            "uses, so their hazards are unknown and they are counted with the "
-            "undisclosed part of the mixture: "
+            "uses, so no rule can use them; they are declared, and count "
+            "towards the total, not towards the undisclosed part: "
             + ", ".join(label for label, _ in unknown))
     not_covered = summary.get("not_covered") or []
     if not_covered:
