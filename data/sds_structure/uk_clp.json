@@ -38,6 +38,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "1.1",
@@ -75,6 +76,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "2.1",
@@ -106,6 +108,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "3.1",
@@ -131,6 +134,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "4.1",
@@ -162,6 +166,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "5.1",
@@ -193,6 +198,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "6.1",
@@ -230,6 +236,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "7.1",
@@ -261,6 +268,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "8.1",
@@ -286,6 +294,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "9.1",
@@ -311,6 +320,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "10.1",
@@ -360,6 +370,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "11.1",
@@ -379,6 +390,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "12.1",
@@ -428,6 +440,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "13.1",
@@ -447,6 +460,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "14.1",
@@ -502,6 +516,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": [
     {
      "number": "15.1",
@@ -527,6 +542,7 @@
    },
    "required": true,
    "content_optional": false,
+   "required_by": null,
    "subsections": []
   }
  ],

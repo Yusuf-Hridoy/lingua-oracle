@@ -386,8 +386,9 @@ def read(document: Document, regulation: str, language: str) -> StructureReport:
                                         f"Section {number} is not on the sheet; the text "
                                         "makes it optional.", rules["optional"], na=True))
             else:
-                result.rows.append(_row(SECTIONS, "Section", heading_binding,
-                                        f"Section {number} is missing.", rules["headings"],
+                rule = section.get("required_by") or rules["headings"]
+                result.rows.append(_row(SECTIONS, "Section", bool(rule and rule["binding"]),
+                                        f"Section {number} is missing.", rule,
                                         expected=required[0] if required else ""))
             report.sections.append(result)
             continue
@@ -508,8 +509,13 @@ def _section_body(result, table, section, lines, start, end, rules, language,
                                             rules["empty"]["binding"],
                                             f"Sub-section {sub_number} is blank.",
                                             rules["empty"]))
+    elif not content and section.get("content_optional"):
+        # The heading is required; what goes under it may be left out.
+        result.rows.append(_row(SUBSECTIONS, "Content", True,
+                                f"No content under the heading; the text lets Section "
+                                f"{number}'s content be left out.", rules["optional"], ok=True))
     elif rules["empty"] and table.get("empty_scope") == "section":
-        if not content and not section.get("content_optional"):
+        if not content:
             result.rows.append(_row(SUBSECTIONS, "Content", rules["empty"]["binding"],
                                     f"Section {number} is empty.", rules["empty"]))
 

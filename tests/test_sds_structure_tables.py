@@ -65,10 +65,14 @@ def test_gb_is_its_own_text_not_the_eus():
     assert gb["14"]["subsections"][-1]["heading"]["en"].startswith("Transport in bulk")
 
 
-def test_osha_headings_and_order_come_from_g2_and_12_to_15_stay_optional():
+def test_osha_headings_and_order_come_from_g2_and_12_to_15_contents_are_optional():
     table = _load("us_osha")
-    optional = [s["number"] for s in table["sections"] if not s["required"]]
-    assert optional == ["12", "13", "14", "15"]
+    # Headings 12-15 required by Note 1 to (g)(2); their content optional by App D.
+    twelve = [s for s in table["sections"] if s["content_optional"]]
+    assert [s["number"] for s in twelve] == ["12", "13", "14", "15"]
+    assert all(s["required"] for s in table["sections"])
+    assert all("must also include the headings" in s["required_by"]["quote"]
+               and "Note 1" in s["required_by"]["citation"] for s in twelve)
     assert table["optional"]["quote"] == ("Sections 12-15 may be included in the SDS, but "
                                           "are not mandatory.")
     assert "in the order listed" in table["order"]["quote"]

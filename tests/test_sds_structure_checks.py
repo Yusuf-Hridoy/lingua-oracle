@@ -117,8 +117,24 @@ def test_a_missing_us_section_16_date_is_a_fault_quoting_table_d1(tmp_path):
     assert "date of preparation or last revision" in date[0].message
 
 
-def test_osha_sections_12_to_15_may_be_left_out(tmp_path):
-    _, found = _structure(tmp_path, regulation="us_osha", omit={"12", "13", "14", "15"})
+def test_an_osha_heading_12_to_15_left_out_is_a_fault_citing_note_1(tmp_path):
+    _, found = _structure(tmp_path, regulation="us_osha", omit={"13"})
+    assert [(f.section, f.severity.value) for f in found] == [("13", "fail")]
+    assert found[0].message.startswith("Section 13 is missing.")
+    assert "29 CFR 1910.1200(g)(2), Note 1" in found[0].message
+    assert "must also include the headings" in found[0].message
+
+
+def test_an_osha_heading_12_to_15_with_nothing_under_it_is_correct(tmp_path):
+    report, found = _structure(tmp_path, regulation="us_osha", blank={"12", "14"})
+    assert found == []
+    rows = {s.number: [r for r in s.rows if r.key == "Content"] for s in report.structure.sections}
+    assert [(r.status, r.citation) for r in rows["12"]] == [
+        ("ok", "29 CFR 1910.1200 Appendix D, introduction")]
+
+
+def test_an_osha_heading_12_to_15_saying_not_applicable_is_correct(tmp_path):
+    _, found = _structure(tmp_path, regulation="us_osha", bodies={"15": ["Not applicable."]})
     assert found == []
 
 

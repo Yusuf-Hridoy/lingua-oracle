@@ -86,6 +86,8 @@ class Section:
     required: bool = True
     #: Where a section's heading is required but its content may be omitted.
     content_optional: bool = False
+    #: The rule that requires this section, where it is not the headings rule.
+    required_by: Rule | None = None
     subsections: list[Subsection] = field(default_factory=list)
 
 
@@ -357,6 +359,13 @@ def _osha(use_cache: bool) -> Structure:
               r"section, the SDS shall clearly indicate that no applicable information is "
               r"available\.", "App D empty"), f"{document}, introduction")
     structure.empty_scope = "section"
+    # Sections 12-15: their headings are required, in order, by Note 1 to
+    # (g)(2); their content is optional, by Appendix D.
+    note_1 = Rule(True, _sentence(
+        standard, r"Note 1 to paragraph \(\s*g\s*\)\(2\): To be consistent with the GHS, "
+                  r"an SDS must also include the headings in paragraphs \(g\)\(2\)\(xii\) "
+                  r"through \(g\)\(2\)\(xv\) of this section in order\.", "(g)(2) Note 1"),
+        f"29 CFR 1910.1200(g)(2), Note 1, eCFR as of {ECFR_DATE}")
     optional = _sentence(text, r"Sections 12-15 may be included in the SDS, but are not "
                                r"mandatory\.", "App D 12-15")
     structure.optional = Rule(True, optional, f"{document}, introduction")
@@ -367,9 +376,11 @@ def _osha(use_cache: bool) -> Structure:
         # Section 16's heading runs on into what it must contain: "including
         # date of preparation or last revision" is checked as an item.
         heading = heading.strip().split(", including")[0]
+        twelve_to_fifteen = 12 <= number <= 15
         structure.sections.append(Section(
             str(number), heading={"en": heading}, label={"en": "Section {n},"},
-            required=not 12 <= number <= 15))
+            content_optional=twelve_to_fifteen,
+            required_by=note_1 if twelve_to_fifteen else None))
     if [s.number for s in structure.sections] != [str(n) for n in range(1, 17)]:
         raise SourceUnavailable("Table D.1 does not list headings 1 to 16")
     item1 = table[table.find("1. Identification"):table.find("2. Hazard Identification")]
