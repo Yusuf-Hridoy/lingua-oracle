@@ -106,6 +106,9 @@ def check_pdf(
         from lingua_oracle.structure.reader import read as read_structure
 
         ctx.structure = read_structure(document, reg.id, lang)
+        from lingua_oracle.consistency.runner import run as read_consistency
+
+        ctx.consistency = read_consistency(ctx, reg.display_name)
     findings = run_all(ctx, only=only)
 
     codes = {hit.code for hit in hits}
@@ -140,6 +143,7 @@ def check_pdf(
                                    key=lambda n: (not n.isdigit(), int(n) if n.isdigit() else 0))
     report.physical_state = physical_state(document.lines, spans) or ""
     report.structure = ctx.structure
+    report.consistency = list(ctx.consistency)
     if ingredients:
         # Never allowed to cost the wording result. Whatever happens here, the
         # report that has already been built is what the reader gets.

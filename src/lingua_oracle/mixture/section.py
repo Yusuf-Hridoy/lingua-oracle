@@ -202,12 +202,15 @@ def _build(rows, lines, spans, regulation: str, table,
     from lingua_oracle.mixture import section_eleven
 
     eleven = section_eleven.read(lines, [(i.cas, i.name) for i in every if i.cas])
+    from lingua_oracle.consistency.data import mixture_acute
+
+    mixture_values = mixture_acute(eleven.mixture, regulation, state)
     entries = {}
     for i in every:
         found = index.get((i.cas or "").strip(), []) if i.cas else []
         if len(found) == 1:
             entries[i.cas.strip()] = found[0]
-    acute_inputs = {"ingredients": every, "entries": entries,
+    acute_inputs = {"ingredients": every, "entries": entries, "mixture_values": mixture_values,
                     "section_11": eleven.by_cas,
                     "unknown": acute.unknown_share(lines)}
     from lingua_oracle.mixture.stated import justifications
@@ -267,6 +270,7 @@ def _as_dict(result) -> dict:
         "calculated_class": result.calculated_class,
         "implied_from": result.implied_from,
         "justification": result.justification,
+        "basis": result.basis,
     }
 
 

@@ -611,3 +611,13 @@ def _emergency(text: str) -> bool:
             if phones(window):
                 return True
     return False
+
+
+def section_spans(document: Document, regulation: str, language: str) -> dict[str, tuple[int, int]]:
+    """Each section's (first, last) raw line, as the structure reader finds
+    the headings: {"9": (120, 160)}. Empty where no table is on file."""
+    table = load(regulation)
+    if table is None or table.get("status") != "ok":
+        return {}
+    headings = _find_headings(document, table, language)
+    return _spans(headings, len(document.raw_lines))

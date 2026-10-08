@@ -93,6 +93,7 @@ class Sheet:
         self._draw(text, bold=bold, size=size)
 
     def _draw(self, text: str = "", *, bold: bool = False, size: int = 9) -> None:
+        self.drawn = getattr(self, "drawn", set()) | set(re.findall(r"\bH\d{3}\b", text or ""))
         if self.y < 60:
             self._new_page()
         font = "Helvetica-Bold" if bold else "Helvetica"
@@ -224,12 +225,15 @@ class _Completion:
                          bold=True, size=11)
         subs = self._subs(number)
         self.pending = []
+        extra = flash_lines(self.language, getattr(self.sheet, "drawn", set())) \
+            if number == "9" else []
         if not subs:
-            for line in self._items(number):
+            for line in self._items(number) + extra:
                 self.sheet._draw(line)
-            if whole:
+            if whole and not extra:
                 self.sheet._draw(FILLER)
             return
+        self.extra = extra if whole else []
         if whole:
             self.pending = subs
             self._close()
@@ -240,14 +244,19 @@ class _Completion:
         self.pending = subs[:at]
         self._close()
         self._sub_heading(subs[at])
-        for line in self._items(subs[at]["number"]):
+        for line in self._items(subs[at]["number"]) + (extra if subs[at]["number"] == "9.1"
+                                                       else []):
             self.sheet._draw(line)
         self.pending = subs[at + 1:]
 
     def _close(self) -> None:
         for sub in self.pending:
             self._sub_heading(sub)
-            for line in self._items(sub["number"]) or [FILLER]:
+            lines = self._items(sub["number"])
+            # Section 9.1, basic properties: where a flash point belongs.
+            if sub["number"] == "9.1":
+                lines = lines + getattr(self, "extra", [])
+            for line in lines or [FILLER]:
                 self.sheet._draw(line)
         self.pending = []
 
@@ -348,7 +357,26 @@ FILLER = "—"
 _EMERGENCY_WORD = {"en": "Emergency telephone", "fr": "Numéro d'urgence",
                    "es": "Teléfono de emergencia"}
 #: Where a section's own content goes when its text has sub-sections.
-_BODY_AT = {"1": "1.1", "2": "2.2", "3": "3.2"}
+_BODY_AT = {"1": "1.1", "2": "2.2", "3": "3.2", "9": "9.1", "11": "11.1", "12": "12.1"}
+
+
+_FLASH_WORDS = {"en": ("Flash point", "Initial boiling point"),
+                "da": ("Flammepunkt", "Kogepunkt"), "de": ("Flammpunkt", "Siedebeginn"),
+                "fr": ("Point d'éclair", "Point initial d'ébullition")}
+#: A flash point and boiling point in each flammable-liquid category - inside
+#: every regulation's bands, which agree on these points.
+_FLASH = {"H224": ("10", "30"), "H225": ("10", "80"), "H226": ("40", ""), "H227": ("75", "")}
+
+
+def flash_lines(language: str, codes) -> list[str]:
+    """Section 9's flash point (and boiling point) for the flammable-liquid
+    code a sheet prints, in its language: a sheet that says H225 says why."""
+    code = next((c for c in ("H224", "H225", "H226", "H227") if c in codes), None)
+    if code is None:
+        return []
+    flash, boiling = _FLASH[code]
+    words = _FLASH_WORDS.get(language.split("-")[0].split("+")[0], _FLASH_WORDS["en"])
+    return [f"{words[0]}: {flash} °C"] + ([f"{words[1]}: {boiling} °C"] if boiling else [])
 
 
 def structure_table(regulation: str) -> dict:
@@ -415,7 +443,11 @@ def structured_sheet(path: Path, *, regulation: str, language: str,
     section under another number, `headings` gives a section other words,
     `blank` prints sub-sections (or sections) with nothing under them."""
     table = structure_table(regulation)
-    bodies = bodies or {}
+    bodies = dict(bodies or {})
+    printed_codes = set(re.findall(r"\bH\d{3}\b", " ".join(
+        line if isinstance(line, str) else line[0] for body in bodies.values() for line in body)))
+    if "9" not in bodies:
+        bodies["9"] = flash_lines(language, printed_codes)
     omit, printed, headings = omit or set(), printed or {}, headings or {}
     blank = blank or set()
     if omit & {i["id"] for i in table.get("items", [])}:

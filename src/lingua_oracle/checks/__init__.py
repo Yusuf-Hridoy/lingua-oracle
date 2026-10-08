@@ -20,6 +20,7 @@ from lingua_oracle.checks import (  # noqa: F401
     c13_revision,
     c14_required_languages,
     c15_newer_ghs,
+    c16_c20_consistency,
 )
 from lingua_oracle.checks.base import (
     CheckContext,

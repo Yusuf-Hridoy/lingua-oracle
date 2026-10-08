@@ -47,6 +47,8 @@ class CheckContext:
     #: The sheet's 16 sections against the regulation's text on SDS structure,
     #: read once by the pipeline (structure/reader.py). None for a label.
     structure: StructureReport | None = None
+    #: Section against section, read once by the pipeline (consistency/runner.py).
+    consistency: list = field(default_factory=list)
 
     def record(self, verdict: StatementVerdict) -> None:
         """Keep the strongest opinion held about a code.

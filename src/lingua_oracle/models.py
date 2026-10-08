@@ -456,6 +456,23 @@ class StructureRow(BaseModel):
     expected: str = ""          # what the text prints, where it matters
 
 
+class ConsistencyRow(BaseModel):
+    """One cross-section comparison: what the regulation's text requires of
+    one part of the sheet, given another part, and what the sheet does."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    section: str                # where the row is shown: "2", "9", "11", "12", "1"
+    check: str                  # C-16 label elements ... C-20 consistency
+    key: str
+    status: Literal["ok", "fix", "check", "na", "info"]
+    text: str
+    quote: str = ""
+    citation: str = ""
+    found: str = ""
+    expected: str = ""
+
+
 class StructureSectionResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -522,6 +539,9 @@ class Report(BaseModel):
     #: The 16 sections, sub-sections and required items, against the
     #: regulation's own text on safety data sheets. None on an older report.
     structure: StructureReport | None = None
+    #: Section against section: label elements against the classification,
+    #: Section 9, 11 and 12 data against it, and the sheet against itself.
+    consistency: list[ConsistencyRow] = Field(default_factory=list)
 
     def recount(self) -> None:
         s = Summary()

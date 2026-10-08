@@ -59,6 +59,9 @@ class ClassResult:
     #: What the sheet itself says about test data, bridging or expert
     #: judgement, quoted, where Section 2 differs from the calculation.
     justification: list[str] = field(default_factory=list)
+    #: Where the calculated class comes from: the additivity calculation, or
+    #: Section 11's data on the mixture as a whole where it gives one.
+    basis: str = "calculation"
 
 
 #: Which hazard classes each rule can produce. A rule is only run where the
@@ -392,6 +395,27 @@ def _acute_results(rules, inputs: dict, stated, state, undisclosed: Decimal,
                              f"relevant ({rules.citations['relevance']})"],
                 trace=[line for r in runs for line in r.trace],
                 contributions=data["contributions"])
+        # Section 11's value for the mixture as a whole is preferred over the
+        # additivity calculation where it gives a category; the row says so.
+        tested = (inputs.get("mixture_values") or {}).get(route)
+        from_section_11 = bool(tested and tested.get("category"))
+        if from_section_11:
+            calc_words = (f"{found.hazard_class}" if found and not found.disagreed
+                          else "no single category" if found else "no classification")
+            words = ("not classified" if tested["category"] == "none"
+                     else f"{name} {tested['category']}")
+            line = (f"Section 11 gives the mixture's {tested['printed']}: {words}"
+                    + (f" ({tested['band']}, {tested['citation']})" if tested["band"] else "")
+                    + f" - used instead of the additivity calculation, which gives "
+                    f"{calc_words}")
+            calc_trace = [r_line for r in runs for r_line in r.trace]
+            found = None if tested["category"] == "none" else _Family(
+                hazard_class=HazardClass(name, tested["category"]),
+                winner=_Cited(f"Section 11, the mixture's own value; bands {tested['citation']}"),
+                disagreed=False, message="", at_low=words, at_high=words,
+                assumptions=[line], trace=[line, *calc_trace], contributions=[])
+            if found is None and not said_cats:
+                continue
         said = None
         if said_cats:
             calc = found.hazard_class.category if found and not found.disagreed else None
@@ -404,7 +428,13 @@ def _acute_results(rules, inputs: dict, stated, state, undisclosed: Decimal,
                                              else min(map(int, said_cats))))
         result = _verdict(family, found, said, None, undisclosed, declared,
                           regulation, justification)
-        if found is None and runs:
+        if from_section_11:
+            result.message = result.message.replace(
+                "calculated from the ingredients", "from Section 11's data on the mixture")
+            result.basis = "section_11"
+            if found is None:
+                result.trace = [line]
+        elif found is None and runs:
             result.trace = [line for r in runs for line in r.trace]
         out.append(result)
     return out
