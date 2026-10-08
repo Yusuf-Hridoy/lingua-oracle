@@ -65,15 +65,18 @@ def test_gb_is_its_own_text_not_the_eus():
     assert gb["14"]["subsections"][-1]["heading"]["en"].startswith("Transport in bulk")
 
 
-def test_osha_makes_12_to_15_optional_and_states_no_order():
+def test_osha_headings_and_order_come_from_g2_and_12_to_15_stay_optional():
     table = _load("us_osha")
     optional = [s["number"] for s in table["sections"] if not s["required"]]
     assert optional == ["12", "13", "14", "15"]
     assert table["optional"]["quote"] == ("Sections 12-15 may be included in the SDS, but "
                                           "are not mandatory.")
-    assert table["order"] is None
-    assert table["sections"][15]["heading"]["en"] == (
-        "Other information, including date of preparation or last revision")
+    assert "in the order listed" in table["order"]["quote"]
+    assert table["order"]["citation"].startswith("29 CFR 1910.1200(g)(2)")
+    assert table["sections"][1]["heading"]["en"] == "Hazard(s) identification"
+    # The rest of (xvi) - "including date of preparation or last revision" -
+    # is what Section 16 must contain, checked as the date item.
+    assert table["sections"][15]["heading"]["en"] == "Other information"
     items = {i["id"]: i for i in table["items"]}
     assert items["date_of_revision"]["scope"] == "16"
 

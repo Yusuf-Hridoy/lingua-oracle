@@ -237,9 +237,9 @@ def _continues(text: str) -> bool:
 def _find_headings(document: Document, table: dict, language: str) -> list[_Heading]:
     lines = document.raw_lines
     labels = "|".join(re.escape(w) for w in _labels(table, language))
-    before = re.compile(rf"^\s*(?:{labels})\s*(\d{{1,2}})(?![.,]?\d)\s*[.:)\-—–]*\s*(?P<rest>.*)$",
+    before = re.compile(rf"^\s*(?:{labels})\s*(\d{{1,2}})(?![.,]?\d)\s*[.,:)\-—–]*\s*(?P<rest>.*)$",
                         re.IGNORECASE)
-    after = re.compile(rf"^\s*(\d{{1,2}})\s*\.?\s*(?:{labels})\b\s*[.:)\-—–]*\s*(?P<rest>.*)$",
+    after = re.compile(rf"^\s*(\d{{1,2}})\s*\.?\s*(?:{labels})\b\s*[.,:)\-—–]*\s*(?P<rest>.*)$",
                        re.IGNORECASE)
     bare = re.compile(r"^\s*(\d{1,2})(?![.,]?\d)\s*[.:)]?\s*(?P<rest>[^\W\d_].*)$")
     best: dict[str, tuple[float, _Heading]] = {}

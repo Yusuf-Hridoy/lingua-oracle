@@ -1,15 +1,19 @@
 {
  "regulation": "us_osha",
- "document": "29 CFR 1910.1200 Appendix D",
+ "document": "29 CFR 1910.1200(g)(2) and Appendix D",
  "status": "ok",
  "why": "",
  "headings": {
   "binding": true,
-  "quote": "A safety data sheet (SDS) shall include the information specified in Table D.1 under the section number and heading indicated for sections 1-11 and 16.",
-  "citation": "29 CFR 1910.1200 Appendix D, introduction"
+  "quote": "(2) The chemical manufacturer or importer shall ensure that the safety data sheet is in English (although the employer may maintain copies in other languages as well), and includes at least the following section numbers and headings, and associated information under each heading, in the order listed (see appendix D to this section, for the specific content of each section of the safety data sheet):",
+  "citation": "29 CFR 1910.1200(g)(2), eCFR as of 2026-02-13"
  },
  "subheadings": null,
- "order": null,
+ "order": {
+  "binding": true,
+  "quote": "(2) The chemical manufacturer or importer shall ensure that the safety data sheet is in English (although the employer may maintain copies in other languages as well), and includes at least the following section numbers and headings, and associated information under each heading, in the order listed (see appendix D to this section, for the specific content of each section of the safety data sheet):",
+  "citation": "29 CFR 1910.1200(g)(2), eCFR as of 2026-02-13"
+ },
  "empty": {
   "binding": true,
   "quote": "If no relevant information is found for any given subheading within a section, the SDS shall clearly indicate that no applicable information is available.",
@@ -29,7 +33,7 @@
     "en": "Identification"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -38,10 +42,10 @@
   {
    "number": "2",
    "heading": {
-    "en": "Hazard Identification"
+    "en": "Hazard(s) identification"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -53,7 +57,7 @@
     "en": "Composition/information on ingredients"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -62,10 +66,10 @@
   {
    "number": "4",
    "heading": {
-    "en": "First aid measures"
+    "en": "First-aid measures"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -77,7 +81,7 @@
     "en": "Fire-fighting measures"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -89,7 +93,7 @@
     "en": "Accidental release measures"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -101,7 +105,7 @@
     "en": "Handling and storage"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -113,7 +117,7 @@
     "en": "Exposure controls/personal protection"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -125,7 +129,7 @@
     "en": "Physical and chemical properties"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -137,7 +141,7 @@
     "en": "Stability and reactivity"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -149,7 +153,7 @@
     "en": "Toxicological information"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,
@@ -161,7 +165,7 @@
     "en": "Ecological information"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": false,
    "content_optional": false,
@@ -173,7 +177,7 @@
     "en": "Disposal considerations"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": false,
    "content_optional": false,
@@ -185,7 +189,7 @@
     "en": "Transport information"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": false,
    "content_optional": false,
@@ -197,7 +201,7 @@
     "en": "Regulatory information"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": false,
    "content_optional": false,
@@ -206,10 +210,10 @@
   {
    "number": "16",
    "heading": {
-    "en": "Other information, including date of preparation or last revision"
+    "en": "Other information"
    },
    "label": {
-    "en": "{n}."
+    "en": "Section {n},"
    },
    "required": true,
    "content_optional": false,

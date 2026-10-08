@@ -8,7 +8,8 @@ located. The check (B-12 to B-14) applies only what is here.
   sub-headings in each language from that language's own act (Irish has no
   consolidated text: its wording is pending, the numbers still apply).
 * GB - GB REACH Annex II, Part B, from the legislation.gov.uk PDF.
-* US - 29 CFR 1910.1200 Appendix D, Table D.1.
+* US - 29 CFR 1910.1200(g)(2) for the headings, their numbers and order
+  (eCFR), Appendix D, Table D.1 for each section's content.
 * Canada - HPR section 4 and Schedule 1, English and French, read by column.
 * UN GHS - Rev.11 Annex 4, A4.2.3.1 and A4.3.
 * Australia - Model WHS Regulations, Schedule 7, clause 1.
@@ -42,6 +43,12 @@ from lingua_oracle.keys.builders.common import (
 from lingua_oracle.registry import data_dir
 
 REGULATIONS = ("eu_clp", "uk_clp", "us_osha", "ca_whmis", "un_ghs", "au_whs")
+
+#: 29 CFR 1910.1200 on eCFR, at the version read. Pinned like the EU
+#: consolidations, so a rebuild is deterministic.
+ECFR_DATE = "2026-02-13"
+ECFR_URL = (f"https://www.ecfr.gov/api/versioner/v1/full/{ECFR_DATE}/title-29.xml"
+            "?part=1910&section=1910.1200")
 
 
 @dataclass
@@ -331,11 +338,20 @@ def _osha(use_cache: bool) -> Structure:
     raw = local.read_bytes() if local.exists() else fetch(
         APPENDIX_D_URL, headers={"User-Agent": BROWSER_UA}, use_cache=use_cache)
     text = _flat(_html.unescape(re.sub(r"<[^>]+>", " ", raw.decode("utf-8", "replace"))))
-    structure = Structure("us_osha", document, languages=["en"])
-    headings = _sentence(text, r"A safety data sheet \(SDS\) shall include the information "
-                               r"specified in Table D\.1 under the section number and "
-                               r"heading indicated for sections 1-11 and 16\.", "App D")
-    structure.headings = _rule(headings, f"{document}, introduction")
+    structure = Structure("us_osha", "29 CFR 1910.1200(g)(2) and Appendix D",
+                          languages=["en"])
+    # The headings, their numbers and their order are required by the
+    # standard itself, (g)(2); Appendix D gives each section's content.
+    standard = _flat(re.sub(r"<[^>]+>", " ", fetch(ECFR_URL, use_cache=use_cache)
+                            .decode("utf-8", "replace")))
+    g2 = _sentence(standard, r"\(2\) The chemical manufacturer or importer shall ensure that "
+                             r"the safety data sheet is in English .*?Section 16, Other "
+                             r"information, including date of preparation or last revision\.",
+                   "1910.1200(g)(2)")
+    lead = g2[:g2.index(": (i)") + 1]
+    cited = f"29 CFR 1910.1200(g)(2), eCFR as of {ECFR_DATE}"
+    structure.headings = _rule(lead, cited)
+    structure.order = structure.headings
     structure.empty = _rule(_sentence(
         text, r"If no relevant information is found for any given subheading within a "
               r"section, the SDS shall clearly indicate that no applicable information is "
@@ -345,18 +361,14 @@ def _osha(use_cache: bool) -> Structure:
                                r"mandatory\.", "App D 12-15")
     structure.optional = Rule(True, optional, f"{document}, introduction")
     table = text[text.find("Table D.1—Minimum Information for an SDS"):]
-    from lxml import html as LH
-
-    for row in LH.fromstring(raw).xpath("//table//tr"):
-        cells = [_flat(c.text_content()) for c in row.xpath("./td|./th")]
-        found = re.match(r"^(\d{1,2})\. (.+)$", cells[0]) if cells else None
-        if found is None:
-            continue
-        number = int(found.group(1))
-        heading = re.sub(r"\s*\(Non-mandatory\)$", "", found.group(2)).strip()
-        heading = heading.rstrip("†").strip().rstrip("(†)").strip()
+    for number, heading in re.findall(r"\([xvi]+\) Section (\d{1,2}), (.+?)(?:;|\.(?= \(x)| and"
+                                      r"(?= \(xvi\))|\.$)", g2[len(lead):]):
+        number = int(number)
+        # Section 16's heading runs on into what it must contain: "including
+        # date of preparation or last revision" is checked as an item.
+        heading = heading.strip().split(", including")[0]
         structure.sections.append(Section(
-            str(number), heading={"en": heading}, label={"en": "{n}."},
+            str(number), heading={"en": heading}, label={"en": "Section {n},"},
             required=not 12 <= number <= 15))
     if [s.number for s in structure.sections] != [str(n) for n in range(1, 17)]:
         raise SourceUnavailable("Table D.1 does not list headings 1 to 16")

@@ -70,6 +70,15 @@ def test_a_swapped_order_is_a_fault_where_the_text_states_an_order(tmp_path):
     assert "Schedule 7, clause 1(3)" in late[0].message
 
 
+def test_osha_g2_requires_the_order_listed(tmp_path):
+    order = [str(n) for n in range(1, 17)]
+    order[4], order[5] = order[5], order[4]
+    _, found = _structure(tmp_path, regulation="us_osha", order=order)
+    late = [f for f in found if "comes after" in f.message]
+    assert [(f.section, f.severity.value) for f in late] == [("5", "fail")]
+    assert "29 CFR 1910.1200(g)(2)" in late[0].message and "in the order listed" in late[0].message
+
+
 def test_eu_part_b_states_no_order_so_a_swap_is_not_a_finding(tmp_path):
     order = [str(n) for n in range(1, 17)]
     order[4], order[5] = order[5], order[4]
