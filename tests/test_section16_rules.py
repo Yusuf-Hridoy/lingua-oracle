@@ -17,7 +17,7 @@ from lingua_oracle.keys.builders import section16
     ("ca_whmis", "no_rule", "Schedule 1, item 16"),
     ("un_ghs", "no_rule", "Annex 4, A4.3.16"),
     ("uk_clp", "rule", "Annex II, Part A, Section 16(e)"),
-    ("au_whs", "pending_source", ""),
+    ("au_whs", "no_rule", "Schedule 7, clause 1(2)(p)"),
 ])
 def test_each_regulation_has_its_own_finding(regulation, status, where):
     rule = section16.load(regulation)
@@ -51,3 +51,9 @@ def test_the_gb_rule_is_read_from_the_gb_text_and_names_both_kinds():
     assert rule.document.startswith("GB REACH") and "legislation.gov.uk" in rule.document
     assert "hazard statements and/or precautionary statements" in rule.text
     assert rule.text.endswith("not written out in full under Sections 2 to 15")
+
+
+def test_australia_says_only_any_other_relevant_information():
+    rule = section16.load("au_whs")
+    assert rule.document.startswith("Model Work Health and Safety Regulations as at 5 December 2025")
+    assert rule.text == "(p) Section 16: Any other relevant information."

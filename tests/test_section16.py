@@ -68,8 +68,15 @@ def test_a_code_only_in_section_16_is_a_note(tmp_path):
 
 
 def test_a_regulation_with_no_such_rule_gets_no_finding(tmp_path):
-    for regulation in ("un_ghs", "us_osha"):
+    for regulation in ("un_ghs", "us_osha", "au_whs"):
         assert _b08(tmp_path, regulation) == {}, regulation
+
+
+def _pending(monkeypatch):
+    from lingua_oracle.keys.builders import section16
+
+    monkeypatch.setattr(section16, "load", lambda regulation: section16.Section16Rule(
+        regulation, "pending_source", "Act", "Annex", why="not on file"))
 
 
 def test_gb_applies_its_own_rule(tmp_path):
@@ -80,8 +87,9 @@ def test_gb_applies_its_own_rule(tmp_path):
     assert "Annex II, Part A, Section 16(e)" in message
 
 
-def test_a_regulation_whose_rule_is_not_on_file_gets_no_finding(tmp_path):
-    assert _b08(tmp_path, "au_whs") == {}
+def test_a_regulation_whose_rule_is_not_on_file_gets_no_finding(tmp_path, monkeypatch):
+    _pending(monkeypatch)
+    assert _b08(tmp_path, "eu_clp") == {}
 
 
 def _summary(tmp_path, regulation):
@@ -100,8 +108,16 @@ def test_the_report_says_when_a_regulation_asks_nothing_of_section_16(tmp_path):
     assert "Not required: UN GHS Rev.11 (2025), Annex 4, A4.3.16" in row.text
 
 
-def test_the_report_says_when_the_rule_is_not_on_file(tmp_path):
+def test_the_report_says_when_australia_asks_nothing_of_section_16(tmp_path):
     row = _summary(tmp_path, "au_whs")
+    assert row.status == "na"
+    assert "Not required: Model Work Health and Safety Regulations" in row.text
+    assert "Schedule 7, clause 1(2)(p)" in row.text
+
+
+def test_the_report_says_when_the_rule_is_not_on_file(tmp_path, monkeypatch):
+    _pending(monkeypatch)
+    row = _summary(tmp_path, "eu_clp")
     assert row.status == "na" and "not on file" in row.text
 
 

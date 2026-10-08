@@ -107,6 +107,12 @@ SOURCES: tuple[Source, ...] = (
            "2026-09-29", "au_whs",
            version="Safe Work Australia GHS classification and labelling "
                    "guidance (AUH statements), on file since 2026-09-29"),
+    Source("australia/model_whs_regulations_2025-12-05.pdf",
+           "Model Work Health and Safety Regulations", "as at 5 December 2025",
+           None,
+           "2026-10-08", "section16",
+           version="Model Work Health and Safety Regulations as at 5 December 2025 "
+                   "(Safe Work Australia)"),
     Source("australia/hcis_hazard_classification_export_2026-10-07.xlsx",
            "Safe Work Australia HCIS, hazard classification data export",
            "7 062 chemicals, exported 2026-10-07",

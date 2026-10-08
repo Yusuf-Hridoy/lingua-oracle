@@ -25,8 +25,8 @@ Where each comes from:
 * US - 29 CFR 1910.1200 Appendix D, item 16.
 * Canada - Hazardous Products Regulations, Schedule 1, item 16.
 * UN GHS - Annex 4, A4.3.16, of the revision the key is built from.
-* Australia - the WHS Regulations' own schedule on safety data sheets is not
-  on file; the Purple Book is not Australian law on this point and stands in
+* Australia - Model WHS Regulations, Schedule 7 (safety data sheets), clause
+  1(2)(p). The Purple Book is not Australian law on this point and stands in
   for nothing.
 """
 
@@ -174,6 +174,23 @@ def _ghs() -> Section16Rule:
     raise SourceUnavailable("GHS Rev.11 A4.3.16 not found")
 
 
+def _au() -> Section16Rule:
+    source = sources.BY_PATH["australia/model_whs_regulations_2025-12-05.pdf"]
+    document = source.version
+    if not source.where.exists():
+        return Section16Rule("au_whs", "pending_source", document, "Schedule 7",
+                             why="not on file: " + sources.describe(source.path))
+    for number, text in _pdf_text(source.where):
+        if "Schedule 7 Safety data sheets" not in text:
+            continue
+        found = re.search(r"\(p\) Section 16: Any other relevant information\.", text)
+        if found:
+            return _no_rule_or_rule("au_whs", document,
+                                    f"Schedule 7, clause 1(2)(p), page {number}",
+                                    found.group(0))
+    raise SourceUnavailable("Model WHS Regulations Schedule 7 clause 1(2)(p) not found")
+
+
 def _no_rule_or_rule(regulation: str, document: str, section: str,
                      passage: str) -> Section16Rule:
     """A passage on Section 16 that was read: a rule only if it says one."""
@@ -196,11 +213,7 @@ def build(regulation: str, *, use_cache: bool = True) -> Section16Rule:
         case "un_ghs":
             return _ghs()
         case "au_whs":
-            return Section16Rule(
-                "au_whs", "pending_source",
-                "Work Health and Safety Regulations", "schedule on safety data sheets",
-                why="not on file; the GHS edition the key is built from is not "
-                    "Australia's rule on safety data sheets")
+            return _au()
     raise ValueError(f"no Section 16 source for {regulation}")
 
 

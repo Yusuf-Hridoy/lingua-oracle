@@ -1,8 +1,8 @@
 {
   "regulation": "au_whs",
-  "status": "pending_source",
-  "document": "Work Health and Safety Regulations",
-  "section": "schedule on safety data sheets",
-  "text": "",
-  "why": "not on file; the GHS edition the key is built from is not Australia's rule on safety data sheets"
+  "status": "no_rule",
+  "document": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia)",
+  "section": "Schedule 7, clause 1(2)(p), page 449",
+  "text": "(p) Section 16: Any other relevant information.",
+  "why": ""
 }
