@@ -482,3 +482,7 @@ table.ingredients .val { display: block; margin-top: 4px; font-size: 13px; color
 mark.fillin { background: var(--fillin); color: var(--text); padding: 0 2px; border-radius: 2px; }
 .rnote.ate { font-family: var(--mono); font-size: 12.5px; }
 .cmp .ate-box { grid-column: 1 / -1; }
+.cmp .justify { grid-column: 1 / -1; padding: 10px 12px; border-left: 3px solid #C4CAD2;
+                background: #FAFBFC; border-radius: 0 6px 6px 0; }
+.cmp .justify q { display: block; font-size: 13.5px; color: var(--text); }
+.cmp .justify q + q { margin-top: 4px; }

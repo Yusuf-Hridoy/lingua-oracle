@@ -47,6 +47,12 @@
     {% endif %}
     {% if acute %}<div class="ate-box">{{ ate_lines(m) }}</div>{% endif %}
     <p class="rnote">{{ m.message }}{% if m.citation %} &middot; {{ m.citation }}{% endif %}</p>
+    {% if m.justification %}
+    <div class="justify">
+      <div class="sub">What the sheet gives as its basis</div>
+      {% for line in m.justification %}<q>{{ line }}</q>{% endfor %}
+    </div>
+    {% endif %}
   </div>
 {% endif %}
 {% endmacro %}

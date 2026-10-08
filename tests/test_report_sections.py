@@ -97,3 +97,30 @@ def test_acute_toxicity_is_a_row_of_2_1_with_its_arithmetic():
     assert 'data-class="Acute toxicity, oral"' in two
     assert "ATEmix = 1250 mg/kg" in two and "ATEmix = 800 mg/kg" in two
     assert "Category 4" in two
+
+
+def _card(body, family):
+    start = body.index(f'data-class="{family}"')
+    return body[start:body.index('<div class="srow', start + 1)]
+
+
+def test_a_differing_section_two_shows_the_question_and_no_basis_box():
+    body = render_html(check_pdf(pdf("pattern_glycol_coolant_gb"), ingredients=True))
+    card = _card(body, "Target organ toxicity, repeated exposure")
+    assert 'class="pill check"' in card
+    assert "Section 2 states STOT RE 2; calculated from the ingredients" in card
+    assert "confirm which principle and which reference mixture" in card
+    assert 'class="justify"' not in card
+
+
+def test_the_sheets_own_basis_is_quoted_next_to_the_verdict(tmp_path):
+    from tests.make_fixtures import _glycol_coolant
+
+    line = "Classification based on test data on the mixture."
+    path = _glycol_coolant(tmp_path / "coolant.pdf",
+                           section_two=[("STOT RE 2", "H373")], extra_s2=[line])
+    body = render_html(check_pdf(str(path), "uk_clp", ingredients=True))
+    card = _card(body, "Acute toxicity, oral")
+    assert 'class="pill check"' in card and 'class="pill fix"' not in card
+    assert "What the sheet gives as its basis" in card
+    assert f"<q>{line}</q>" in card
