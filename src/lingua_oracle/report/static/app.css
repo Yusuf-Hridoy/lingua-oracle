@@ -480,3 +480,5 @@ table.ingredients .val { display: block; margin-top: 4px; font-size: 13px; color
 }
 .cmp .contributions { grid-column: 1 / -1; border: 1px solid #EEF0F2; border-radius: 6px; }
 mark.fillin { background: var(--fillin); color: var(--text); padding: 0 2px; border-radius: 2px; }
+.rnote.ate { font-family: var(--mono); font-size: 12.5px; }
+.cmp .ate-box { grid-column: 1 / -1; }

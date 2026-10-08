@@ -89,3 +89,11 @@ def test_a_mixture_whose_ranges_reach_100_says_nothing_is_undisclosed():
     assert "upper ends total 124.5 %, so nothing is undisclosed" in basis
     assert "at both ends of every range" in basis
     assert "of the mixture" not in basis
+
+
+def test_acute_toxicity_is_a_row_of_2_1_with_its_arithmetic():
+    body = render_html(check_pdf(pdf("pattern_glycol_coolant_gb"), ingredients=True))
+    two = body[body.index('id="s2"'):body.index('id="s3"')]
+    assert 'data-class="Acute toxicity, oral"' in two
+    assert "ATEmix = 1250 mg/kg" in two and "ATEmix = 800 mg/kg" in two
+    assert "Category 4" in two

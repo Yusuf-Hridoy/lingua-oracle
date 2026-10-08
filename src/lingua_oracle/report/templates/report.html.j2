@@ -1,13 +1,17 @@
 {% import '_mixture.html.j2' as mix %}
 {% macro pill(status) %}{% set p = PILL[status] %}{% if p[0] %}<span class="pill {{ p[2] }}"><span aria-hidden="true">{{ p[1] }}</span> {{ p[0] }}</span>{% else %}<span></span>{% endif %}{% endmacro %}
+{% macro ate_lines(m) %}
+{% for line in m.trace if 'ATEmix =' in line and '\u2192' in line %}<span class="rnote ate">{{ line }}</span>{% endfor %}
+{% endmacro %}
 {% macro mixture_row(r) %}
 {% set m = r.mixture %}
+{% set acute = (m.family or '').startswith('Acute toxicity') %}
 {% if m.verdict == 'not_calculated' and not m.calculated_class %}
   <span class="val">{{ m.message }}</span>
 {% elif not r.problem %}
   <span class="val">Section 2 says {{ m.stated_class or 'nothing' }}; calculated from
     declared ingredients: {{ m.calculated_class or 'no classification' }}.
-    <span class="rnote">{{ m.message }}</span></span>
+    <span class="rnote">{{ m.message }}</span>{% if acute %}{{ ate_lines(m) }}{% endif %}</span>
 {% else %}
   <div class="cmp">
     <div>
@@ -26,17 +30,22 @@
     {% if m.contributions %}
     <div class="table-box contributions">
       <table class="ingredients">
+        {% if acute %}
+        <thead><tr><th>Ingredient</th><th>%</th><th>ATE</th><th>Taken from</th></tr></thead>
+        {% else %}
         <thead><tr><th>Ingredient</th><th>%</th><th>Classified</th><th>Counted as</th></tr></thead>
+        {% endif %}
         <tbody>
           {% for c in m.contributions %}
           <tr><td>{{ c.name or c.cas or 'unnamed' }}</td><td>{{ c.percentage }} %</td>
             <td>{{ c.hazard_class }}</td>
-            <td>{{ c.contributed }} %{% if c.note %} <span class="muted">({{ c.note }})</span>{% endif %}</td></tr>
+            <td>{{ c.contributed }}{% if not acute %} %{% endif %}{% if c.note %} <span class="muted">({{ c.note }})</span>{% endif %}</td></tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
     {% endif %}
+    {% if acute %}<div class="ate-box">{{ ate_lines(m) }}</div>{% endif %}
     <p class="rnote">{{ m.message }}{% if m.citation %} &middot; {{ m.citation }}{% endif %}</p>
   </div>
 {% endif %}
