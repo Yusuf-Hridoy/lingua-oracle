@@ -736,9 +736,9 @@ def _australian_exclusions(structure: LabelElements) -> None:
 # -- US: Appendix C, class by class ------------------------------------------------
 
 _OSHA_BLOCK = re.compile(
-    r"(?P<hclass>[A-Z][A-Z0-9 ,/()\-]+?) \(Classified in Accordance with Appendix (?P<app>[AB]\.\d+)"
-    r"[^)]*\) Pictogram (?P<pic>.+?) Hazard category Signal word Hazard statement (?P<rows>.+?)"
-    r"(?= Precautionary statements)")
+    r"C\.4\.\d+ (?P<hclass>[^()]+?(?:\([A-Za-z ]+\))?)(?: \(CONT[A-Za-z]*\))? \(Classified in "
+    r"Accordance with Appendix (?P<app>[AB]\.\d+)[^)]*\) Pictogram (?P<pic>.+?) Hazard category "
+    r"Signal word Hazard statement (?P<rows>.+?)(?= Precautionary statements)")
 _OSHA_ROW = re.compile(
     r"(?P<cat>\d[A-C]?(?: to \d[A-C])?|Types? [A-G](?: (?:and|&|to) [A-G])?|Division \d\.\d"
     r"|Unstable explosives?|(?:Compressed|Liquefied|Refrigerated liquefied|Dissolved) gas"
@@ -768,7 +768,8 @@ def _osha(use_cache: bool) -> LabelElements:
         if entry.code.startswith("H") and entry.text:
             by_text.setdefault(_norm(entry.text), entry.code)
     for block in _OSHA_BLOCK.finditer(text):
-        hclass = block.group("hclass").strip().lower()
+        hclass = re.sub(r"\s*\(\s*cont\w*\s*\)", "", block.group("hclass"),
+                        flags=re.IGNORECASE).strip().lower()
         pictogram = block.group("pic").strip()
         pictogram = "" if pictogram.lower().startswith("no ") else pictogram
         for row in _OSHA_ROW.finditer(block.group("rows")):

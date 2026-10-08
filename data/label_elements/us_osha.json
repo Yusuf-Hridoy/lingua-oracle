@@ -84,7 +84,7 @@
    "pictograms": [
     "Exclamation mark"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, ACUTE TOXICITY - ORAL (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, ACUTE TOXICITY - ORAL"
   },
   {
    "section": "A.1",
@@ -135,7 +135,7 @@
    "pictograms": [
     "Exclamation mark"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, ACUTE TOXICITY - DERMAL (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, ACUTE TOXICITY - DERMAL"
   },
   {
    "section": "A.1",
@@ -186,7 +186,7 @@
    "pictograms": [
     "Skull and crossbones"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, ACUTE TOXICITY - INHALATION (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, ACUTE TOXICITY - INHALATION"
   },
   {
    "section": "A.1",
@@ -203,7 +203,7 @@
    "pictograms": [
     "Exclamation mark"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, ACUTE TOXICITY - INHALATION (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, ACUTE TOXICITY - INHALATION"
   },
   {
    "section": "A.2",
@@ -227,7 +227,7 @@
   },
   {
    "section": "A.2",
-   "hazard_class": "skin corrosion/irritation (continued)",
+   "hazard_class": "skin corrosion/irritation",
    "category": [
     "2"
    ],
@@ -240,7 +240,7 @@
    "pictograms": [
     "Exclamation mark"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, SKIN CORROSION/IRRITATION (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, SKIN CORROSION/IRRITATION"
   },
   {
    "section": "A.3",
@@ -261,7 +261,7 @@
   },
   {
    "section": "A.3",
-   "hazard_class": "eye damage/irritation (continued)",
+   "hazard_class": "eye damage/irritation",
    "category": [
     "2A"
    ],
@@ -274,11 +274,11 @@
    "pictograms": [
     "Exclamation mark"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, EYE DAMAGE/IRRITATION (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, EYE DAMAGE/IRRITATION"
   },
   {
    "section": "A.3",
-   "hazard_class": "nued)",
+   "hazard_class": "eye damage/irritation",
    "category": [
     "2B"
    ],
@@ -289,7 +289,7 @@
    ],
    "signal": "Warning",
    "pictograms": [],
-   "source": "29 CFR 1910.1200 Appendix C, NUED)"
+   "source": "29 CFR 1910.1200 Appendix C, EYE DAMAGE/IRRITATION"
   },
   {
    "section": "A.5",
@@ -395,7 +395,24 @@
   },
   {
    "section": "A.8",
-   "hazard_class": "continued)",
+   "hazard_class": "specific target organ toxicity (single exposure)",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H370"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "29 CFR 1910.1200 Appendix C, SPECIFIC TARGET ORGAN TOXICITY (Single Exposure)"
+  },
+  {
+   "section": "A.8",
+   "hazard_class": "specific target organ toxicity (single exposure)",
    "category": [
     "2"
    ],
@@ -408,11 +425,11 @@
    "pictograms": [
     "Health hazard"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, SPECIFIC TARGET ORGAN TOXICITY (Single Exposure)"
   },
   {
    "section": "A.8",
-   "hazard_class": "continued)",
+   "hazard_class": "specific target organ toxicity (single exposure)",
    "category": [
     "3"
    ],
@@ -425,7 +442,24 @@
    "pictograms": [
     "Exclamation mark"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, SPECIFIC TARGET ORGAN TOXICITY (Single Exposure)"
+  },
+  {
+   "section": "A.9",
+   "hazard_class": "specific target organ toxicity (repeated exposure)",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H370"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "29 CFR 1910.1200 Appendix C, SPECIFIC TARGET ORGAN TOXICITY (Repeated Exposure)"
   },
   {
    "section": "A.10",
@@ -463,7 +497,7 @@
   },
   {
    "section": "B.1",
-   "hazard_class": "explosives (continued)",
+   "hazard_class": "explosives",
    "category": [
     "1.1"
    ],
@@ -476,11 +510,11 @@
    "pictograms": [
     "Exploding bomb"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, EXPLOSIVES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, EXPLOSIVES"
   },
   {
    "section": "B.1",
-   "hazard_class": "explosives (continued)",
+   "hazard_class": "explosives",
    "category": [
     "1.2"
    ],
@@ -493,11 +527,11 @@
    "pictograms": [
     "Exploding bomb"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, EXPLOSIVES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, EXPLOSIVES"
   },
   {
    "section": "B.1",
-   "hazard_class": "explosives (continued)",
+   "hazard_class": "explosives",
    "category": [
     "1.4"
    ],
@@ -510,11 +544,11 @@
    "pictograms": [
     "Exploding bomb 1"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, EXPLOSIVES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, EXPLOSIVES"
   },
   {
    "section": "B.1",
-   "hazard_class": "explosives (continued)",
+   "hazard_class": "explosives",
    "category": [
     "1.5"
    ],
@@ -525,7 +559,7 @@
    ],
    "signal": "Danger",
    "pictograms": [],
-   "source": "29 CFR 1910.1200 Appendix C, EXPLOSIVES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, EXPLOSIVES"
   },
   {
    "section": "B.2",
@@ -563,7 +597,7 @@
   },
   {
    "section": "B.2",
-   "hazard_class": "flammable gases (continued)",
+   "hazard_class": "flammable gases",
    "category": [
     "2"
    ],
@@ -574,7 +608,7 @@
    ],
    "signal": "Warning",
    "pictograms": [],
-   "source": "29 CFR 1910.1200 Appendix C, FLAMMABLE GASES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, FLAMMABLE GASES"
   },
   {
    "section": "B.3",
@@ -712,7 +746,7 @@
   },
   {
    "section": "B.5",
-   "hazard_class": "gases under pressure (continued)",
+   "hazard_class": "gases under pressure",
    "category": [
     "refrigerated liquefied gas"
    ],
@@ -725,7 +759,7 @@
    "pictograms": [
     "Gas cylinder"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, GASES UNDER PRESSURE (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, GASES UNDER PRESSURE"
   },
   {
    "section": "B.6",
@@ -780,7 +814,7 @@
   },
   {
    "section": "B.6",
-   "hazard_class": "flammable liquids (continued)",
+   "hazard_class": "flammable liquids",
    "category": [
     "4"
    ],
@@ -791,7 +825,7 @@
    ],
    "signal": "Warning",
    "pictograms": [],
-   "source": "29 CFR 1910.1200 Appendix C, FLAMMABLE LIQUIDS (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, FLAMMABLE LIQUIDS"
   },
   {
    "section": "B.7",
@@ -846,7 +880,7 @@
   },
   {
    "section": "B.8",
-   "hazard_class": "self-reactive substances and mixtures (continued)",
+   "hazard_class": "self-reactive substances and mixtures",
    "category": [
     "B"
    ],
@@ -859,11 +893,11 @@
    "pictograms": [
     "Exploding bomb and flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES"
   },
   {
    "section": "B.8",
-   "hazard_class": "self-reactive substances and mixtures (continued)",
+   "hazard_class": "self-reactive substances and mixtures",
    "category": [
     "C"
    ],
@@ -876,11 +910,11 @@
    "pictograms": [
     "Flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES"
   },
   {
    "section": "B.8",
-   "hazard_class": "self-reactive substances and mixtures (continued)",
+   "hazard_class": "self-reactive substances and mixtures",
    "category": [
     "D"
    ],
@@ -893,11 +927,11 @@
    "pictograms": [
     "Flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES"
   },
   {
    "section": "B.8",
-   "hazard_class": "self-reactive substances and mixtures (continued)",
+   "hazard_class": "self-reactive substances and mixtures",
    "category": [
     "E"
    ],
@@ -910,11 +944,11 @@
    "pictograms": [
     "Flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES"
   },
   {
    "section": "B.8",
-   "hazard_class": "self-reactive substances and mixtures (continued)",
+   "hazard_class": "self-reactive substances and mixtures",
    "category": [
     "F"
    ],
@@ -927,7 +961,7 @@
    "pictograms": [
     "Flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, SELF-REACTIVE SUBSTANCES AND MIXTURES"
   },
   {
    "section": "B.9",
@@ -1050,7 +1084,7 @@
   },
   {
    "section": "B.13",
-   "hazard_class": "oxidizing liquids (continued)",
+   "hazard_class": "oxidizing liquids",
    "category": [
     "2"
    ],
@@ -1063,11 +1097,11 @@
    "pictograms": [
     "Flame over circle"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, OXIDIZING LIQUIDS (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, OXIDIZING LIQUIDS"
   },
   {
    "section": "B.13",
-   "hazard_class": "oxidizing liquids (continued)",
+   "hazard_class": "oxidizing liquids",
    "category": [
     "3"
    ],
@@ -1080,7 +1114,7 @@
    "pictograms": [
     "Flame over circle"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, OXIDIZING LIQUIDS (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, OXIDIZING LIQUIDS"
   },
   {
    "section": "B.14",
@@ -1101,7 +1135,7 @@
   },
   {
    "section": "B.14",
-   "hazard_class": "oxidizing solids (continued)",
+   "hazard_class": "oxidizing solids",
    "category": [
     "2"
    ],
@@ -1114,11 +1148,11 @@
    "pictograms": [
     "Flame over circle"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, OXIDIZING SOLIDS (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, OXIDIZING SOLIDS"
   },
   {
    "section": "B.14",
-   "hazard_class": "oxidizing solids (continued)",
+   "hazard_class": "oxidizing solids",
    "category": [
     "3"
    ],
@@ -1131,7 +1165,7 @@
    "pictograms": [
     "Flame over circle"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, OXIDIZING SOLIDS (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, OXIDIZING SOLIDS"
   },
   {
    "section": "B.15",
@@ -1152,7 +1186,7 @@
   },
   {
    "section": "B.15",
-   "hazard_class": "organic peroxides (continued)",
+   "hazard_class": "organic peroxides",
    "category": [
     "B"
    ],
@@ -1165,11 +1199,11 @@
    "pictograms": [
     "Exploding bomb and flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES"
   },
   {
    "section": "B.15",
-   "hazard_class": "organic peroxides (continued)",
+   "hazard_class": "organic peroxides",
    "category": [
     "C"
    ],
@@ -1182,11 +1216,11 @@
    "pictograms": [
     "Flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES"
   },
   {
    "section": "B.15",
-   "hazard_class": "organic peroxides (continued)",
+   "hazard_class": "organic peroxides",
    "category": [
     "D"
    ],
@@ -1199,11 +1233,11 @@
    "pictograms": [
     "Flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES"
   },
   {
    "section": "B.15",
-   "hazard_class": "organic peroxides (continued)",
+   "hazard_class": "organic peroxides",
    "category": [
     "E"
    ],
@@ -1216,11 +1250,11 @@
    "pictograms": [
     "Flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES"
   },
   {
    "section": "B.15",
-   "hazard_class": "organic peroxides (continued)",
+   "hazard_class": "organic peroxides",
    "category": [
     "F"
    ],
@@ -1233,7 +1267,7 @@
    "pictograms": [
     "Flame"
    ],
-   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES (CONTINUED)"
+   "source": "29 CFR 1910.1200 Appendix C, ORGANIC PEROXIDES"
   },
   {
    "section": "B.16",
@@ -1384,8 +1418,8 @@
  "statement_rules": [],
  "not_adopted": [],
  "unparsed": [
-  "29 CFR 1910.1200 Appendix C: explosives (continued) Division 1.3: “Explosive; fire, blast or projection” matched to no code",
-  "29 CFR 1910.1200 Appendix C: explosives (continued) Division 1.6: “No hazard statement” matched to no code",
+  "29 CFR 1910.1200 Appendix C: explosives Division 1.3: “Explosive; fire, blast or projection” matched to no code",
+  "29 CFR 1910.1200 Appendix C: explosives Division 1.6: “No hazard statement” matched to no code",
   "29 CFR 1910.1200 Appendix C: chemical under pressure 1: “Extremely flammable chemical under pressure. May explode if ” matched to no code",
   "29 CFR 1910.1200 Appendix C: chemical under pressure 2: “Flammable chemical under pressure. May explode if heated.” matched to no code"
  ]
