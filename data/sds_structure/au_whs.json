@@ -1,0 +1,251 @@
+{
+ "regulation": "au_whs",
+ "document": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia)",
+ "status": "ok",
+ "why": "",
+ "headings": {
+  "binding": true,
+  "quote": "(3) The safety data sheet must use the headings and be set out in the order set out in subclause (2).",
+  "citation": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia), Schedule 7, clause 1(3), page 448"
+ },
+ "subheadings": null,
+ "order": {
+  "binding": true,
+  "quote": "(3) The safety data sheet must use the headings and be set out in the order set out in subclause (2).",
+  "citation": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia), Schedule 7, clause 1(3), page 448"
+ },
+ "empty": null,
+ "empty_scope": "",
+ "optional": null,
+ "one_of": [],
+ "sections": [
+  {
+   "number": "1",
+   "heading": {
+    "en": "Identification"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "2",
+   "heading": {
+    "en": "Hazard(s) identification"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "3",
+   "heading": {
+    "en": "Composition and information on ingredients"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "4",
+   "heading": {
+    "en": "First aid measures"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "5",
+   "heading": {
+    "en": "Firefighting measures"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "6",
+   "heading": {
+    "en": "Accidental release measures"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "7",
+   "heading": {
+    "en": "Handling and storage"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "8",
+   "heading": {
+    "en": "Exposure controls and personal protection"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "9",
+   "heading": {
+    "en": "Physical and chemical properties"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "10",
+   "heading": {
+    "en": "Stability and reactivity"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "11",
+   "heading": {
+    "en": "Toxicological information"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "12",
+   "heading": {
+    "en": "Ecological information"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "13",
+   "heading": {
+    "en": "Disposal considerations"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "14",
+   "heading": {
+    "en": "Transport information"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "15",
+   "heading": {
+    "en": "Regulatory information"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "16",
+   "heading": {
+    "en": "Any other relevant information"
+   },
+   "label": {
+    "en": "Section {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  }
+ ],
+ "items": [
+  {
+   "id": "date_reviewed",
+   "kind": "date",
+   "scope": "document",
+   "rule": {
+    "binding": true,
+    "quote": "(1) A safety data sheet for a hazardous chemical must: (b) state the date it was last reviewed or, if it has not been reviewed, the date it was prepared;",
+    "citation": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia), Schedule 7, clause 1(1)(b), page 448"
+   }
+  },
+  {
+   "id": "supplier_telephone",
+   "kind": "telephone",
+   "scope": "document",
+   "rule": {
+    "binding": true,
+    "quote": "(1) A safety data sheet for a hazardous chemical must: (c) state the name, and the Australian address and business telephone number of: (i) the manufacturer; or (ii) the importer;",
+    "citation": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia), Schedule 7, clause 1(1)(c), page 448"
+   }
+  },
+  {
+   "id": "emergency_telephone",
+   "kind": "emergency_telephone",
+   "scope": "document",
+   "rule": {
+    "binding": true,
+    "quote": "(1) A safety data sheet for a hazardous chemical must: (d) state an Australian business telephone number from which information about the chemical can be obtained in an emergency;",
+    "citation": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia), Schedule 7, clause 1(1)(d), page 448"
+   }
+  }
+ ],
+ "languages": [
+  "en"
+ ],
+ "pending_languages": {}
+}

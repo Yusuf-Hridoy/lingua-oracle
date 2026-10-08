@@ -1,0 +1,292 @@
+{
+ "regulation": "ca_whmis",
+ "document": "Hazardous Products Regulations (SOR/2015-17)",
+ "status": "ok",
+ "why": "",
+ "headings": {
+  "binding": true,
+  "quote": "the safety data sheet of a hazardous product must provide, in respect of the hazardous product, the following information elements: (a) the headings set out in column 1 of Schedule 1, in the order they are presented, including the corresponding item number, which is to be placed immediately before the heading;",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), section 4(1)(a), page 35"
+ },
+ "subheadings": null,
+ "order": {
+  "binding": true,
+  "quote": "the safety data sheet of a hazardous product must provide, in respect of the hazardous product, the following information elements: (a) the headings set out in column 1 of Schedule 1, in the order they are presented, including the corresponding item number, which is to be placed immediately before the heading;",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), section 4(1)(a), page 35"
+ },
+ "empty": {
+  "binding": true,
+  "quote": "if any of the information — except that required by paragraphs 3(1)(a) and (2)(a) and (d) of that Schedule — is not available or not applicable, an indication to that effect must be clearly stated in lieu of the required specific information element",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), section 4(1)(b)(i)"
+ },
+ "empty_scope": "section",
+ "optional": {
+  "binding": true,
+  "quote": "Despite subsection (1), under each heading set out for items 12 to 15 of Schedule 1, the content of the specific information elements in that Schedule may be omitted.",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), section 4(2)"
+ },
+ "one_of": [],
+ "sections": [
+  {
+   "number": "1",
+   "heading": {
+    "en": "Identification",
+    "fr": "Identification"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "2",
+   "heading": {
+    "en": "Hazard identification",
+    "fr": "Identification des dangers"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "3",
+   "heading": {
+    "en": "Composition/Information on ingredients",
+    "fr": "Composition/information sur les ingrédients"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "4",
+   "heading": {
+    "en": "First-aid measures",
+    "fr": "Premiers soins"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "5",
+   "heading": {
+    "en": "Fire-fighting measures",
+    "fr": "Mesures à prendre en cas d’incendie"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "6",
+   "heading": {
+    "en": "Accidental release measures",
+    "fr": "Mesures à prendre en cas de déversement accidentel"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "7",
+   "heading": {
+    "en": "Handling and storage",
+    "fr": "Manutention et stockage"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "8",
+   "heading": {
+    "en": "Exposure controls/Personal protection",
+    "fr": "Contrôle de l’exposition/protection individuelle"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "9",
+   "heading": {
+    "en": "Physical and chemical properties",
+    "fr": "Propriétés physiques et chimiques"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "10",
+   "heading": {
+    "en": "Stability and reactivity",
+    "fr": "Stabilité et réactivité"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "11",
+   "heading": {
+    "en": "Toxicological information",
+    "fr": "Données toxicologiques"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "12",
+   "heading": {
+    "en": "Ecological information",
+    "fr": "Données écologiques"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": true,
+   "subsections": []
+  },
+  {
+   "number": "13",
+   "heading": {
+    "en": "Disposal considerations",
+    "fr": "Données sur l’élimination"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": true,
+   "subsections": []
+  },
+  {
+   "number": "14",
+   "heading": {
+    "en": "Transport information",
+    "fr": "Informations relatives au transport"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": true,
+   "subsections": []
+  },
+  {
+   "number": "15",
+   "heading": {
+    "en": "Regulatory information",
+    "fr": "Informations sur la réglementation"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": true,
+   "subsections": []
+  },
+  {
+   "number": "16",
+   "heading": {
+    "en": "Other information",
+    "fr": "Autres informations"
+   },
+   "label": {
+    "en": "{n}",
+    "fr": "{n}"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  }
+ ],
+ "items": [
+  {
+   "id": "supplier_telephone",
+   "kind": "telephone",
+   "scope": "1",
+   "rule": {
+    "binding": true,
+    "quote": "(d) initial supplier identifier; - initial supplier identifier means the name, address and telephone number of (a) the manufacturer; or (b) the importer of the hazardous product who operates in Canada.",
+    "citation": "Hazardous Products Regulations (SOR/2015-17), Schedule 1, item 1(d); section 1"
+   }
+  },
+  {
+   "id": "emergency_telephone",
+   "kind": "emergency_telephone",
+   "scope": "1",
+   "rule": {
+    "binding": true,
+    "quote": "(e) emergency telephone number and any restrictions on the use of that number, if applicable",
+    "citation": "Hazardous Products Regulations (SOR/2015-17), Schedule 1, item 1(e)"
+   }
+  },
+  {
+   "id": "date_of_revision",
+   "kind": "date",
+   "scope": "16",
+   "rule": {
+    "binding": true,
+    "quote": "16 Other information Date of the latest revision of the safety data sheet",
+    "citation": "Hazardous Products Regulations (SOR/2015-17), Schedule 1, item 16"
+   }
+  }
+ ],
+ "languages": [
+  "en",
+  "fr"
+ ],
+ "pending_languages": {}
+}

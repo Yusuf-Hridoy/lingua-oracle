@@ -1,0 +1,589 @@
+{
+ "regulation": "uk_clp",
+ "document": "GB REACH (Regulation (EC) No 1907/2006 as retained), legislation.gov.uk, document generated 2026-10-08",
+ "status": "ok",
+ "why": "",
+ "headings": {
+  "binding": true,
+  "quote": "The safety data sheet shall include the following 16 headings in accordance with Article 31(6) and in addition the subheadings also listed except Section 3, where only subsections 3.1 or 3.2 need to be included as appropriate:",
+  "citation": "Annex II, Part B, page 26"
+ },
+ "subheadings": {
+  "binding": true,
+  "quote": "The safety data sheet shall include the following 16 headings in accordance with Article 31(6) and in addition the subheadings also listed except Section 3, where only subsections 3.1 or 3.2 need to be included as appropriate:",
+  "citation": "Annex II, Part B, page 26"
+ },
+ "order": null,
+ "empty": {
+  "binding": true,
+  "quote": "The safety data sheet shall not contain blank subsections.",
+  "citation": "Annex II, Part A, 0.4"
+ },
+ "empty_scope": "subsection",
+ "optional": null,
+ "one_of": [
+  [
+   "3.1",
+   "3.2"
+  ]
+ ],
+ "sections": [
+  {
+   "number": "1",
+   "heading": {
+    "en": "Identification of the substance/mixture and of the company/undertaking"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "1.1",
+     "heading": {
+      "en": "Product identifier"
+     }
+    },
+    {
+     "number": "1.2",
+     "heading": {
+      "en": "Relevant identified uses of the substance or mixture and uses advised against"
+     }
+    },
+    {
+     "number": "1.3",
+     "heading": {
+      "en": "Details of the supplier of the safety data sheet"
+     }
+    },
+    {
+     "number": "1.4",
+     "heading": {
+      "en": "Emergency telephone number"
+     }
+    }
+   ]
+  },
+  {
+   "number": "2",
+   "heading": {
+    "en": "Hazards identification"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "2.1",
+     "heading": {
+      "en": "Classification of the substance or mixture"
+     }
+    },
+    {
+     "number": "2.2",
+     "heading": {
+      "en": "Label elements"
+     }
+    },
+    {
+     "number": "2.3",
+     "heading": {
+      "en": "Other hazards"
+     }
+    }
+   ]
+  },
+  {
+   "number": "3",
+   "heading": {
+    "en": "Composition/information on ingredients"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "3.1",
+     "heading": {
+      "en": "Substances"
+     }
+    },
+    {
+     "number": "3.2",
+     "heading": {
+      "en": "Mixtures"
+     }
+    }
+   ]
+  },
+  {
+   "number": "4",
+   "heading": {
+    "en": "First aid measures"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "4.1",
+     "heading": {
+      "en": "Description of first aid measures"
+     }
+    },
+    {
+     "number": "4.2",
+     "heading": {
+      "en": "Most important symptoms and effects, both acute and delayed"
+     }
+    },
+    {
+     "number": "4.3",
+     "heading": {
+      "en": "Indication of any immediate medical attention and special treatment needed"
+     }
+    }
+   ]
+  },
+  {
+   "number": "5",
+   "heading": {
+    "en": "Firefighting measures"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "5.1",
+     "heading": {
+      "en": "Extinguishing media"
+     }
+    },
+    {
+     "number": "5.2",
+     "heading": {
+      "en": "Special hazards arising from the substance or mixture"
+     }
+    },
+    {
+     "number": "5.3",
+     "heading": {
+      "en": "Advice for firefighters"
+     }
+    }
+   ]
+  },
+  {
+   "number": "6",
+   "heading": {
+    "en": "Accidental release measures"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "6.1",
+     "heading": {
+      "en": "Personal precautions, protective equipment and emergency procedures"
+     }
+    },
+    {
+     "number": "6.2",
+     "heading": {
+      "en": "Environmental precautions"
+     }
+    },
+    {
+     "number": "6.3",
+     "heading": {
+      "en": "Methods and material for containment and cleaning up"
+     }
+    },
+    {
+     "number": "6.4",
+     "heading": {
+      "en": "Reference to other sections"
+     }
+    }
+   ]
+  },
+  {
+   "number": "7",
+   "heading": {
+    "en": "Handling and storage"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "7.1",
+     "heading": {
+      "en": "Precautions for safe handling"
+     }
+    },
+    {
+     "number": "7.2",
+     "heading": {
+      "en": "Conditions for safe storage, including any incompatibilities"
+     }
+    },
+    {
+     "number": "7.3",
+     "heading": {
+      "en": "Specific end use(s)"
+     }
+    }
+   ]
+  },
+  {
+   "number": "8",
+   "heading": {
+    "en": "Exposure controls/personal protection"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "8.1",
+     "heading": {
+      "en": "Control parameters"
+     }
+    },
+    {
+     "number": "8.2",
+     "heading": {
+      "en": "Exposure controls"
+     }
+    }
+   ]
+  },
+  {
+   "number": "9",
+   "heading": {
+    "en": "Physical and chemical properties"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "9.1",
+     "heading": {
+      "en": "Information on basic physical and chemical properties"
+     }
+    },
+    {
+     "number": "9.2",
+     "heading": {
+      "en": "Other information"
+     }
+    }
+   ]
+  },
+  {
+   "number": "10",
+   "heading": {
+    "en": "Stability and reactivity"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "10.1",
+     "heading": {
+      "en": "Reactivity"
+     }
+    },
+    {
+     "number": "10.2",
+     "heading": {
+      "en": "Chemical stability"
+     }
+    },
+    {
+     "number": "10.3",
+     "heading": {
+      "en": "Possibility of hazardous reactions"
+     }
+    },
+    {
+     "number": "10.4",
+     "heading": {
+      "en": "Conditions to avoid"
+     }
+    },
+    {
+     "number": "10.5",
+     "heading": {
+      "en": "Incompatible materials"
+     }
+    },
+    {
+     "number": "10.6",
+     "heading": {
+      "en": "Hazardous decomposition products"
+     }
+    }
+   ]
+  },
+  {
+   "number": "11",
+   "heading": {
+    "en": "Toxicological information"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "11.1",
+     "heading": {
+      "en": "Information on toxicological effects"
+     }
+    }
+   ]
+  },
+  {
+   "number": "12",
+   "heading": {
+    "en": "Ecological information"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "12.1",
+     "heading": {
+      "en": "Toxicity"
+     }
+    },
+    {
+     "number": "12.2",
+     "heading": {
+      "en": "Persistence and degradability"
+     }
+    },
+    {
+     "number": "12.3",
+     "heading": {
+      "en": "Bioaccumulative potential"
+     }
+    },
+    {
+     "number": "12.4",
+     "heading": {
+      "en": "Mobility in soil"
+     }
+    },
+    {
+     "number": "12.5",
+     "heading": {
+      "en": "Results of PBT and vPvB assessment"
+     }
+    },
+    {
+     "number": "12.6",
+     "heading": {
+      "en": "Other adverse effects"
+     }
+    }
+   ]
+  },
+  {
+   "number": "13",
+   "heading": {
+    "en": "Disposal considerations"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "13.1",
+     "heading": {
+      "en": "Waste treatment methods"
+     }
+    }
+   ]
+  },
+  {
+   "number": "14",
+   "heading": {
+    "en": "Transport information"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "14.1",
+     "heading": {
+      "en": "UN number"
+     }
+    },
+    {
+     "number": "14.2",
+     "heading": {
+      "en": "UN proper shipping name"
+     }
+    },
+    {
+     "number": "14.3",
+     "heading": {
+      "en": "Transport hazard class(es)"
+     }
+    },
+    {
+     "number": "14.4",
+     "heading": {
+      "en": "Packing group"
+     }
+    },
+    {
+     "number": "14.5",
+     "heading": {
+      "en": "Environmental hazards"
+     }
+    },
+    {
+     "number": "14.6",
+     "heading": {
+      "en": "Special precautions for user"
+     }
+    },
+    {
+     "number": "14.7",
+     "heading": {
+      "en": "Transport in bulk according to Annex II of Marpol and the IBC Code"
+     }
+    }
+   ]
+  },
+  {
+   "number": "15",
+   "heading": {
+    "en": "Regulatory information"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": [
+    {
+     "number": "15.1",
+     "heading": {
+      "en": "Safety, health and environmental regulations/legislation specific for the substance or mixture"
+     }
+    },
+    {
+     "number": "15.2",
+     "heading": {
+      "en": "Chemical safety assessment"
+     }
+    }
+   ]
+  },
+  {
+   "number": "16",
+   "heading": {
+    "en": "Other information"
+   },
+   "label": {
+    "en": "SECTION {n}:"
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  }
+ ],
+ "items": [
+  {
+   "id": "date_of_compilation",
+   "kind": "date",
+   "scope": "first_page",
+   "rule": {
+    "binding": true,
+    "quote": "The date of compilation of the safety data sheet shall be given on the first page.",
+    "citation": "Annex II, Part A, 0.2.5"
+   }
+  },
+  {
+   "id": "page_numbering",
+   "kind": "page_numbering",
+   "scope": "document",
+   "rule": {
+    "binding": true,
+    "quote": "All pages of a safety data sheet, including any annexes, shall be numbered and shall bear either an indication of the length of the safety data sheet (such as ‘ page 1 of 3 ’ ) or an indication whether there is a page following (such as ‘ Continued on next page ’ or ‘ End of safety data sheet ’ ).",
+    "citation": "Annex II, Part A, 0.3.2"
+   }
+  },
+  {
+   "id": "supplier_telephone",
+   "kind": "telephone",
+   "scope": "1.3",
+   "rule": {
+    "binding": true,
+    "quote": "The full address and telephone number of the supplier shall be given as well as an e-mail address for a competent person responsible for the safety data sheet.",
+    "citation": "Annex II, Part A, 1.3"
+   }
+  },
+  {
+   "id": "supplier_email",
+   "kind": "email",
+   "scope": "1.3",
+   "rule": {
+    "binding": true,
+    "quote": "The full address and telephone number of the supplier shall be given as well as an e-mail address for a competent person responsible for the safety data sheet.",
+    "citation": "Annex II, Part A, 1.3"
+   }
+  },
+  {
+   "id": "emergency_telephone",
+   "kind": "telephone",
+   "scope": "1.4",
+   "rule": {
+    "binding": true,
+    "quote": "References to emergency information services shall be provided.",
+    "citation": "Annex II, Part A, 1.4"
+   }
+  }
+ ],
+ "languages": [
+  "en"
+ ],
+ "pending_languages": {}
+}

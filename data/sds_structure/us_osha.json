@@ -1,0 +1,255 @@
+{
+ "regulation": "us_osha",
+ "document": "29 CFR 1910.1200 Appendix D",
+ "status": "ok",
+ "why": "",
+ "headings": {
+  "binding": true,
+  "quote": "A safety data sheet (SDS) shall include the information specified in Table D.1 under the section number and heading indicated for sections 1-11 and 16.",
+  "citation": "29 CFR 1910.1200 Appendix D, introduction"
+ },
+ "subheadings": null,
+ "order": null,
+ "empty": {
+  "binding": true,
+  "quote": "If no relevant information is found for any given subheading within a section, the SDS shall clearly indicate that no applicable information is available.",
+  "citation": "29 CFR 1910.1200 Appendix D, introduction"
+ },
+ "empty_scope": "section",
+ "optional": {
+  "binding": true,
+  "quote": "Sections 12-15 may be included in the SDS, but are not mandatory.",
+  "citation": "29 CFR 1910.1200 Appendix D, introduction"
+ },
+ "one_of": [],
+ "sections": [
+  {
+   "number": "1",
+   "heading": {
+    "en": "Identification"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "2",
+   "heading": {
+    "en": "Hazard Identification"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "3",
+   "heading": {
+    "en": "Composition/information on ingredients"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "4",
+   "heading": {
+    "en": "First aid measures"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "5",
+   "heading": {
+    "en": "Fire-fighting measures"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "6",
+   "heading": {
+    "en": "Accidental release measures"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "7",
+   "heading": {
+    "en": "Handling and storage"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "8",
+   "heading": {
+    "en": "Exposure controls/personal protection"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "9",
+   "heading": {
+    "en": "Physical and chemical properties"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "10",
+   "heading": {
+    "en": "Stability and reactivity"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "11",
+   "heading": {
+    "en": "Toxicological information"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "12",
+   "heading": {
+    "en": "Ecological information"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": false,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "13",
+   "heading": {
+    "en": "Disposal considerations"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": false,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "14",
+   "heading": {
+    "en": "Transport information"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": false,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "15",
+   "heading": {
+    "en": "Regulatory information"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": false,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "16",
+   "heading": {
+    "en": "Other information, including date of preparation or last revision"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  }
+ ],
+ "items": [
+  {
+   "id": "supplier_telephone",
+   "kind": "telephone",
+   "scope": "1",
+   "rule": {
+    "binding": true,
+    "quote": "(d) Name, U.S. address, and U.S. telephone number of the chemical manufacturer, importer, or other responsible party;",
+    "citation": "29 CFR 1910.1200 Appendix D, Table D.1, 1(d)"
+   }
+  },
+  {
+   "id": "emergency_telephone",
+   "kind": "emergency_telephone",
+   "scope": "1",
+   "rule": {
+    "binding": true,
+    "quote": "(e) Emergency phone number.",
+    "citation": "29 CFR 1910.1200 Appendix D, Table D.1, 1(e)"
+   }
+  },
+  {
+   "id": "date_of_revision",
+   "kind": "date",
+   "scope": "16",
+   "rule": {
+    "binding": true,
+    "quote": "16. Other information, including date of preparation or last revision The date of preparation of the SDS or the last change to it.",
+    "citation": "29 CFR 1910.1200 Appendix D, Table D.1, 16"
+   }
+  }
+ ],
+ "languages": [
+  "en"
+ ],
+ "pending_languages": {}
+}

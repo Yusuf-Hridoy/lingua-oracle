@@ -207,6 +207,16 @@ def keys_build(
             typer.secho(f"  {reg_id}: -> {path}")
         return
 
+    if regulation == "sds_structure":
+        # Not an answer key: the sections, sub-sections and items each
+        # regulation's own text requires of a safety data sheet.
+        from lingua_oracle.keys.builders import sds_structure
+
+        for reg_id in sds_structure.REGULATIONS:
+            path = sds_structure.write(reg_id, use_cache=not no_cache)
+            typer.secho(f"  {reg_id}: -> {path}")
+        return
+
     if regulation == "section16":
         # Not an answer key: what each regulation requires Section 16 to say
         # about hazard statements, quoted from its own text on safety data

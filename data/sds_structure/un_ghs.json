@@ -1,0 +1,265 @@
+{
+ "regulation": "un_ghs",
+ "document": "UN GHS Rev.11 (2025)",
+ "status": "ok",
+ "why": "",
+ "headings": {
+  "binding": false,
+  "quote": "A4.2.3.1 The information in the SDS should be presented using the following 16 headings in the order given below (see also 1.5.3.2.1):",
+  "citation": "UN GHS Rev.11 (2025), Annex 4, A4.2.3.1, page 418"
+ },
+ "subheadings": null,
+ "order": {
+  "binding": false,
+  "quote": "A4.2.3.1 The information in the SDS should be presented using the following 16 headings in the order given below (see also 1.5.3.2.1):",
+  "citation": "UN GHS Rev.11 (2025), Annex 4, A4.2.3.1, page 418"
+ },
+ "empty": {
+  "binding": false,
+  "quote": "The SDS should not contain any blanks.",
+  "citation": "UN GHS Rev.11 (2025), Annex 4, A4.2.4.2"
+ },
+ "empty_scope": "section",
+ "optional": null,
+ "one_of": [],
+ "sections": [
+  {
+   "number": "1",
+   "heading": {
+    "en": "Identification"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "2",
+   "heading": {
+    "en": "Hazard identification"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "3",
+   "heading": {
+    "en": "Composition/information on ingredients"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "4",
+   "heading": {
+    "en": "First-aid measures"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "5",
+   "heading": {
+    "en": "Fire-fighting measures"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "6",
+   "heading": {
+    "en": "Accidental release measures"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "7",
+   "heading": {
+    "en": "Handling and storage"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "8",
+   "heading": {
+    "en": "Exposure controls/personal protection"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "9",
+   "heading": {
+    "en": "Physical and chemical properties"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "10",
+   "heading": {
+    "en": "Stability and reactivity"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "11",
+   "heading": {
+    "en": "Toxicological information"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "12",
+   "heading": {
+    "en": "Ecological information"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "13",
+   "heading": {
+    "en": "Disposal considerations"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "14",
+   "heading": {
+    "en": "Transport information"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "15",
+   "heading": {
+    "en": "Regulatory information"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  },
+  {
+   "number": "16",
+   "heading": {
+    "en": "Other information"
+   },
+   "label": {
+    "en": "{n}."
+   },
+   "required": true,
+   "content_optional": false,
+   "subsections": []
+  }
+ ],
+ "items": [
+  {
+   "id": "date_of_issue",
+   "kind": "date",
+   "scope": "document",
+   "rule": {
+    "binding": false,
+    "quote": "The date of issue of the SDS should be stated and be very apparent.",
+    "citation": "UN GHS Rev.11 (2025), Annex 4, A4.2.2.4"
+   }
+  },
+  {
+   "id": "page_numbering",
+   "kind": "page_numbering",
+   "scope": "document",
+   "rule": {
+    "binding": false,
+    "quote": "All pages of an SDS should be numbered and some indication of the end of the SDS should be given (for example: “page 1 of 3”).",
+    "citation": "UN GHS Rev.11 (2025), Annex 4, A4.2.3.3"
+   }
+  },
+  {
+   "id": "supplier_telephone",
+   "kind": "telephone",
+   "scope": "1",
+   "rule": {
+    "binding": false,
+    "quote": "The name, full address and phone number(s) of the supplier should be included on the SDS.",
+    "citation": "UN GHS Rev.11 (2025), Annex 4, A4.3.1.4"
+   }
+  },
+  {
+   "id": "emergency_telephone",
+   "kind": "emergency_telephone",
+   "scope": "1",
+   "rule": {
+    "binding": false,
+    "quote": "References to emergency information services should be included in all SDS.",
+    "citation": "UN GHS Rev.11 (2025), Annex 4, A4.3.1.5"
+   }
+  }
+ ],
+ "languages": [
+  "en"
+ ],
+ "pending_languages": {}
+}
