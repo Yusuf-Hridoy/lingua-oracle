@@ -108,7 +108,7 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
         loose_end = (ctx.regulation.statements_lack_terminal_punctuation
                      or omits_terminator)
         result = match(hit.text, entry.text, optional_terminator=loose_end,
-                       language=ctx.language)
+                       language=ctx.language, parallel=ctx.parallel(hit.code))
         if (omits_terminator and result.matched
                 and hit.text.rstrip().endswith((".", "!", "?"))
                 and not entry.text.rstrip().endswith((".", "!", "?"))):
@@ -122,7 +122,8 @@ def _run_for(ctx: CheckContext, check_id: str, family: str) -> list[Finding]:
             for other_language, other in ctx.alternate_entries(hit.code):
                 other_result = match(hit.text, other.text,
                                      optional_terminator=loose_end,
-                                     language=other_language)
+                                     language=other_language,
+                                     parallel=ctx.parallel(hit.code, other_language))
                 if other_result.matched:
                     result, entry = other_result, other
                     findings.append(

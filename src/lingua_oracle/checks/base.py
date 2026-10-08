@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import functools
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Protocol
@@ -95,6 +96,15 @@ class CheckContext:
     def section_for_line(self, index: int) -> str | None:
         return section_of(self.spans, index)
 
+    def parallel(self, code: str, language: str | None = None) -> str | None:
+        """The same code's English text in this regulation, which says which
+        of its slots are conditional - None where the text being matched is
+        itself English. `language` is that text's, the document's by default."""
+        if (language or self.language or "").split("-")[0] == "en":
+            return None
+        entry = _english(self.regulation.id).entries.get(code)
+        return entry.text if entry else None
+
     def hits_in(self, section: str) -> list[CodeHit]:
         return [h for h in self.hits if self.section_for(h) == section]
 
@@ -148,3 +158,10 @@ def run_all(ctx: CheckContext, only: list[str] | None = None) -> list[Finding]:
             continue
         findings.extend(_REGISTRY[check_id](ctx))
     return findings
+
+
+@functools.lru_cache(maxsize=16)
+def _english(regulation: str):
+    from lingua_oracle.keys.tierb import resolve
+
+    return resolve(regulation, "en")

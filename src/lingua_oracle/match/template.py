@@ -50,6 +50,7 @@ from lingua_oracle.match.normalize import (
 _DIRECTIVE = r"(?:or\s+)?(?:state|specify|indicate|insert|list|name\s+of)\b"
 _FILLIN_ATOM = rf"(?:<[^<>]*>|\(\s*{_DIRECTIVE}[^()]{{0,240}}\)|…)"
 _FILLIN_RE = re.compile(rf"{_FILLIN_ATOM}(?:\s*{_FILLIN_ATOM})*", re.IGNORECASE)
+_SLOT_RE = re.compile(_FILLIN_ATOM, re.IGNORECASE)
 
 # Some slots are conditional by the source's own words: "<or state all organs
 # affected, if known>", "<state route of exposure if it is conclusively proven
@@ -62,9 +63,46 @@ _FILLIN_RE = re.compile(rf"{_FILLIN_ATOM}(?:\s*{_FILLIN_ATOM})*", re.IGNORECASE)
 _CONDITIONAL_SLOT_RE = re.compile(
     r"\bif\s+known\b"
     r"|\bif\s+it\s+is\s+conclusively\s+proven\b"
-    r"|\bif\s+no\s+other\s+routes\s+of\s+exposure\b",
+    r"|\bif\s+no\s+other\s+routes\s+of\s+exposure\b"
+    rf"|{chr(0x2063)}",
     re.IGNORECASE,
 )
+#: Marks a slot as conditional because its English parallel is: an invisible
+#: separator, put inside the slot by `with_optional_slots` and never shown.
+_OPTIONAL_MARK = "\u2063"
+
+
+def with_optional_slots(template: str, parallel: str | None) -> str:
+    """The template, with every slot its English parallel calls conditional
+    marked as optional.
+
+    The English text says which slots are conditional ("if known", "if it is
+    conclusively proven ..."); the same act in another language puts the same
+    slots in the same order, worded in that language. So slot n of a code is
+    optional in every language when slot n of the English is - read from the
+    act's own English, with no translated wording recalled. Where the two do
+    not have the same number of slots nothing is marked - the Hungarian H373,
+    whose act drops a slot's opening bracket and reorders the sentence, is one.
+    """
+    if not parallel:
+        return template
+    # Slot by slot, not run by run: English prints "<organs> <route>" side by
+    # side where a translation may put a word between them.
+    ours = list(_SLOT_RE.finditer(template))
+    theirs = list(_SLOT_RE.finditer(parallel))
+    if not ours or len(ours) != len(theirs):
+        return template
+    out, pos = [], 0
+    for mine, english in zip(ours, theirs, strict=True):
+        out.append(template[pos:mine.start()])
+        slot = mine.group(0)
+        if (_CONDITIONAL_SLOT_RE.search(english.group(0))
+                and not _CONDITIONAL_SLOT_RE.search(slot) and slot[:1] in "<("):
+            slot = slot[0] + _OPTIONAL_MARK + slot[1:]
+        out.append(slot)
+        pos = mine.end()
+    out.append(template[pos:])
+    return "".join(out)
 _SENTENCE_END_RE = re.compile(r"(?<=[.!?])\s")
 # Two places where PDF producers move a space and nothing is meant by it:
 # beside a fill-in ellipsis ("Use… to" / "Use … to"), and between a number and
@@ -328,7 +366,7 @@ _TERMINATORS = (".", "!", "?")
 
 
 def match(found: str, template: str, *, optional_terminator: bool = False,
-          language: str | None = None) -> MatchResult:
+          language: str | None = None, parallel: str | None = None) -> MatchResult:
     """Compare a phrase from a document against official template text.
 
     `optional_terminator` is for a regulation whose own rendering prints the
@@ -342,9 +380,13 @@ def match(found: str, template: str, *, optional_terminator: bool = False,
     shapes with Latin. It is a second attempt, made only when the plain
     comparison has already failed, so a document is never judged against
     anything but its own text.
+
+    `parallel` is the same code's English text in the same regulation, which
+    says which slots are conditional (`with_optional_slots`).
     """
     f = normalize(found)
-    t = normalize(template)
+    t = with_optional_slots(normalize(template),
+                            normalize(parallel) if parallel else None)
     if not f:
         return MatchResult(False, MatchKind.MISMATCH, message="empty text in document")
     result = _compare(f, t, optional_terminator=optional_terminator)
@@ -411,6 +453,22 @@ def _compare(f: str, t: str, *, optional_terminator: bool) -> MatchResult:
         ):
             for pattern in patterns:
                 m = pattern.match(trimmed)
+                if m:
+                    return MatchResult(True, MatchKind.PUNCTUATION,
+                                       fillins=_fillins(m), message=message)
+
+    # The other way round: the official text ends with a full stop and the
+    # sheet does not. Through the template again with it put back, so a
+    # statement with slots is judged like one without - a punctuation
+    # difference, reported and never failed.
+    if t.endswith(_TERMINATORS) and not f.endswith(_TERMINATORS):
+        completed = f + t[-1]
+        for patterns, message in (
+            (compile_template(t, ignore_case=False), "differs only in punctuation"),
+            (compile_template(t), "differs only in punctuation and letter case"),
+        ):
+            for pattern in patterns:
+                m = pattern.match(completed)
                 if m:
                     return MatchResult(True, MatchKind.PUNCTUATION,
                                        fillins=_fillins(m), message=message)
