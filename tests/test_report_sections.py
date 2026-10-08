@@ -80,3 +80,12 @@ def test_nothing_but_technical_details_is_collapsed():
     assert body.count("<details") == 1
     assert "<summary>Technical details</summary>" in body
     assert "Sections 4&ndash;8 and 10&ndash;15" in body
+
+
+def test_a_mixture_whose_ranges_reach_100_says_nothing_is_undisclosed():
+    _, page = _page("pattern_glycol_coolant_gb")
+    two = next(s for s in page.sections if s.number == "2")
+    basis = next(r.text for r in two.rows if r.key == "Mixture")
+    assert "upper ends total 124.5 %, so nothing is undisclosed" in basis
+    assert "at both ends of every range" in basis
+    assert "of the mixture" not in basis

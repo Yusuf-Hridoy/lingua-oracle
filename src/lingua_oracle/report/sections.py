@@ -307,10 +307,17 @@ def _classification(report: Report, display: str) -> Sub:
         read_as = {"gas": ", read as a gas",
                    "solid/liquid": ", read as a solid or a liquid"}.get(
                        mixture.physical_state, "")
+        if mixture.undisclosed in ("0", ""):
+            # The upper bounds reach 100 %: nothing hidden, and the only
+            # uncertainty is the ranges', which is why both ends are shown.
+            basis = (f"Calculated from the declared ranges - their upper ends "
+                     f"total {mixture.declared_total} %, so nothing is "
+                     f"undisclosed{read_as}, at both ends of every range")
+        else:
+            basis = (f"Calculated from {mixture.declared_total}% of the "
+                     f"mixture{undisclosed}{read_as}")
         sub.rows.append(Row("Mixture", "plain",
-                            text=f"Calculated from {mixture.declared_total}% of "
-                                 f"the mixture{undisclosed}{read_as}, by "
-                                 f"{mixture.source_document}."))
+                            text=f"{basis}, by {mixture.source_document}."))
         for result in mixture.results:
             status = {"consistent": "ok", "inconsistent": "fix",
                       "cannot_tell": "check"}.get(result["verdict"], "na")
