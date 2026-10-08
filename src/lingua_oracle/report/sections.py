@@ -23,11 +23,18 @@ from lingua_oracle.report import labels
 #: same sixteen headings in GHS Annex 4).
 TITLES = {
     "1": "Identification", "2": "Hazards identification",
-    "3": "Composition", "9": "Physical and chemical properties",
-    "16": "Other information", "label": "Label",
+    "3": "Composition", "4": "First aid measures", "5": "Firefighting measures",
+    "6": "Accidental release measures", "7": "Handling and storage",
+    "8": "Exposure controls/personal protection",
+    "9": "Physical and chemical properties", "10": "Stability and reactivity",
+    "11": "Toxicological information", "12": "Ecological information",
+    "13": "Disposal considerations", "14": "Transport information",
+    "15": "Regulatory information", "16": "Other information", "label": "Label",
 }
-#: The sections this tool reads. The others are listed and not judged.
+#: The sections whose content this tool reads. Every section's structure is
+#: judged too, where the regulation's text on SDS structure is on file.
 CHECKED = ("1", "2", "3", "9", "16")
+ALL_SECTIONS = tuple(str(n) for n in range(1, 17))
 NOT_CHECKED_RANGES = (("4", "8"), ("10", "15"))
 
 PILL = {
@@ -43,7 +50,13 @@ PILL = {
 }
 #: How the navigator names each section, as the design board does.
 NAV = {"1": "Identification", "2": "Hazards", "3": "Composition",
-       "9": "Physical state", "16": "Other information"}
+       "4": "First aid", "5": "Firefighting", "6": "Accidental release",
+       "7": "Handling and storage", "8": "Exposure controls",
+       "9": "Physical state", "10": "Stability and reactivity",
+       "11": "Toxicology", "12": "Ecology", "13": "Disposal", "14": "Transport",
+       "15": "Regulatory", "16": "Other information"}
+#: The structure checks, shown from Report.structure in every section.
+_STRUCTURE_CHECKS = {"B-12", "B-13", "B-14"}
 
 #: Checks whose results are statements, shown from the statement verdicts.
 _STATEMENT_CHECKS = {"A-01", "A-02", "A-03", "A-04", "C-15"}
@@ -505,6 +518,71 @@ def _section_sixteen(report: Report, display: str) -> Section:
     return sec
 
 
+# -- the structure, section by section ------------------------------------------
+
+def _structure_action(row, number: str) -> str:
+    """What to do about one structure row, in the sheet's terms."""
+    if row.check == "B-12":
+        return {
+            "Section": f"add Section {number}" + (f", “{row.expected}”" if row.expected else ""),
+            "Number": f"number this heading {number}",
+            "Order": f"put Section {number} in its place, after Section {int(number) - 1}",
+            "Heading": f"head Section {number} “{row.expected}”",
+        }.get(row.key, row.text.rstrip("."))
+    if row.check == "B-13":
+        if row.key.endswith("content") or row.key == "Content":
+            where = row.key.replace(" content", "") if row.key != "Content" else number
+            return (f"give sub-section {where} its content" if "." in where
+                    else f"give Section {where} its content, or say that no "
+                         "information is available")
+        if "differs" in row.text:
+            return f"head sub-section {row.key.split()[0]} “{row.expected}”"
+        if "None of" in row.text:
+            return "add sub-section 3.1 or 3.2, as the product is a substance or a mixture"
+        return f"add sub-section {row.key}"
+    return f"add {row.key[0].lower()}{row.key[1:]} " + row.text.split(" found ", 1)[-1].rstrip(".")
+
+
+def _structure_row(row, result=None) -> Row:
+    """One row of the structure, as the page shows it."""
+    from lingua_oracle.report.render import word_diff
+
+    status = row.status
+    where = (f"{row.citation}: “{row.quote}”" if row.quote and len(row.quote) <= 240
+             else row.citation)
+    text = row.text
+    if row.check == "B-12" and row.key == "Heading" and result is not None and result.heading:
+        text = f"“{result.heading}” — {row.text[0].lower()}{row.text[1:]}"
+    out = Row(row.key, status, text=text, note=where if status != "ok" else "",
+              source=row.citation if status == "ok" else "")
+    if status in ("fix", "check"):
+        out.action = _structure_action(row, result.number if result else "1")
+        if row.found and row.expected:
+            left, right = word_diff(row.expected, row.found)
+            out.found_html, out.expected_html = right, left
+            out.expected = row.expected
+            out.official_heading = "As the text words it"
+            out.note, out.text = f"{row.text} {where}".strip(), ""
+    return out
+
+
+def _structure_sub(report: Report, number: str) -> Sub | None:
+    structure = report.structure
+    if structure is None or structure.state != "checked":
+        return None
+    result = next((s for s in structure.sections if s.number == number), None)
+    if result is None:
+        return None
+    return Sub("Structure", [_structure_row(r, result) for r in result.rows])
+
+
+def _document_sub(report: Report) -> Sub | None:
+    structure = report.structure
+    if structure is None or structure.state != "checked" or not structure.document_rows:
+        return None
+    return Sub("Whole document", [_structure_row(r) for r in structure.document_rows])
+
+
 # -- the page --------------------------------------------------------------------
 
 @dataclass
@@ -545,11 +623,21 @@ def build(report: Report, display: str, set_by: str) -> Page:
     sections["3"] = _section_three(report, display)
     sections["9"] = _section_nine(report)
     sections["16"] = _section_sixteen(report, display)
+    structured = report.structure is not None and report.structure.state == "checked"
+    if structured and not label_only:
+        for number in ALL_SECTIONS:
+            sections.setdefault(number, Section(number, TITLES[number]))
+            sub = _structure_sub(report, number)
+            if sub is not None:
+                sections[number].subs.insert(0 if number not in ("1",) else 1, sub)
+        document = _document_sub(report)
+        if document is not None:
+            sections["1"].subs.append(document)
 
     # Findings that are not a statement's wording, each where it was found.
     others: dict[str, Sub] = {}
     for finding in report.findings:
-        if finding.check_id == "B-08":
+        if finding.check_id == "B-08" or finding.check_id in _STRUCTURE_CHECKS:
             continue
         row = _finding_row(finding, display)
         if row is None:
@@ -565,14 +653,14 @@ def build(report: Report, display: str, set_by: str) -> Page:
     for sec in sections.values():
         sec.subs = [s for s in sec.subs if s.rows]
 
-    order = ["1", "2", "label", "3", "9", "16"]
+    order = ["1", "2", "label", "3", *[str(n) for n in range(4, 16)], "16"]
     shown = [sections[n] for n in order if n in sections]
     rows = [r for sec in shown for r in sec.rows]
     stats = {
         "must_fix": sum(1 for r in rows if r.status in ("fix", "wrong")),
         "to_check": sum(1 for r in rows if r.status == "check"),
         "correct": sum(1 for r in rows if r.status == "ok"),
-        "sections": sum(1 for s in shown if s.number in CHECKED and s.judged),
+        "sections": sum(1 for s in shown if s.number in ALL_SECTIONS and s.judged),
         "codes_found": report.coverage.codes_found,
         "codes_checked": report.coverage.codes_checked,
         "codes_percent": (int(report.coverage.percent)
@@ -656,8 +744,13 @@ def _nav(sections: list[Section]) -> list[dict]:
     if "label" in by_number:
         add(by_number["label"])
     add(by_number["3"])
-    out.append({"href": None, "label": "4–8 · not checked", "status": "none"})
-    add(by_number["9"])
-    out.append({"href": None, "label": "10–15 · not checked", "status": "none"})
+    if "4" in by_number:
+        # Every section has its structure judged: one entry, one dot, each.
+        for number in range(4, 16):
+            add(by_number[str(number)])
+    else:
+        out.append({"href": None, "label": "4–8 · not checked", "status": "none"})
+        add(by_number["9"])
+        out.append({"href": None, "label": "10–15 · not checked", "status": "none"})
     add(by_number["16"])
     return out

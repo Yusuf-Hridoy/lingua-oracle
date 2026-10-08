@@ -20,11 +20,35 @@ def _page(name, regulation=None):
 
 def test_the_sections_come_in_sds_order():
     _, page = _page("pattern_substance_2_propanol")
-    assert [s.number for s in page.sections] == ["1", "2", "3", "9", "16"]
+    assert [s.number for s in page.sections] == [str(n) for n in range(1, 17)]
     assert [n["label"] for n in page.nav] == [
-        "1 · Identification", "2 · Hazards", "3 · Composition",
-        "4–8 · not checked", "9 · Physical state", "10–15 · not checked",
-        "16 · Other information"]
+        "1 · Identification", "2 · Hazards", "3 · Composition", "4 · First aid",
+        "5 · Firefighting", "6 · Accidental release", "7 · Handling and storage",
+        "8 · Exposure controls", "9 · Physical state", "10 · Stability and reactivity",
+        "11 · Toxicology", "12 · Ecology", "13 · Disposal", "14 · Transport",
+        "15 · Regulatory", "16 · Other information"]
+    assert all(n["href"] and n["status"] == "ok" for n in page.nav)
+
+
+def test_a_report_without_a_structure_keeps_the_sections_it_reads():
+    report, _ = _page("pattern_substance_2_propanol")
+    report.structure = None
+    page = sections.build(report, "EU CLP", "read from the document")
+    assert [s.number for s in page.sections] == ["1", "2", "3", "9", "16"]
+    assert "4–8 · not checked" in [n["label"] for n in page.nav]
+
+
+def test_each_section_shows_its_structure_rows_with_the_texts_wording():
+    _, page = _page("pattern_substance_2_propanol")
+    seven = next(s for s in page.sections if s.number == "7")
+    structure = next(sub for sub in seven.subs if sub.title == "Structure")
+    keys = [r.key for r in structure.rows]
+    assert keys[:2] == ["Number", "Heading"]
+    assert "7.1 Precautions for safe handling" in keys
+    assert all(r.status == "ok" for r in structure.rows)
+    one = next(s for s in page.sections if s.number == "1")
+    document = next(sub for sub in one.subs if sub.title == "Whole document")
+    assert {r.key for r in document.rows} == {"A date", "Page numbering"}
 
 
 def test_a_correct_substance_sheet_is_ready_with_every_item_a_row():
@@ -40,9 +64,8 @@ def test_a_correct_substance_sheet_is_ready_with_every_item_a_row():
     three = next(s for s in page.sections if s.number == "3")
     row = three.table["rows"][0]
     assert (row["cas"], row["share"], row["row"].text) == ("67-63-0", "100 %", "Matches")
-    # Section 1 states facts - product, regulation - and judges nothing, so
-    # it is shown and not counted, as on the design board: 4 of 16.
-    assert page.stats["sections"] == 4
+    # Every section's structure is judged against the text: 16 of 16.
+    assert page.stats["sections"] == 16
 
 
 def test_a_missing_code_is_one_action_in_the_section_it_is_fixed_in():
@@ -79,7 +102,7 @@ def test_nothing_but_technical_details_is_collapsed():
                                  ingredients=True))
     assert body.count("<details") == 1
     assert "<summary>Technical details</summary>" in body
-    assert "Sections 4&ndash;8 and 10&ndash;15" in body
+    assert 'id="s7"' in body                       # every section shown, open
 
 
 def test_a_mixture_whose_ranges_reach_100_says_nothing_is_undisclosed():

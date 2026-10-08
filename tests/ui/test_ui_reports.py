@@ -335,10 +335,10 @@ def test_the_issue_filters_hide_and_show_cards(page, server, shots_dir):
     assert nav.evaluate("el => getComputedStyle(el).position") == "sticky"
     links = nav.locator("a")
     assert [links.nth(i).get_attribute("href") for i in range(links.count())] == [
-        "#s1", "#s2", "#s3", "#s9", "#s16"]
+        f"#s{n}" for n in range(1, 17)]
     assert nav.locator('a[href="#s2"] .dot').get_attribute("class") == "dot d-fix"
-    assert "4–8 · not checked" in nav.inner_text()
-    assert "10–15 · not checked" in nav.inner_text()
+    assert nav.locator('a[href="#s7"] .dot').get_attribute("class") == "dot d-ok"
+    assert "not checked" not in nav.inner_text()
     nav.locator('a[href="#s2"]').click()
     assert page.url.endswith("#s2")
 
@@ -661,11 +661,14 @@ def test_every_checked_item_is_a_row_in_its_section(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["clean_eu_da"])
     headings = page.locator(".sds-section > header h2").all_inner_texts()
-    assert headings == ["Section 1 · Identification", "Section 2 · Hazards identification",
-                        "Section 3 · Composition", "Section 9 · Physical and chemical properties",
-                        "Section 16 · Other information"]
+    assert len(headings) == 16
+    assert headings[3] == "Section 4 · First aid measures"
+    assert headings[-1] == "Section 16 · Other information"
     two = page.locator("#s2")
     assert "SIGNAL WORD & HAZARD STATEMENTS" in two.inner_text().upper()
     assert "PRECAUTIONARY STATEMENTS" in two.inner_text().upper()
     assert two.locator(".srow").filter(has_text="Signal word").count() == 1
-    assert "Sections 4–8 and 10–15" in page.locator(".skipped").inner_text()
+    assert page.locator(".skipped").count() == 0     # every section is judged
+    four = page.locator("#s4")
+    assert four.locator(".srow").filter(has_text="Heading").count() == 1
+    assert "4.1 Beskrivelse af førstehjælpsforanstaltninger" in four.inner_text()  # da

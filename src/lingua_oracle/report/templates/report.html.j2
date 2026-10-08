@@ -255,10 +255,12 @@
       </section>
       {% endfor %}
 
+      {% if not (page.sections | selectattr("number", "equalto", "4") | list) %}
       <section class="card skipped" aria-label="Sections not checked">
         <b>Sections 4&ndash;8 and 10&ndash;15</b> &mdash; not checked. They carry no
         classification or statements this tool judges.
       </section>
+      {% endif %}
 
       {% if report.sources %}
       <section class="card sources-box" aria-label="Sources used">
