@@ -60,7 +60,8 @@ def test_a_correct_substance_sheet_is_ready_with_every_item_a_row():
     for item in ("Flam. Liq. 2", "Eye Irrit. 2", "STOT SE 3", "Signal word",
                  "H225", "H319", "H336", "P210", "P233"):
         assert item in keys, item
-    assert all(r.status in ("ok", "plain") for r in two.rows)
+    # Pictograms are images on this sheet: that row says it could not check them.
+    assert all(r.status in ("ok", "plain") or r.key == "Pictograms" for r in two.rows)
     three = next(s for s in page.sections if s.number == "3")
     row = three.table["rows"][0]
     assert (row["cas"], row["share"], row["row"].text) == ("67-63-0", "100 %", "Matches")
@@ -147,3 +148,24 @@ def test_the_sheets_own_basis_is_quoted_next_to_the_verdict(tmp_path):
     assert 'class="pill check"' in card and 'class="pill fix"' not in card
     assert "What the sheet gives as its basis" in card
     assert f"<q>{line}</q>" in card
+
+
+def test_label_elements_and_the_flash_point_are_rows_where_they_belong():
+    _, page = _page("pattern_substance_2_propanol")
+    by_number = {s.number: s for s in page.sections}
+    two = next(sub for sub in by_number["2"].subs if sub.title == "Label elements")
+    assert ("Signal word", "ok") in [(r.key, r.status) for r in two.rows]
+    nine = next(sub for sub in by_number["9"].subs if sub.title == "Flash point")
+    assert [r.status for r in nine.rows] == ["ok"]
+    assert "Table 2.6.1" in nine.rows[0].source
+
+
+def test_a_mixture_card_says_when_its_class_comes_from_section_11(tmp_path):
+    from tests.make_fixtures import _glycol_coolant
+
+    path = _glycol_coolant(tmp_path / "c11.pdf", section_eleven=[
+        "Acute toxicity of the mixture: LD50 oral, rat: 1500 mg/kg"])
+    body = render_html(check_pdf(str(path), "uk_clp", ingredients=True))
+    card = _card(body, "Acute toxicity, oral")
+    assert "Section 11&rsquo;s data on the mixture" in card or "Section 11’s data on the mixture" in card
+    assert "used instead of the additivity calculation" in card

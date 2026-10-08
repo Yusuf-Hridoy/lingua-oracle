@@ -57,6 +57,11 @@ NAV = {"1": "Identification", "2": "Hazards", "3": "Composition",
        "15": "Regulatory", "16": "Other information"}
 #: The structure checks, shown from Report.structure in every section.
 _STRUCTURE_CHECKS = {"B-12", "B-13", "B-14"}
+#: Section against section, shown from Report.consistency where each belongs.
+_CONSISTENCY_CHECKS = {"C-16", "C-17", "C-18", "C-19", "C-20"}
+_CONSISTENCY_TITLES = {"C-16": "Label elements", "C-17": "Flash point",
+                       "C-18": "Mixture's acute toxicity data",
+                       "C-19": "Mixture's aquatic data", "C-20": "Consistency"}
 
 #: Checks whose results are statements, shown from the statement verdicts.
 _STATEMENT_CHECKS = {"A-01", "A-02", "A-03", "A-04", "C-15"}
@@ -583,6 +588,46 @@ def _document_sub(report: Report) -> Sub | None:
     return Sub("Whole document", [_structure_row(r) for r in structure.document_rows])
 
 
+# -- section against section ------------------------------------------------------
+
+def _consistency_row(row) -> Row:
+    from lingua_oracle.report.render import word_diff
+
+    status = {"info": "info"}.get(row.status, row.status)
+    where = (f"{row.citation}: “{row.quote}”" if row.quote and len(row.quote) <= 260
+             else row.citation)
+    out = Row(row.key, status, text=row.text, note=where if status != "ok" else "",
+              source=row.citation if status == "ok" else "")
+    if status in ("fix", "check"):
+        out.action = {
+            "C-16": f"bring the label elements in line: {row.text[0].lower()}{row.text[1:]}",
+            "C-17": "make the flash point and the flammable-liquid classification agree",
+            "C-18": "make Section 2's acute toxicity agree with Section 11's data on the mixture",
+            "C-19": "make Section 2's aquatic classification agree with Section 12's data",
+            "C-20": "make the product name and revision date the same throughout",
+        }[row.check].rstrip(".")
+        if row.found and row.expected and row.check == "C-16":
+            left, right = word_diff(row.expected, row.found)
+            out.found_html, out.expected_html = right, left
+            out.expected = row.expected
+            out.official_heading = "As the classification calls for"
+            out.note, out.text = f"{row.text} {where}".strip(), ""
+    return out
+
+
+def _consistency_subs(report: Report) -> dict[str, list[Sub]]:
+    """The rows, grouped by check, in the section each is shown in."""
+    out: dict[str, list[Sub]] = {}
+    for check, title in _CONSISTENCY_TITLES.items():
+        rows = [r for r in report.consistency if r.check == check]
+        by_section: dict[str, list] = {}
+        for row in rows:
+            by_section.setdefault(row.section, []).append(row)
+        for section, held in by_section.items():
+            out.setdefault(section, []).append(Sub(title, [_consistency_row(r) for r in held]))
+    return out
+
+
 # -- the page --------------------------------------------------------------------
 
 @dataclass
@@ -633,11 +678,16 @@ def build(report: Report, display: str, set_by: str) -> Page:
         document = _document_sub(report)
         if document is not None:
             sections["1"].subs.append(document)
+    for number, subs in _consistency_subs(report).items():
+        if number not in sections:
+            sections[number] = Section(number, TITLES.get(number, number))
+        sections[number].subs += subs
 
     # Findings that are not a statement's wording, each where it was found.
     others: dict[str, Sub] = {}
     for finding in report.findings:
-        if finding.check_id == "B-08" or finding.check_id in _STRUCTURE_CHECKS:
+        if finding.check_id == "B-08" or finding.check_id in _STRUCTURE_CHECKS | \
+                _CONSISTENCY_CHECKS:
             continue
         row = _finding_row(finding, display)
         if row is None:

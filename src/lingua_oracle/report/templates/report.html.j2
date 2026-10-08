@@ -1,7 +1,7 @@
 {% import '_mixture.html.j2' as mix %}
 {% macro pill(status) %}{% set p = PILL[status] %}{% if p[0] %}<span class="pill {{ p[2] }}"><span aria-hidden="true">{{ p[1] }}</span> {{ p[0] }}</span>{% else %}<span></span>{% endif %}{% endmacro %}
 {% macro ate_lines(m) %}
-{% for line in m.trace if 'ATEmix =' in line and '\u2192' in line %}<span class="rnote ate">{{ line }}</span>{% endfor %}
+{% for line in m.trace if ('ATEmix =' in line and '\u2192' in line) or line.startswith('Section 11 gives') %}<span class="rnote ate">{{ line }}</span>{% endfor %}
 {% endmacro %}
 {% macro mixture_row(r) %}
 {% set m = r.mixture %}
@@ -9,8 +9,9 @@
 {% if m.verdict == 'not_calculated' and not m.calculated_class %}
   <span class="val">{{ m.message }}</span>
 {% elif not r.problem %}
-  <span class="val">Section 2 says {{ m.stated_class or 'nothing' }}; calculated from
-    declared ingredients: {{ m.calculated_class or 'no classification' }}.
+  <span class="val">Section 2 says {{ m.stated_class or 'nothing' }}; {% if m.basis == 'section_11' %}from
+    Section 11&rsquo;s data on the mixture{% else %}calculated from
+    declared ingredients{% endif %}: {{ m.calculated_class or 'no classification' }}.
     <span class="rnote">{{ m.message }}</span>{% if acute %}{{ ate_lines(m) }}{% endif %}</span>
 {% else %}
   <div class="cmp">
@@ -20,7 +21,7 @@
       {% if m.implied_from %}<p class="rnote">{{ m.implied_from }}</p>{% endif %}
     </div>
     <div class="official">
-      <div class="sub">Calculated from declared ingredients</div>
+      <div class="sub">{% if m.basis == 'section_11' %}From Section 11&rsquo;s data on the mixture{% else %}Calculated from declared ingredients{% endif %}</div>
       <div class="txt">{% if m.calculated_class %}{{ m.calculated_class }}{% else %}The declared ingredients don&rsquo;t give this hazard{% endif %}</div>
       {% if m.calculated_low and m.calculated_high and m.calculated_low != m.calculated_high %}
       <p class="rnote">{{ m.calculated_low }} at the low end of the declared ranges,
