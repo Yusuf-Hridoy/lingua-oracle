@@ -26,8 +26,8 @@ _BOIL_LABEL = re.compile(r"(?:initial\s+)?boiling\s+(?:point|range)|siedebeginn|
                          r"point (?:initial )?d['’]ébullition|kogepunkt|kookpunt|kokpunkt",
                          re.IGNORECASE)
 _VALUE = re.compile(
-    r"(?P<cmp>[<>≤≥]=?|approx\.?|ca\.?|~)?\s*(?P<a>-?\d+(?:[.,]\d+)?)\s*(?:°\s*)?(?P<ua>[CF])?\b"
-    r"(?:\s*(?:-|–|to|bis|à)\s*(?P<b>-?\d+(?:[.,]\d+)?))?\s*(?:°\s*)?(?P<unit>[CF])\b")
+    r"(?P<cmp>[<>≤≥]=?|approx\.?|ca\.?|~)?\s*(?P<a>-?\d+(?:[.,]\d+)?)\s*(?:[°º˚]\s*)?(?P<ua>[CF])?\b"
+    r"(?:\s*(?:-|–|to|bis|à)\s*(?P<b>-?\d+(?:[.,]\d+)?))?\s*(?:[°º˚]\s*)?(?P<unit>[CF])\b")
 _NONE = re.compile(r"not applicable|not available|no data|n\.?a\.?\b|not determined|"
                    r"nicht anwendbar|keine daten|non applicable|ikke relevant", re.IGNORECASE)
 

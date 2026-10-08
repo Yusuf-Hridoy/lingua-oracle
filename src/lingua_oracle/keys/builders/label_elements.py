@@ -774,8 +774,11 @@ def _osha(use_cache: bool) -> LabelElements:
         pictogram = "" if pictogram.lower().startswith("no ") else pictogram
         for row in _OSHA_ROW.finditer(block.group("rows")):
             statement = row.group("statement").strip()
+            # The longest official text the row starts with: "Causes damage to
+            # organs" (H370) is the start of H372's text too.
             code = by_text.get(_norm(statement)) or next(
-                (c for t, c in by_text.items() if _norm(statement).startswith(t)), None)
+                (c for t, c in sorted(by_text.items(), key=lambda kv: -len(kv[0]))
+                 if _norm(statement).startswith(t)), None)
             if code is None:
                 structure.unparsed.append(f"{document}: {hclass} {row.group('cat')}: "
                                           f"“{statement[:60]}” matched to no code")

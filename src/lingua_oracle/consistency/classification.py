@@ -38,6 +38,9 @@ class Classification:
     text: str                                  # as printed: "Flam. Liq. 2"
     entries: list[dict] = field(default_factory=list)
     line: int = -1
+    #: The class was recognised, but the regulation's text has no such
+    #: category for it ("Category 2A" under CLP): the class's own entries.
+    unknown_category: list[dict] = field(default_factory=list)
 
     @property
     def h_codes(self) -> set[str]:
@@ -65,6 +68,22 @@ def _stems(text: str) -> set[str]:
     stop = {"the", "and", "for", "with", "after", "category", "categories", "hazard",
             "hazards", "substance", "substances", "mixture", "mixtures", "which"}
     return {_stem(w) for w in re.findall(r"[a-z]+", text.lower()) if len(w) > 2 and w not in stop}
+
+
+def _alternatives(name: str) -> list[set[str]]:
+    """A class name as each of its halves: "serious eye damage/eye irritation"
+    is also "eye irritation"; "skin corrosion/irritation" also "skin
+    irritation"."""
+    halves = [h.strip() for h in name.split("/")]
+    out = [_stems(name)]
+    if len(halves) > 1:
+        lead = halves[0].split()[:-1]
+        for half in halves:
+            words = half.split()
+            if len(words) == 1 and lead:
+                words = lead + words
+            out.append(_stems(" ".join(words)))
+    return out
 
 
 _CATEGORY_WORD = re.compile(
@@ -112,17 +131,33 @@ def read(lines: list[str], regulation: str) -> list[Classification]:
             if not re.search(r"[A-Za-z]{4}", before) and index > 0:
                 before = (lines[index - 1] or "") + " " + before
             cat = found.group("cat").upper().replace("CAT", "")
+            # A table printing the code beside the category: the code names
+            # the class ("H225" above "Category 2").
+            near = " ".join(lines[max(0, index - 1):index + 1])
+            coded = [e for e in entries if cat in [c.upper() for c in e["category"]]
+                     and any(re.search(rf"\b{h}\b", near) for h in e["h_codes"])]
+            bare = not re.search(r"[A-Za-z]{4}", re.sub(r"\b(?:EU)?H\d{3}\w*", "", before))
+            if coded and bare:
+                keep(f"{coded[0]['h_codes'][0]} {found.group(0)}", coded, index)
+                continue
+            by_code = [e for e in entries
+                       if any(re.search(rf"\b{h}\b", near) for h in e["h_codes"])]
+            if bare and by_code:
+                # The code names a class the regulation has, but not in this
+                # category ("H319" beside "Category 2A" under CLP).
+                out.append(Classification(f"{by_code[0]['h_codes'][0]} {found.group(0)}", [],
+                                          index, by_code))
+                continue
             words = _stems(before[-120:])
             route = next((r for r in _ROUTES if r in before.lower()), "")
             best, score = [], 0.0
             for entry in entries:
                 if cat not in [c.upper() for c in entry["category"]]:
                     continue
-                theirs = _stems(entry["hazard_class"]) | (
-                    _stems(entry["subclass"]) if entry["subclass"] not in _ROUTES else set())
-                if not theirs:
-                    continue
-                share = len(theirs & words) / len(theirs)
+                extra = _stems(entry["subclass"]) if entry["subclass"] not in _ROUTES else set()
+                share = max((len((alt | extra) & words) / len(alt | extra)
+                             for alt in _alternatives(entry["hazard_class"]) if alt | extra),
+                            default=0.0)
                 if share < 0.6:
                     continue
                 if route and entry["subclass"] in _ROUTES and entry["subclass"] != route:
@@ -131,5 +166,14 @@ def read(lines: list[str], regulation: str) -> list[Classification]:
                     best, score = [entry], share
                 elif share == score:
                     best.append(entry)
-            keep(f"{before[-60:].strip(' :-–,;')} {found.group(0)}".strip(), best, index)
+            text_seen = f"{before[-60:].strip(' :-–,;')} {found.group(0)}".strip()
+            if best:
+                keep(text_seen, best, index)
+                continue
+            # The class is there, in words, but not with this category.
+            same_class = [e for e in entries
+                          if max((len(alt & words) / len(alt) for alt in
+                                  _alternatives(e["hazard_class"]) if alt), default=0) >= 0.99]
+            if same_class and words:
+                out.append(Classification(text_seen, [], index, same_class))
     return out

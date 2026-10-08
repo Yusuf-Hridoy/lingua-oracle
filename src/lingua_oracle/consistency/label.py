@@ -66,15 +66,29 @@ def signal_word(classifications, stated: list[str], held: dict) -> list[Consiste
     return [_row("Signal word", "ok", f"“{required}”, as {because[0]} calls for.", rule=source)]
 
 
-def statements(classifications, codes: set[str], held: dict) -> list[ConsistencyRow]:
+def statements(classifications, codes: set[str], held: dict,
+               printed_as_text: set[str] | None = None) -> list[ConsistencyRow]:
     rows: list[ConsistencyRow] = []
     called: set[str] = set()
+    as_text = printed_as_text or set()
     for c in classifications:
+        if c.unknown_category:
+            cats = sorted({x for e in c.unknown_category for x in e["category"]})
+            called |= {h for e in c.unknown_category for h in e["h_codes"]}
+            rows.append(_row(c.text, "check", f"{c.text}: the regulation's text has no such "
+                             f"category for this class (its categories: {', '.join(cats)}).",
+                             rule={"quote": "", "citation": c.unknown_category[0].get("source", "")},
+                             found=c.text))
+            continue
         wanted = c.h_codes
         called |= wanted
         if wanted & codes:
             rows.append(_row(c.text, "ok", f"{', '.join(sorted(wanted & codes))} printed, as "
                              f"{c.text} calls for.", rule=_source(c)))
+            continue
+        if wanted & as_text:
+            rows.append(_row(c.text, "ok", f"The statement of {', '.join(sorted(wanted & as_text))} "
+                             f"is printed in words, as {c.text} calls for.", rule=_source(c)))
             continue
         # A statement a precedence rule lets be omitted is not missing.
         omitted = [r for r in held.get("statement_rules", [])
@@ -103,6 +117,20 @@ def _stated_pictograms(lines: list[str], held: dict) -> set[str]:
     text = "\n".join(lines)
     if held.get("pictogram_kind") == "code":
         return set(_GHS_CODE.findall(text))
+    # A name counts where the line is about pictograms or symbols, or holds
+    # nothing but names: "Corrosion" inside "Skin Corrosion/Irritation" is
+    # the class, not a pictogram.
+    names = held.get("pictogram_names", [])
+    vocabulary = "|".join(re.escape(n) for n in sorted(names, key=len, reverse=True))
+    picked = []
+    for k, line in enumerate(lines):
+        about = re.search(r"pictogram|symbol|piktogram", line or "", re.I) or (
+            k and re.search(r"pictogram|symbol", lines[k - 1] or "", re.I))
+        bare = vocabulary and re.fullmatch(rf"(?:\s*(?:{vocabulary})\s*[,;/]?)+", line or "",
+                                           re.IGNORECASE)
+        if about or bare:
+            picked.append(line or "")
+    text = "\n".join(picked)
     found = set()
     for name in sorted(held.get("pictogram_names", []), key=len, reverse=True):
         # "Flame" inside "Flame over circle" is not a second pictogram.
@@ -186,12 +214,14 @@ def not_adopted(lines: list[str], codes: set[str], held: dict, criteria: dict | 
     rows = []
     text = " ".join(lines).lower()
     for item in held.get("not_adopted", []):
-        words = [w for w in re.findall(r"[a-z]+", item["what"].lower().split("–")[0]) if len(w) > 3]
-        if words and all(w[:5] in text for w in words[:2]):
-            cats = item.get("categories") or []
-            if cats and not any(re.search(rf"(?:category|cat\.?)\s*{c}\b|\b(?:acute|chronic)\s*{c}\b",
-                                          text) for c in cats):
-                continue
+        phrase = re.split(r"\s\W\s", item["what"].lower())[0].strip()
+        words = [re.escape(w[:5]) + r"\w*" for w in re.findall(r"[a-z]+", phrase) if len(w) > 2]
+        if not words:
+            continue
+        cats = item.get("categories") or []
+        tail = (r"[^.;\n]{0,40}?(?:category|cat\.?)\s*(?:" + "|".join(cats) + r")\b") if cats else ""
+        if not re.search(r"\W+".join(words) + tail, text):
+            continue
             rows.append(_row(item["what"], "info", f"{item['what'].capitalize()} is not part of "
                              f"{display}; this classification is outside it.", rule=item["rule"]))
     aquatic = (criteria or {}).get("aquatic", {})
@@ -207,16 +237,18 @@ def not_adopted(lines: list[str], codes: set[str], held: dict, criteria: dict | 
 
 
 def run(lines: list[str], classifications, codes: set[str], stated_signal: list[str],
-        regulation: str, display: str, criteria: dict | None) -> list[ConsistencyRow]:
+        regulation: str, display: str, criteria: dict | None,
+        printed_as_text: set[str] | None = None) -> list[ConsistencyRow]:
     held = table(regulation)
     if held is None:
         return [_row("Label elements", "na", "Not checked (criterion not on file).")]
     rows = not_adopted(lines, codes, held, criteria, display)
+    judged = [c for c in classifications if not c.unknown_category]
     if not classifications:
         rows.append(_row("Label elements", "na", "Not checked: no classification read in "
                          "Section 2."))
         return rows
-    rows += signal_word(classifications, stated_signal, held)
-    rows += statements(classifications, codes, held)
-    rows += pictograms(classifications, lines, held)
+    rows += signal_word(judged, stated_signal, held)
+    rows += statements(classifications, codes, held, printed_as_text)
+    rows += pictograms(judged, lines, held)
     return rows

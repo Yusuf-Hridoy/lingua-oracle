@@ -203,3 +203,58 @@ def test_revision_dates_that_differ_are_one_to_check(tmp_path):
     report = check_pdf(str(tmp_path / "dates.pdf"), "eu_clp", "en")
     row = next(r for r in report.consistency if r.check == "C-20" and r.key == "Revision date")
     assert row.status == "check" and "not a requirement in the regulation" in row.citation
+
+
+# -- Section 2 as real sheets print it ----------------------------------------------
+
+def _lines_sheet(tmp_path, regulation, two, nine=(), name="r.pdf"):
+    bodies = {"2": list(two), "3": ["Synthetic component A  CAS 000-00-0  30-60%"]}
+    if nine:
+        bodies["9"] = list(nine)
+    path = structured_sheet(tmp_path / name, regulation=regulation, language="en", bodies=bodies)
+    return check_pdf(str(path), regulation, "en")
+
+
+def test_a_signal_word_on_the_line_below_its_label_is_read(tmp_path):
+    report = _lines_sheet(tmp_path, "eu_clp", ["Flam. Liq. 2", "Signal word", "Danger",
+                                               "H225"], nine=["Flash point: 10 °C",
+                                                              "Initial boiling point: 80 °C"])
+    assert ("Signal word", "ok") in _status(report, "C-16")
+
+
+def test_a_statement_printed_in_words_without_its_code_is_printed(tmp_path):
+    official = texts("us_osha", "en", ["H372"])["H372"]
+    words = official.split("<")[0].strip() + " through prolonged or repeated ingestion exposure"
+    report = _lines_sheet(tmp_path, "us_osha", [
+        "Specific Target Organ Toxicity (repeated exposure): Category 1.", "Signal word: Danger",
+        words])
+    row = next(r for r in _rows(report, "C-16") if r.key.startswith("Specific"))
+    assert row.status == "ok" and "printed in words" in row.text
+
+
+def test_a_code_beside_its_category_names_the_class(tmp_path):
+    report = _lines_sheet(tmp_path, "eu_clp", ["Classification", "H319", "Category 2",
+                                               "Signal word: Warning", "H319"])
+    assert ("H319 Category 2", "ok") in _status(report, "C-16")
+
+
+def test_a_category_the_regulation_does_not_have_is_one_to_check(tmp_path):
+    report = _lines_sheet(tmp_path, "eu_clp", ["Serious eye damage/eye irritation Category 2A",
+                                               "Signal word: Warning", "H319"])
+    row = next(r for r in _rows(report, "C-16") if "2A" in r.key)
+    assert row.status == "check" and "no such category" in row.text
+    assert not [r for r in _rows(report, "C-16") if r.key == "H319"]
+
+
+def test_a_class_name_containing_a_pictogram_name_is_not_a_pictogram(tmp_path):
+    report = _lines_sheet(tmp_path, "us_osha", ["Skin Corrosion/Irritation Category 2",
+                                                "Signal word: Warning", "H315"])
+    assert ("Pictograms", "na") in _status(report, "C-16")
+
+
+def test_a_flash_point_with_an_ordinal_degree_sign_is_read(tmp_path):
+    report = _lines_sheet(tmp_path, "us_osha", ["Flammable liquids - Category 2",
+                                                "Signal word: Danger", "H225"],
+                          nine=["Flash point: 6 ºC [Test Method: Closed Cup]",
+                                "Initial boiling point: 80 ºC"])
+    assert [r.status for r in _rows(report, "C-17")] == ["ok"]
