@@ -56,6 +56,9 @@ class ClassResult:
     calculated_class: str = ""
     #: Where a stated class was read into the sheet rather than printed on it.
     implied_from: str = ""
+    #: What the sheet itself says about test data, bridging or expert
+    #: judgement, quoted, where Section 2 differs from the calculation.
+    justification: list[str] = field(default_factory=list)
 
 
 #: Which hazard classes each rule can produce. A rule is only run where the
@@ -116,7 +119,8 @@ def _declared_total(ingredients) -> Decimal:
 def calculate(ingredients, stated: list[HazardClass], regulation: str,
               state: str | None = None, *,
               declared: Decimal | None = None,
-              acute_inputs: dict | None = None) -> tuple[list[ClassResult], dict]:
+              acute_inputs: dict | None = None,
+              justification: list[str] | None = None) -> tuple[list[ClassResult], dict]:
     """Compare what the ingredients give with what Section 2 states.
 
     The comparison is per hazard family, not per class: a sheet that states
@@ -188,13 +192,15 @@ def calculate(ingredients, stated: list[HazardClass], regulation: str,
                 message=f"Not covered by {_display(regulation)}."))
             continue
         results.append(_verdict(family, found, said, implied.get(family),
-                                undisclosed, declared, regulation))
+                                undisclosed, declared, regulation,
+                                justification or []))
 
     # Acute toxicity, by additivity, one family per route.
     acute_rules = _acute_rules(regulation)
     if acute_rules is not None and acute_inputs is not None:
         results += _acute_results(acute_rules, acute_inputs, stated, state,
-                                  undisclosed, declared, regulation)
+                                  undisclosed, declared, regulation,
+                                  justification or [])
 
     # Classes the sheet states that this tool does not compare at all.
     for hazard_class in stated:
@@ -328,7 +334,8 @@ def _words(name: str, values) -> str:
 
 
 def _acute_results(rules, inputs: dict, stated, state, undisclosed: Decimal,
-                   declared: Decimal, regulation: str) -> list[ClassResult]:
+                   declared: Decimal, regulation: str,
+                   justification: list[str]) -> list[ClassResult]:
     """One verdict per route, from the additivity runs, in the common model."""
     from lingua_oracle.mixture import acute
 
@@ -391,17 +398,44 @@ def _acute_results(rules, inputs: dict, stated, state, undisclosed: Decimal,
                 said = HazardClass(name, str(max(map(int, said_cats)) if calc
                                              else min(map(int, said_cats))))
         result = _verdict(family, found, said, None, undisclosed, declared,
-                          regulation)
+                          regulation, justification)
         if found is None and runs:
             result.trace = [line for r in runs for line in r.trace]
         out.append(result)
     return out
 
 
+def _differs(said_text: str, calculated_text: str) -> str:
+    """The sentence for a Section 2 that differs from the calculation.
+
+    The calculation from the law is the reference; Section 2 may differ from
+    it only for a reason the sheet can give - bridging principles, test data
+    on the mixture, expert judgement - and the sheet is asked for it.
+    """
+    stated = said_text or "nothing for this hazard"
+    subject = said_text or "leaving it out"
+    calculated = calculated_text or "no classification"
+    return (f"Section 2 states {stated}; calculated from the ingredients: "
+            f"{calculated}. If {subject} is based on bridging principles, test "
+            "data or expert judgement, the SDS must be able to justify it \u2014 "
+            "confirm which principle and which reference mixture.")
+
+
 def _verdict(family: str, found: _Family | None, said: HazardClass | None,
              implied, undisclosed: Decimal, declared: Decimal,
-             regulation: str) -> ClassResult:
-    """One endpoint, one verdict, in the words a reader can act on."""
+             regulation: str, justification: list[str] | None = None) -> ClassResult:
+    """One endpoint, one verdict, in the words a reader can act on.
+
+    Where Section 2 and the calculation agree, that is the verdict. Where they
+    differ, Section 2 is never taken as right for differing:
+
+    * Section 2 stricter than the calculation - including a hazard the
+      declared ingredients do not give - is one to check;
+    * Section 2 weaker, or silent on a hazard the ingredients give, is a fault
+      to fix - unless the sheet itself cites test data, bridging or expert
+      judgement, in which case it is one to check, with that text shown.
+    """
+    justification = list(justification or [])
     said_text = str(said) if said else ""
     calculated_text = str(found.hazard_class) if found else ""
     common = {
@@ -415,54 +449,39 @@ def _verdict(family: str, found: _Family | None, said: HazardClass | None,
         "calculated_low": found.at_low if found else "",
         "calculated_high": found.at_high if found else "",
     }
+    undisclosed_note = (f" The declared ingredients total {declared} %; the "
+                        f"undisclosed {undisclosed} % may also carry it."
+                        if undisclosed > 0 else "")
+
+    def stricter_section_two() -> ClassResult:
+        return ClassResult(verdict="cannot_tell",
+                           message=_differs(said_text, calculated_text) + undisclosed_note,
+                           justification=justification, **common)
+
+    def weaker_section_two() -> ClassResult:
+        return ClassResult(verdict="cannot_tell" if justification else "inconsistent",
+                           message=_differs(said_text, calculated_text),
+                           justification=justification, **common)
 
     if found is None:
         # Section 2 states a hazard the declared ingredients do not give.
-        if undisclosed > 0:
-            return ClassResult(
-                verdict="cannot_tell", message=(
-                    f"Section 2 lists {said_text} and the declared ingredients "
-                    f"do not give this hazard. It may come from the "
-                    f"undisclosed {undisclosed} %."),
-                **{**common, "assumptions": [
-                    f"the declared ingredients total {declared} %"]})
-        return ClassResult(
-            verdict="inconsistent", message=(
-                f"Section 2 lists {said_text} and the declared ingredients do "
-                "not give this hazard, with nothing undisclosed to explain "
-                "it."), **common)
+        return stricter_section_two()
 
     if found.disagreed:
-        return ClassResult(verdict="cannot_tell", message=found.message,
-                           **common)
+        return ClassResult(verdict="cannot_tell", message=found.message, **common)
 
     if said is None:
-        return ClassResult(
-            verdict="inconsistent", message=(
-                f"The declared ingredients give {calculated_text} and "
-                "Section 2 does not list this hazard."), **common)
+        return weaker_section_two()
 
     narcotic = _stot_se_3_against_1_or_2(found.hazard_class, said)
     if narcotic:
         return ClassResult(verdict="cannot_tell", message=narcotic, **common)
 
     if families.stricter(found.hazard_class, said):
-        return ClassResult(
-            verdict="inconsistent", message=(
-                f"The declared ingredients give {calculated_text}, which is "
-                f"stricter than the {said_text} Section 2 lists."), **common)
+        return weaker_section_two()
 
     if families.stricter(said, found.hazard_class):
-        if undisclosed > 0:
-            return ClassResult(
-                verdict="consistent", message=(
-                    f"Section 2 is stricter than the declared ingredients "
-                    f"give; this may come from the undisclosed "
-                    f"{undisclosed} %."), **common)
-        return ClassResult(
-            verdict="cannot_tell", message=(
-                "Check this: Section 2 is stricter than the ingredients "
-                "justify."), **common)
+        return stricter_section_two()
 
     return ClassResult(
         verdict="consistent",

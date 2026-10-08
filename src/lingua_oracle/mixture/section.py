@@ -210,8 +210,11 @@ def _build(rows, lines, spans, regulation: str, table,
     acute_inputs = {"ingredients": every, "entries": entries,
                     "section_11": eleven.by_cas,
                     "unknown": acute.unknown_share(lines)}
+    from lingua_oracle.mixture.stated import justifications
+
     results, summary = calculate(ingredients, stated, regulation, state,
-                                 declared=declared, acute_inputs=acute_inputs)
+                                 declared=declared, acute_inputs=acute_inputs,
+                                 justification=justifications(lines, spans))
     if eleven.mixture:
         assumptions.append("Section 11 gives for the mixture itself: "
                            + "; ".join(eleven.mixture))
@@ -263,6 +266,7 @@ def _as_dict(result) -> dict:
         "family": result.family, "stated_class": result.stated_class,
         "calculated_class": result.calculated_class,
         "implied_from": result.implied_from,
+        "justification": result.justification,
     }
 
 

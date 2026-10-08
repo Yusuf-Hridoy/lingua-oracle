@@ -47,3 +47,32 @@ def stated_classes(lines, spans) -> list[HazardClass]:
                 for hazard_class in acute_classes(code):
                     remember(hazard_class)
     return out
+
+
+#: What a sheet says when its classification rests on something other than
+#: the calculation: test data on the mixture, bridging, expert judgement.
+_JUSTIFIED = re.compile(
+    r"\b(bridging|test(?:ed)? data|tested|test results?|on the basis of (?:test|data)|"
+    r"based on (?:test|data|testing)|expert judg(?:e)?ment|weight of evidence)\b",
+    re.IGNORECASE)
+_ABOUT_MIXTURE = re.compile(r"\b(mixture|product|preparation)\b", re.IGNORECASE)
+
+
+def justifications(lines, spans) -> list[str]:
+    """Lines of Section 2, or Section 11 about the mixture, citing test data,
+    bridging or expert judgement - quoted, for a reader to weigh. Section 11's
+    tests on single ingredients are not a reason for the mixture's
+    classification and are left out."""
+    from lingua_oracle.detect.sections import section_of
+    from lingua_oracle.mixture.section_eleven import _lines as section_11_lines
+
+    out: list[str] = []
+    for index, line in enumerate(lines):
+        text = " ".join((line.text or "").split())
+        if section_of(spans, index) == "2" and _JUSTIFIED.search(text):
+            out.append(text[:200])
+    for text in section_11_lines(lines):
+        text = " ".join(text.split())
+        if _JUSTIFIED.search(text) and _ABOUT_MIXTURE.search(text):
+            out.append(text[:200])
+    return list(dict.fromkeys(out))

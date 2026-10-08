@@ -77,7 +77,8 @@ def test_a_calculated_class_the_sheet_lacks_is_inconsistent():
     results, _ = calculate([ing(30, 30, "H400")], [], "eu_clp")
     result = _about(results, "Aquatic Acute 1")
     assert result.verdict == "inconsistent"
-    assert "does not list this hazard" in result.message
+    assert result.message.startswith("Section 2 states nothing for this hazard; "
+                                     "calculated from the ingredients: Aquatic Acute 1.")
 
 
 def test_a_class_the_sheet_states_and_the_calculation_gives_is_consistent():
@@ -96,12 +97,15 @@ def test_a_stated_class_may_come_from_the_undisclosed_part():
     assert summary["undisclosed"] == "60"
 
 
-def test_with_nothing_undisclosed_a_stated_class_is_inconsistent():
+def test_with_nothing_undisclosed_a_stated_class_is_still_one_to_check():
+    """Section 2 may rest on test data or bridging; it is checked, not accused."""
     results, _ = calculate([ing(100, 100, "H315")], [parse_class("Carc. 1")],
                            "eu_clp")
     result = _about(results, "Carc. 1")
-    assert result.verdict == "inconsistent"
-    assert "nothing undisclosed" in result.message
+    assert result.verdict == "cannot_tell"
+    assert result.message.startswith("Section 2 states Carc. 1; calculated from "
+                                     "the ingredients: no classification.")
+    assert "undisclosed" not in result.message
 
 
 def test_a_class_outside_the_rules_is_not_calculated_rather_than_contradicted():

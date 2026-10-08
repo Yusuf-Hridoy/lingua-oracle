@@ -95,12 +95,13 @@ def test_the_declared_total_and_what_is_missing_from_it():
     assert report.mixture.undisclosed == "39"
 
 
-def test_section_two_being_stricter_about_the_skin_is_consistent():
+def test_section_two_being_stricter_about_the_skin_is_one_to_check():
     skin = _family(_check("eu_clp"), "Skin")
-    assert skin["verdict"] == "consistent"
+    assert skin["verdict"] == "cannot_tell"
     assert skin["stated_class"] == "Skin Corr. 1"
     assert skin["calculated_class"] == "Skin Irrit. 2"
-    assert "stricter than the declared ingredients" in skin["message"]
+    assert skin["message"].startswith("Section 2 states Skin Corr. 1; calculated "
+                                      "from the ingredients: Skin Irrit. 2.")
     assert "undisclosed 39 %" in skin["message"]
 
 
@@ -108,7 +109,7 @@ def test_the_eye_follows_from_the_skin_where_the_act_says_so():
     """CLP says a skin corrosive is to be considered as seriously damaging to
     the eye, so a sheet stating Skin Corr. 1 has stated Eye Dam. 1 too."""
     eye = _family(_check("eu_clp"), "Eye")
-    assert eye["verdict"] == "consistent"
+    assert eye["verdict"] == "cannot_tell"          # stricter than calculated
     assert eye["stated_class"] == "Eye Dam. 1"
     assert eye["calculated_class"] == "Eye Irrit. 2"
     assert "Skin Corr. 1 in Section 2 is also Eye Dam. 1" in eye["implied_from"]
@@ -131,7 +132,7 @@ def test_every_regulation_that_says_it_has_it_cited(regulation, where):
     assert found is not None, f"{regulation} has no implication on file"
     assert where in found.citation
     eye = _family(_check(regulation), "Eye")
-    assert eye["verdict"] == "consistent"
+    assert eye["verdict"] == "cannot_tell"
     assert eye["stated_class"] == "Eye Dam. 1"
     assert where in eye["implied_from"]
 
@@ -157,9 +158,9 @@ def test_narcotic_effects_against_a_target_organ_are_never_a_contradiction():
 def test_the_whole_sheet_produces_one_verdict_per_family():
     report = _check("eu_clp")
     assert [(r["hazard_class"], r["verdict"]) for r in report.mixture.results] == [
+        ("Eye", "cannot_tell"),
+        ("Skin", "cannot_tell"),
         ("Target organ toxicity, single exposure", "cannot_tell"),
-        ("Eye", "consistent"),
-        ("Skin", "consistent"),
     ]
 
 
@@ -180,7 +181,8 @@ def test_a_hazard_the_ingredients_give_and_section_two_omits():
     found = _family(report, "Respiratory sensitisation")
     assert found["verdict"] == "inconsistent"
     assert found["stated_class"] == ""
-    assert "Section 2 does not list this hazard" in found["message"]
+    assert found["message"].startswith("Section 2 states nothing for this hazard; "
+                                       "calculated from the ingredients: Resp. Sens. 1.")
 
 
 # -- on the page ---------------------------------------------------------------
@@ -202,7 +204,7 @@ def test_one_card_per_family_headed_by_the_endpoint():
 
     body = _page("eu_clp")
     cards = re.findall(r'data-section="mixture"[^>]*data-class="([^"]+)"', body)
-    assert cards == ["Target organ toxicity, single exposure", "Eye", "Skin"]
+    assert cards == ["Eye", "Skin", "Target organ toxicity, single exposure"]
 
 
 def test_a_card_puts_the_two_classifications_side_by_side():
@@ -215,8 +217,8 @@ def test_a_card_puts_the_two_classifications_side_by_side():
 def test_the_ingredient_table_is_under_its_family():
     body = _page("eu_clp")
     skin = body[body.index('data-class="Skin"'):]
-    assert "<th>Ingredient</th>" in skin[:4000]
-    assert "100-00-1" in skin[:4000]
+    assert "<th>Ingredient</th>" in skin[:6000]
+    assert "100-00-1" in skin[:6000]
 
 
 def test_plain_words_where_a_side_is_empty():
