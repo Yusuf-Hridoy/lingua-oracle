@@ -62,18 +62,19 @@ def tokens(text: str) -> list[str]:
 
 
 def _pattern(required: str) -> re.Pattern[str]:
-    """The required heading as a pattern over tokens: "hazard(s)" takes both."""
+    """The required heading as a pattern over its words, spaces and hyphens
+    set aside ("First Aid" is "First-aid"); "hazard(s)" takes both."""
     words = []
     for word in re.findall(r"[^\W_]+(?:\(s\))?", _fold(required)):
         if word.endswith("(s)"):
             words.append(re.escape(word[:-3]) + "s?")
         else:
             words.append(re.escape(word))
-    return re.compile(r"^" + r" ".join(words) + r"$")
+    return re.compile(r"^" + "".join(words) + r"$")
 
 
 def same_heading(found: str, required: str) -> bool:
-    return bool(_pattern(required).match(" ".join(tokens(found))))
+    return bool(_pattern(required).match("".join(tokens(found))))
 
 
 def _starts_with(found_tokens: list[str], required: str) -> int:
@@ -81,7 +82,7 @@ def _starts_with(found_tokens: list[str], required: str) -> int:
     start, or 0 where they do not."""
     pattern = _pattern(required)
     for end in range(len(found_tokens), 0, -1):
-        if pattern.match(" ".join(found_tokens[:end])):
+        if pattern.match("".join(found_tokens[:end])):
             return end
     return 0
 
@@ -103,6 +104,7 @@ _DATE = re.compile(
     r"\b\d{1,2}[./-]\d{1,2}[./-](?:\d{4}|\d{2})\b"
     r"|\b\d{4}[./-]\d{1,2}[./-]\d{1,2}\b"
     r"|\b\d{1,2}\.?\s+[^\W\d_]{3,}\.?,?\s+\d{4}\b"
+    r"|\b\d{1,2}-[^\W\d_]{3,9}\.?-\d{4}\b"
     r"|\b[^\W\d_]{3,}\.?\s+\d{1,2},?\s+\d{4}\b")
 _EMERGENCY = re.compile(r"emergenc|urgence|urgencia|notruf|notfall|nød|nöd|hätä",
                         re.IGNORECASE)
@@ -168,6 +170,70 @@ def _all_required(table: dict, number: str) -> list[str]:
     return list(table["sections"][int(number) - 1]["heading"].values())
 
 
+@functools.lru_cache(maxsize=1)
+def _every_heading() -> dict[str, tuple[str, ...]]:
+    """Each section's heading in every regulation and language on file: what
+    a heading line may read like, whichever text the sheet followed."""
+    out: dict[str, list[str]] = {str(n): [] for n in range(1, 17)}
+    for path in sorted((data_dir() / "sds_structure").glob("*.json")):
+        table = json.loads(path.read_text(encoding="utf-8"))
+        for section in table.get("sections", []):
+            out[section["number"]] += list(section["heading"].values())
+    return {k: tuple(v) for k, v in out.items()}
+
+
+def _overlap(found: str, number: str) -> float:
+    return max((_score(found, h) for h in _every_heading()[number]), default=0.0)
+
+
+def _title_like(text: str) -> bool:
+    """A heading's words, not a sentence: short, opening with a letter, no
+    sentence break inside."""
+    words = text.split()
+    return (0 < len(words) <= 10 and bool(re.match(r"[^\W\d_]", text))
+            and not re.search(r"[.;]\s+\S", text))
+
+
+def _below(lines, index: int, end: int | None = None) -> tuple[int, str]:
+    """The line directly below this one, in the same column: on a two-column
+    sheet the next line read may be the other column's, while the heading's
+    own continuation sits under it at the same left edge."""
+    here = lines[index]
+    height = max(here.bbox[3] - here.bbox[1], 6.0)
+    for k in range(index + 1, min(end or len(lines), index + 12)):
+        line = lines[k]
+        if line.page != here.page:
+            break
+        if line.bbox == (0.0, 0.0, 0.0, 0.0) or here.bbox == (0.0, 0.0, 0.0, 0.0):
+            return k, " ".join((line.text or "").split())   # no geometry: next line
+        if line.bbox[1] - here.bbox[1] > 2.5 * height:
+            break
+        if abs(line.bbox[0] - here.bbox[0]) <= 3 and line.bbox[1] > here.bbox[1] + 1:
+            return k, " ".join((line.text or "").split())
+    return -1, ""
+
+
+def _beside(lines, index: int) -> tuple[int, str]:
+    """The text on the same row to the right: a number printed in a column of
+    its own, its words in the next."""
+    here = lines[index]
+    for k in range(index + 1, min(len(lines), index + 4)):
+        line = lines[k]
+        if line.page != here.page:
+            break
+        if here.bbox == (0.0, 0.0, 0.0, 0.0):
+            return k, " ".join((line.text or "").split())
+        if abs(line.bbox[1] - here.bbox[1]) <= 2 and line.bbox[0] > here.bbox[2]:
+            return k, " ".join((line.text or "").split())
+    return -1, ""
+
+
+def _continues(text: str) -> bool:
+    """A line that carries on the one above: opens in lower case, is short,
+    and is not itself numbered."""
+    return bool(re.match(r"^[^\W\d_A-ZÀ-ÞΑ-ΩА-Я]", text)) and len(text.split()) <= 8
+
+
 def _find_headings(document: Document, table: dict, language: str) -> list[_Heading]:
     lines = document.raw_lines
     labels = "|".join(re.escape(w) for w in _labels(table, language))
@@ -175,9 +241,8 @@ def _find_headings(document: Document, table: dict, language: str) -> list[_Head
                         re.IGNORECASE)
     after = re.compile(rf"^\s*(\d{{1,2}})\s*\.?\s*(?:{labels})\b\s*[.:)\-—–]*\s*(?P<rest>.*)$",
                        re.IGNORECASE)
-    bare = re.compile(r"^\s*(\d{1,2})(?![.,]?\d)\s*[.:)]?\s+(?P<rest>[^\W\d_].*)$")
-    found: list[_Heading] = []
-    seen: set[str] = set()
+    bare = re.compile(r"^\s*(\d{1,2})(?![.,]?\d)\s*[.:)]?\s*(?P<rest>[^\W\d_].*)$")
+    best: dict[str, tuple[float, _Heading]] = {}
     for index, line in enumerate(lines):
         text = " ".join((line.text or "").split())
         if not text or len(text) > 200:
@@ -190,28 +255,41 @@ def _find_headings(document: Document, table: dict, language: str) -> list[_Head
         if not 1 <= int(printed) <= 16:
             continue
         rest = match.group("rest").strip()
-        # A heading wrapped onto the next line: take it in while it helps.
-        if index + 1 < len(lines):
-            joined = f"{rest} {' '.join((lines[index + 1].text or '').split())}"
-            options = _all_required(table, printed)
-            if (any(_starts_with(tokens(joined), r) > len(tokens(rest)) for r in options)
-                    and not any(same_heading(rest, r) for r in options)):
-                rest = joined
-        own = max((_score(rest, r) for r in _all_required(table, printed)), default=0)
-        best_number, best = printed, own
+        _, following = _below(lines, index)
+        if not rest:
+            _, beside = _beside(lines, index)
+            words = beside or (following if labelled else "")
+            if words and not re.match(r"^\d", words):
+                rest = words                     # its words beside it, or below
+                following = ""
+        elif rest and following and _continues(following) and not re.search(r"[.:]$", rest):
+            rest = f"{rest} {following}"         # a heading wrapped onto the next line
+        own = _overlap(rest, printed)
+        # A numbered line is a heading when it reads as one: a title that
+        # shares words with this section's heading in some text on file. A
+        # numbered step in Section 4, or a sentence opening "Section 8 on
+        # suitable materials", is not.
+        # A line opening with the section label is a heading when it reads as
+        # a title, whatever its words; a bare number needs its words too.
+        if labelled is not None:
+            if not (own >= 0.5 or _title_like(rest)):
+                continue
+        elif not (own >= 0.5 or (_title_like(rest) and own > 0)):
+            continue
+        best_number, best_score = printed, own
         for k in range(1, 17):
-            score = max((_score(rest, r) for r in _all_required(table, str(k))), default=0)
-            if score > best:
-                best_number, best = str(k), score
-        if labelled is None and best < 0.5:
-            continue                     # a numbered line of content, not a heading
-        misnumbered = best_number != printed and best >= 0.75 and own < 0.5
+            score = _overlap(rest, str(k))
+            if score > best_score:
+                best_number, best_score = str(k), score
+        misnumbered = best_number != printed and best_score >= 0.75 and own < 0.34
         number = best_number if misnumbered else printed
-        if number in seen:
-            continue                     # a running head repeating the heading
-        seen.add(number)
-        found.append(_Heading(index, line.page, printed, number, rest, text, misnumbered))
-    return found
+        heading = _Heading(index, line.page, printed, number, rest, text, misnumbered)
+        held = best.get(number)
+        # The same number twice - a running head, a mention - is the line
+        # that reads most like the heading; the first where they tie.
+        if held is None or own > held[0]:
+            best[number] = (own, heading)
+    return sorted((h for _, h in best.values()), key=lambda h: h.line)
 
 
 def _spans(headings: list[_Heading], total: int) -> dict[str, tuple[int, int]]:
@@ -223,14 +301,38 @@ def _spans(headings: list[_Heading], total: int) -> dict[str, tuple[int, int]]:
     return out
 
 
-def _subsections(lines, start: int, end: int, number: str) -> list[_Sub]:
+def _subsections(lines, start: int, end: int, number: str,
+                 wording: dict[str, str] | None = None) -> list[_Sub]:
+    """The numbered sub-sections between a section's heading and the next.
+    A sub-heading whose number stands alone on its line takes its words from
+    the line below; one wrapped onto the next line is joined where that
+    brings it closer to the text's words."""
     pattern = re.compile(rf"^\s*{number}\.(\d{{1,2}})(?![\d,])\.?\s*(?P<rest>.*)$")
+    wording = wording or {}
     subs: list[_Sub] = []
+    taken: set[int] = set()
     for index in range(start + 1, end):
+        if index in taken:
+            continue
         text = " ".join((lines[index].text or "").split())
         found = pattern.match(text)
         if found and not re.match(r"^\d", found.group("rest") or "x"):
-            subs.append(_Sub(f"{number}.{found.group(1)}", index, found.group("rest")))
+            sub_number, rest = f"{number}.{found.group(1)}", found.group("rest")
+            at, following = _below(lines, index, end)
+            if not rest:
+                at, following = _beside(lines, index)
+                if at < 0:
+                    at, following = _below(lines, index, end)
+            if following and not pattern.match(following):
+                required = wording.get(sub_number, "")
+                if not rest:
+                    rest = following
+                    taken.add(at)
+                elif required and _starts_with(tokens(f"{rest} {following}"), required) > \
+                        _starts_with(tokens(rest), required):
+                    rest = f"{rest} {following}"
+                    taken.add(at)
+            subs.append(_Sub(sub_number, index, rest))
         elif subs:
             subs[-1].content.append(text)
     return subs
@@ -332,7 +434,9 @@ def _section_body(result, table, section, lines, start, end, rules, language,
     content = [c for c in content if c]
     required_subs = section.get("subsections") or []
     if required_subs:
-        subs = {s.number: s for s in _subsections(lines, start, end, number)}
+        tag = language.split("-")[0]
+        wording = {s["number"]: s["heading"].get(tag, "") for s in required_subs}
+        subs = {s.number: s for s in _subsections(lines, start, end, number, wording)}
         one_of = next((g for g in table.get("one_of", []) if required_subs[0]["number"] in g
                        or any(s["number"] in g for s in required_subs)), [])
         binding = bool(rules["subheadings"] and rules["subheadings"]["binding"])

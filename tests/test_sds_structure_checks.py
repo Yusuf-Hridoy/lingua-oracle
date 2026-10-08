@@ -151,3 +151,67 @@ def test_a_sheet_printing_the_texts_own_s_in_brackets_matches_it():
     assert same_heading("Utilisation(s) finale(s) particulière(s)",
                         "Utilisation(s) finale(s) particulière(s)")
     assert same_heading("Specific end uses", "Specific end use(s)")
+
+
+# -- headings as real sheets lay them out -------------------------------------------
+
+def _columns(path, rows):
+    """A page drawn cell by cell: rows of (x, text), each row one baseline."""
+    from reportlab.lib.pagesizes import A4
+    from reportlab.pdfgen import canvas
+
+    page = canvas.Canvas(str(path), pagesize=A4)
+    y = A4[1] - 60
+    for row in rows:
+        for x, text in row:
+            page.drawString(x, y, text)
+        y -= 13
+    page.save()
+    return str(path)
+
+
+def _subs(path, regulation="eu_clp"):
+    from lingua_oracle.extract import extract
+    from lingua_oracle.structure.reader import read
+
+    report = read(extract(path), regulation, "en")
+    return {r.key.split()[0]: r for s in report.sections for r in s.rows if r.check == "B-13"}
+
+
+def test_a_sub_heading_wrapped_beside_another_column_is_joined(tmp_path):
+    path = _columns(tmp_path / "wrap.pdf", [
+        [(40, "SECTION 12: Ecological information")],
+        [(40, "12.1. Toxicity"), (300, "no data")],
+        [(40, "12.2. Persistence and"), (300, "readily degradable")],
+        [(40, "degradability")],
+    ])
+    rows = _subs(path)
+    assert rows["12.2"].status == "ok", rows["12.2"].text
+
+
+def test_a_number_in_a_column_of_its_own_takes_the_words_beside_it(tmp_path):
+    path = _columns(tmp_path / "beside.pdf", [
+        [(40, "SECTION 7: Handling and storage")],
+        [(40, "7.1"), (80, "Precautions for safe handling")],
+        [(80, "—")],
+    ])
+    assert _subs(path)["7.1"].status == "ok"
+
+
+def test_a_sentence_naming_a_section_is_not_its_heading(tmp_path):
+    from lingua_oracle.extract import extract
+    from lingua_oracle.structure.reader import read
+
+    path = _columns(tmp_path / "mention.pdf", [
+        [(40, "SECTION 7: Handling and storage")],
+        [(40, "Section 8 on suitable and unsuitable materials. See also the label")],
+        [(40, "SECTION 8: Exposure controls/personal protection")],
+    ])
+    eight = next(s for s in read(extract(path), "eu_clp", "en").sections if s.number == "8")
+    assert eight.heading == "SECTION 8: Exposure controls/personal protection"
+
+
+def test_spaces_and_hyphens_inside_a_heading_are_punctuation():
+    assert same_heading("First Aid Measures", "First-aid measures")
+    assert same_heading("Fire Fighting Measures", "Firefighting measures")
+    assert not same_heading("Hazards Identification", "Hazard identification")
