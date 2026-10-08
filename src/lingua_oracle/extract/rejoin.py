@@ -52,16 +52,36 @@ _NEW_ITEM_AFTER_SENTENCE_RE = re.compile(
 )
 
 
+#: The words a legend or glossary block opens with. A line that ends a
+#: statement and then starts one of these, broken by a hyphen - "... exposure.
+#: Abbrevi-" - carries the block's first syllables, and the rest of the word is
+#: on a line that is never joined back (overleaf, or capitalised).
+_LEGEND_WORDS = (
+    "abbreviations", "acronyms", "legend", "glossary", "references", "revision",
+    "notes", "explanation", "abkürzungen", "abréviations", "abreviaturas",
+    "forkortelser", "afkortingen", "förkortningar", "legende", "légende",
+    "leyenda", "legenda",
+)
+_FRAGMENT_AFTER_SENTENCE_RE = re.compile(r"(?<=[.!?])\s+(?P<fragment>[^\W\d_]{2,})-\s*$")
+
+
 def cut_at_new_item(text: str) -> str:
     """Text up to the point where a new item starts after a finished sentence.
 
     A statement that runs to the end of its line is followed, on real sheets, by
     whatever the section holds next - a glossary, a footnote, a revision note.
     Without this the statement swallows it and fails against wording it never
-    claimed to be.
+    claimed to be. That includes the opening syllables of such a block broken
+    at the line end ("Abbrevi-"), which no statement ends with.
     """
     match = _NEW_ITEM_AFTER_SENTENCE_RE.search(text or "")
-    return text[: match.start()].rstrip() if match else text
+    if match:
+        return text[: match.start()].rstrip()
+    fragment = _FRAGMENT_AFTER_SENTENCE_RE.search(text or "")
+    if fragment and any(word.startswith(fragment.group("fragment").casefold())
+                        for word in _LEGEND_WORDS):
+        return text[: fragment.start()].rstrip()
+    return text
 
 
 def starts_new_block(text: str) -> bool:
