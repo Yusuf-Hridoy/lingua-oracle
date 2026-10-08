@@ -1195,10 +1195,9 @@ def test_every_source_row_says_where_to_download_it():
     for source in SOURCES:
         assert source.title and source.edition and source.added
         assert source.used_by
-        # Two documents have no recorded link, and say so rather than guessing:
-        # the Japanese file, and the WHS Regulations, which print none.
+        # One document has no recorded link, and says so rather than guessing.
         if source.url is None:
-            assert "japan" in source.path or "model_whs_regulations" in source.path
+            assert "japan" in source.path
         else:
             assert source.url.startswith("https://")
 

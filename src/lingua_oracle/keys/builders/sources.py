@@ -109,7 +109,8 @@ SOURCES: tuple[Source, ...] = (
                    "guidance (AUH statements), on file since 2026-09-29"),
     Source("australia/model_whs_regulations_2025-12-05.pdf",
            "Model Work Health and Safety Regulations", "as at 5 December 2025",
-           None,
+           "https://www.safeworkaustralia.gov.au/sites/default/files/2025-12/"
+           "model-whs-regulations-5_december_2025.pdf",
            "2026-10-08", "section16",
            version="Model Work Health and Safety Regulations as at 5 December 2025 "
                    "(Safe Work Australia)"),
