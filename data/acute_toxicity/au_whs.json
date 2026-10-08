@@ -1,0 +1,201 @@
+{
+  "regulation": "au_whs",
+  "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+  "bands": {
+    "oral": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "5"
+      },
+      {
+        "category": "2",
+        "low": "5",
+        "high": "50"
+      },
+      {
+        "category": "3",
+        "low": "50",
+        "high": "300"
+      },
+      {
+        "category": "4",
+        "low": "300",
+        "high": "2000"
+      }
+    ],
+    "dermal": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "50"
+      },
+      {
+        "category": "2",
+        "low": "50",
+        "high": "200"
+      },
+      {
+        "category": "3",
+        "low": "200",
+        "high": "1000"
+      },
+      {
+        "category": "4",
+        "low": "1000",
+        "high": "2000"
+      }
+    ],
+    "gases": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "100"
+      },
+      {
+        "category": "2",
+        "low": "100",
+        "high": "500"
+      },
+      {
+        "category": "3",
+        "low": "500",
+        "high": "2500"
+      },
+      {
+        "category": "4",
+        "low": "2500",
+        "high": "20000"
+      }
+    ],
+    "vapours": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "0.5"
+      },
+      {
+        "category": "2",
+        "low": "0.5",
+        "high": "2.0"
+      },
+      {
+        "category": "3",
+        "low": "2.0",
+        "high": "10.0"
+      },
+      {
+        "category": "4",
+        "low": "10.0",
+        "high": "20.0"
+      }
+    ],
+    "dusts_mists": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "0.05"
+      },
+      {
+        "category": "2",
+        "low": "0.05",
+        "high": "0.5"
+      },
+      {
+        "category": "3",
+        "low": "0.5",
+        "high": "1.0"
+      },
+      {
+        "category": "4",
+        "low": "1.0",
+        "high": "5.0"
+      }
+    ]
+  },
+  "bands_from": {
+    "value": null,
+    "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+    "section": "Table 3.1.1",
+    "page": 121,
+    "raw": ""
+  },
+  "conversion": {
+    "oral": {
+      "1": "0.5",
+      "2": "5",
+      "3": "100",
+      "4": "500"
+    },
+    "dermal": {
+      "1": "5",
+      "2": "50",
+      "3": "300",
+      "4": "1100"
+    },
+    "gases": {
+      "1": "10",
+      "2": "100",
+      "3": "700",
+      "4": "4500"
+    },
+    "vapours": {
+      "1": "0.05",
+      "2": "0.5",
+      "3": "3",
+      "4": "11"
+    },
+    "dusts_mists": {
+      "1": "0.005",
+      "2": "0.05",
+      "3": "0.5",
+      "4": "1.5"
+    }
+  },
+  "conversion_from": {
+    "value": null,
+    "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+    "section": "Table 3.1.2",
+    "page": 125,
+    "raw": ""
+  },
+  "relevance": {
+    "value": "1",
+    "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+    "section": "3.1.3.3(a)",
+    "page": 124,
+    "raw": "relevant ingredients” of a mixture are those which are present in concentrations ≥ 1%"
+  },
+  "unknown_threshold": {
+    "value": "10",
+    "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+    "section": "3.1.3.6.2.3",
+    "page": 128,
+    "raw": "unknown acute toxicity is ≤ 10%"
+  },
+  "formula": {
+    "value": "ATE of the mixture is determined by calculation from the ATE values for all relevant ingredients according to the following formula below for oral. dermal or inhalation toxicity:   n i ATE i C ATEmix 100 where: Ci = concentration of ingredient i",
+    "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+    "section": "3.1.3.6.1",
+    "page": 127,
+    "raw": "ATE of the mixture is determined by calculation from the ATE values for all relevant ingredients according to the following formula below for oral, dermal or inhalation toxicity:   n i ATE i C ATEmix 100 where: Ci = concentration of ingredient i"
+  },
+  "ingredient_limit": {
+    "oral": "2000",
+    "dermal": "2000",
+    "gases": "20000",
+    "vapours": "20.0",
+    "dusts_mists": "5.0"
+  },
+  "ingredient_limit_from": {
+    "value": null,
+    "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+    "section": "3.1.3.6.1(a), Category 5 excluded",
+    "page": null,
+    "raw": ""
+  },
+  "notes": [
+    "dermal Category 5 band read from Table 3.1.2, where Table 3.1.1 prints one cell for two routes",
+    "Category 5 excluded: “acute toxicity – oral, dermal and inhalation – category 5” (Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, Appendix A, hazardous chemical, page 12)"
+  ]
+}

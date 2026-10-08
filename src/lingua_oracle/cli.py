@@ -197,6 +197,16 @@ def keys_build(
                 typer.secho(f"      {note}", fg=typer.colors.BLUE)
         return
 
+    if regulation == "acute_toxicity":
+        # Not an answer key: each regulation's acute toxicity bands, conversion
+        # table and mixture rules, read out of its own text.
+        from lingua_oracle.keys.builders import acute_toxicity
+
+        for reg_id in ("eu_clp", "uk_clp", "un_ghs", "au_whs", "ca_whmis", "us_osha"):
+            path = acute_toxicity.write(reg_id, use_cache=not no_cache)
+            typer.secho(f"  {reg_id}: -> {path}")
+        return
+
     if regulation == "annex_vi":
         # Not an answer key: the harmonised classifications a substance is
         # judged against, which live in their own file.

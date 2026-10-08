@@ -41,7 +41,17 @@ FAMILIES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Hazardous to the aquatic environment, long-term", ("Aquatic Chronic",)),
 )
 
-_FAMILY_OF = {name: family for family, names in FAMILIES for name in names}
+#: Acute toxicity, one family per route. Calculated by additivity in
+#: `mixture/acute.py` rather than by the cut-off rules, so kept out of
+#: FAMILIES - whose loop compares cut-off results - but known here, so the
+#: comparison and the report treat them like every other family.
+ACUTE_FAMILIES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("Acute toxicity, oral", ("Acute Tox. (oral)",)),
+    ("Acute toxicity, dermal", ("Acute Tox. (dermal)",)),
+    ("Acute toxicity, inhalation", ("Acute Tox. (inhalation)",)),
+)
+_FAMILY_OF = {name: family for family, names in (*FAMILIES, *ACUTE_FAMILIES)
+              for name in names}
 
 
 def family_of(hazard_class: HazardClass | str | None) -> str | None:
@@ -54,7 +64,8 @@ def family_of(hazard_class: HazardClass | str | None) -> str | None:
 
 
 def classes_in(family: str) -> tuple[str, ...]:
-    return next(names for name, names in FAMILIES if name == family)
+    return next(names for name, names in (*FAMILIES, *ACUTE_FAMILIES)
+                if name == family)
 
 
 @dataclass(frozen=True, eq=False)

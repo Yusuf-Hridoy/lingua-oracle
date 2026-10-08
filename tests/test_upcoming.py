@@ -175,7 +175,9 @@ def _mixture(rows, upcoming, table, on, stated=None):
 def test_a_class_the_atp_removes_passes_before_the_date(table, upcoming):
     rows = [{"cas": P4S3, "name": None, "h_codes": [], "concentration": "50 %"}]
     before = _mixture(rows, upcoming, table, BEFORE)
-    assert before.counts["inconsistent"] == 0
+    aquatic = [r for r in before.results
+               if r["family"] == "Hazardous to the aquatic environment, short-term"]
+    assert all(r["verdict"] != "inconsistent" for r in aquatic)
     assert before.upcoming[0].startswith(
         "Hazardous to the aquatic environment, short-term: consistent with "
         "Annex VI as amended by the 23rd ATP")

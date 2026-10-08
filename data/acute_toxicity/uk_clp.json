@@ -1,0 +1,198 @@
+{
+  "regulation": "uk_clp",
+  "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+  "bands": {
+    "oral": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "5"
+      },
+      {
+        "category": "2",
+        "low": "5",
+        "high": "50"
+      },
+      {
+        "category": "3",
+        "low": "50",
+        "high": "300"
+      },
+      {
+        "category": "4",
+        "low": "300",
+        "high": "2000"
+      }
+    ],
+    "dermal": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "50"
+      },
+      {
+        "category": "2",
+        "low": "50",
+        "high": "200"
+      },
+      {
+        "category": "3",
+        "low": "200",
+        "high": "1000"
+      },
+      {
+        "category": "4",
+        "low": "1000",
+        "high": "2000"
+      }
+    ],
+    "gases": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "100"
+      },
+      {
+        "category": "2",
+        "low": "100",
+        "high": "500"
+      },
+      {
+        "category": "3",
+        "low": "500",
+        "high": "2500"
+      },
+      {
+        "category": "4",
+        "low": "2500",
+        "high": "20000"
+      }
+    ],
+    "vapours": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "0.5"
+      },
+      {
+        "category": "2",
+        "low": "0.5",
+        "high": "2.0"
+      },
+      {
+        "category": "3",
+        "low": "2.0",
+        "high": "10.0"
+      },
+      {
+        "category": "4",
+        "low": "10.0",
+        "high": "20.0"
+      }
+    ],
+    "dusts_mists": [
+      {
+        "category": "1",
+        "low": "0",
+        "high": "0.05"
+      },
+      {
+        "category": "2",
+        "low": "0.05",
+        "high": "0.5"
+      },
+      {
+        "category": "3",
+        "low": "0.5",
+        "high": "1.0"
+      },
+      {
+        "category": "4",
+        "low": "1.0",
+        "high": "5.0"
+      }
+    ]
+  },
+  "bands_from": {
+    "value": null,
+    "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+    "section": "Annex I, Table 3.1.1",
+    "page": 140,
+    "raw": ""
+  },
+  "conversion": {
+    "oral": {
+      "1": "0.5",
+      "2": "5",
+      "3": "100",
+      "4": "500"
+    },
+    "dermal": {
+      "1": "5",
+      "2": "50",
+      "3": "300",
+      "4": "1100"
+    },
+    "gases": {
+      "1": "10",
+      "2": "100",
+      "3": "700",
+      "4": "4500"
+    },
+    "vapours": {
+      "1": "0.05",
+      "2": "0.5",
+      "3": "3",
+      "4": "11"
+    },
+    "dusts_mists": {
+      "1": "0.005",
+      "2": "0.05",
+      "3": "0.5",
+      "4": "1.5"
+    }
+  },
+  "conversion_from": {
+    "value": null,
+    "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+    "section": "Annex I, Table 3.1.2",
+    "page": 145,
+    "raw": ""
+  },
+  "relevance": {
+    "value": "1",
+    "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+    "section": "Annex I, 3.1.3.3(a)",
+    "page": 142,
+    "raw": "relevant ingredients’ of a mixture are those which are present in concentrations of 1 %"
+  },
+  "unknown_threshold": {
+    "value": "10",
+    "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+    "section": "Annex I, 3.1.3.6.2.3",
+    "page": 145,
+    "raw": "unknown acute toxicity is ≤ 10 %"
+  },
+  "formula": {
+    "value": "ATE of the mixture is determined by calculation from the ATE values for all relevant ingredients according to the following formula for Oral. Dermal or Inhalation Toxicity: where: Ci = concentration of ingredient i ( % w/w or % v/v) i = the individual ingredient from 1 to n n = the number of ingredients ATEi = Acute Toxicity Estimate of ingredient i",
+    "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+    "section": "Annex I, 3.1.3.6.1",
+    "page": 144,
+    "raw": "ATE of the mixture is determined by calculation from the ATE values for all relevant ingredients according to the following formula for Oral, Dermal or Inhalation Toxicity: where: Ci = concentration of ingredient i ( % w/w or % v/v) i = the individual ingredient from 1 to n n = the number of ingredi"
+  },
+  "ingredient_limit": {
+    "oral": "2000",
+    "dermal": "2000",
+    "gases": "20000",
+    "vapours": "20.0",
+    "dusts_mists": "5.0"
+  },
+  "ingredient_limit_from": {
+    "value": null,
+    "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+    "section": "Annex I, 3.1.3.6.1(a)",
+    "page": 144,
+    "raw": "include ingredients with a known acute toxicity, which fall into any of the acute hazard categories shown in Table 3.1.1"
+  },
+  "notes": []
+}

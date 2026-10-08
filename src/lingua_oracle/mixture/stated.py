@@ -12,7 +12,7 @@ import re
 
 from lingua_oracle.detect.codes import CODE_RE
 from lingua_oracle.detect.hazard_classes import is_listed_hazard_class
-from lingua_oracle.mixture.classes import HazardClass, class_of, parse_class
+from lingua_oracle.mixture.classes import HazardClass, acute_classes, class_of, parse_class
 
 #: "Skin Corr. 1B", "Aquatic Chronic 3" - a class token as Annex VI writes it.
 #: Checked against the committed class list rather than against the shape:
@@ -42,4 +42,8 @@ def stated_classes(lines, spans) -> list[HazardClass]:
             code = match.group(0).upper().replace(" ", "")
             if code.startswith("H"):
                 remember(class_of(match.group(0).strip()) or class_of(code))
+                # Acute toxicity by route: the class name says the route, and
+                # a code covering two categories states both.
+                for hazard_class in acute_classes(code):
+                    remember(hazard_class)
     return out

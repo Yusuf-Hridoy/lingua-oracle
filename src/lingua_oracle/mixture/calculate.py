@@ -115,7 +115,8 @@ def _declared_total(ingredients) -> Decimal:
 
 def calculate(ingredients, stated: list[HazardClass], regulation: str,
               state: str | None = None, *,
-              declared: Decimal | None = None) -> tuple[list[ClassResult], dict]:
+              declared: Decimal | None = None,
+              acute_inputs: dict | None = None) -> tuple[list[ClassResult], dict]:
     """Compare what the ingredients give with what Section 2 states.
 
     The comparison is per hazard family, not per class: a sheet that states
@@ -189,10 +190,18 @@ def calculate(ingredients, stated: list[HazardClass], regulation: str,
         results.append(_verdict(family, found, said, implied.get(family),
                                 undisclosed, declared, regulation))
 
+    # Acute toxicity, by additivity, one family per route.
+    acute_rules = _acute_rules(regulation)
+    if acute_rules is not None and acute_inputs is not None:
+        results += _acute_results(acute_rules, acute_inputs, stated, state,
+                                  undisclosed, declared, regulation)
+
     # Classes the sheet states that this tool does not compare at all.
     for hazard_class in stated:
         if families.family_of(hazard_class) is not None:
             continue
+        if acute_rules is not None and hazard_class.name.startswith("Acute Tox"):
+            continue   # compared above, route by route, from the codes
         name = str(hazard_class)
         if (hazard_class.name in _ALL_CLASSES
                 and not table.covers_class(hazard_class.name)):
@@ -300,6 +309,92 @@ def _implied(stated: list[HazardClass], table: RuleTable
             continue
         out[family] = (implied, f"{hazard_class} in Section 2 is also "
                                 f"{implied} - {found.citation}")
+    return out
+
+
+def _acute_rules(regulation: str):
+    from lingua_oracle.mixture import acute_table
+
+    return acute_table.load(regulation)
+
+
+@dataclass(frozen=True)
+class _Cited:
+    citation: str
+
+
+def _words(name: str, values) -> str:
+    return " or ".join(f"{name} {v}" if v else "no classification" for v in values)
+
+
+def _acute_results(rules, inputs: dict, stated, state, undisclosed: Decimal,
+                   declared: Decimal, regulation: str) -> list[ClassResult]:
+    """One verdict per route, from the additivity runs, in the common model."""
+    from lingua_oracle.mixture import acute
+
+    calculated = acute.calculate(
+        inputs["ingredients"], rules, state, entries=inputs.get("entries"),
+        section_11=inputs.get("section_11"), unknown=inputs.get("unknown"))
+    said_by_route = acute.stated_categories(stated)
+    out: list[ClassResult] = []
+    for route in acute.ROUTES:
+        name, family = acute.CLASS_NAME[route], acute.FAMILY[route]
+        said_cats = said_by_route.get(route, set())
+        data = calculated.get(route)
+        if data is None and not said_cats:
+            continue
+        runs = data["runs"] if data else []
+        cats = {r.category for r in runs}
+        found = None
+        if runs and cats != {None}:
+            ranked = sorted((c for c in cats if c), key=int)
+            hazard_class = HazardClass(name, ranked[0])
+            by_end = {end: sorted({r.category or "" for r in runs if r.end == end})
+                      for end in ("low", "high")}
+
+            disagreed = len(cats) > 1
+            message = ""
+            if disagreed:
+                reasons = []
+                if by_end["low"] != by_end["high"]:
+                    reasons.append(f"at the low end of the declared ranges the "
+                                   f"mixture is {_words(name, by_end['low'])}, at "
+                                   f"the high end {_words(name, by_end['high'])}")
+                if data["variants"] > 1:
+                    reasons.append("an ingredient's H code covers two categories, "
+                                   "and they give different answers")
+                if len(data["forms"]) > 1:
+                    reasons.append("Section 9 does not say whether the mixture is "
+                                   "a liquid or a solid, and vapour and dust/mist "
+                                   "give different answers")
+                message = ("Depends on the exact composition: "
+                           + "; ".join(reasons or ["the runs disagree"]) + ".")
+            found = _Family(
+                hazard_class=hazard_class,
+                winner=_Cited(f"{rules.citations['formula']}; bands "
+                              f"{rules.citations['bands']}"),
+                disagreed=disagreed, message=message,
+                at_low=_words(name, by_end["low"]),
+                at_high=_words(name, by_end["high"]),
+                assumptions=[f"ingredients below {rules.relevance} % are not "
+                             f"relevant ({rules.citations['relevance']})"],
+                trace=[line for r in runs for line in r.trace],
+                contributions=data["contributions"])
+        said = None
+        if said_cats:
+            calc = found.hazard_class.category if found and not found.disagreed else None
+            if calc in said_cats:
+                said = HazardClass(name, calc)
+            elif calc is not None and int(calc) < min(map(int, said_cats)):
+                said = HazardClass(name, str(min(map(int, said_cats))))
+            else:
+                said = HazardClass(name, str(max(map(int, said_cats)) if calc
+                                             else min(map(int, said_cats))))
+        result = _verdict(family, found, said, None, undisclosed, declared,
+                          regulation)
+        if found is None and runs:
+            result.trace = [line for r in runs for line in r.trace]
+        out.append(result)
     return out
 
 

@@ -105,6 +105,30 @@ STOT_SE_3_EFFECT = {
 }
 
 
+#: The acute toxicity statements: the route each is for, and the categories it
+#: is assigned to (Annex I Table 3.1.3). H300, H310 and H330 cover two
+#: categories each, so a code alone does not say which.
+ACUTE_CODES: dict[str, tuple[str, tuple[str, ...]]] = {
+    "H300": ("oral", ("1", "2")), "H301": ("oral", ("3",)),
+    "H302": ("oral", ("4",)), "H303": ("oral", ("5",)),
+    "H310": ("dermal", ("1", "2")), "H311": ("dermal", ("3",)),
+    "H312": ("dermal", ("4",)), "H313": ("dermal", ("5",)),
+    "H330": ("inhalation", ("1", "2")), "H331": ("inhalation", ("3",)),
+    "H332": ("inhalation", ("4",)), "H333": ("inhalation", ("5",)),
+}
+ACUTE_CLASS = {"oral": "Acute Tox. (oral)", "dermal": "Acute Tox. (dermal)",
+               "inhalation": "Acute Tox. (inhalation)"}
+
+
+def acute_classes(code: str) -> list[HazardClass]:
+    """The route-specific acute classes a code states - two where it covers two."""
+    found = ACUTE_CODES.get((code or "").strip().upper())
+    if found is None:
+        return []
+    route, cats = found
+    return [HazardClass(ACUTE_CLASS[route], c) for c in cats]
+
+
 def class_of(code: str) -> HazardClass | None:
     """The hazard class a statement code stands for, or None if not mapped."""
     return CODE_TO_CLASS.get((code or "").strip())

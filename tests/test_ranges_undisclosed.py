@@ -37,7 +37,7 @@ def test_an_ingredient_no_rule_can_use_still_counts_as_declared():
     # Water has no classification and no list entry. It used to drop out of
     # the total, and 37.5 % of a fully declared mixture was called undisclosed.
     found = _coolant()
-    assert any("count towards the total" in a and "7732-18-5" in a
+    assert any("count towards the total" in a and "Water" in a
                for a in found.assumptions)
 
 

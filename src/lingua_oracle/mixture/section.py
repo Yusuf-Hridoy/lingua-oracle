@@ -163,6 +163,9 @@ def _build(rows, lines, spans, regulation: str, table,
     #: not - water, say. They are declared, so they count towards the total
     #: and are not undisclosed; no rule can use them, and that is said.
     unknown: list[tuple[str, object]] = []
+    #: Every ingredient with a concentration, whatever it is classified as:
+    #: acute toxicity is summed over all of them, H302-only ones included.
+    every: list = []
     for row in rows:
         ingredient, parsed = _ingredient(
             row.get("cas"), row.get("name"), row.get("concentration"),
@@ -172,12 +175,18 @@ def _build(rows, lines, spans, regulation: str, table,
             continue
         if parsed.assumption:
             assumptions.append(f"{ingredient.label}: {parsed.assumption}")
+        every.append(ingredient)
         if not ingredient.classes:
             unknown.append((ingredient.label, ingredient.high))
             continue
         ingredients.append(ingredient)
 
-    if not ingredients:
+    from lingua_oracle.mixture import acute
+    from lingua_oracle.mixture.classes import ACUTE_CODES
+
+    acute_data = any(c.upper() in ACUTE_CODES for i in every for c in i.h_codes) or any(
+        i.limits and i.limits.ates for i in every)
+    if not ingredients and not acute_data:
         # Plain words for why: the sheet gives no concentrations at all, or
         # gives them only for ingredients nothing is known about.
         return MixtureSection(
@@ -190,8 +199,24 @@ def _build(rows, lines, spans, regulation: str, table,
     # undisclosed is what the upper bounds leave of 100 %, and no more.
     declared = (sum((i.high for i in ingredients), Decimal(0))
                 + sum((high for _, high in unknown), Decimal(0)))
+    from lingua_oracle.mixture import section_eleven
+
+    eleven = section_eleven.read(lines, [(i.cas, i.name) for i in every if i.cas])
+    entries = {}
+    for i in every:
+        found = index.get((i.cas or "").strip(), []) if i.cas else []
+        if len(found) == 1:
+            entries[i.cas.strip()] = found[0]
+    acute_inputs = {"ingredients": every, "entries": entries,
+                    "section_11": eleven.by_cas,
+                    "unknown": acute.unknown_share(lines)}
     results, summary = calculate(ingredients, stated, regulation, state,
-                                 declared=declared)
+                                 declared=declared, acute_inputs=acute_inputs)
+    if eleven.mixture:
+        assumptions.append("Section 11 gives for the mixture itself: "
+                           + "; ".join(eleven.mixture))
+    for line in eleven.ignored:
+        assumptions.append(f"Section 11, not used: {line}")
     counts = {
         "inconsistent": sum(1 for r in results if r.verdict == "inconsistent"),
         "cannot_tell": sum(1 for r in results if r.verdict == "cannot_tell"),
@@ -247,7 +272,7 @@ def rows_from_app(ingredients) -> list[dict]:
 
 
 def rows_from_pdf(ingredients) -> list[dict]:
-    return [{"cas": i.cas, "name": None, "h_codes": i.h_codes,
+    return [{"cas": i.cas, "name": getattr(i, "name", None), "h_codes": i.h_codes,
              "concentration": i.concentration} for i in ingredients]
 
 
