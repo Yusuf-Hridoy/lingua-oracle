@@ -206,8 +206,13 @@ def write_sds(
     extra_lines_s2: list[str] | None = None,
     extra_lines_s16: list[str] | None = None,
     include_s16: bool = True,
+    bare_in_s3: list[str] | None = None,
 ) -> Path:
-    """Write a minimal but realistic three-section SDS."""
+    """Write a minimal but realistic three-section SDS.
+
+    `bare_in_s3` codes are printed in Section 3's classification only, as
+    codes, and nowhere else.
+    """
     head = HEADINGS[language]
     supplemental = supplemental or []
     overrides = overrides or {}
@@ -242,7 +247,7 @@ def write_sds(
 
     sheet.line(head["3"], bold=True, size=11)
     sheet.line("Synthetic component A  CAS 000-00-0  30-60%")
-    sheet.line("Classification: " + ", ".join(h_codes))
+    sheet.line("Classification: " + ", ".join(h_codes + (bare_in_s3 or [])))
     sheet.blank()
 
     if include_s16:
@@ -334,9 +339,12 @@ def build_all() -> dict[str, Path]:
         h_codes=EU_H, p_codes=EU_P,
         extra_lines_s2=["Brandfarlig vÃ¦ske og damp ved opvarmning."]))
 
+    # B-08: H302 is given in Section 3 only as a code, and Section 16 does
+    # not write it out - so the sheet never gives its text. (A code Section 2
+    # writes out in full needs nothing in Section 16: REACH Annex II, 16(e).)
     add("defect_b08_missing_s16", write_sds(
         FIXTURES / "defect_b08_missing_s16.pdf", regulation="eu_clp", language="da",
-        h_codes=EU_H, p_codes=EU_P, omit_from_s16={"H336"}))
+        h_codes=EU_H, p_codes=EU_P, bare_in_s3=["H302"]))
 
     add("defect_b09_label", _label_mismatch(FIXTURES / "defect_b09_label.pdf"))
 

@@ -441,7 +441,7 @@ def test_each_section_keeps_its_own_counts():
     by_number = {s.number: s for s in page.sections}
     assert by_number["2"].count("fix") >= 1          # the mixture verdict
     assert by_number["3"].count("fix") == 1          # the ingredient below its entry
-    assert by_number["16"].count("fix") == 3         # three codes without full text
+    assert by_number["16"].count("fix") == 4         # H336, EUH066, H220, H260: codes only
     assert set(report.ingredients.counts) >= {"fix", "ok"}
     assert set(report.mixture.counts) >= {"inconsistent", "consistent"}
 

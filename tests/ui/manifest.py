@@ -86,10 +86,11 @@ CASES: tuple[Case, ...] = (
          plain="The sheet contains broken or mis-encoded characters.",
          should_show="A-07 fails, quoting the damaged text."),
     Case("defect_b08_missing_s16", regulation="eu_clp",
-         expect=(("B-08", "fail", "H336"),),
-         plain="A hazard code appears on the label but is missing from "
-               "section 16.",
-         should_show="B-08 fails for H336."),
+         expect=(("B-08", "fail", "H302"),),
+         plain="A hazard code is given in section 3 only as a code, and "
+               "section 16 does not write it out, so the sheet never gives "
+               "its text.",
+         should_show="B-08 fails for H302, citing REACH Annex II."),
     Case("defect_b09_label", regulation="eu_clp",
          expect=(("B-09", "fail", "H336"),),
          plain="The label elements and section 2 disagree.",

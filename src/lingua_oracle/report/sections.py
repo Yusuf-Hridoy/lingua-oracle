@@ -477,13 +477,25 @@ def _section_sixteen(report: Report, display: str) -> Section:
     full = Sub("")
     missing = [f for f in report.findings if f.check_id == "B-08"
                and not f.unverified]
+    from lingua_oracle.keys.builders import section16
+
+    rule = section16.load(report.regulation)
     if "16" not in report.sections_found:
         full.rows.append(Row("Full text of H-statements", "na",
                              text="No Section 16 was found in this document."))
-    elif not missing:
+    elif rule is None or rule.status == "pending_source":
+        full.rows.append(Row("Full text of H-statements", "na",
+                             text="Not checked: what this regulation asks of "
+                                  "Section 16 is not on file."))
+    elif rule.status == "no_rule":
+        full.rows.append(Row("Full text of H-statements", "na",
+                             text=f"Not required: {rule.citation} asks nothing "
+                                  "of Section 16 about hazard statements."))
+    elif not any(f.severity is Severity.FAIL for f in missing):
         full.rows.append(Row("Full text of H-statements", "ok",
-                             text="Every H code Section 2 uses - and Section 3, "
-                                  "where it prints codes - has its full text here."))
+                             text="Every statement Sections 2 to 15 give only as "
+                                  "a code is written out here, as "
+                                  f"{rule.citation} requires."))
     for finding in missing:
         row = _finding_row(finding, display)
         if row:
