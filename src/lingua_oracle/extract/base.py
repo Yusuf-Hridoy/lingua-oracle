@@ -23,6 +23,10 @@ class Line:
 class Page:
     number: int
     lines: list[Line] = field(default_factory=list)
+    #: The page's lines as the PDF draws them, before continuation lines are
+    #: joined. The structure reader needs them: "2 Hazard identification"
+    #: starts with no capital and is joined to the line above it otherwise.
+    raw_lines: list[Line] = field(default_factory=list)
 
     @property
     def text(self) -> str:
@@ -38,6 +42,12 @@ class Document:
     @property
     def lines(self) -> list[Line]:
         return [line for page in self.pages for line in page.lines]
+
+    @property
+    def raw_lines(self) -> list[Line]:
+        """Every page's lines before joining; the joined lines where a
+        backend kept none."""
+        return [line for page in self.pages for line in (page.raw_lines or page.lines)]
 
     @property
     def text(self) -> str:

@@ -29,5 +29,5 @@ class PyMuPDFExtractor:
                         x0, y0, x1, y1 = line.get("bbox", (0, 0, 0, 0))
                         raw.append(Line(text=text, page=index, bbox=(x0, y0, x1, y1)))
                 raw.sort(key=lambda ln: (round(ln.bbox[1], 1), ln.bbox[0]))
-                doc.pages.append(Page(number=index, lines=rejoin_lines(raw)))
+                doc.pages.append(Page(number=index, lines=rejoin_lines(raw), raw_lines=raw))
         return doc

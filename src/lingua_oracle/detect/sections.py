@@ -13,6 +13,7 @@ from lingua_oracle.registry import data_dir
 
 LABEL = "label"
 INTERESTING = ("2", "3", "16")
+_SUBSECTION_RE = re.compile(r"^\s*\d{1,2}\.\d{1,2}(?!\d)")
 
 
 @dataclass
@@ -69,6 +70,11 @@ def detect_sections(doc: Document, language: str) -> list[SectionSpan]:
         if not text or len(text) > 120:
             continue
         matched: str | None = None
+        # A sub-section heading is not a section heading, whatever its words:
+        # "9.2. Other information" is REACH's sub-heading in Section 9, and
+        # would otherwise read as Section 16.
+        if _SUBSECTION_RE.match(text):
+            continue
         # A short standalone line naming the label starts a label block. Label
         # artwork carries no numbered SDS headings, so without this it would be
         # swallowed by whichever section preceded it. The line has to read as a

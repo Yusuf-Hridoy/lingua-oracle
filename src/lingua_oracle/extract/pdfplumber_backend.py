@@ -33,5 +33,5 @@ class PdfplumberExtractor:
                             bbox=(group[0]["x0"], top, group[-1]["x1"], group[-1]["bottom"]),
                         )
                     )
-                doc.pages.append(Page(number=index, lines=rejoin_lines(raw)))
+                doc.pages.append(Page(number=index, lines=rejoin_lines(raw), raw_lines=raw))
         return doc
