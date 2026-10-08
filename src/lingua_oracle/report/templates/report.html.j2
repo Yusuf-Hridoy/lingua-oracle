@@ -124,8 +124,9 @@
         <span>{{ regulation_display }} &middot; {{ language_name }}</span>
         {% if report.composition == 'substance' %}<span>Substance (Section 3)</span>
         {% elif report.composition == 'mixture' %}<span>Mixture (Section 3)</span>{% endif %}
-        {% if report.physical_state == 'gas' %}<span>Read as a gas (Section 9)</span>
-        {% elif report.physical_state %}<span>Read as a solid or liquid (Section 9)</span>{% endif %}
+        {% set read_as = {'gas': 'a gas', 'liquid': 'a liquid', 'solid': 'a solid',
+                          'solid/liquid': 'a solid or liquid'} %}
+        {% if report.physical_state %}<span>Read as {{ read_as[report.physical_state] }} (Section 9)</span>{% endif %}
         <span>Checked {{ report.created_at.strftime('%-d %b %Y, %H:%M') }}</span>
         {% if report.compared_with %}<span>compared with {{ report.compared_with }}</span>{% endif %}
       </div>

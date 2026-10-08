@@ -97,7 +97,8 @@ def test_the_report_says_which_state_it_read():
     from lingua_oracle.report.render import render_html
 
     body = render_html(_check("pattern_sensitiser_liquid"))
-    assert "Read as a solid or liquid (Section 9)" in body
+    assert "read as a liquid" in body
+    assert "Read as a liquid (Section 9)" in body
 
 
 # -- choosing the limits that apply --------------------------------------------

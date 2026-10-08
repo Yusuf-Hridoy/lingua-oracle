@@ -304,7 +304,8 @@ def _classification(report: Report, display: str) -> Sub:
     if mixture is not None and mixture.state == "calculated":
         undisclosed = (f" ({mixture.undisclosed}% not disclosed)"
                        if mixture.undisclosed not in ("0", "") else "")
-        read_as = {"gas": ", read as a gas",
+        read_as = {"gas": ", read as a gas", "liquid": ", read as a liquid",
+                   "solid": ", read as a solid",
                    "solid/liquid": ", read as a solid or a liquid"}.get(
                        mixture.physical_state, "")
         if mixture.undisclosed in ("0", ""):
@@ -455,11 +456,15 @@ def _section_nine(report: Report) -> Section:
     sec = Section("9", TITLES["9"])
     state = report.physical_state or (report.mixture.physical_state
                                       if report.mixture else "")
+    use = ("used where the rules set different limits for gas and solid/liquid, "
+           "and for the form inhalation toxicity is calculated in")
     text = {
-        "gas": "Gas — used where the rules set different limits for gas "
-               "and solid/liquid",
-        "solid/liquid": "Solid or liquid — used where the rules set different "
-                        "limits for gas and solid/liquid",
+        "gas": f"Gas — {use} (gas)",
+        "liquid": f"Liquid — {use} (vapour)",
+        "solid": f"Solid — {use} (dust/mist)",
+        "solid/liquid": ("Solid or liquid — Section 9 does not say which; "
+                         "inhalation toxicity is calculated both as a vapour and "
+                         "as a dust/mist"),
     }.get(state, "Section 9 does not say whether this is a gas; where a limit "
                  "depends on it, both were tried")
     sec.subs.append(Sub("", [Row("Physical state", "ok" if state else "na",
@@ -477,8 +482,8 @@ def _section_sixteen(report: Report, display: str) -> Section:
                              text="No Section 16 was found in this document."))
     elif not missing:
         full.rows.append(Row("Full text of H-statements", "ok",
-                             text="Every H code Section 3 names has its full "
-                                  "text here."))
+                             text="Every H code Section 2 uses - and Section 3, "
+                                  "where it prints codes - has its full text here."))
     for finding in missing:
         row = _finding_row(finding, display)
         if row:
