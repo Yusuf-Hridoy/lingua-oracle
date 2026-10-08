@@ -12,6 +12,10 @@ written out in full under sections 2 to 15". So:
 * a code written out only in Section 16 is said, as a note: it may belong to
   an ingredient whose codes Section 3 omits.
 
+Which statements: H and EUH always; P too where the rule's own sentence
+names precautionary statements, as REACH's does ("a list of relevant hazard
+statements and/or precautionary statements").
+
 A regulation whose text has no such rule (OSHA Appendix D, the HPR, the GHS
 Annex 4) gets no finding, and nor does one whose text is not on file.
 """
@@ -27,12 +31,20 @@ CHECK_ID = "B-08"
 TITLE = "Section 16 writes out every statement Sections 2 to 15 give only as a code"
 
 
-def _statement_codes(hits):
-    """(code, hit) for each H and EUH code, combinations taken apart."""
+def _statement_codes(hits, prefixes):
+    """(code, hit) for each statement code the rule covers, combinations
+    taken apart."""
     for hit in hits:
         for code in split_combined(hit.code):
-            if code.startswith(("H", "EUH")):
+            if code.startswith(prefixes):
                 yield code, hit
+
+
+def _covered(rule) -> tuple[str, ...]:
+    """The code families the rule's own sentence speaks of."""
+    if "precautionary statements" in rule.text.lower():
+        return ("H", "EUH", "P")
+    return ("H", "EUH")
 
 
 @register(CHECK_ID, TITLE)
@@ -44,14 +56,16 @@ def run(ctx: CheckContext) -> list[Finding]:
         return []
     # Only Sections 2, 3 and 16 are tracked; the Section 3 span runs on to
     # Section 16, so "2" and "3" together are Sections 2 to 15.
+    prefixes = _covered(rule)
     before = [h for h in ctx.hits if ctx.section_for(h) in ("2", "3")]
-    written = {code for code, hit in _statement_codes(before) if hit.text}
+    written = {code for code, hit in _statement_codes(before, prefixes) if hit.text}
     bare: dict[str, object] = {}
-    for code, hit in _statement_codes(before):
+    for code, hit in _statement_codes(before, prefixes):
         if code not in written:
             bare.setdefault(code, hit)
     section16_hits = ctx.hits_in("16")
-    spelled_out = {code for code, hit in _statement_codes(section16_hits) if hit.text}
+    spelled_out = {code for code, hit in _statement_codes(section16_hits, prefixes)
+                   if hit.text}
 
     findings: list[Finding] = []
     for code, hit in bare.items():
@@ -67,7 +81,7 @@ def run(ctx: CheckContext) -> list[Finding]:
                      f"Section 16 does not write it out. {rule.citation}: "
                      f"“{rule.text}”.")))
     reported = set(bare)
-    for code, hit in _statement_codes(section16_hits):
+    for code, hit in _statement_codes(section16_hits, prefixes):
         if hit.text and code not in written and code not in reported:
             reported.add(code)
             findings.append(Finding(

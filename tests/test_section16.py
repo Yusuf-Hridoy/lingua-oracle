@@ -95,3 +95,56 @@ def test_the_report_says_when_a_regulation_asks_nothing_of_section_16(tmp_path):
 def test_the_report_says_when_the_rule_is_not_on_file(tmp_path):
     row = _summary(tmp_path, "uk_clp")
     assert row.status == "na" and "not on file" in row.text
+
+
+# -- precautionary statements, where the rule's sentence names them --------------
+
+def _p_sheet(path):
+    head = HEADINGS["en"]
+    official = texts("eu_clp", "en", ["H225", "P210", "P280", "P403+P235"])
+    sheet = Sheet(path)
+    sheet.line(PRODUCT, bold=True, size=12)
+    sheet.line(SUPPLIER)
+    sheet.blank()
+    sheet.line(head["2"], bold=True, size=11)
+    sheet.line("Signal word: Danger")
+    sheet.line(f"H225 {official['H225']}")
+    sheet.line(f"P210 {official['P210']}")
+    sheet.line("Precautionary statements: P280, P403+P235")
+    sheet.blank()
+    sheet.line(head["3"], bold=True, size=11)
+    sheet.line("Synthetic component A  CAS 000-00-0  30-60%  Flam. Liq. 2; H225")
+    sheet.blank()
+    sheet.line(head["16"], bold=True, size=11)
+    sheet.line(f"H225 {official['H225']}")
+    sheet.line(f"P403+P235 {official['P403+P235']}")
+    sheet.save()
+    return path
+
+
+def _p_findings(tmp_path):
+    report = check_pdf(str(_p_sheet(tmp_path / "p16.pdf")), "eu_clp", "en")
+    return {f.code: f.severity.value for f in report.findings if f.check_id == "B-08"}
+
+
+def test_a_p_code_given_only_as_a_code_and_missing_from_16_is_a_fault(tmp_path):
+    assert _p_findings(tmp_path).get("P280") == "fail"
+
+
+def test_a_p_code_written_out_in_section_2_needs_nothing_in_16(tmp_path):
+    assert "P210" not in _p_findings(tmp_path)
+
+
+def test_a_bare_p_combination_written_out_in_16_raises_nothing(tmp_path):
+    found = _p_findings(tmp_path)
+    assert "P403" not in found and "P235" not in found
+
+
+def test_p_codes_are_covered_only_where_the_rule_names_them():
+    from lingua_oracle.checks.b08_section16 import _covered
+    from lingua_oracle.keys.builders.section16 import Section16Rule, load
+
+    assert "P" in _covered(load("eu_clp"))
+    hazard_only = Section16Rule("x", "rule", "Act", "16",
+                                "Write out the full text of any hazard statements")
+    assert _covered(hazard_only) == ("H", "EUH")
