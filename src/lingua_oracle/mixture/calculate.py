@@ -339,6 +339,11 @@ def _acute_results(rules, inputs: dict, stated, state, undisclosed: Decimal,
     """One verdict per route, from the additivity runs, in the common model."""
     from lingua_oracle.mixture import acute
 
+    # A category the regulation does not have (Category 5 outside the GHS
+    # itself) is outside its classification: C-12 says so as a note, and no
+    # verdict is formed on it here.
+    stated = [c for c in stated if c.name not in acute.CLASS_NAME.values()
+              or c.category in rules.categories]
     calculated = acute.calculate(
         inputs["ingredients"], rules, state, entries=inputs.get("entries"),
         section_11=inputs.get("section_11"), unknown=inputs.get("unknown"))

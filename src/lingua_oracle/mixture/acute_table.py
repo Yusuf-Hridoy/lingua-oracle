@@ -5,6 +5,7 @@ share, and the highest ATE an ingredient may have and still count."""
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from decimal import Decimal
 from functools import cache
@@ -37,6 +38,25 @@ class AcuteRules:
             if band.low < ate <= band.high:
                 return band.category
         return None
+
+    @property
+    def categories(self) -> set[str]:
+        """Every acute toxicity category the regulation has, on any route."""
+        return {b.category for bands in self.bands.values() for b in bands}
+
+    def without_category_5(self) -> str | None:
+        """Where the regulation's own text shows it has no Category 5, or None
+        where it has one. A regulation that excludes it in terms (Australia)
+        is cited for the exclusion; the others for their table, which stops
+        at Category 4."""
+        if "5" in self.categories:
+            return None
+        for note in self.notes:
+            if note.startswith("Category 5 excluded"):
+                cited = re.search(r"\(([^()]*)\)\s*$", note)
+                if cited:
+                    return cited.group(1)
+        return self.citations["bands"]
 
     def band_text(self, form: str, category: str) -> str:
         band = next(b for b in self.bands[form] if b.category == category)

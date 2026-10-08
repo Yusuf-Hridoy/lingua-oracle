@@ -470,9 +470,10 @@ def test_an_out_of_scope_match_raises_no_finding_and_no_action():
     assert "outside US OSHA HazCom's scope" in by_code["H303"].match_note
     assert "allowed as extra information" in by_code["H303"].match_note
     # No wording finding, and none from B-08: Appendix D asks nothing of
-    # Section 16 about statements.
+    # Section 16 about statements. Only the note that Category 5 is not
+    # OSHA's - information, not a fault.
     h303 = [f for f in report.findings if f.code == "H303"]
-    assert h303 == []
+    assert [(f.check_id, f.severity.value) for f in h303] == [("C-12", "info")]
     actions = sections.build(report, "US OSHA HazCom", "chosen by you").actions
     assert not any("H303" in text and "Section 2" in text for text in actions), actions
 
