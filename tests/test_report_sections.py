@@ -34,7 +34,7 @@ def test_a_report_without_a_structure_keeps_the_sections_it_reads():
     report, _ = _page("pattern_substance_2_propanol")
     report.structure = None
     page = sections.build(report, "EU CLP", "read from the document")
-    assert [s.number for s in page.sections] == ["1", "2", "3", "9", "16"]
+    assert [s.number for s in page.sections] == ["1", "2", "3", "9", "14", "16"]
     assert "4–8 · not checked" in [n["label"] for n in page.nav]
 
 

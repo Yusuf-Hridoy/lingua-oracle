@@ -58,10 +58,11 @@ NAV = {"1": "Identification", "2": "Hazards", "3": "Composition",
 #: The structure checks, shown from Report.structure in every section.
 _STRUCTURE_CHECKS = {"B-12", "B-13", "B-14"}
 #: Section against section, shown from Report.consistency where each belongs.
-_CONSISTENCY_CHECKS = {"C-16", "C-17", "C-18", "C-19", "C-20"}
+_CONSISTENCY_CHECKS = {"C-16", "C-17", "C-18", "C-19", "C-20", "C-21", "C-22"}
 _CONSISTENCY_TITLES = {"C-16": "Label elements", "C-17": "Flash point",
                        "C-18": "Mixture's acute toxicity data",
-                       "C-19": "Mixture's aquatic data", "C-20": "Consistency"}
+                       "C-19": "Mixture's aquatic data", "C-20": "Consistency",
+                       "C-21": "Dangerous goods list", "C-22": "Candidate List (SVHC)"}
 
 #: Checks whose results are statements, shown from the statement verdicts.
 _STATEMENT_CHECKS = {"A-01", "A-02", "A-03", "A-04", "C-15"}
@@ -605,6 +606,8 @@ def _consistency_row(row) -> Row:
             "C-18": "make Section 2's acute toxicity agree with Section 11's data on the mixture",
             "C-19": "make Section 2's aquatic classification agree with Section 12's data",
             "C-20": "make the product name and revision date the same throughout",
+            "C-21": "make Section 14 agree with the dangerous goods list entry",
+            "C-22": "name the Candidate List substance where REACH Annex II requires",
         }[row.check].rstrip(".")
         if row.found and row.expected and row.check == "C-16":
             left, right = word_diff(row.expected, row.found)
