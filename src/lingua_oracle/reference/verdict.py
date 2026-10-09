@@ -152,27 +152,50 @@ def _partial(printed: list[str], per_ingredient: list[list[str] | None]) -> dict
     return out
 
 
-def _calculate(rows, codes_by_cas, document, spans, regulation, table, *, use_list,
-               stated: list[str] | None = None):
+def _calculate(rows, codes_by_cas, lines, spans, regulation, table, *, use_list,
+               stated: list[str] | None = None, state: str | None = None):
     from lingua_oracle.mixture import section as mixture_section
 
     data = [{**row, "h_codes": codes_by_cas.get(row["cas"]) or []} for row in rows]
-    return mixture_section.build(data, document.lines, spans, regulation, table,
-                                 stated_override=stated or None, use_list=use_list)
+    return mixture_section.build(data, lines, spans, regulation, table,
+                                 stated_override=stated or None, state_override=state,
+                                 use_list=use_list)
 
 
-def _stated(document, spans, codes: list[str]) -> list[str]:
+def _stated(lines, spans, codes: list[str]) -> list[str]:
     """Section 2's classes: as the mixture's own reader reads them, and as
     each code printed - or each class stated in words - stands for."""
     from lingua_oracle.mixture.classes import class_of
     from lingua_oracle.mixture.stated import stated_classes
 
-    out = [str(c) for c in stated_classes(document.lines, spans)]
+    out = [str(c) for c in stated_classes(lines, spans)] if lines else []
     for code in codes:
         for hazard_class in acute_classes(code) or [class_of(code) or class_of(code[:4])]:
             if hazard_class is not None and str(hazard_class) not in out:
                 out.append(str(hazard_class))
     return out
+
+
+def context(lines, spans, section_two: list[str], *, sheet_text: str = "",
+            stated_as: dict[str, str] | None = None) -> HCodeSection:
+    """What the verdict needs from the sheet itself, kept so that a product
+    chosen later can be judged without the file: the codes Section 2 prints
+    and states in words, its classes, and whether it cites bridging."""
+    printed = ref.codes_in(" ".join(section_two))
+    worded = {c: t for c, t in (stated_as or {}).items()
+              if c.casefold() not in {p.casefold() for p in printed}}
+    printed = printed + list(worded)
+    return HCodeSection(state="nothing", printed=printed, stated_as=worded,
+                        stated=_stated(lines, spans, printed),
+                        bridged=bool(_BRIDGING.search(sheet_text)))
+
+
+def rebuild(held: HCodeSection, regulation: str, rows: list[dict], *,
+            app_codes: dict[str, list[str]] | None = None, lines=None, spans=None,
+            state: str | None = None) -> HCodeSection:
+    """The verdict on a composition, from the sheet's kept context."""
+    return _judge(lines or [], spans or [], regulation, rows, held, app_codes=app_codes,
+                  state=state)
 
 
 def build(document, spans, regulation: str, rows: list[dict], section_two: list[str],
@@ -183,15 +206,20 @@ def build(document, spans, regulation: str, rows: list[dict], section_two: list[
     `stated_as`: codes for the classes Section 2 states in words, with the
     words ("Reproductive Toxicity: Category 2" - an OSHA sheet prints no
     codes)."""
+    held = context(document.lines, spans, section_two, sheet_text=sheet_text,
+                   stated_as=stated_as)
+    return _judge(document.lines, spans, regulation, rows, held, app_codes=app_codes)
+
+
+def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None,
+           state: str | None = None) -> HCodeSection:
     from lingua_oracle.substances.load import for_check
 
-    printed = ref.codes_in(" ".join(section_two))
-    worded = {c: t for c, t in (stated_as or {}).items()
-              if c.casefold() not in {p.casefold() for p in printed}}
-    printed = printed + list(worded)
+    printed, worded, stated = list(held.printed), dict(held.stated_as), list(held.stated)
+    kept = {"printed": printed, "stated": stated, "stated_as": worded, "bridged": held.bridged}
     rows = [r for r in rows if r.get("cas")]
     if not rows:
-        return HCodeSection(state="nothing", printed=printed,
+        return HCodeSection(state="nothing", **kept,
                             message="No ingredient with a CAS number to calculate from.")
     assumptions: list[str] = []
     with_share = [r for r in rows if r.get("concentration")]
@@ -212,17 +240,15 @@ def build(document, spans, regulation: str, rows: list[dict], section_two: list[
     a_blocked = [cas for cas, x in a.items() if not x.reproducible]
     b_open = [cas for cas, x in b.items() if x.codes is None]
     runs: dict[str, dict] = {}
-    bridged = bool(_BRIDGING.search(sheet_text))
+    bridged = held.bridged
     partial = not any(r.get("concentration") for r in rows)
-
-    stated = _stated(document, spans, printed)
 
     def judged(chosen, open_cas, use_list):
         codes = {cas: x.codes for cas, x in chosen.items()}
         if partial:
             return _partial(printed, list(codes.values()))
-        section = _calculate(rows, codes, document, spans, regulation, table, use_list=use_list,
-                             stated=stated)
+        section = _calculate(rows, codes, lines, spans, regulation, table, use_list=use_list,
+                             stated=stated, state=state)
         carried = {c.casefold() for x in codes.values() for c in (x or [])}
         if use_list:
             carried |= {c.casefold() for x in chosen.values() for c in (x.codes or [])}
@@ -288,7 +314,7 @@ def build(document, spans, regulation: str, rows: list[dict], section_two: list[
               for s in (CONFIRMED, WRONG, CHECK, CANT)}
     message = ("" if out_rows else "Section 2 prints no hazard statement, and the ingredients "
                "give none.")
-    return HCodeSection(state="judged", message=message, printed=printed, rows=out_rows,
+    return HCodeSection(state="judged", message=message, **kept, rows=out_rows,
                         ingredients=ingredients, notes=list(dict.fromkeys(notes)),
                         assumptions=assumptions, counts=counts,
                         runs={k: {kk: vv for kk, vv in v.items() if kk != "rows"}

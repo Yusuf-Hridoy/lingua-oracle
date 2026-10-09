@@ -198,3 +198,14 @@ def test_a_record_keeps_the_date_it_was_read_while_pubchem_says_the_same(tmp_pat
     pubchem.write("67-64-1", today="2026-10-09")
     held = pubchem.load("67-64-1")
     assert held["retrieved"] == "2026-10-01" and held["source_url"].startswith("https://pubchem")
+
+
+def test_a_product_chosen_later_is_judged_from_the_sheets_kept_context(tmp_path, on_file):
+    from lingua_oracle.reference import verdict
+
+    h = _sheet(tmp_path, "us_osha", ["H225", "H319"], ["Synthetic solvent  CAS 67-64-1  90%"])
+    again = verdict.rebuild(h, "us_osha", [{"cas": "67-64-1", "name": "", "concentration": "90"}],
+                            app_codes={"67-64-1": ["H225", "H319", "H335"]})
+    rows = _rows(again)
+    assert again.printed == h.printed and rows["H319"]["status"] == "confirmed"
+    assert rows["H335"]["a"]["status"] == "wrong" and rows["H335"]["status"] == "confirmed"

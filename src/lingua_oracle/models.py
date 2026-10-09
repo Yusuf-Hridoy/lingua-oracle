@@ -422,6 +422,12 @@ class HCodeSection(BaseModel):
     assumptions: list[str] = Field(default_factory=list)
     counts: dict[str, int] = Field(default_factory=dict)
     runs: dict[str, dict] = Field(default_factory=dict)
+    #: Kept from the sheet, so a product chosen later is judged without it:
+    #: the classes Section 2 states, those stated in words by code, and
+    #: whether the sheet cites bridging.
+    stated: list[str] = Field(default_factory=list)
+    stated_as: dict[str, str] = Field(default_factory=dict)
+    bridged: bool = False
 
 
 class SubstanceSection(BaseModel):

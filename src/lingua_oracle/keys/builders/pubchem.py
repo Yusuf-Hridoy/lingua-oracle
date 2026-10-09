@@ -40,7 +40,11 @@ _NOT_MEETING = re.compile(r"(?:not meeting|does not meet) GHS hazard criteria.*?
 
 
 def folder() -> Path:
-    return data_dir() / "reference_classifications"
+    """data/reference_classifications, or LINGUA_REFERENCE_DIR where set."""
+    import os
+
+    override = os.environ.get("LINGUA_REFERENCE_DIR")
+    return Path(override) if override else data_dir() / "reference_classifications"
 
 
 def parse(view: dict, *, cas: str, cid: int | None, url: str) -> dict:

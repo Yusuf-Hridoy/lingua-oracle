@@ -255,6 +255,15 @@ def recheck(report, product_id: int, *, client_factory=None):
         state_override=(report.mixture.physical_state if report.mixture
                         else None),
         upcoming=upcoming)
+    if report.hcodes is not None and report.hcodes.state != "skipped":
+        # The codes, judged on the chosen product's composition with the
+        # app's stored codes as input A - the sheet's context was kept.
+        from lingua_oracle.reference import composition, verdict
+
+        found, app_codes = composition.from_app(rows)
+        report.hcodes = verdict.rebuild(
+            report.hcodes, report.regulation, found, app_codes=app_codes,
+            state=(report.mixture.physical_state if report.mixture else None) or None)
     if client_factory is not None:
         client.close()
     return report

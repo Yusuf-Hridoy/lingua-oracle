@@ -305,7 +305,20 @@ def _hcode_section(report, path, document, spans, regulation, language,
         def lines_of(number: str) -> list[str]:
             return raw[slice(*found[number])] if number in found else []
 
+        from lingua_oracle.consistency import classification
+
+        stated_as: dict[str, str] = {}
+        for found_class in classification.read(lines_of("2"), regulation):
+            for entry in found_class.entries:
+                for code in entry.get("h_codes", []):
+                    stated_as.setdefault(code, found_class.text)
         section = report.ingredients
+        if section is not None and section.match_state == "ambiguous":
+            # A choice is pending, as for the mixture: judged once it is made.
+            held = verdict.context(document.lines, spans, lines_of("2"),
+                                   sheet_text=" ".join(raw), stated_as=stated_as)
+            held.message = "Choose the product above to judge the hazard statement codes."
+            return held
         app_codes = None
         if section is not None and section.source == "app" and section.product_id:
             from lingua_oracle.ingredients.client import session
@@ -317,13 +330,6 @@ def _hcode_section(report, path, document, spans, regulation, language,
         if report.composition == "substance" and report.substance and report.substance.cas:
             rows = [{"cas": report.substance.cas, "name": report.substance.name or "",
                      "concentration": "100"}]
-        from lingua_oracle.consistency import classification
-
-        stated_as: dict[str, str] = {}
-        for found_class in classification.read(lines_of("2"), regulation):
-            for entry in found_class.entries:
-                for code in entry.get("h_codes", []):
-                    stated_as.setdefault(code, found_class.text)
         return verdict.build(document, spans, regulation, rows, lines_of("2"),
                              app_codes=app_codes, sheet_text=" ".join(raw),
                              stated_as=stated_as)

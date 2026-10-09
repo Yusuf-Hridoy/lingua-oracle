@@ -185,3 +185,15 @@ def reports_tmp(tmp_path_factory):
 
 def pdf(name: str) -> str:
     return str(FIXTURES / f"{name}.pdf")
+
+
+@pytest.fixture(autouse=True)
+def _no_local_pubchem_records(tmp_path_factory, monkeypatch):
+    """PubChem records are local data (data/reference_classifications is not
+    tracked): every test starts with none, so a result never depends on what
+    one machine happens to have fetched. A test that needs records gives its
+    own (tests/test_reference.py, `on_file`)."""
+    from lingua_oracle.keys.builders import pubchem
+
+    empty = tmp_path_factory.mktemp("no_pubchem")
+    monkeypatch.setattr(pubchem, "folder", lambda: empty)
