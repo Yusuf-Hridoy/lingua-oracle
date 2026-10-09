@@ -126,3 +126,11 @@ def test_proper_shipping_names_are_the_roman_type_with_italic_or_as_a_choice(hmt
     for role in ("what", "spelling", "choices"):
         assert hmt["name_rules"][role]["quote"], role
     assert "Roman type (not italics)" in hmt["name_rules"]["what"]["quote"]
+
+
+def test_class_2_and_class_3_are_quoted_with_the_flash_point_limits_from_the_text(un):
+    rules = un["class_rules"]
+    assert rules["2.2.1.1"]["quote"].startswith("2.2.1.1 A gas is a substance which")
+    assert rules["2.3.1.1"]["quote"].startswith("2.3.1.1 Class 3 includes")
+    assert "not more than 60 °C, closed-cup test" in rules["2.3.1.2"]["quote"]
+    assert rules["flash_point_limit"] == {"closed_cup": 60.0, "open_cup": 65.6}

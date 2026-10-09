@@ -43814,5 +43814,23 @@
    "quote": "3.1.2.3 Proper shipping names may be used in the singular or plural as appropriate. In addition, when qualifying words are used as part of the proper shipping name, their sequence on documentation or package marks is optional. For instance, \"DIMETHYLAMINE AQUEOUS SOLUTION\" may alternatively be shown \"AQUEOUS SOLUTION OF DIMETHYLAMINE\".",
    "citation": "UN Model Regulations Rev.24 (ST/SG/AC.10/1/Rev.24), Vol. I, 3.1.2.3"
   }
+ },
+ "class_rules": {
+  "2.2.1.1": {
+   "quote": "2.2.1.1 A gas is a substance which: (a) At 50 °C has a vapour pressure greater than 300 kPa; or (b) Is completely gaseous at 20 °C at a standard pressure of 101.3 kPa.",
+   "citation": "UN Model Regulations Rev.24 (ST/SG/AC.10/1/Rev.24), Vol. I, 2.2.1.1"
+  },
+  "2.3.1.1": {
+   "quote": "2.3.1.1 Class 3 includes the following substances: (a) Flammable liquids (see 2.3.1.2 and 2.3.1.3); (b) Liquid desensitized explosives (see 2.3.1.4).",
+   "citation": "UN Model Regulations Rev.24 (ST/SG/AC.10/1/Rev.24), Vol. I, 2.3.1.1"
+  },
+  "2.3.1.2": {
+   "quote": "2.3.1.2 Flammable liquids are liquids, or mixtures of liquids, or liquids containing solids in solution or suspension (for example, paints, varnishes, lacquers, etc., but not including substances otherwise classified on account of their dangerous characteristics) which give off a flammable vapour at temperatures of not more than 60 °C, closed-cup test, or not more than 65.6 °C, open-cup test, normally referred to as the flash point.",
+   "citation": "UN Model Regulations Rev.24 (ST/SG/AC.10/1/Rev.24), Vol. I, 2.3.1.2"
+  },
+  "flash_point_limit": {
+   "closed_cup": 60.0,
+   "open_cup": 65.6
+  }
  }
 }

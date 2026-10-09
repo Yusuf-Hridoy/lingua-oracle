@@ -288,7 +288,28 @@ def _un() -> dict:
         rules[role] = {"quote": found.group(0) if found else "", "citation": f"{act}, {key}"}
     return {"list": "un_dangerous_goods", "status": "ok", "document": _UN_DOCUMENT,
             "version": f"{source.version}" + (f" ({edition.group(0)})" if edition else ""),
-            "source": source.path, "entries": entries, "name_rules": rules}
+            "source": source.path, "entries": entries, "name_rules": rules,
+            "class_rules": _class_rules(pages, act)}
+
+
+def _class_rules(pages, act: str) -> dict:
+    """What Class 2 and Class 3 are, quoted from part 2, with the flash
+    point limits read out of 2.3.1.2's own words."""
+    text = _flat(" ".join(page.get_text() for page in pages))
+    out = {}
+    for key, pattern in (
+        ("2.2.1.1", r"2\.2\.1\.1 A gas is a substance which: .+?101\.3 kPa\."),
+        ("2.3.1.1", r"2\.3\.1\.1 Class 3 includes the following substances: .+?\(see 2\.3\.1\.4\)\."),
+        ("2.3.1.2", r"2\.3\.1\.2 Flammable liquids are liquids.+?normally referred to as the "
+                    r"flash point\."),
+    ):
+        found = re.search(pattern, text)
+        out[key] = {"quote": found.group(0) if found else "", "citation": f"{act}, {key}"}
+    limits = re.search(r"not more than ([\d.]+) °C, closed-cup test, or not more than ([\d.]+) °C, "
+                       r"open-cup test", out["2.3.1.2"]["quote"])
+    out["flash_point_limit"] = ({"closed_cup": float(limits.group(1)),
+                                 "open_cup": float(limits.group(2))} if limits else {})
+    return out
 
 
 def _un_rows(page) -> list[list[str]]:

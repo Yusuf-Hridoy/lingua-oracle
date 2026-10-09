@@ -68,3 +68,8 @@ def transport(ctx: CheckContext) -> list[Finding]:
 @register("C-22", "Candidate List substances are named where REACH Annex II requires")
 def candidate_list(ctx: CheckContext) -> list[Finding]:
     return _findings(ctx, "C-22")
+
+
+@register("C-23", "Section 14's transport class fits the product's state and flash point")
+def transport_class(ctx: CheckContext) -> list[Finding]:
+    return _findings(ctx, "C-23")

@@ -10,6 +10,7 @@ from lingua_oracle.consistency import (
     physical,
     svhc,
     transport,
+    transport_class,
 )
 from lingua_oracle.detect.codes import split_combined
 from lingua_oracle.models import ConsistencyRow
@@ -84,6 +85,7 @@ def run(ctx, display: str) -> list[ConsistencyRow]:
                                                        for c in codes
                                                        if c in ("H224", "H225", "H226")})
     rows += transport.run(lines_of("14"), regulation, flammable)
+    rows += transport_class.run(lines_of("14"), lines_of("9"), two, regulation, state, flammable)
     rows += svhc.run(regulation, lines_of("3"), two, lines_of("15"),
                      _section_3(doc.path, lines_of("3")))
     return rows
