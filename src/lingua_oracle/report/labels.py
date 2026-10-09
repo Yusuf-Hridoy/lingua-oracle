@@ -266,7 +266,7 @@ REVIEW = "Review before release"
 FIX = "Fix before release"
 
 
-def _caveats(report: Report) -> list[str]:
+def _caveats(report: Report, page=None) -> list[str]:
     """What this report does NOT cover.
 
     A green headline that stands alone would overclaim. These lines run under
@@ -300,13 +300,51 @@ def _caveats(report: Report) -> list[str]:
             f"{report.coverage.codes_found} codes found in this document."
         )
 
-    out.append(
-        "This checks the wording of statements against the official text, and "
-        "the classification only where the substance's entry or the "
-        "ingredients allow it. Pictograms, layout and Sections 4-8 and 10-15 "
-        "are not checked."
-    )
+    out.append(_coverage(report, page))
     return out
+
+
+def _ranges(numbers: list[int]) -> str:
+    """[1, 2, 4, 5, 6, 7, 8, 15] -> "1, 2, 4–8 and 15": a run of three or more
+    as a range."""
+    runs: list[list[int]] = []
+    for number in sorted(numbers):
+        if runs and number == runs[-1][-1] + 1:
+            runs[-1].append(number)
+        else:
+            runs.append([number])
+    parts: list[str] = []
+    for run in runs:
+        parts += [f"{run[0]}–{run[-1]}"] if len(run) > 2 else [str(n) for n in run]
+    return ", ".join(parts[:-1]) + f" and {parts[-1]}" if len(parts) > 1 else parts[0]
+
+
+def _coverage(report: Report, page) -> str:
+    """What this report checked and did not, from what actually ran."""
+    checked = ["the wording of each statement against the official text"]
+    if report.structure is not None and report.structure.state == "checked":
+        checked.append("the structure of every section (number, order, heading, "
+                       "required items)")
+    unchecked: list[str] = []
+    if page is not None:
+        numbered = [s for s in page.sections if s.number.isdigit()]
+        deep = [int(s.number) for s in numbered if s.deep]
+        if deep:
+            word = "Section" if len(deep) == 1 else "Sections"
+            checked.append(f"{word} {_ranges(deep)} in depth, section against section "
+                           "and against the official lists")
+        shallow = [n for n in range(1, 17) if n not in deep]
+        if shallow:
+            word = "Section" if len(shallow) == 1 else "Sections"
+            unchecked.append(f"the content of {word} {_ranges(shallow)} beyond "
+                             + ("its" if len(shallow) == 1 else "their") + " structure")
+    if any(r.check == "C-16" and r.key == "Pictograms" and r.status == "na"
+           for r in report.consistency):
+        unchecked.append("pictograms printed only as images")
+    text = "Checked: " + "; ".join(checked) + "."
+    if unchecked:
+        text += " Not checked: " + "; ".join(unchecked) + "."
+    return text
 
 
 def plural(count: int, singular: str, many: str | None = None) -> str:

@@ -14,10 +14,11 @@ where each one goes and how it reads.
 from __future__ import annotations
 
 import html
+import re
 from dataclasses import dataclass, field
 
 from lingua_oracle.models import Report, Severity
-from lingua_oracle.report import labels
+from lingua_oracle.report import labels, suggest
 
 #: Section titles as the SDS format names them (Annex II to REACH, and the
 #: same sixteen headings in GHS Annex 4).
@@ -39,6 +40,8 @@ NOT_CHECKED_RANGES = (("4", "8"), ("10", "15"))
 
 PILL = {
     "ok": ("Correct", "✓", "ok"),
+    #: A section whose structure alone was judged: never "Correct".
+    "structure": ("Structure correct", "✓", "ok"),
     "fix": ("Fix", "✕", "fix"),
     "wrong": ("Wrong", "✕", "fix"),
     "check": ("Check", "!", "check"),
@@ -58,13 +61,15 @@ NAV = {"1": "Identification", "2": "Hazards", "3": "Composition",
 #: The structure checks, shown from Report.structure in every section.
 _STRUCTURE_CHECKS = {"B-12", "B-13", "B-14"}
 #: Section against section, shown from Report.consistency where each belongs.
-_CONSISTENCY_CHECKS = {"C-16", "C-17", "C-18", "C-19", "C-20", "C-21", "C-22", "C-23", "C-24"}
+_CONSISTENCY_CHECKS = {"C-16", "C-17", "C-18", "C-19", "C-20", "C-21", "C-22", "C-23", "C-24",
+                       "C-25"}
 _CONSISTENCY_TITLES = {"C-16": "Label elements", "C-17": "Flash point",
                        "C-18": "Mixture's acute toxicity data",
                        "C-19": "Mixture's aquatic data", "C-20": "Consistency",
                        "C-21": "Dangerous goods list", "C-22": "Candidate List (SVHC)",
                        "C-23": "Transport class against the product",
-                       "C-24": "Required transport fields"}
+                       "C-24": "Required transport fields",
+                       "C-25": "Physical state"}
 
 #: Checks whose results are statements, shown from the statement verdicts.
 _STATEMENT_CHECKS = {"A-01", "A-02", "A-03", "A-04", "C-15"}
@@ -125,6 +130,8 @@ class Row:
 class Sub:
     title: str
     rows: list[Row] = field(default_factory=list)
+    #: The section's structure - number, order, heading, required items.
+    structure: bool = False
 
 
 @dataclass
@@ -170,6 +177,25 @@ class Section:
     def judged(self) -> bool:
         return self.count("ok", "fix", "wrong", "check") > 0
 
+    @property
+    def deep(self) -> bool:
+        """Judged beyond its structure: a row outside the structure says so."""
+        rows = [r for s in self.subs if not s.structure for r in s.rows]
+        if self.table:
+            rows += [r["row"] for r in self.table["rows"]]
+        return any(r.status in ("ok", "fix", "wrong", "check") for r in rows)
+
+    @property
+    def structured(self) -> bool:
+        return any(s.structure and s.rows for s in self.subs)
+
+    @property
+    def pill(self) -> str:
+        """The section's verdict as its pill says it: "Structure correct"
+        where only the structure was judged and it is right."""
+        status = self.status
+        return "structure" if status == "ok" and not self.deep and self.structured else status
+
 
 # -- small helpers ---------------------------------------------------------------
 
@@ -196,28 +222,35 @@ def _statement_row(verdict, display: str) -> Row:
                    note=verdict.found and f"Your document: {verdict.found}")
     heading = (f"Closest {display} statement · {verdict.nearest_code}"
                if verdict.nearest_code else "Official wording")
+    # Shown as the text prints it; given to copy as the shortest it allows.
+    official = suggest.tidy(verdict.expected)
+    use, may = suggest.shortest(verdict.expected)
     if verdict.blank_unfilled:
         from lingua_oracle.report.render import _highlight_blank
 
         return Row(key, "fix", mono=mono,
                    found_html=_highlight_blank(verdict.found),
-                   single=True, expected=verdict.expected,
-                   reference=verdict.expected, source=verdict.source, blank=True,
-                   note=labels.blank_instruction(code, verdict.expected),
+                   single=True, expected=use,
+                   reference=official, source=verdict.source, blank=True,
+                   note=" ".join(x for x in (labels.blank_instruction(code, verdict.expected),
+                                             f"{may[:1].upper()}{may[1:]}." if may else "") if x),
                    action=f"fill in the blank in {key}")
-    left, right = word_diff(verdict.expected, verdict.found)
+    left, right = word_diff(official, verdict.found)
     if verdict.status == "wrong":
         target = "the signal word" if code == "SIGNAL" else key
         return Row(key, "wrong", mono=mono, found_html=right, expected_html=left,
-                   expected=verdict.expected, official_heading=heading,
-                   note=verdict.why, source=verdict.source,
-                   fillins=list(verdict.fillins),
-                   action=f"correct {target} to “{verdict.expected}”")
+                   expected=use, official_heading=heading,
+                   note=" ".join(x for x in (verdict.why,
+                                             f"Copy gives the shortest wording; {may}." if may
+                                             else "") if x),
+                   source=verdict.source, fillins=list(verdict.fillins),
+                   action=f"correct {target} to “{use}”" + (f" ({may})" if may else ""))
     minor = bool(verdict.minor_difference)
     return Row(key, "check", mono=mono, found_html=right, expected_html=left,
-               expected=verdict.expected, official_heading=heading,
+               expected=use, official_heading=heading,
                note=(f"{verdict.why} {verdict.match_note}".strip()
-                     if verdict.match_note else verdict.why),
+                     if verdict.match_note else verdict.why)
+                    + (f" Copy gives the shortest wording; {may}." if may else ""),
                minor=minor, source=verdict.source,
                fillins=list(verdict.fillins),
                group=("align punctuation and capital letters in {keys}, or "
@@ -388,8 +421,6 @@ def _statement_subs(report: Report, section: str, display: str) -> list[Sub]:
 
 
 def _ingredient_table(report: Report, display: str) -> dict | None:
-    from lingua_oracle.ingredients.report import REASONS
-
     ing = report.ingredients
     found = report.substance
     if found is not None and found.state == "checked":
@@ -415,6 +446,7 @@ def _ingredient_table(report: Report, display: str) -> dict | None:
         return None
     list_heading = (f"{ing.list_title} ({'binding' if ing.list_binding else 'reference only'})"
                     if ing.list_title else "Official list")
+    named = _list_name(report)
     rows = []
     for s in ing.substances:
         status = {"ok": "ok", "info": "ok", "not_checked": "na"}.get(s["status"])
@@ -432,7 +464,7 @@ def _ingredient_table(report: Report, display: str) -> dict | None:
         elif s.get("reason") == "sheet_gives_no_codes":
             text, status = "Listed — Section 3 prints no codes to compare", "info"
         else:
-            text = REASONS.get(s.get("reason") or "", "Not checked")
+            text = _reason(s.get("reason") or "", named)
         name = s.get("name") or s["cas"]
         sheet = sorted({c for cs in s.get("code_sets") or [] for c in cs.get("codes", [])}) \
             if s.get("code_sets") else []
@@ -447,6 +479,36 @@ def _ingredient_table(report: Report, display: str) -> dict | None:
                                f"which lists {', '.join(missing)}"
                                if status == "check" else ""))})
     return {"list_heading": list_heading, "rows": rows}
+
+
+def _list_name(report: Report) -> str:
+    """The list this regulation's ingredients are held against, by name."""
+    from lingua_oracle.substances.lists import for_regulation
+
+    use = for_regulation(report.regulation or "")
+    return use.short if use is not None and use.short else "Annex VI"
+
+
+def _reason(reason: str, named: str) -> str:
+    """Why an ingredient was not checked, naming the list actually used -
+    "harmonised" only where it is Annex VI that binds."""
+    entry = "harmonised entry" if named == "Annex VI" else "entry"
+    return {
+        "no_harmonised_entry": f"no {entry} in {named}",
+        "ingredient_has_no_cas": f"no CAS number, so {named} cannot be searched",
+        "several_harmonised_entries": f"the CAS number appears in more than one {named} entry",
+        "entry_covers_several_substances": f"the {named} entry covers several substances at once",
+        "sheet_gives_no_codes": "Section 3 prints no codes for it to compare",
+    }.get(reason, "Not checked")
+
+
+def _named_message(message: str, named: str) -> str:
+    """A message written about Annex VI, about the list actually used."""
+    if named == "Annex VI" or not message:
+        return message
+    message = re.sub(r"\ba harmonised entry", "an entry", message)
+    message = re.sub(r"harmonised entry", "entry", message)
+    return re.sub(r"(?:CLP )?Annex VI(?: Part 3,)?(?: Table 3)?", named, message)
 
 
 def _section_three(report: Report, display: str) -> Section:
@@ -466,30 +528,27 @@ def _section_three(report: Report, display: str) -> Section:
         message = (ing.message if ing is not None and ing.message else
                    "The ingredient check was not run." if ing is None else
                    "No ingredients with CAS numbers were found.")
-        sec.subs.append(Sub("", [Row("Ingredients", "na", text=message)]))
+        sec.subs.append(Sub("", [Row("Ingredients", "na",
+                                     text=_named_message(message, _list_name(report)))]))
     elif ing is not None and ing.message and report.composition != "substance":
-        sec.subs.append(Sub("", [Row("Ingredients", "info", text=ing.message)]))
+        sec.subs.append(Sub("", [Row("Ingredients", "info",
+                                     text=_named_message(ing.message, _list_name(report)))]))
     sec.subs += _statement_subs(report, "3", display)
     return sec
 
 
 def _section_nine(report: Report) -> Section:
+    """Section 9's physical state is C-25's row (shown with the section
+    against section rows); a report without it says what it read."""
     sec = Section("9", TITLES["9"])
+    if any(r.check == "C-25" for r in report.consistency):
+        return sec
     state = report.physical_state or (report.mixture.physical_state
                                       if report.mixture else "")
-    use = ("used where the rules set different limits for gas and solid/liquid, "
-           "and for the form inhalation toxicity is calculated in")
-    text = {
-        "gas": f"Gas — {use} (gas)",
-        "liquid": f"Liquid — {use} (vapour)",
-        "solid": f"Solid — {use} (dust/mist)",
-        "solid/liquid": ("Solid or liquid — Section 9 does not say which; "
-                         "inhalation toxicity is calculated both as a vapour and "
-                         "as a dust/mist"),
-    }.get(state, "Section 9 does not say whether this is a gas; where a limit "
-                 "depends on it, both were tried")
-    sec.subs.append(Sub("", [Row("Physical state", "ok" if state else "na",
-                                 text=text)]))
+    text = {"gas": "Gas", "liquid": "Liquid", "solid": "Solid",
+            "solid/liquid": "Solid or liquid, not saying which"}.get(
+        state, "Not read: no physical state was found in Section 9.")
+    sec.subs.append(Sub("", [Row("Physical state", "ok" if state else "na", text=text)]))
     return sec
 
 
@@ -581,14 +640,15 @@ def _structure_sub(report: Report, number: str) -> Sub | None:
     result = next((s for s in structure.sections if s.number == number), None)
     if result is None:
         return None
-    return Sub("Structure", [_structure_row(r, result) for r in result.rows])
+    return Sub("Structure", [_structure_row(r, result) for r in result.rows], structure=True)
 
 
 def _document_sub(report: Report) -> Sub | None:
     structure = report.structure
     if structure is None or structure.state != "checked" or not structure.document_rows:
         return None
-    return Sub("Whole document", [_structure_row(r) for r in structure.document_rows])
+    return Sub("Whole document", [_structure_row(r) for r in structure.document_rows],
+               structure=True)
 
 
 # -- section against section ------------------------------------------------------
@@ -612,6 +672,7 @@ def _consistency_row(row) -> Row:
             "C-22": "name the Candidate List substance where REACH Annex II requires",
             "C-23": "give a UN entry whose class fits the product's state and flash point",
             "C-24": "give the shipping name, class and packing group beside the UN number",
+            "C-25": "state the physical state (gas, liquid or solid) in Section 9",
         }[row.check].rstrip(".")
         if row.found and row.expected and row.check == "C-16":
             left, right = word_diff(row.expected, row.found)
@@ -718,6 +779,8 @@ def build(report: Report, display: str, set_by: str) -> Page:
         "to_check": sum(1 for r in rows if r.status == "check"),
         "correct": sum(1 for r in rows if r.status == "ok"),
         "sections": sum(1 for s in shown if s.number in ALL_SECTIONS and s.judged),
+        "structure_sections": sum(1 for s in shown if s.number in ALL_SECTIONS and s.structured),
+        "deep_sections": sum(1 for s in shown if s.number in ALL_SECTIONS and s.deep),
         "codes_found": report.coverage.codes_found,
         "codes_checked": report.coverage.codes_checked,
         "codes_percent": (int(report.coverage.percent)
@@ -761,7 +824,7 @@ def _actions(sections: list[Section]) -> list[str]:
 
 def _detail(sections: list[Section]) -> str:
     """One sentence under the verdict, written from the rows on the page."""
-    problems, clean = [], []
+    problems, clean, structure_only = [], [], []
     for sec in sections:
         name = "the label" if sec.number == "label" else f"Section {sec.number}"
         blanks = sum(1 for r in sec.rows if r.blank)
@@ -778,11 +841,21 @@ def _detail(sections: list[Section]) -> str:
             phrase = ", ".join(parts)
             problems.append(f"{phrase}{',' if phrase.endswith('fill in') else ''} in {name}")
         elif sec.judged and sec.number != "1":
-            clean.append(name.replace("Section ", ""))
+            (clean if sec.deep else structure_only).append(name.replace("Section ", ""))
     out = "; ".join(problems) + "." if problems else ""
+
+    def listed(numbers: list[str]) -> str:
+        return (f"{', '.join(numbers[:-1])} and {numbers[-1]}" if len(numbers) > 1
+                else numbers[0])
+
     if clean:
-        tail = (f"Sections {', '.join(clean[:-1])} and {clean[-1]} are correct."
-                if len(clean) > 1 else f"Section {clean[0]} is correct.")
+        tail = (f"Sections {listed(clean)} are correct." if len(clean) > 1
+                else f"Section {clean[0]} is correct.")
+        out = f"{out} {tail}".strip()
+    if structure_only:
+        tail = (f"Sections {listed(structure_only)} have correct structure."
+                if len(structure_only) > 1
+                else f"Section {structure_only[0]} has correct structure.")
         out = f"{out} {tail}".strip()
     return out or "Nothing on this document could be checked."
 

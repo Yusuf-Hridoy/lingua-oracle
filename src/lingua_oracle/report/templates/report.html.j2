@@ -156,7 +156,11 @@
       <div><div class="n fix">{{ page.stats.must_fix }}</div><div class="l">Must fix</div></div>
       <div><div class="n check">{{ page.stats.to_check }}</div><div class="l">To check</div></div>
       <div><div class="n ok">{{ page.stats.correct }}</div><div class="l">Correct</div></div>
-      <div><div class="n">{{ page.stats.sections }} of 16</div><div class="l">SDS sections checked</div></div>
+      {% if page.stats.structure_sections %}
+      <div><div class="n">{{ page.stats.structure_sections }} of 16</div><div class="l">sections &mdash; structure; {{ page.stats.deep_sections }} in depth</div></div>
+      {% else %}
+      <div><div class="n">{{ page.stats.deep_sections }} of 16</div><div class="l">SDS sections checked in depth</div></div>
+      {% endif %}
       <div><div class="n">{{ page.stats.codes_percent }}%</div>
            <div class="l">Codes checked ({{ page.stats.codes_checked }} of {{ page.stats.codes_found }})</div></div>
     </div>
@@ -197,7 +201,7 @@
             {% set fixes = sec.count('fix', 'wrong') %}{% set checks = sec.count('check') %}
             {% if fixes %}<span class="pill fix"><span aria-hidden="true">✕</span> {{ fixes }} must fix</span>{% endif %}
             {% if checks %}<span class="pill check"><span aria-hidden="true">!</span> {{ checks }} to check</span>{% endif %}
-            {% if not fixes and not checks %}{{ pill(sec.status) }}{% endif %}
+            {% if not fixes and not checks %}{{ pill(sec.pill) }}{% endif %}
           </div>
         </header>
 

@@ -204,9 +204,10 @@ def render_html(report: Report) -> str:
     template = _environment().get_template("report.html.j2")
     ing = report.ingredients
     substances = (ing.substances if ing else []) or []
+    page = sections.build(report, display, set_by)
     return template.render(
         report=report,
-        page=sections.build(report, display, set_by),
+        page=page,
         PILL=sections.PILL,
         ing=ing,
         mixture=report.mixture,
@@ -214,7 +215,7 @@ def render_html(report: Report) -> str:
                               for line in s.get("list_anomalies") or []}),
         provenance=sorted({(v.code, v.source_detail) for v in report.statements
                            if v.source_detail}),
-        caveats=labels._caveats(report),
+        caveats=labels._caveats(report, page),
         regulation_name=display_name_of,
         regulation_display=display,
         language_name=language_name(report.language),

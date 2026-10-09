@@ -176,10 +176,12 @@ def test_the_count_line_and_coverage_are_at_the_top(page, server, shots_dir):
 
     _upload(page, server, BY_NAME["defect_a02_hazard"])
     stats = page.locator(".verdict .stats").first.inner_text()
-    for label in ("Must fix", "To check", "Correct", "SDS sections checked",
-                  "Codes checked"):
+    for label in ("Must fix", "To check", "Correct", "Codes checked"):
         assert label in stats, stats[:300]
     assert re.search(r"Codes checked \(\d+ of \d+\)", stats), stats[:300]
+    # Structure and depth counted apart: a section whose structure alone was
+    # judged is not a section "checked".
+    assert re.search(r"16 of 16\s+sections — structure; \d+ in depth", stats), stats[:300]
     assert re.search(r"\d+ of 16", stats), stats[:300]
 
 
@@ -308,7 +310,8 @@ def test_the_verdict_bar_has_a_banner_and_five_stats(page, server, shots_dir):
     cells = verdict.locator(".stats > div")
     assert cells.count() == 5, cells.count()
     labels_shown = [cells.nth(i).inner_text().split("\n")[-1] for i in range(5)]
-    assert labels_shown[:4] == ["Must fix", "To check", "Correct", "SDS sections checked"]
+    assert labels_shown[:3] == ["Must fix", "To check", "Correct"]
+    assert re.fullmatch(r"sections — structure; \d+ in depth", labels_shown[3]), labels_shown
     assert labels_shown[4].startswith("Codes checked")
 
 
@@ -672,3 +675,17 @@ def test_every_checked_item_is_a_row_in_its_section(page, server, shots_dir):
     four = page.locator("#s4")
     assert four.locator(".srow").filter(has_text="Heading").count() == 1
     assert "4.1 Beskrivelse af førstehjælpsforanstaltninger" in four.inner_text()  # da
+
+
+def test_a_section_judged_only_by_its_structure_never_says_correct(page, server, shots_dir):
+    from tests.ui.manifest import BY_NAME
+
+    _upload(page, server, BY_NAME["defect_a02_hazard"])
+    five = page.locator("section#s5 header .pills").first.inner_text()
+    assert "Structure correct" in five and five.strip() != "✓ Correct", five
+    assert "have correct structure" in page.locator(".verdict .banner p").first.inner_text()
+    page.locator("summary", has_text="Technical details").first.click()
+    details = page.locator("details.block").filter(has_text="Technical details").first
+    text = details.inner_text()
+    assert "Checked: the wording of each statement" in text, text[:400]
+    assert "Pictograms, layout and Sections 4-8" not in text
