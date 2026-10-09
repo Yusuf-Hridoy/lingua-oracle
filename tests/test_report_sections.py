@@ -169,3 +169,23 @@ def test_a_mixture_card_says_when_its_class_comes_from_section_11(tmp_path):
     card = _card(body, "Acute toxicity, oral")
     assert "Section 11&rsquo;s data on the mixture" in card or "Section 11’s data on the mixture" in card
     assert "used instead of the additivity calculation" in card
+
+
+def test_section_14_shows_the_transport_class_and_required_field_rows(tmp_path):
+    from tests.make_fixtures import structured_sheet
+
+    path = structured_sheet(tmp_path / "t.pdf", regulation="uk_clp", language="en", bodies={
+        "2": ["H225", "Highly flammable liquid and vapour"],
+        "3": ["Synthetic component A  CAS 000-00-0  30-60%"],
+        "9": ["State :", "liquid", "Flash point :", "Not specified"],
+        "14": ["UN ID Number:", "1001", "Shipping Name:", "Not applicable",
+               "Class or Division:", "Not applicable"]})
+    report = check_pdf(str(path), "uk_clp", "en")
+    page = sections.build(report, "GB CLP", "flag")
+    fourteen = next(s for s in page.sections if s.number == "14")
+    subs = {sub.title: sub.rows for sub in fourteen.subs}
+    [cls] = subs["Transport class against the product"]
+    assert cls.status == "fix" and cls.action.startswith("give a UN entry whose class fits")
+    fields = subs["Required transport fields"]
+    assert {r.status for r in fields} == {"fix"} and len(fields) == 2
+    assert fields[0].action.startswith("give the shipping name, class and packing group")
