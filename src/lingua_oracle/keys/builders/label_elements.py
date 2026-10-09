@@ -92,6 +92,9 @@ class LabelElements:
     statement_rules: list[Precedence] = field(default_factory=list)
     #: What the regulation does not adopt, quoted: "aquatic acute 1-3".
     not_adopted: list[dict] = field(default_factory=list)
+    #: Statements of the regulation's own beside the GHS's (AUH...), with the
+    #: criterion each is assigned by and the classification it needs, if any.
+    supplemental: list[dict] = field(default_factory=list)
     unparsed: list[str] = field(default_factory=list)
 
 
@@ -533,9 +536,13 @@ def write(regulation: str, *, use_cache: bool = True) -> Path:
 
 # -- the GHS: Annex 3 for codes, the chapters for symbols and signal words ----------
 
+# A statement may carry the text's own instructions in brackets ("May cause
+# cancer (state route of exposure ...)"), and a class its sub-class after a
+# semicolon ("Specific target organ toxicity, single exposure; Respiratory
+# tract irritation (chapter 3.8);").
 _A3_ROW = re.compile(
-    r"(?P<code>H\d{3}[A-Za-z]?(?:\+H\d{3})*) (?P<statement>[A-Z][^()]+?) "
-    r"(?P<hclass>[A-Z][A-Za-z ,/()\-]+?) \(chapter (?P<chapter>\d\.\d{1,2})\) "
+    r"(?P<code>H\d{3}[A-Za-z]?(?:\+H\d{3})*) (?P<statement>[A-Z](?:[^()]|\([^()]*\))+?) "
+    r"(?P<hclass>[A-Z][A-Za-z ,;/()\-]+?) \(chapter (?P<chapter>\d\.\d{1,2})\);? "
     r"(?P<cats>(?:(?:\d[A-C]?|[A-G]|Type [A-G]|Division \d\.\d|\d\.\d|(?:Compressed|Liquefied|"
     r"Refrigerated liquefied|Dissolved) gas)(?:,\s*|\s+and\s+|\s+or\s+)?)+)")
 
@@ -648,9 +655,14 @@ def _ghs(regulation: str) -> LabelElements:
             elif sub and sub.split()[0][:6] not in lowered:
                 continue
             route = next((r for r in ("oral", "dermal", "inhalation") if r in lowered), "")
+            # Single and repeated exposure are two classes under one name.
+            exposure = next((x for x in ("single exposure", "repeated exposure")
+                             if x in lowered), "")
+            name = (lowered if lowered.startswith("substances and mixtures which")
+                    else lowered.split(",")[0]).split(" (")[0]
             structure.entries.append(Entry(
-                section=chapter, hazard_class=lowered.split(",")[0].split(" (")[0],
-                category=column["category"], subclass=sub or route, h_codes=[code],
+                section=chapter, hazard_class=name,
+                category=column["category"], subclass=sub or route or exposure, h_codes=[code],
                 signal=column["signal"],
                 pictograms=[column["symbol"]] if column["symbol"] else [],
                 source=f"{document}, Table A3.1.1 and Table {column['table']}"))
@@ -658,9 +670,15 @@ def _ghs(regulation: str) -> LabelElements:
         if not matched:
             structure.unparsed.append(f"{document}: {code} ({hclass}, chapter {chapter}) - "
                                       "no label table column for its category")
+    # A row the pattern did not read is said, never passed over in silence.
+    listed = dict.fromkeys(re.findall(r"(?<![+\w])(H\d{3}[A-Za-z]?) [A-Z]", rows))
+    for code in listed:
+        if not any(c == code for c, _ in seen):
+            structure.unparsed.append(f"{document}: {code} - its Table A3.1.1 row was not read")
     _ghs_rules(structure, text, document)
     if regulation == "au_whs":
         _australian_exclusions(structure)
+        _australian_statements(structure)
     return structure
 
 
@@ -731,6 +749,39 @@ def _australian_exclusions(structure: LabelElements) -> None:
                                                               citation))})
         return
     structure.unparsed.append("Safe Work Australia exclusions not found")
+
+
+def _australian_statements(structure: LabelElements) -> None:
+    """The non-GHS hazard statements (AUH...) and the criterion each is
+    assigned by, from Safe Work Australia's guidance, Tables 4 and 5. One
+    needs a classification beside it: AUH071, "in addition to classification
+    for inhalation toxicity"."""
+    import pymupdf
+
+    path = sources.require("australia/swa_classification_guidance.pdf")
+    with pymupdf.open(path) as pdf:
+        pages = [(n + 1, _flat(p.get_text())) for n, p in enumerate(pdf)]
+    for number, page in pages:
+        for found in re.finditer(r"(AUH0\d\d) – ([^.]+?) (For substances (?:and|or) mixtures"
+                                 r".+?)(?= (?:R\d+ – |AUH0\d\d – |Table \d|\d+ [A-Z]{4,})|$)",
+                                 page):
+            code = found.group(1)
+            if any(s["code"] == code for s in structure.supplemental):
+                continue
+            criterion = found.group(3)
+            needs = None
+            route = re.search(r"in addition to classification for (oral|dermal|inhalation) "
+                              r"toxicity", criterion)
+            if route:
+                needs = {"hazard_class": "acute toxicity", "subclass": route.group(1)}
+            structure.supplemental.append({
+                "code": code, "statement": found.group(2), "needs": needs,
+                "rule": asdict(Rule(False, f"{code} – {found.group(2)} {criterion}",
+                                    "Safe Work Australia, Guidance on the classification of "
+                                    f"hazardous chemicals under the WHS Regulations, page "
+                                    f"{number}"))})
+    if not structure.supplemental:
+        structure.unparsed.append("Safe Work Australia non-GHS hazard statements not found")
 
 
 # -- US: Appendix C, class by class ------------------------------------------------

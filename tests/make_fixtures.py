@@ -225,8 +225,9 @@ class _Completion:
                          bold=True, size=11)
         subs = self._subs(number)
         self.pending = []
-        extra = flash_lines(self.language, getattr(self.sheet, "drawn", set())) \
-            if number == "9" else []
+        drawn = getattr(self.sheet, "drawn", set())
+        extra = ((default_nine if whole else flash_lines)(self.language, drawn)
+                 if number == "9" else [])
         if not subs:
             for line in self._items(number) + extra:
                 self.sheet._draw(line)
@@ -379,6 +380,22 @@ def flash_lines(language: str, codes) -> list[str]:
     return [f"{words[0]}: {flash} °C"] + ([f"{words[1]}: {boiling} °C"] if boiling else [])
 
 
+#: "Physical state: Liquid", in the sheet's language - what Section 9 says of a
+#: flammable liquid where the builder leaves Section 9 to be written for it.
+_STATE_WORDS = {"en": ("Physical state", "Liquid"), "da": ("Fysisk tilstand", "Væske"),
+                "de": ("Aggregatzustand", "Flüssig"), "fr": ("État physique", "Liquide")}
+
+
+def default_nine(language: str, codes) -> list[str]:
+    """Section 9 written for a builder that wrote none: a flammable liquid's
+    state, flash point and boiling point; nothing for anything else."""
+    flash = flash_lines(language, codes)
+    if not flash:
+        return []
+    state = _STATE_WORDS.get(language.split("-")[0].split("+")[0], _STATE_WORDS["en"])
+    return [f"{state[0]}: {state[1]}", *flash]
+
+
 def structure_table(regulation: str) -> dict:
     from lingua_oracle.structure.reader import load
 
@@ -447,7 +464,7 @@ def structured_sheet(path: Path, *, regulation: str, language: str,
     printed_codes = set(re.findall(r"\bH\d{3}\b", " ".join(
         line if isinstance(line, str) else line[0] for body in bodies.values() for line in body)))
     if "9" not in bodies:
-        bodies["9"] = flash_lines(language, printed_codes)
+        bodies["9"] = default_nine(language, printed_codes)
     omit, printed, headings = omit or set(), printed or {}, headings or {}
     blank = blank or set()
     if omit & {i["id"] for i in table.get("items", [])}:

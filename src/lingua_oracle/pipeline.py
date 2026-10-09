@@ -137,11 +137,12 @@ def check_pdf(
         compared_with=Path(compare_with).name if compare_with else None,
     )
     report.recount()
-    from lingua_oracle.mixture.state import physical_state
+    from lingua_oracle.mixture.state import physical_state, printed_state
 
     report.sections_found = sorted({span.name for span in spans},
                                    key=lambda n: (not n.isdigit(), int(n) if n.isdigit() else 0))
     report.physical_state = physical_state(document.lines, spans) or ""
+    report.physical_state_printed = printed_state(document.lines, spans)
     report.structure = ctx.structure
     report.consistency = list(ctx.consistency)
     if ingredients:
@@ -195,6 +196,13 @@ def check_pdf(
         + (", ".join(sorted({span.name for span in spans})) or "none")
     )
     report.notes.append(f"PDF text read with {document.backend}.")
+    if report.physical_state in ("", "solid/liquid"):
+        said = (f"Section 9 says “{report.physical_state_printed}”, which is neither solid "
+                "nor liquid" if report.physical_state_printed else
+                "Section 9 does not state the physical state")
+        report.notes.append(f"{said}: where a limit depends on the state, both were tried, "
+                            "and inhalation toxicity is calculated both as a vapour and as a "
+                            "dust/mist.")
     if detection.detected_by == "flag":
         report.notes.append("Regulation chosen by you, not read from the sheet.")
     elif detection.evidence.get(reg.id):

@@ -268,6 +268,23 @@
    "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 2.3.1"
   },
   {
+   "section": "2.10",
+   "hazard_class": "pyrophoric solids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H242"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 2.10.2"
+  },
+  {
    "section": "2.11",
    "hazard_class": "self-heating substances and mixtures",
    "category": [
@@ -303,7 +320,7 @@
   },
   {
    "section": "2.12",
-   "hazard_class": "substances and mixtures which",
+   "hazard_class": "substances and mixtures which, in contact with water, emit flammable gases",
    "category": [
     "1"
    ],
@@ -320,7 +337,7 @@
   },
   {
    "section": "2.12",
-   "hazard_class": "substances and mixtures which",
+   "hazard_class": "substances and mixtures which, in contact with water, emit flammable gases",
    "category": [
     "2"
    ],
@@ -337,7 +354,7 @@
   },
   {
    "section": "2.12",
-   "hazard_class": "substances and mixtures which",
+   "hazard_class": "substances and mixtures which, in contact with water, emit flammable gases",
    "category": [
     "3"
    ],
@@ -368,6 +385,57 @@
     "Flame over circle"
    ],
    "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 2.4.2"
+  },
+  {
+   "section": "2.14",
+   "hazard_class": "oxidizing solids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H271"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame over circle"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 2.14.2"
+  },
+  {
+   "section": "2.14",
+   "hazard_class": "oxidizing solids",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H272"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame over circle"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 2.14.2"
+  },
+  {
+   "section": "2.14",
+   "hazard_class": "oxidizing solids",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H272"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame over circle"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 2.14.2"
   },
   {
    "section": "2.5",
@@ -858,11 +926,28 @@
   },
   {
    "section": "3.8",
-   "hazard_class": "narcotic effects",
+   "hazard_class": "specific target organ toxicity",
    "category": [
     "3"
    ],
-   "subclass": "",
+   "subclass": "single exposure",
+   "codes": [],
+   "h_codes": [
+    "H335"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.8.3"
+  },
+  {
+   "section": "3.8",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "3"
+   ],
+   "subclass": "single exposure",
    "codes": [],
    "h_codes": [
     "H336"
@@ -872,6 +957,114 @@
     "Exclamation mark"
    ],
    "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.8.3"
+  },
+  {
+   "section": "3.5",
+   "hazard_class": "germ cell mutagenicity",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H340"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.5.2"
+  },
+  {
+   "section": "3.5",
+   "hazard_class": "germ cell mutagenicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H341"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.5.2"
+  },
+  {
+   "section": "3.6",
+   "hazard_class": "carcinogenicity",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H350"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.6.2"
+  },
+  {
+   "section": "3.6",
+   "hazard_class": "carcinogenicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H351"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.6.2"
+  },
+  {
+   "section": "3.7",
+   "hazard_class": "reproductive toxicity",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H360"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.7.2"
+  },
+  {
+   "section": "3.7",
+   "hazard_class": "reproductive toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H361"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.7.2"
   },
   {
    "section": "3.7",
@@ -889,15 +1082,83 @@
    "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.7.2"
   },
   {
+   "section": "3.8",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "single exposure",
+   "codes": [],
+   "h_codes": [
+    "H370"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.8.3"
+  },
+  {
+   "section": "3.8",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "single exposure",
+   "codes": [],
+   "h_codes": [
+    "H371"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.8.3"
+  },
+  {
+   "section": "3.9",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "repeated exposure",
+   "codes": [],
+   "h_codes": [
+    "H372"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.9.4"
+  },
+  {
+   "section": "3.9",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "repeated exposure",
+   "codes": [],
+   "h_codes": [
+    "H373"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, Table A3.1.1 and Table 3.9.4"
+  },
+  {
    "section": "4.1",
-   "hazard_class": "hazardous to the aquatic environment",
+   "hazard_class": "very toxic to aquatic life hazardous to the aquatic environment",
    "category": [
     "1"
    ],
    "subclass": "short-term (acute)",
    "codes": [],
    "h_codes": [
-    "H400"
+    "H310"
    ],
    "signal": "Warning",
    "pictograms": [
@@ -1226,8 +1487,123 @@
    }
   }
  ],
+ "supplemental": [
+  {
+   "code": "AUH006",
+   "statement": "Explosive with or without contact with air",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH006 – Explosive with or without contact with air For substances and mixtures which are unstable at ambient temperatures, such as acetylene.",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 32"
+   }
+  },
+  {
+   "code": "AUH014",
+   "statement": "Reacts violently with water",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH014 – Reacts violently with water For substances and mixtures which react violently with water, such as acetyl chloride, alkali metals, titanium tetrachloride.",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 32"
+   }
+  },
+  {
+   "code": "AUH018",
+   "statement": "In use, may form flammable/explosive vapour/air mixture",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH018 – In use, may form flammable/explosive vapour/air mixture For substances and mixtures not classified as flammable themselves, but which may form flammable/explosive vapour-air mixtures. For substances this might be the case for halogenated hydrocarbons; and for mixtures this might be the case due to a volatile flammable component or due to the loss of a volatile non-flammable component.",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 32"
+   }
+  },
+  {
+   "code": "AUH019",
+   "statement": "May form explosive peroxides",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH019 – May form explosive peroxides For substances and mixtures which may form explosive peroxides during storage, such as diethyl ether, 1,4-dioxan.",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 32"
+   }
+  },
+  {
+   "code": "AUH029",
+   "statement": "Contact with water liberates toxic gas",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH029 – Contact with water liberates toxic gas For substances and mixtures which in contact with water or damp air, evolve gases classified for acute toxicity in category 1, 2 or 3 in potentially dangerous amounts, such as aluminium phosphide, phosphorus pentasulphide.",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 32"
+   }
+  },
+  {
+   "code": "AUH031",
+   "statement": "Contact with acid liberates toxic gas",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH031 – Contact with acid liberates toxic gas For substances and mixtures which react with acids to evolve gases classified for acute toxicity in category 3 in dangerous amounts, such as sodium hypochlorite, barium polysulphide.",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 32"
+   }
+  },
+  {
+   "code": "AUH032",
+   "statement": "Contact with acid liberates very toxic gas",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH032 – Contact with acid liberates very toxic gas For substances and mixtures which react with acids to evolve gases classified for acute toxicity in category 1 or 2 in dangerous amounts; such as salts of hydrogen cyanide, sodium azide. APPENDIX E: TRANSLATION FOR NON-GHS SUPPLEMENTAL HAZARD STATEMENTS",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 32"
+   }
+  },
+  {
+   "code": "AUH044",
+   "statement": "Risk of explosion if heated under confinement",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH044 – Risk of explosion if heated under confinement For substances and mixtures not classified as, but which may nevertheless display explosive properties in practice if heated under sufficient confinement, in particular substances which decompose explosively if heated in a steel drum do not show this effect if heated in less-strong containers.",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 33"
+   }
+  },
+  {
+   "code": "AUH066",
+   "statement": "Repeated exposure may cause skin dryness and cracking",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH066 – Repeated exposure may cause skin dryness and cracking For substances and mixtures which may cause concern as a result of skin dryness, flaking or cracking but which do not meet the criteria for skin irritancy, based on either practical observations or relevant evidence concerning their predicted effects on the skin. APPENDIX E. TRANSLATION FOR NON-GHS SUPPLEMENTAL HAZARD STATEMENTS",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 33"
+   }
+  },
+  {
+   "code": "AUH070",
+   "statement": "Toxic by eye contact",
+   "needs": null,
+   "rule": {
+    "binding": false,
+    "quote": "AUH070 – Toxic by eye contact For substances or mixtures where an eye irritation test has resulted in overt signs of systemic toxicity or mortality among the animals tested, which is likely to be attributed to absorption of the substance or mixture through the mucous membranes of the eye. The statement shall also be applied if there is evidence in humans for systemic toxicity after eye contact. The statement shall also be applied where a substance or a mixture contains another substance labelled for this effect, if the concentration of this substance is equal to, or greater than 0.1 %.",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 34"
+   }
+  },
+  {
+   "code": "AUH071",
+   "statement": "Corrosive to the respiratory tract",
+   "needs": {
+    "hazard_class": "acute toxicity",
+    "subclass": "inhalation"
+   },
+   "rule": {
+    "binding": false,
+    "quote": "AUH071 – Corrosive to the respiratory tract For substances and mixtures in addition to classification for inhalation toxicity, if data are available that indicate the mechanism of toxicity was corrosivity For substances and mixtures in addition to classification for skin corrosivity, if no acute inhalation test data are available and which may be inhaled. APPENDIX F: ADDITIONAL NON-GHS HAZARD STATEMENTS AND CLASSIFICATION CRITERIA",
+    "citation": "Safe Work Australia, Guidance on the classification of hazardous chemicals under the WHS Regulations, page 34"
+   }
+  }
+ ],
  "unparsed": [
-  "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H201 (Explosives, chapter 2.1) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H200 (Explosive; mass explosion hazard Explosives, chapter 2.1) - no label table column for its category",
   "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H202 (Explosives, chapter 2.1) - no label table column for its category",
   "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H203 (Explosives, chapter 2.1) - no label table column for its category",
   "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H204 (Explosives, chapter 2.1) - no label table column for its category",
@@ -1237,6 +1613,11 @@
   "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H230 (Flammable gases, chapter 2.2) - no label table column for its category",
   "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H231 (Flammable gases, chapter 2.2) - no label table column for its category",
   "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H232 (Flammable gases, chapter 2.2) - no label table column for its category",
-  "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H280 (Gases under pressure, chapter 2.5) - no label table column for its category"
+  "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H240 (Organic peroxides, chapter 2.15) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H241 (Organic peroxides, chapter 2.15) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H280 (Gases under pressure, chapter 2.5) - no label table column for its category",
+  "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H201 - its Table A3.1.1 row was not read",
+  "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H250 - its Table A3.1.1 row was not read",
+  "UN GHS Rev.7 (2017), as adopted by the WHS Regulations: H400 - its Table A3.1.1 row was not read"
  ]
 }

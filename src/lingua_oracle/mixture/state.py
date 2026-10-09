@@ -29,13 +29,14 @@ _LABEL_RE = re.compile(
 
 #: Where Section 9 starts and where it stops. The section detector tracks only
 #: the sections the wording check needs, so this finds its own.
+#: The label before the number is any one word ("Section", "PUNKT", "ABSCHNITT").
 _SECTION_9 = re.compile(
-    r"^\s*(?:section\s*)?9[.):]?\s*(physical and chemical|"
+    r"^\s*(?:[^\W\d]+\s*)?9[.):]?\s*(physical and chemical|"
     r"physikalische und chemische|propriétés physiques|"
     r"propiedades físicas|proprietà fisiche|fysiske og kemiske|"
     r"fysische en chemische)", re.IGNORECASE)
 _SECTION_10 = re.compile(
-    r"^\s*(?:section\s*)?10[.):]?\s*(stability|stabilität|stabilité|"
+    r"^\s*(?:[^\W\d]+\s*)?10[.):]?\s*(stability|stabilität|stabilité|"
     r"estabilidad|stabilità|stabilitet|stabiliteit)", re.IGNORECASE)
 
 #: What the value has to say for each answer. "Gas" and "gaseous" only: an
@@ -83,32 +84,57 @@ def physical_state(lines, spans=None) -> str | None:
     label or sit on the line below it: a two-column layout flattens to
     "State :" and then "liquid", and both are the same sentence.
     """
-    inside = False
-    for index, line in enumerate(lines):
+    return _read(lines)[0]
+
+
+def printed_state(lines, spans=None) -> str:
+    """What Section 9 prints for the physical state ("aerosol", "Liquid"),
+    where it says one; "" where it does not."""
+    return _read(lines)[1]
+
+
+#: The languages whose Section 9 labels `_LABELS` holds: elsewhere a state
+#: not found is a state not read, not one not stated.
+LANGUAGES = frozenset({"en", "de", "fr", "es", "pt", "it", "da", "nl"})
+
+
+def read_section(lines: list[str]) -> tuple[str | None, str]:
+    """(state, printed) from Section 9's own lines, found by the caller."""
+    return _scan([line or "" for line in lines])
+
+
+def _read(lines) -> tuple[str | None, str]:
+    inside, section = False, []
+    for line in lines:
         text = (line.text or "").strip()
         if _SECTION_9.match(text):
             inside = True
             continue
         if inside and _SECTION_10.match(text):
             break
-        if not inside:
-            continue
-        match = _LABEL_RE.match(text)
+        if inside:
+            section.append(text)
+    return _scan(section)
+
+
+def _scan(lines: list[str]) -> tuple[str | None, str]:
+    for index, line in enumerate(lines):
+        match = _LABEL_RE.match(line.strip())
         if match is None:
             continue
         value = match.group("value").strip()
         if not value and index + 1 < len(lines):
-            value = (lines[index + 1].text or "").strip()
+            value = lines[index + 1].strip()
         if _GAS.search(value):
-            return GAS
+            return GAS, value
         liquid, solid = _LIQUID.search(value), _SOLID.search(value)
         if liquid and not solid:
-            return LIQUID
+            return LIQUID, value
         if solid and not liquid:
-            return SOLID
+            return SOLID, value
         if liquid or solid or _EITHER.search(value):
-            return SOLID_OR_LIQUID
-    return None
+            return SOLID_OR_LIQUID, value
+    return None, ""
 
 
 def state_of(qualifier: str) -> str | None:

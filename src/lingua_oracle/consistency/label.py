@@ -67,7 +67,11 @@ def signal_word(classifications, stated: list[str], held: dict) -> list[Consiste
 
 
 def statements(classifications, codes: set[str], held: dict,
-               printed_as_text: set[str] | None = None) -> list[ConsistencyRow]:
+               printed_as_text: set[str] | None = None,
+               accounted: set[str] | None = None) -> list[ConsistencyRow]:
+    """Each classification's statements against those printed; then each
+    printed statement no classification calls for. `accounted` are codes
+    another row already speaks for (a class the regulation leaves out)."""
     rows: list[ConsistencyRow] = []
     called: set[str] = set()
     as_text = printed_as_text or set()
@@ -105,6 +109,30 @@ def statements(classifications, codes: set[str], held: dict,
     for code in sorted(codes & known - called):
         rows.append(_row(code, "check", f"{code} is printed, but no classification in "
                          "Section 2 calls for it.", found=code))
+    # A hazard statement the table on file does not know is no less printed.
+    for code in sorted(c for c in codes - known - called - (accounted or set())
+                       if re.fullmatch(r"H\d{3}[A-Za-z]{0,2}", c)):
+        rows.append(_row(code, "check", f"{code} is printed, but no classification read in "
+                         "Section 2 calls for it.", found=code))
+    # The regulation's own statements (AUH...), by the criterion each has.
+    for item in held.get("supplemental", []):
+        code = item["code"]
+        if code not in codes:
+            continue
+        needs = item.get("needs")
+        if not needs:
+            rows.append(_row(code, "info", f"{code} is assigned by its own criterion, not by a "
+                             "classification; not judged here.", rule=item["rule"]))
+            continue
+        beside = [c for c in classifications for e in c.entries
+                  if e["hazard_class"] == needs["hazard_class"]
+                  and e["subclass"] == needs["subclass"]]
+        what = f"{needs['hazard_class']} ({needs['subclass']})"
+        rows.append(_row(code, "ok" if beside else "check",
+                         f"{code} printed beside {beside[0].text}, as its criterion asks."
+                         if beside else
+                         f"{code} is printed, but no {what} classification is read in Section "
+                         "2; its criterion asks for one.", rule=item["rule"], found=code))
     for rule in held.get("statement_rules", []):
         if rule["drop"] in codes and set(rule["when"]) & codes:
             rows.append(_row(rule["drop"], "info", f"{rule['drop']} is printed beside "
@@ -222,8 +250,8 @@ def not_adopted(lines: list[str], codes: set[str], held: dict, criteria: dict | 
         tail = (r"[^.;\n]{0,40}?(?:category|cat\.?)\s*(?:" + "|".join(cats) + r")\b") if cats else ""
         if not re.search(r"\W+".join(words) + tail, text):
             continue
-            rows.append(_row(item["what"], "info", f"{item['what'].capitalize()} is not part of "
-                             f"{display}; this classification is outside it.", rule=item["rule"]))
+        rows.append(_row(item["what"], "info", f"{item['what'].capitalize()} is not part of "
+                         f"{display}; this classification is outside it.", rule=item["rule"]))
     aquatic = (criteria or {}).get("aquatic", {})
     if aquatic.get("status") == "not_adopted" and held["regulation"] != "au_whs":
         stated = sorted(c for c in codes if re.match(r"H4[01]\d$", c))
@@ -249,6 +277,9 @@ def run(lines: list[str], classifications, codes: set[str], stated_signal: list[
                          "Section 2."))
         return rows
     rows += signal_word(judged, stated_signal, held)
-    rows += statements(classifications, codes, held, printed_as_text)
+    aquatic = (criteria or {}).get("aquatic", {})
+    accounted = ({c for c in codes if re.match(r"H4[01]\d$", c)}
+                 if aquatic.get("status") == "not_adopted" else set())
+    rows += statements(classifications, codes, held, printed_as_text, accounted)
     rows += pictograms(judged, lines, held)
     return rows

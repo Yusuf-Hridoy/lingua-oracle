@@ -1,0 +1,9 @@
+{
+ "regulation": "uk_clp",
+ "status": "ok",
+ "binding": true,
+ "item": {
+  "quote": "The following properties shall be clearly identified … (a) Appearance: The physical state (solid (including appropriate and available safety information on granulometry and specific surface area if not already specified elsewhere in this safety data sheet), liquid, gas) and the colour of the substance or mixture as supplied",
+  "citation": "GB REACH (Regulation (EC) No 1907/2006 as retained), legislation.gov.uk, document generated 2026-10-08, Annex II, 9.1(a)"
+ }
+}

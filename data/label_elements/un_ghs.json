@@ -268,6 +268,23 @@
    "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 2.3.2"
   },
   {
+   "section": "2.10",
+   "hazard_class": "pyrophoric solids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H242"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 2.10.2"
+  },
+  {
    "section": "2.11",
    "hazard_class": "self-heating substances and mixtures",
    "category": [
@@ -303,7 +320,7 @@
   },
   {
    "section": "2.12",
-   "hazard_class": "substances and mixtures which",
+   "hazard_class": "substances and mixtures which, in contact with water, emit flammable gases",
    "category": [
     "1"
    ],
@@ -320,7 +337,7 @@
   },
   {
    "section": "2.12",
-   "hazard_class": "substances and mixtures which",
+   "hazard_class": "substances and mixtures which, in contact with water, emit flammable gases",
    "category": [
     "2"
    ],
@@ -337,7 +354,7 @@
   },
   {
    "section": "2.12",
-   "hazard_class": "substances and mixtures which",
+   "hazard_class": "substances and mixtures which, in contact with water, emit flammable gases",
    "category": [
     "3"
    ],
@@ -368,6 +385,57 @@
     "Flame over circle"
    ],
    "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 2.4.2"
+  },
+  {
+   "section": "2.14",
+   "hazard_class": "oxidizing solids",
+   "category": [
+    "1"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H271"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame over circle"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 2.14.2"
+  },
+  {
+   "section": "2.14",
+   "hazard_class": "oxidizing solids",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H272"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Flame over circle"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 2.14.2"
+  },
+  {
+   "section": "2.14",
+   "hazard_class": "oxidizing solids",
+   "category": [
+    "3"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H272"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Flame over circle"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 2.14.2"
   },
   {
    "section": "2.5",
@@ -908,11 +976,28 @@
   },
   {
    "section": "3.8",
-   "hazard_class": "narcotic effects",
+   "hazard_class": "specific target organ toxicity",
    "category": [
     "3"
    ],
-   "subclass": "",
+   "subclass": "single exposure",
+   "codes": [],
+   "h_codes": [
+    "H335"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Exclamation mark"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.8.3"
+  },
+  {
+   "section": "3.8",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "3"
+   ],
+   "subclass": "single exposure",
    "codes": [],
    "h_codes": [
     "H336"
@@ -922,6 +1007,114 @@
     "Exclamation mark"
    ],
    "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.8.3"
+  },
+  {
+   "section": "3.5",
+   "hazard_class": "germ cell mutagenicity",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H340"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.5.2"
+  },
+  {
+   "section": "3.5",
+   "hazard_class": "germ cell mutagenicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H341"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.5.2"
+  },
+  {
+   "section": "3.6",
+   "hazard_class": "carcinogenicity",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H350"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.6.2"
+  },
+  {
+   "section": "3.6",
+   "hazard_class": "carcinogenicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H351"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.6.2"
+  },
+  {
+   "section": "3.7",
+   "hazard_class": "reproductive toxicity",
+   "category": [
+    "1",
+    "1A",
+    "1B"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H360"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.7.2"
+  },
+  {
+   "section": "3.7",
+   "hazard_class": "reproductive toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "",
+   "codes": [],
+   "h_codes": [
+    "H361"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.7.2"
   },
   {
    "section": "3.7",
@@ -939,15 +1132,83 @@
    "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.7.2"
   },
   {
+   "section": "3.8",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "single exposure",
+   "codes": [],
+   "h_codes": [
+    "H370"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.8.3"
+  },
+  {
+   "section": "3.8",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "single exposure",
+   "codes": [],
+   "h_codes": [
+    "H371"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.8.3"
+  },
+  {
+   "section": "3.9",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "1"
+   ],
+   "subclass": "repeated exposure",
+   "codes": [],
+   "h_codes": [
+    "H372"
+   ],
+   "signal": "Danger",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.9.4"
+  },
+  {
+   "section": "3.9",
+   "hazard_class": "specific target organ toxicity",
+   "category": [
+    "2"
+   ],
+   "subclass": "repeated exposure",
+   "codes": [],
+   "h_codes": [
+    "H373"
+   ],
+   "signal": "Warning",
+   "pictograms": [
+    "Health hazard"
+   ],
+   "source": "UN GHS Rev.11 (2025), Table A3.1.1 and Table 3.9.4"
+  },
+  {
    "section": "4.1",
-   "hazard_class": "hazardous to the aquatic environment",
+   "hazard_class": "very toxic to aquatic life hazardous to the aquatic environment",
    "category": [
     "1"
    ],
    "subclass": "short-term (acute)",
    "codes": [],
    "h_codes": [
-    "H400"
+    "H310"
    ],
    "signal": "Warning",
    "pictograms": [
@@ -1235,6 +1496,7 @@
   }
  ],
  "not_adopted": [],
+ "supplemental": [],
  "unparsed": [
   "UN GHS Rev.11 (2025): H204 (Explosives, chapter 2.1) - no label table column for its category",
   "UN GHS Rev.11 (2025): H209 (Explosives, chapter 2.1) - no label table column for its category",
@@ -1245,6 +1507,10 @@
   "UN GHS Rev.11 (2025): H230 (Flammable gases, chapter 2.2) - no label table column for its category",
   "UN GHS Rev.11 (2025): H231 (Flammable gases, chapter 2.2) - no label table column for its category",
   "UN GHS Rev.11 (2025): H232 (Flammable gases, chapter 2.2) - no label table column for its category",
-  "UN GHS Rev.11 (2025): H280 (Gases under pressure, chapter 2.5) - no label table column for its category"
+  "UN GHS Rev.11 (2025): H240 (Organic peroxides, chapter 2.15) - no label table column for its category",
+  "UN GHS Rev.11 (2025): H241 (Organic peroxides, chapter 2.15) - no label table column for its category",
+  "UN GHS Rev.11 (2025): H280 (Gases under pressure, chapter 2.5) - no label table column for its category",
+  "UN GHS Rev.11 (2025): H250 - its Table A3.1.1 row was not read",
+  "UN GHS Rev.11 (2025): H400 - its Table A3.1.1 row was not read"
  ]
 }

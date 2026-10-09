@@ -1,0 +1,9 @@
+{
+ "regulation": "us_osha",
+ "status": "ok",
+ "binding": true,
+ "item": {
+  "quote": "While each section of the SDS must contain all of the specified information … 9. Physical and chemical properties † (a) Physical state.",
+  "citation": "29 CFR 1910.1200 Appendix D, Table D.1, 9(a)"
+ }
+}

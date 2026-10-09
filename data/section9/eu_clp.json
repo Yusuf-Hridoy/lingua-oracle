@@ -1,0 +1,9 @@
+{
+ "regulation": "eu_clp",
+ "status": "ok",
+ "binding": true,
+ "item": {
+  "quote": "(a) Physical state The physical state (gas, liquid or solid) shall generally be indicated at standard conditions of temperature and pressure.",
+  "citation": "Regulation (EC) No 1907/2006 (REACH), consolidated 02006R1907-20260622, Annex II, 9.1(a)"
+ }
+}

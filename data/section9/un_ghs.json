@@ -1,0 +1,9 @@
+{
+ "regulation": "un_ghs",
+ "status": "ok",
+ "binding": false,
+ "item": {
+  "quote": "Relevant information as required should be indicated for every property listed in this table … Physical state − generally at standard conditions",
+  "citation": "UN GHS Rev.11 (2025), Annex 4, Table A4.3.9.1"
+ }
+}

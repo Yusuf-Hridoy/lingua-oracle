@@ -8,6 +8,7 @@ from lingua_oracle.consistency import (
     document,
     label,
     physical,
+    state_stated,
     svhc,
     transport,
     transport_class,
@@ -76,6 +77,7 @@ def run(ctx, display: str) -> list[ConsistencyRow]:
     criteria = physical.criteria(regulation)
     rows = label.run(two, stated, codes, signal, regulation, display, criteria,
                      printed_as_text=by_text)
+    rows += state_stated.run(regulation, ctx.language, lines_of("9"))
     rows += physical.run(lines_of("9"), stated, codes, regulation, bucket)
     rows += data.acute(lines_of("11"), stated, codes, regulation, bucket)
     rows += data.aquatic(lines_of("12"), stated, codes, criteria)

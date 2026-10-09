@@ -536,6 +536,8 @@ class Report(BaseModel):
     #: What Section 9 says the product is: "gas", "liquid", "solid",
     #: "solid/liquid" (an aerosol, paste or gel) or "".
     physical_state: str = ""
+    #: The words Section 9 prints for it ("aerosol"), or "".
+    physical_state_printed: str = ""
     #: The 16 sections, sub-sections and required items, against the
     #: regulation's own text on safety data sheets. None on an older report.
     structure: StructureReport | None = None

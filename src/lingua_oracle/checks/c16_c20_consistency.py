@@ -78,3 +78,8 @@ def transport_class(ctx: CheckContext) -> list[Finding]:
 @register("C-24", "Section 14 gives the fields its regulation requires with a UN number")
 def transport_fields(ctx: CheckContext) -> list[Finding]:
     return _findings(ctx, "C-24")
+
+
+@register("C-25", "Section 9 states the physical state")
+def physical_state(ctx: CheckContext) -> list[Finding]:
+    return _findings(ctx, "C-25")

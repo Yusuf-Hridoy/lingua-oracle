@@ -1,0 +1,9 @@
+{
+ "regulation": "ca_whmis",
+ "status": "ok",
+ "binding": true,
+ "item": {
+  "quote": "Physical and chemical properties (a) physical state;",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), Schedule 1, item 9(a)"
+ }
+}
