@@ -103,17 +103,65 @@ def test_not_regulated_with_nothing_against_it_is_ok(tmp_path):
     assert [(r.key, r.status) for r in _rows(report, "C-21")] == [("Not regulated", "ok")]
 
 
-def test_a_un_number_off_us_sheets_is_not_checked_while_the_un_list_is_not_on_file(tmp_path):
+def test_off_us_sheets_a_block_is_held_against_the_un_list(tmp_path):
     report = _sheet(tmp_path, "eu_clp", fourteen=["ADR/RID"] + _ACETONE)
     row = _rows(report, "C-21")[0]
-    assert row.status == "na" and row.text.startswith("Not checked (list not on file)")
-    assert _findings(report, "C-21") == []
+    assert (row.key, row.status) == ("ADR UN1090", "ok")
+    assert "Rev.24" in row.citation and _findings(report, "C-21") == []
 
 
 def test_an_imdg_block_on_a_us_sheet_is_held_against_the_un_list(tmp_path):
     report = _sheet(tmp_path, "us_osha", fourteen=["DOT"] + _ACETONE + ["IMDG"] + _ACETONE)
-    assert [(r.key, r.status) for r in _rows(report, "C-21")] == [
-        ("DOT UN1090", "ok"), ("IMDG UN1090", "na")]
+    rows = _rows(report, "C-21")
+    assert [(r.key, r.status) for r in rows] == [("DOT UN1090", "ok"), ("IMDG UN1090", "ok")]
+    assert "172.101" in rows[0].citation and "Rev.24" in rows[1].citation
+
+
+def _un(tmp_path, regulation, block):
+    return _rows(_sheet(tmp_path, regulation, fourteen=block), "C-21")
+
+
+def test_a_un_name_with_its_words_in_another_order_agrees(tmp_path):
+    # 3.1.2.3: qualifying words may be shown in another order.
+    rows = _un(tmp_path, "au_whs", ["UN number: UN1993", "UN proper shipping name: "
+                                    "N.O.S. flammable liquid (synthetic solvent)",
+                                    "Transport hazard class(es): 3", "Packing group: II"])
+    assert [r.status for r in rows] == ["ok"]
+
+
+def test_a_un_name_combined_as_3_1_2_2_shows(tmp_path):
+    rows = _un(tmp_path, "eu_clp", ["UN number: UN2793", "UN proper shipping name: Ferrous "
+                                    "metal turnings", "Transport hazard class(es): 4.2",
+                                    "Packing group: III"])
+    assert [r.status for r in rows] == ["ok"]
+
+
+def test_a_un_name_that_is_another_entrys_is_a_fault_quoting_3_1_2_1(tmp_path):
+    rows = _un(tmp_path, "uk_clp", ["UN number: UN1993", "UN proper shipping name: "
+                                    "Flammable solid, n.o.s.", "Transport hazard class(es): 3",
+                                    "Packing group: II"])
+    row = next(r for r in rows if r.key.endswith("name"))
+    assert row.status == "fix" and row.citation.endswith("3.1.2.1")
+    assert row.quote.startswith("3.1.2.1 The proper shipping name")
+
+
+def test_a_un_class_or_packing_group_the_list_does_not_give_is_a_fault(tmp_path):
+    rows = _un(tmp_path, "eu_clp", ["UN number: UN1001", "UN proper shipping name: "
+                                    "Acetylene, dissolved", "Transport hazard class(es): 3",
+                                    "Packing group: II"])
+    statuses = {r.key: r.status for r in rows}
+    assert statuses == {"Transport UN1001 class": "fix"}    # no packing group to compare
+
+
+def test_a_class_without_a_division_takes_any_of_its_divisions(tmp_path):
+    rows = _un(tmp_path, "eu_clp", ["UN number: UN1950", "UN proper shipping name: Aerosols",
+                                    "Transport hazard class(es): 2.1"])
+    assert [r.status for r in rows] == ["ok"]
+
+
+def test_an_unknown_un_number_off_us_sheets_is_a_fault(tmp_path):
+    rows = _un(tmp_path, "eu_clp", ["UN number: UN0000", "UN proper shipping name: Synthetic"])
+    assert [(r.status, r.found) for r in rows] == [("fix", "UN0000")]
 
 
 # -- C-22 Candidate List --------------------------------------------------------------
@@ -233,7 +281,7 @@ def test_section_14_as_a_table_with_a_column_per_mode(tmp_path):
                 "-"]
     report = _sheet(tmp_path, "us_osha", fourteen=fourteen)
     assert [(r.key, r.status) for r in _rows(report, "C-21")] == [
-        ("DOT UN1950", "ok"), ("IMDG UN1950", "na"), ("IATA UN1950", "na")]
+        ("DOT UN1950", "ok"), ("IMDG UN1950", "ok"), ("IATA UN1950", "ok")]
 
 
 def test_a_column_table_with_a_wrong_dot_class_is_a_fault(tmp_path):
@@ -247,3 +295,29 @@ def test_a_column_table_with_a_wrong_dot_class_is_a_fault(tmp_path):
 def test_section_14_saying_neither_is_not_checked(tmp_path):
     report = _sheet(tmp_path, "us_osha", fourteen=["See the shipping papers."])
     assert [(r.key, r.status) for r in _rows(report, "C-21")] == [("Transport", "na")]
+
+
+def test_a_page_number_between_a_tables_values_is_not_a_value():
+    from lingua_oracle.consistency import transport
+
+    read = transport.columns(["ADR", "IMDG", "UN number", "UN1090", "SDS 1 / 2", "UN1090",
+                              "Transport hazard class(es)", "3", "Page 2 of 4", "3"])
+    assert [(m, b["number"], b["class"]) for m, b in read] == [
+        ("ADR", "UN1090", "3"), ("IMDG", "UN1090", "3")]
+
+
+def test_a_number_alone_says_nothing_else_was_compared(tmp_path):
+    rows = _un(tmp_path, "eu_clp", ["UN ID Number:", "1090", "Shipping Name:", "Not applicable",
+                                    "Class or Division:", "Not applicable"])
+    assert [r.status for r in rows] == ["ok"] and "gives no shipping name" in rows[0].text
+
+
+def test_a_label_under_a_heading_of_the_same_name_is_read_for_its_value():
+    from lingua_oracle.consistency import transport
+
+    block = transport.read_block(["14.1. UN number or ID number", "UN ID Number: 1090",
+                                  "14.2. UN proper shipping name", "Shipping Name: Acetone",
+                                  "14.3. Transport hazard class(es)", "Class or Division: 3",
+                                  "14.4. Packing group", "Packaging Group: II"])
+    assert (block["number"], block["name"], block["class"], block["group"]) == (
+        "UN1090", "Acetone", "3", "II")
