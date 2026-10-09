@@ -494,13 +494,15 @@ def structured_sheet(path: Path, *, regulation: str, language: str,
             if subs[0]["number"] in group or any(x["number"] in group for x in subs):
                 keep = _BODY_AT.get(number, group[-1])
                 skip |= {n for n in group if n != keep}
+        shown = [x["number"] for x in subs if x["number"] not in skip | omit]
+        body_at = _BODY_AT.get(number) or (shown[0] if shown else None)
         for sub in subs:
             if sub["number"] in skip or sub["number"] in omit:
                 continue
             words = sub["heading"].get(tag) or sub["heading"]["en"]
             sheet.line(f"{sub['number']}. {words}", bold=True)
             content = _item_lines(table, language, sub["number"]) + \
-                (body if _BODY_AT.get(number) == sub["number"] else [])
+                (body if body_at == sub["number"] else [])
             if sub["number"] not in blank:
                 write(content or [FILLER])
         sheet.blank()

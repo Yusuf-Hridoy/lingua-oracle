@@ -58,3 +58,13 @@ def aquatic_data(ctx: CheckContext) -> list[Finding]:
 @register("C-20", "Product name and revision date are the same throughout")
 def document_consistency(ctx: CheckContext) -> list[Finding]:
     return _findings(ctx, "C-20")
+
+
+@register("C-21", "Section 14 agrees with the dangerous goods list")
+def transport(ctx: CheckContext) -> list[Finding]:
+    return _findings(ctx, "C-21")
+
+
+@register("C-22", "Candidate List substances are named where REACH Annex II requires")
+def candidate_list(ctx: CheckContext) -> list[Finding]:
+    return _findings(ctx, "C-22")

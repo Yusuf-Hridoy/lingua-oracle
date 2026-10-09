@@ -62,7 +62,7 @@ def _fired(report, severity: Severity) -> set[str]:
 def test_every_check_is_registered():
     """Importing lingua_oracle.checks is what registers them; a module left out
     of that package's import list disappears silently."""
-    assert len(all_checks()) == 24
+    assert len(all_checks()) == 26
 
 
 @pytest.mark.parametrize(("name", "regulation", "language"), CLEAN)
