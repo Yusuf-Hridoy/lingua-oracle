@@ -32,7 +32,7 @@ This file is generated from `keys/builders/sources.py`. Edit that.
 | `us-osha/appendix_d.html` | OSHA 29 CFR 1910.1200 Appendix D | as published | [link](https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.1200AppD) | 2026-10-08 | section16 (falls back to the network if absent) |
 | `uk-gb-reach/gb_reach_annex_ii.pdf` | GB REACH - Regulation (EC) No 1907/2006 as retained, Annex II | legislation.gov.uk PDF, document generated 2026-10-08 | [link](https://www.legislation.gov.uk/eur/2006/1907/annex/II) | 2026-10-08 | section16 (download by hand: the site answers scripts with a WAF challenge) |
 | `eu-echa/candidate_list_export_2026-10-09.xlsx` | ECHA Candidate List of substances of very high concern for authorisation | export of 09-Oct-2026 09:20:07; 507 entries, latest inclusion 04-Feb-2026 | _not recorded_ | 2026-10-09 | lists (svhc_candidate) |
-| `un-model-regulations/model_regulations_vol1.pdf` | UN Recommendations on the Transport of Dangerous Goods, Model Regulations, Vol. I | not on file | _not recorded_ | 2026-10-09 | lists (un_dangerous_goods) - download by hand: unece.org answers scripts with a Cloudflare challenge |
+| `un-model-regulations/model_regulations_vol1.pdf` | UN Recommendations on the Transport of Dangerous Goods, Model Regulations, Vol. I | Rev.24 (2025), ST/SG/AC.10/1/Rev.24, published 15 Sep 2025 | [link](https://unece.org/transport/dangerous-goods/un-model-regulations-rev-24) | 2026-10-09 | lists (un_dangerous_goods) - downloaded by hand: unece.org answers scripts with a Cloudflare challenge |
 | `japan/GHS_Rev9_ja_annex2-3.pdf` | UN GHS (Purple Book), Japanese - NOT JIS | Rev.9 (2021) | _not recorded_ | 2026-09-29 | nothing: see builders/pending.py |
 
 ## Notes
@@ -45,9 +45,10 @@ This file is generated from `keys/builders/sources.py`. Edit that.
   fetches the page itself when the file is absent.
 * 49 CFR 172.101 (the DOT Hazardous Materials Table) and 49 CFR 173.120
   (flammable liquid) are read from eCFR's versioner API at a pinned date.
-* The ECHA Candidate List export and the UN Model Regulations record no
-  download link: both sites answer a script with 403 or a challenge, so
-  no link could be confirmed.
+* The ECHA Candidate List export records no download link: the site
+  answers a script with 403, so no link could be confirmed.
+* The UN Model Regulations (Rev.24, Vol. I) were downloaded by hand from
+  the page linked: unece.org answers a script with a Cloudflare challenge.
 * 29 CFR 1910.1200 itself - (g)(2), the SDS headings and their order -
   is read from eCFR's versioner API at a pinned date, and is not a file
   here.

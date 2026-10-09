@@ -52727,15 +52727,15 @@
   }
  ],
  "name_rules": {
-  "c": {
+  "what": {
    "quote": "Proper shipping names are limited to those shown in Roman type (not italics).",
    "citation": "49 CFR 172.101(c), eCFR as of 2026-09-08"
   },
-  "c1": {
+  "spelling": {
    "quote": "(1) Proper shipping names may be used in the singular or plural and in either capital or lower case letters. Words may be alternatively spelled in the same manner as they appear in the ICAO Technical Instructions or the IMDG Code. For example “aluminum” may be spelled “aluminium” and “sulfur” may be spelled “sulphur”. However, the word “inflammable” may not be used in place of the word “flammable”.",
    "citation": "49 CFR 172.101(c)(1), eCFR as of 2026-09-08"
   },
-  "c2": {
+  "choices": {
    "quote": "(2) Punctuation marks and words in italics are not part of the proper shipping name, but may be used in addition to the proper shipping name. The word “or” in italics indicates that there is a choice of terms in the sequence that may alternately be used as the proper shipping name or as part of the proper shipping name, as appropriate.",
    "citation": "49 CFR 172.101(c)(2), eCFR as of 2026-09-08"
   }

@@ -68,10 +68,50 @@ def test_the_candidate_list_entries_and_annex_ii_quotes(svhc):
     assert "0,1 %" in svhc["annex_ii"]["3.2.1(c)"]["quote"]
 
 
-def test_the_un_list_is_pending_until_its_source_is_on_file():
-    un = lists.load("un_dangerous_goods")
-    assert un["status"] == "pending_source" and un["entries"] == []
-    assert "not on file" in un["why"]
+@pytest.fixture(scope="module")
+def un():
+    return lists.load("un_dangerous_goods")
+
+
+def _by_id(held):
+    out = {}
+    for e in held["entries"]:
+        out.setdefault(e["id"], []).append(e)
+    return out
+
+
+def test_every_un_number_is_four_digits_and_in_order(un):
+    assert un["status"] == "ok" and "Rev.24" in un["version"]
+    ids = [e["id"] for e in un["entries"]]
+    assert all(re.fullmatch(r"UN\d{4}", i) for i in ids)
+    assert ids == sorted(ids) and len(set(ids)) > 2300
+    assert all(set(e["packing_groups"]) <= {"I", "II", "III"} for e in un["entries"])
+    assert all(re.fullmatch(r"(?:\d(?:\.\d)?[A-S]?)?", e["class"]) for e in un["entries"])
+
+
+def test_known_un_entries(un):
+    by_id = _by_id(un)
+    assert [(e["proper_shipping_names"], e["class"], e["packing_groups"])
+            for e in by_id["UN1090"]] == [(["ACETONE"], "3", ["II"])]
+    assert [e["packing_groups"] for e in by_id["UN1993"]] == [["I"], ["II"], ["III"]]
+    assert all(e["proper_shipping_names"] == ["FLAMMABLE LIQUID, N.O.S."]
+               for e in by_id["UN1993"])
+    assert [(e["proper_shipping_names"], e["class"]) for e in by_id["UN1001"]] == [
+        (["ACETYLENE, DISSOLVED"], "2.1")]
+    assert by_id["UN1045"][0]["subsidiary_hazards"] == ["5.1", "8"]
+
+
+def test_un_names_are_the_upper_case_with_3_1_2_2s_own_examples(un):
+    by_id = _by_id(un)
+    assert by_id["UN1057"][0]["proper_shipping_names"] == ["LIGHTERS", "LIGHTER REFILLS"]
+    ferrous = set(by_id["UN2793"][0]["proper_shipping_names"])
+    assert {"FERROUS METAL BORINGS", "FERROUS METAL SHAVINGS", "FERROUS METAL TURNINGS",
+            "FERROUS METAL CUTTINGS"} <= ferrous and "CUTTINGS" not in ferrous
+    # 3.1.2.1: "An alternative proper shipping name may be shown in brackets".
+    assert {"ETHANOL", "ETHYL ALCOHOL"} <= set(by_id["UN1170"][0]["proper_shipping_names"])
+    for role, key in (("what", "3.1.2.1"), ("choices", "3.1.2.2"), ("spelling", "3.1.2.3")):
+        assert un["name_rules"][role]["quote"].startswith(key), role
+        assert un["name_rules"][role]["citation"].endswith(key)
 
 
 def test_proper_shipping_names_are_the_roman_type_with_italic_or_as_a_choice(hmt):
@@ -83,6 +123,6 @@ def test_proper_shipping_names_are_the_roman_type_with_italic_or_as_a_choice(hmt
     articles = next(v for k, v in names.items() if k.startswith("Articles, pressurized"))
     assert {"Articles, pressurized pneumatic", "Articles, pressurized hydraulic"} <= set(articles)
     assert all(e["proper_shipping_names"] for e in hmt["entries"])
-    for key in ("c", "c1", "c2"):
-        assert hmt["name_rules"][key]["quote"], key
-    assert "Roman type (not italics)" in hmt["name_rules"]["c"]["quote"]
+    for role in ("what", "spelling", "choices"):
+        assert hmt["name_rules"][role]["quote"], role
+    assert "Roman type (not italics)" in hmt["name_rules"]["what"]["quote"]

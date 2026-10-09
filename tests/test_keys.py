@@ -1198,7 +1198,7 @@ def test_every_source_row_says_where_to_download_it():
         # Documents whose link could not be confirmed say so rather than guess:
         # the Japanese file, and two sites that refuse scripts (ECHA, UNECE).
         if source.url is None:
-            assert source.path.split("/")[0] in ("japan", "eu-echa", "un-model-regulations")
+            assert source.path.split("/")[0] in ("japan", "eu-echa")
         else:
             assert source.url.startswith("https://")
 
