@@ -207,6 +207,17 @@ def keys_build(
             typer.secho(f"  {reg_id}: -> {path}")
         return
 
+    if regulation == "lists":
+        # Not answer keys: the Candidate List, the DOT Hazardous Materials
+        # Table and the UN Dangerous Goods List, from their own sources.
+        from lingua_oracle.keys.builders import lists
+
+        for name in lists.LISTS:
+            path = lists.write(name, use_cache=not no_cache)
+            held = lists.load(name)
+            typer.secho(f"  {name}: {held['status']}, {len(held['entries'])} entries -> {path}")
+        return
+
     if regulation == "hazard_criteria":
         # Not an answer key: flammable-liquid and aquatic criteria a sheet's
         # own data is held against, from each regulation's text.

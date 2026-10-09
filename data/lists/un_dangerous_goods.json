@@ -1,0 +1,7 @@
+{
+ "list": "un_dangerous_goods",
+ "status": "pending_source",
+ "document": "UN Model Regulations, Vol. I, chapter 3.2 (Dangerous Goods List)",
+ "why": "not on file: data/sources/un-model-regulations/model_regulations_vol1.pdf - UN Recommendations on the Transport of Dangerous Goods, Model Regulations, Vol. I, not on file. Download it from no download link on record and put it at that path. See data/sources/README.md.",
+ "entries": []
+}

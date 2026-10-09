@@ -1195,9 +1195,10 @@ def test_every_source_row_says_where_to_download_it():
     for source in SOURCES:
         assert source.title and source.edition and source.added
         assert source.used_by
-        # One document has no recorded link, and says so rather than guessing.
+        # Documents whose link could not be confirmed say so rather than guess:
+        # the Japanese file, and two sites that refuse scripts (ECHA, UNECE).
         if source.url is None:
-            assert "japan" in source.path
+            assert source.path.split("/")[0] in ("japan", "eu-echa", "un-model-regulations")
         else:
             assert source.url.startswith("https://")
 
