@@ -27,3 +27,9 @@ data/sources/**
 # spot-check files, which quote product names. Only cases.example.yaml is
 # tracked, and it is kept outside this directory.
 data/validation/
+
+# PubChem's classifications for the ingredients of the documents checked
+# (lingua keys pubchem): reference data, kept locally - the CAS numbers in it
+# are those documents' compositions.
+data/reference_classifications/*
+!data/reference_classifications/README.md

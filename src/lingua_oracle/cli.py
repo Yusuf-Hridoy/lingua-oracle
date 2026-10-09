@@ -363,6 +363,53 @@ def keys_build(
             )
 
 
+@keys_app.command("pubchem")
+def keys_pubchem(
+    cas: Annotated[list[str] | None, typer.Argument(help="CAS numbers.")] = None,
+    documents: Annotated[list[Path] | None, typer.Option(
+        "--from", help="SDS PDFs (or folders of them) whose Section 3 CAS numbers to fetch.")] = None,
+    no_cache: Annotated[bool, typer.Option("--no-cache", help="Ignore the HTTP cache.")] = False,
+) -> None:
+    """Fetch PubChem's GHS classifications into data/reference_classifications.
+
+    Reference data, not law. Networked, like every builder; the check itself
+    only reads what this wrote.
+    """
+    from lingua_oracle.keys.builders import pubchem
+
+    wanted = list(dict.fromkeys(c.strip() for c in (cas or []) if c.strip()))
+    for item in documents or []:
+        for pdf in sorted(item.rglob("*.pdf")) if item.is_dir() else [item]:
+            wanted += [c.strip() for c in _section_three_cas(pdf)
+                       if c.strip() and c.strip() not in wanted]
+    for number in wanted:
+        try:
+            path = pubchem.write(number, use_cache=not no_cache)
+        except Exception as exc:  # noqa: BLE001 - one CAS must not stop the rest
+            typer.secho(f"  {number}: failed - {exc}", fg=typer.colors.RED)
+            continue
+        held = pubchem.load(number)
+        typer.secho(f"  {number}: {held['status']}, {len(held['entries'])} entries -> {path}")
+
+
+def _section_three_cas(pdf: Path) -> list[str]:
+    """The CAS numbers a sheet's Section 3 prints."""
+    from lingua_oracle.detect.regulation import RegulationUndetermined
+    from lingua_oracle.pipeline import _prepare
+    from lingua_oracle.reference import composition
+    from lingua_oracle.structure.reader import section_spans
+
+    try:
+        document, reg, lang, *_ = _prepare(str(pdf), None, None, None)
+    except RegulationUndetermined:
+        return []
+    found = section_spans(document, reg.id, lang)
+    if "3" not in found:
+        return []
+    raw = [line.text or "" for line in document.raw_lines]
+    return [row["cas"] for row in composition.from_sheet(str(pdf), raw[slice(*found["3"])])]
+
+
 @keys_app.command("import-csv")
 def keys_import_csv(
     file: Annotated[Path, typer.Argument(exists=True, dir_okay=False)],
