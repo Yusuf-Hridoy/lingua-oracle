@@ -68,11 +68,13 @@ def server(tmp_path_factory) -> str:
 
 
 def _serve(env: dict[str, str]):
-    """Run the server the way a user runs it, and yield its base URL."""
+    """Run the server the way a user runs it, and yield its base URL. PubChem
+    records are local data: the server sees none, on any machine."""
     import tempfile
 
     port = _free_port()
     env.setdefault("LINGUA_REPORTS_DIR", tempfile.mkdtemp(prefix="ui-reports-"))
+    env.setdefault("LINGUA_REFERENCE_DIR", tempfile.mkdtemp(prefix="ui-reference-"))
     # Its own process group: "uv run" spawns uvicorn as a child, and
     # terminating only the parent leaves the server alive holding its port and
     # competing for the machine. Interrupted runs used to leak one each time,

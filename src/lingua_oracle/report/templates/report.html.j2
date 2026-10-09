@@ -60,7 +60,7 @@
 {% macro row(r) %}
 <div class="srow{% if r.problem %} problem{% endif %} st-{{ r.status }}" data-status="{{ r.status }}"{% if r.mixture %} data-section="mixture" data-class="{{ r.key }}"{% endif %}>
   <span class="key{% if r.mono %} mono{% endif %}">{{ r.key }}</span>
-  {{ pill(r.status) }}
+  {% if r.verdict %}<span class="pill {{ PILL[r.status][2] }}"><span aria-hidden="true">{{ PILL[r.status][1] }}</span> {{ r.verdict }}</span>{% else %}{{ pill(r.status) }}{% endif %}
   {% if r.mixture %}{{ mixture_row(r) }}
   {% elif r.compare %}
   <div class="cmp{% if r.single %} single{% endif %}">

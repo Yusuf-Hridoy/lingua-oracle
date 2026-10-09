@@ -112,6 +112,9 @@ class Row:
     #: A blank never filled in: something to do, but not a contradiction of
     #: the official text, so it does not by itself hold the sheet.
     blank: bool = False
+    #: The verdict's own word where the pill must say it ("Confirmed",
+    #: "Can't confirm"), in the colour `status` gives.
+    verdict: str = ""
 
     @property
     def pill(self) -> tuple[str, str, str]:
@@ -394,6 +397,62 @@ def _classification(report: Report, display: str) -> Sub:
                             "plain" if mixture.state == "not_applicable" else "na",
                             text=mixture.message))
     return sub
+
+
+_VERDICT = {"confirmed": ("ok", "Confirmed"), "check": ("check", "Check this"),
+            "cant": ("na", "Can't confirm")}
+
+
+def _hcode_subs(report: Report) -> list[Sub]:
+    """2.1: a verdict for every hazard statement code, and the input it came
+    from - reference data labelled as such, binding lists as binding."""
+    held = report.hcodes
+    if held is None or held.state == "nothing" and not held.message:
+        return []
+    table = Sub("2.1 H-code verdict")
+    if held.state != "judged":
+        table.rows.append(Row("H-code verdict", "na", text=held.message or "Not judged."))
+        return [table]
+    if held.message:
+        table.rows.append(Row("H-code verdict", "ok", text=held.message))
+    for row in held.rows:
+        if row["status"] == "wrong":
+            status, word = ("fix", "Wrong") if row["binding"] else ("check",
+                                                                      "Wrong (reference data)")
+        else:
+            status, word = _VERDICT[row["status"]]
+        said = f"Stated as “{row['stated_as']}”. " if row.get("stated_as") else ""
+        notes = [row.get("differs", "")]
+        if row.get("a5"):
+            notes.append(f"First 5 codes (the app's own fallback): "
+                         f"{_VERDICT.get(row['a5']['status'], ('', 'Wrong'))[1]} - "
+                         f"{row['a5']['reason']}")
+        notes += row.get("likely") or []
+        action = ""
+        if report.composition == "substance" and report.substance is not None:
+            pass    # the substance's own check against its entry says what to do
+        elif row["status"] == "wrong":
+            action = (f"add {row['code']} to Section 2, or say why it is not there"
+                      if not row["printed"] else
+                      f"check {row['code']}: the ingredients give "
+                      f"{row['expected'] or 'something else'}")
+        elif row["status"] == "check":
+            action = f"check {row['code']}: {row['reason'].rstrip('.')}"
+        table.rows.append(Row(row["code"], status, verdict=word, mono=True,
+                              text=f"{said}{row['reason'][:1].upper()}{row['reason'][1:]}",
+                              note=" ".join(n for n in notes if n), action=action))
+    inputs = Sub("2.1 Inputs per ingredient")
+    for item in held.ingredients:
+        def said(part):
+            codes = part.get("codes")
+            shown = ", ".join(codes) if codes else ("none" if codes == [] else "—")
+            return f"{shown} ({part['source']}{'; ' + part['why'] if part.get('why') else ''})"
+        inputs.rows.append(Row(item["cas"], "plain", mono=True,
+                               text=f"{item.get('name') or ''} {item.get('concentration') or ''}"
+                                    .strip(),
+                               note=f"A - same input as ExactSDS: {said(item['a'])}. "
+                                    f"B - best available: {said(item['b'])}."))
+    return [table] + ([inputs] if inputs.rows else [])
 
 
 def _upcoming(report: Report) -> Sub:
@@ -723,6 +782,7 @@ def build(report: Report, display: str, set_by: str) -> Page:
     if upcoming.rows:
         two.subs.append(upcoming)
     two.subs += _statement_subs(report, "2", display)
+    two.subs += _hcode_subs(report)
     sections["2"] = two
     if label_only:
         label = Section("label", TITLES["label"])

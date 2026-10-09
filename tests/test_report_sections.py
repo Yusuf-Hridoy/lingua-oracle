@@ -61,7 +61,9 @@ def test_a_correct_substance_sheet_is_ready_with_every_item_a_row():
                  "H225", "H319", "H336", "P210", "P233"):
         assert item in keys, item
     # Pictograms are images on this sheet: that row says it could not check them.
-    assert all(r.status in ("ok", "plain") or r.key == "Pictograms" for r in two.rows)
+    # The H-code verdict's "Can't confirm" (H225, a physical hazard) holds nothing.
+    judged = [r for sub in two.subs if not sub.title.startswith("2.1") for r in sub.rows]
+    assert all(r.status in ("ok", "plain") or r.key == "Pictograms" for r in judged)
     three = next(s for s in page.sections if s.number == "3")
     row = three.table["rows"][0]
     assert (row["cas"], row["share"], row["row"].text) == ("67-63-0", "100 %", "Matches")

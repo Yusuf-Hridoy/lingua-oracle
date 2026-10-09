@@ -301,6 +301,14 @@ def _caveats(report: Report, page=None) -> list[str]:
         )
 
     out.append(_coverage(report, page))
+    held = getattr(report, "hcodes", None)
+    if held is not None:
+        out += [f"H-code verdict: {line}" for line in held.assumptions]
+        out += [f"Likely cause (not part of any verdict): {line}" for line in held.notes]
+        if held.state == "judged":
+            out.append("H-code verdict inputs: PubChem (ECHA C&L notifications) — reference, "
+                       "not legally binding; Annex VI and the GB MCL are binding; HCIS is a "
+                       "reference. The mixture is calculated by Lingua's own rules.")
     return out
 
 
