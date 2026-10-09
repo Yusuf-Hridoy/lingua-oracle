@@ -23,8 +23,10 @@ _LABELS = (
     r"estado físico", r"stato fisico", r"fysisk tilstand",
     r"fysische toestand", r"estado físico",
 )
+#: The label, then its value on the same line after a separator - or nothing,
+#: the value on the line below ("Physical state" / "Liquid", or / ": liquid").
 _LABEL_RE = re.compile(
-    r"^\s*(?:9\.1\.?\s*)?(?:" + "|".join(_LABELS) + r")\s*[:–-]\s*(?P<value>.*)$",
+    r"^\s*(?:9\.1\.?\s*)?(?:" + "|".join(_LABELS) + r")\s*(?:[:–-]\s*(?P<value>.*))?$",
     re.IGNORECASE)
 
 #: Where Section 9 starts and where it stops. The section detector tracks only
@@ -122,9 +124,12 @@ def _scan(lines: list[str]) -> tuple[str | None, str]:
         match = _LABEL_RE.match(line.strip())
         if match is None:
             continue
-        value = match.group("value").strip()
-        if not value and index + 1 < len(lines):
-            value = lines[index + 1].strip()
+        value = (match.group("value") or "").strip()
+        below = index + 1
+        while not value and below < len(lines) and below <= index + 2:
+            # The value below; a lone ":" a layout put between them is not it.
+            value = lines[below].strip().lstrip(":：").strip()
+            below += 1
         if _GAS.search(value):
             return GAS, value
         liquid, solid = _LIQUID.search(value), _SOLID.search(value)

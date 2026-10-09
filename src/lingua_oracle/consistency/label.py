@@ -75,6 +75,10 @@ def statements(classifications, codes: set[str], held: dict,
     rows: list[ConsistencyRow] = []
     called: set[str] = set()
     as_text = printed_as_text or set()
+    # A code as printed, and as the class's code: "H361D" is H361 with its
+    # specific effect (the keys' H361d / H361f / H361fd), its letter's case aside.
+    forms = {c: {c.casefold()} | ({c[:4].casefold()} if re.fullmatch(r"H\d{3}[A-Za-z]{1,2}", c)
+                                   else set()) for c in codes}
     for c in classifications:
         if c.unknown_category:
             cats = sorted({x for e in c.unknown_category for x in e["category"]})
@@ -86,8 +90,9 @@ def statements(classifications, codes: set[str], held: dict,
             continue
         wanted = c.h_codes
         called |= wanted
-        if wanted & codes:
-            rows.append(_row(c.text, "ok", f"{', '.join(sorted(wanted & codes))} printed, as "
+        given = {code for code in codes if forms[code] & {w.casefold() for w in wanted}}
+        if given:
+            rows.append(_row(c.text, "ok", f"{', '.join(sorted(given))} printed, as "
                              f"{c.text} calls for.", rule=_source(c)))
             continue
         if wanted & as_text:
@@ -106,12 +111,15 @@ def statements(classifications, codes: set[str], held: dict,
                          "which Section 2 does not print.", rule=_source(c),
                          expected=" or ".join(sorted(wanted))))
     known = {code for e in held["entries"] for code in e["h_codes"]}
-    for code in sorted(codes & known - called):
+    called_cf = {c.casefold() for c in called}
+    known_cf = {c.casefold() for c in known}
+    for code in sorted(c for c in codes if forms[c] & known_cf and not forms[c] & called_cf):
         rows.append(_row(code, "check", f"{code} is printed, but no classification in "
                          "Section 2 calls for it.", found=code))
     # A hazard statement the table on file does not know is no less printed.
-    for code in sorted(c for c in codes - known - called - (accounted or set())
-                       if re.fullmatch(r"H\d{3}[A-Za-z]{0,2}", c)):
+    for code in sorted(c for c in codes - (accounted or set())
+                       if not forms[c] & (known_cf | called_cf)
+                       and re.fullmatch(r"H\d{3}[A-Za-z]{0,2}", c)):
         rows.append(_row(code, "check", f"{code} is printed, but no classification read in "
                          "Section 2 calls for it.", found=code))
     # The regulation's own statements (AUH...), by the criterion each has.

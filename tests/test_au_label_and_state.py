@@ -138,3 +138,19 @@ def test_each_regulation_names_its_own_list():
         "eu_clp": "Annex VI", "uk_clp": "GB MCL", "au_whs": "HCIS",
         "us_osha": "EU Annex VI (reference)", "ca_whmis": "EU Annex VI (reference)",
         "un_ghs": "EU Annex VI (reference)"}
+
+
+def test_a_code_printed_with_its_letter_in_another_case_is_the_same_code(tmp_path):
+    two = ["Repr. 2", "Signal word: Warning", "H361D"]
+    report = check_pdf(str(structured_sheet(tmp_path / "eu.pdf", regulation="eu_clp",
+                                            language="en", bodies={"2": two})), "eu_clp", "en")
+    rows = _rows(report, "C-16")
+    assert "H361D" not in rows and rows["Repr. 2"].status == "ok"
+
+
+def test_a_label_with_its_value_below_and_no_colon_is_read():
+    from lingua_oracle.mixture.state import read_section
+
+    assert read_section(["Appearance", "Physical state", "Liquid"]) == ("liquid", "Liquid")
+    assert read_section(["Physical state", ":", "solid"]) == ("solid", "solid")
+    assert read_section(["Physical state ", ": liquid"]) == ("liquid", "liquid")
