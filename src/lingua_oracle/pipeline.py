@@ -159,6 +159,8 @@ def check_pdf(
                 _not_a_mixture(document, spans) if report.composition == "substance"
                 else _mixture_section(report, path, document, spans, reg.id,
                                       client_factory=client_factory))
+            report.hcodes = _hcode_section(report, path, document, spans, reg.id, lang,
+                                           client_factory=client_factory)
         except Exception as exc:  # noqa: BLE001
             from lingua_oracle.models import IngredientSection
 
@@ -286,6 +288,47 @@ def _composition(report, path, document, spans, regulation) -> None:
         sheet_codes=substance.section_two_codes(document.lines, spans),
         stated_classes=substance.explicit_classes(document.lines, spans),
         name=name, concentration=(row.concentration or "") if row else "")
+
+
+def _hcode_section(report, path, document, spans, regulation, language,
+                   *, client_factory=None):
+    """A verdict for every hazard statement code (reference.verdict), from
+    the composition the ingredient half used. Never costs the report."""
+    from lingua_oracle.models import HCodeSection
+    from lingua_oracle.reference import composition, verdict
+    from lingua_oracle.structure.reader import section_spans
+
+    try:
+        raw = [line.text or "" for line in document.raw_lines]
+        found = section_spans(document, regulation, language)
+
+        def lines_of(number: str) -> list[str]:
+            return raw[slice(*found[number])] if number in found else []
+
+        section = report.ingredients
+        app_codes = None
+        if section is not None and section.source == "app" and section.product_id:
+            from lingua_oracle.ingredients.client import session
+
+            client = client_factory() if client_factory else session()
+            rows, app_codes = composition.from_app(client.ingredients(section.product_id))
+        else:
+            rows = composition.from_sheet(path, lines_of("3"))
+        if report.composition == "substance" and report.substance and report.substance.cas:
+            rows = [{"cas": report.substance.cas, "name": report.substance.name or "",
+                     "concentration": "100"}]
+        from lingua_oracle.consistency import classification
+
+        stated_as: dict[str, str] = {}
+        for found_class in classification.read(lines_of("2"), regulation):
+            for entry in found_class.entries:
+                for code in entry.get("h_codes", []):
+                    stated_as.setdefault(code, found_class.text)
+        return verdict.build(document, spans, regulation, rows, lines_of("2"),
+                             app_codes=app_codes, sheet_text=" ".join(raw),
+                             stated_as=stated_as)
+    except Exception as exc:  # noqa: BLE001
+        return HCodeSection(state="skipped", message=f"H-code verdict skipped: {exc}"[:200])
 
 
 def _not_a_mixture(document, spans):

@@ -401,6 +401,29 @@ class MixtureSection(BaseModel):
         return int(self.counts.get("inconsistent", 0))
 
 
+class HCodeSection(BaseModel):
+    """A verdict for every hazard statement code: Section 2 against the
+    mixture as Lingua calculates it from input A (the app's input) and input
+    B (the best available data). See `reference.verdict`."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    #: "judged", "nothing", "skipped"
+    state: str = "nothing"
+    message: str = ""
+    printed: list[str] = Field(default_factory=list)
+    #: One per code: code, printed, status (confirmed / wrong / check / cant),
+    #: reason, expected, binding, a, b (and a5), differs, likely.
+    rows: list[dict] = Field(default_factory=list)
+    #: Per ingredient: cas, name, concentration, a and b - codes, source, why.
+    ingredients: list[dict] = Field(default_factory=list)
+    #: Why the app's data may lack a code - technical details only.
+    notes: list[str] = Field(default_factory=list)
+    assumptions: list[str] = Field(default_factory=list)
+    counts: dict[str, int] = Field(default_factory=dict)
+    runs: dict[str, dict] = Field(default_factory=dict)
+
+
 class SubstanceSection(BaseModel):
     """A substance's Section 2, against the list entry for its own CAS number.
 
@@ -538,6 +561,8 @@ class Report(BaseModel):
     physical_state: str = ""
     #: The words Section 9 prints for it ("aerosol"), or "".
     physical_state_printed: str = ""
+    #: A verdict for every hazard statement code, from inputs A and B.
+    hcodes: HCodeSection | None = None
     #: The 16 sections, sub-sections and required items, against the
     #: regulation's own text on safety data sheets. None on an older report.
     structure: StructureReport | None = None

@@ -20,12 +20,13 @@ NO_CLASSIFIED = ("Can't calculate: no ingredient with a concentration has a "
                  "classification on the sheet or in the list.")
 
 
-def _ingredient(cas, name, raw_concentration, codes, table, index):
-    """One ingredient, classified from Annex VI where it is harmonised."""
+def _ingredient(cas, name, raw_concentration, codes, table, index, use_list=True):
+    """One ingredient, classified from Annex VI where it is harmonised - or,
+    with `use_list` off, from the codes given, whatever the list says."""
     parsed = conc.parse(raw_concentration)
     if parsed is None:
         return None, None
-    entries = index.get((cas or "").strip(), []) if cas else []
+    entries = index.get((cas or "").strip(), []) if cas and use_list else []
     if len(entries) == 1 and not entries[0].covers_several_substances:
         entry = entries[0]
         limits = parse_limits(entry.limits)
@@ -47,7 +48,7 @@ def display_name(regulation: str) -> str:
 def build(rows, lines, spans, regulation: str, table,
           stated_override: list[str] | None = None,
           state_override: str | None = None, *,
-          upcoming=None, on=None) -> MixtureSection:
+          upcoming=None, on=None, use_list: bool = True) -> MixtureSection:
     """The mixture section for one document.
 
     `rows` carry a CAS number, a name, the codes and the concentration as
@@ -62,6 +63,9 @@ def build(rows, lines, spans, regulation: str, table,
     from lingua_oracle.substances.upcoming import today
 
     on = on or today()
+    if not use_list:
+        return _build(rows, lines, spans, regulation, table, stated_override,
+                      state_override, use_list=False)
     if upcoming is not None and upcoming.binding_on(on):
         return _build(rows, lines, spans, regulation, upcoming.table,
                       stated_override, state_override)
@@ -128,7 +132,7 @@ def _reconcile(now: MixtureSection, later: MixtureSection,
 
 def _build(rows, lines, spans, regulation: str, table,
            stated_override: list[str] | None = None,
-           state_override: str | None = None) -> MixtureSection:
+           state_override: str | None = None, use_list: bool = True) -> MixtureSection:
     """The calculation against one table."""
     # Read first and keep, whatever happens next: a re-run after the reader
     # picks a product must not need the uploaded file back.
@@ -169,7 +173,7 @@ def _build(rows, lines, spans, regulation: str, table,
     for row in rows:
         ingredient, parsed = _ingredient(
             row.get("cas"), row.get("name"), row.get("concentration"),
-            row.get("h_codes") or [], table, index)
+            row.get("h_codes") or [], table, index, use_list)
         if ingredient is None:
             without_concentration += 1
             continue
@@ -207,7 +211,7 @@ def _build(rows, lines, spans, regulation: str, table,
     mixture_values = mixture_acute(eleven.mixture, regulation, state)
     entries = {}
     for i in every:
-        found = index.get((i.cas or "").strip(), []) if i.cas else []
+        found = index.get((i.cas or "").strip(), []) if i.cas and use_list else []
         if len(found) == 1:
             entries[i.cas.strip()] = found[0]
     acute_inputs = {"ingredients": every, "entries": entries, "mixture_values": mixture_values,
