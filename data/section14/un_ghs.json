@@ -1,0 +1,23 @@
+{
+ "regulation": "un_ghs",
+ "status": "ok",
+ "binding": false,
+ "fields": {
+  "number": {
+   "quote": "Provide the UN Number (i.e. four-figure identification number of the substance or article) from the UN Model Regulations",
+   "citation": "UN GHS Rev.11 (2025), Annex 4, A4.3.14.1"
+  },
+  "name": {
+   "quote": "Provide the UN proper shipping name from the UN Model Regulations. For substances or mixtures the UN proper shipping name should be provided in this subsection if it has not appeared as the GHS product identifier or national or regional identifiers.",
+   "citation": "UN GHS Rev.11 (2025), Annex 4, A4.3.14.2"
+  },
+  "class": {
+   "quote": "Provide the transport class (and subsidiary risks) assigned to the substances or mixtures according to the most predominant hazard that they present in accordance with the UN Model Regulations.",
+   "citation": "UN GHS Rev.11 (2025), Annex 4, A4.3.14.3"
+  },
+  "group": {
+   "quote": "Provide the packing group number from the UN Model Regulations, if applicable.",
+   "citation": "UN GHS Rev.11 (2025), Annex 4, A4.3.14.4"
+  }
+ }
+}

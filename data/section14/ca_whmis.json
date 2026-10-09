@@ -1,0 +1,10 @@
+{
+ "regulation": "ca_whmis",
+ "status": "ok",
+ "binding": null,
+ "note": {
+  "quote": "Despite subsection (1), under each heading set out for items 12 to 15 of Schedule 1, the content of the specific information elements in that Schedule may be omitted.",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), section 4(2)",
+  "text": "The HPR lets Section 14's content be omitted."
+ }
+}

@@ -1,0 +1,10 @@
+{
+ "regulation": "us_osha",
+ "status": "ok",
+ "binding": null,
+ "note": {
+  "quote": "Sections 12-15 may be included in the SDS, but are not mandatory.",
+  "citation": "29 CFR 1910.1200 Appendix D, introduction",
+  "text": "Appendix D makes Section 14's content non-mandatory."
+ }
+}

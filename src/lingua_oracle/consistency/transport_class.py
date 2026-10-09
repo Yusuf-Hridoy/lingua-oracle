@@ -36,8 +36,7 @@ _OPEN_CUP = re.compile(r"open[- ]?cup|\bo\.\s?c\.|cleveland", re.IGNORECASE)
 def _classes(section_14: list[str], regulation: str) -> list[tuple[str, str]]:
     """(UN number, class) for each block: the class the sheet prints, or
     the list's for its number where the sheet prints none."""
-    read = transport.columns(section_14) or [
-        (mode, transport.read_block(lines)) for mode, lines in transport.blocks(section_14)]
+    read = transport.read(section_14)
     un, dot = lists.load("un_dangerous_goods"), lists.load("us_dot_hmt")
     out: list[tuple[str, str]] = []
     for mode, block in read:

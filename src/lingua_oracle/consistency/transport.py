@@ -254,6 +254,13 @@ def columns(section_14: list[str]) -> list[tuple[str, dict]] | None:
     return out
 
 
+def read(section_14: list[str]) -> list[tuple[str, dict]]:
+    """Each transport block the sheet prints, as (mode, what it says) - page
+    numbers a page break left inside the section taken out first."""
+    section_14 = [line for line in section_14 if not _page_furniture(line or "")]
+    return columns(section_14) or [(mode, read_block(lines)) for mode, lines in blocks(section_14)]
+
+
 def run(section_14: list[str], regulation: str, flammable: list[str]) -> list[ConsistencyRow]:
     """`flammable` are the flammable-liquid categories Section 2 states."""
     if not section_14:
@@ -262,13 +269,13 @@ def run(section_14: list[str], regulation: str, flammable: list[str]) -> list[Co
     dot = lists.load("us_dot_hmt")
     un = lists.load("un_dangerous_goods")
     rows: list[ConsistencyRow] = []
-    read = columns(section_14) or [(mode, read_block(lines)) for mode, lines in blocks(section_14)]
-    stated = [(mode, b) for mode, b in read if b["number"]]
-    if not stated and not any(b["not_regulated"] for _, b in read):
+    said = read(section_14)
+    stated = [(mode, b) for mode, b in said if b["number"]]
+    if not stated and not any(b["not_regulated"] for _, b in said):
         return [_row("na", "Transport", "Not checked: Section 14 gives no UN number and does "
                      "not say the product is not regulated for transport.")]
     if not stated:
-        if any(b["not_regulated"] for _, b in read):
+        if any(b["not_regulated"] for _, b in said):
             if flammable:
                 criterion = (dot or {}).get("class_3") if us else None
                 if criterion and criterion.get("quote"):

@@ -321,3 +321,11 @@ def test_a_label_under_a_heading_of_the_same_name_is_read_for_its_value():
                                   "14.4. Packing group", "Packaging Group: II"])
     assert (block["number"], block["name"], block["class"], block["group"]) == (
         "UN1090", "Acetone", "3", "II")
+
+
+def test_a_page_number_between_a_label_and_its_value_is_not_the_value():
+    from lingua_oracle.consistency import transport
+
+    [(_, block)] = transport.read(["UN ID Number:", "1090", "Shipping Name:", "SDS 2 / 3",
+                                   "Acetone"])
+    assert (block["number"], block["name"]) == ("UN1090", "Acetone")

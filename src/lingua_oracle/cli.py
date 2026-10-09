@@ -218,6 +218,16 @@ def keys_build(
             typer.secho(f"  {name}: {held['status']}, {len(held['entries'])} entries -> {path}")
         return
 
+    if regulation == "section14":
+        # Not an answer key: what Section 14 must give with a UN number, in
+        # each regulation's own words.
+        from lingua_oracle.keys.builders import section14
+
+        for reg_id in section14.REGULATIONS:
+            path = section14.write(reg_id, use_cache=not no_cache)
+            typer.secho(f"  {reg_id}: -> {path}")
+        return
+
     if regulation == "hazard_criteria":
         # Not an answer key: flammable-liquid and aquatic criteria a sheet's
         # own data is held against, from each regulation's text.

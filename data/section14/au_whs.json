@@ -1,0 +1,10 @@
+{
+ "regulation": "au_whs",
+ "status": "ok",
+ "binding": null,
+ "note": {
+  "quote": "(2) A safety data sheet for a hazardous chemical must state the following information about the chemical: … (n) Section 14: Transport information;",
+  "citation": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia), Schedule 7, clause 1(2)(n)",
+  "text": "Schedule 7 names Section 14, but none of its fields."
+ }
+}

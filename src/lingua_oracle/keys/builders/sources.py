@@ -48,7 +48,7 @@ SOURCES: tuple[Source, ...] = (
     Source("un-ghs/GHS_Rev11_en.pdf",
            "UN GHS (Purple Book), English", "Rev.11 (2025)",
            "https://unece.org/transport/standards/transport/dangerous-goods/ghs-rev11-2025",
-           "2026-09-29", "un_ghs",
+           "2026-09-29", "un_ghs, section14",
            version="UN GHS Rev.11 (2025), English edition"),
     Source("un-ghs/GHS_Rev11_fr.pdf",
            "UN GHS (Purple Book), French", "Rev.11 (2025)",
@@ -111,7 +111,7 @@ SOURCES: tuple[Source, ...] = (
            "Model Work Health and Safety Regulations", "as at 5 December 2025",
            "https://www.safeworkaustralia.gov.au/sites/default/files/2025-12/"
            "model-whs-regulations-5_december_2025.pdf",
-           "2026-10-08", "section16",
+           "2026-10-08", "section16, section14",
            version="Model Work Health and Safety Regulations as at 5 December 2025 "
                    "(Safe Work Australia)"),
     Source("australia/hcis_hazard_classification_export_2026-10-07.xlsx",
@@ -142,7 +142,7 @@ SOURCES: tuple[Source, ...] = (
            "GB REACH - Regulation (EC) No 1907/2006 as retained, Annex II",
            "legislation.gov.uk PDF, document generated 2026-10-08",
            "https://www.legislation.gov.uk/eur/2006/1907/annex/II",
-           "2026-10-08", "section16 (download by hand: the site answers "
+           "2026-10-08", "section16, section14 (download by hand: the site answers "
                          "scripts with a WAF challenge)",
            version="GB REACH Annex II (Regulation (EC) No 1907/2006 as "
                    "retained), legislation.gov.uk, document generated 2026-10-08"),

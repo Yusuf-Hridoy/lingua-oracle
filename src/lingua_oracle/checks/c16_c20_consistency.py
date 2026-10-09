@@ -73,3 +73,8 @@ def candidate_list(ctx: CheckContext) -> list[Finding]:
 @register("C-23", "Section 14's transport class fits the product's state and flash point")
 def transport_class(ctx: CheckContext) -> list[Finding]:
     return _findings(ctx, "C-23")
+
+
+@register("C-24", "Section 14 gives the fields its regulation requires with a UN number")
+def transport_fields(ctx: CheckContext) -> list[Finding]:
+    return _findings(ctx, "C-24")

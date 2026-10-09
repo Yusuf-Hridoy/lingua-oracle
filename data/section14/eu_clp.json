@@ -1,0 +1,27 @@
+{
+ "regulation": "eu_clp",
+ "status": "ok",
+ "binding": true,
+ "fields": {
+  "number": {
+   "quote": "The UN number or the ID number (i.e. the four-figure identification number of the substance, mixture or article preceded by the letters ‘UN’ or ‘ID’) from the UN Model Regulations, IMDG, ADR, RID, ADN or ICAO TI shall be provided.",
+   "citation": "Regulation (EC) No 1907/2006 (REACH), consolidated 02006R1907-20260622, Annex II, 14.1"
+  },
+  "name": {
+   "quote": "The proper shipping name as provided in column 2, ‘Name and description’, of Table A of Chapter 3.2 Dangerous Goods List of the UN Model Regulations, in ADR, in RID and in Tables A and C of Chapter 3.2 of ADN, supplemented, when applicable, with the technical name in brackets as required, shall be provided, unless it was used as the product identifier in subsection 1.1.",
+   "citation": "Regulation (EC) No 1907/2006 (REACH), consolidated 02006R1907-20260622, Annex II, 14.2"
+  },
+  "class": {
+   "quote": "The transport hazard class (and subsidiary risks) assigned to the substances or mixtures on the basis of the predominant hazard that they present according to the UN Model Regulations shall be provided.",
+   "citation": "Regulation (EC) No 1907/2006 (REACH), consolidated 02006R1907-20260622, Annex II, 14.3"
+  },
+  "group": {
+   "quote": "The packing group number from the UN Model Regulations shall be provided, if applicable, as required by the UN Model Regulations, ADR, RID and ADN.",
+   "citation": "Regulation (EC) No 1907/2006 (REACH), consolidated 02006R1907-20260622, Annex II, 14.4"
+  }
+ },
+ "name_once": {
+  "quote": "If the UN number and the proper shipping name remain unchanged in different transport modes, it is not necessary to repeat this information.",
+  "citation": "Regulation (EC) No 1907/2006 (REACH), consolidated 02006R1907-20260622, Annex II, 14.2"
+ }
+}

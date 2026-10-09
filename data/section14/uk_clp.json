@@ -1,0 +1,23 @@
+{
+ "regulation": "uk_clp",
+ "status": "ok",
+ "binding": true,
+ "fields": {
+  "number": {
+   "quote": "The UN number (i.e. the four-figure identification number of the substance, mixture or article preceded by the letters ‘ UN ’ ) from the UN Model Regulations shall be provided.",
+   "citation": "GB REACH (Regulation (EC) No 1907/2006 as retained), legislation.gov.uk, document generated 2026-10-08, Annex II, 14.1"
+  },
+  "name": {
+   "quote": "The UN proper shipping name from the UN Model Regulations shall be provided, unless it was used as the product identifier in subsection 1.1.",
+   "citation": "GB REACH (Regulation (EC) No 1907/2006 as retained), legislation.gov.uk, document generated 2026-10-08, Annex II, 14.2"
+  },
+  "class": {
+   "quote": "The transport hazard class (and subsidiary risks) assigned to the substances or mixtures on the basis of the predominant hazard that they present according to the UN Model Regulations shall be provided.",
+   "citation": "GB REACH (Regulation (EC) No 1907/2006 as retained), legislation.gov.uk, document generated 2026-10-08, Annex II, 14.3"
+  },
+  "group": {
+   "quote": "The packing group number from the UN Model Regulations shall be provided, if applicable.",
+   "citation": "GB REACH (Regulation (EC) No 1907/2006 as retained), legislation.gov.uk, document generated 2026-10-08, Annex II, 14.4"
+  }
+ }
+}
