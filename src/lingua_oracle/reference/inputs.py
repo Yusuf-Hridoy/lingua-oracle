@@ -54,7 +54,7 @@ def _first_entry(record: dict) -> dict | None:
 
 def input_a(cas: str, app_codes: list[str] | None) -> Input:
     if app_codes is not None:
-        return Input(list(app_codes), APP_LABEL, detail={"from": "app"})
+        return Input([canonical(c) for c in app_codes], APP_LABEL, detail={"from": "app"})
     record = pubchem.load(cas)
     if record is None:
         return Input(None, FIRST_LABEL, why=f"no PubChem record on file for {cas}")
@@ -158,5 +158,33 @@ def likely_causes(cas: str, a: Input, b: Input) -> list[str]:
 
 
 def codes_in(text: str) -> list[str]:
-    """Hazard statement codes printed in a text, combined ones split."""
+    """Hazard statement codes printed in a text, combined ones split - as
+    printed; `canonical` gives the act's own spelling."""
     return list(dict.fromkeys(_CODE.findall(text or "")))
+
+
+def _act_codes() -> set[str]:
+    from lingua_oracle.mixture.classes import ACUTE_CODES, CODE_TO_CLASS
+    from lingua_oracle.substances.load import load_list
+
+    codes = set(CODE_TO_CLASS) | set(ACUTE_CODES)
+    table = load_list("annex_vi")
+    for entry in getattr(table, "entries", []) or []:
+        codes |= set(entry.h_codes) | set(getattr(entry, "euh_codes", []) or [])
+    return codes
+
+
+_ACT: set[str] | None = None
+
+
+def canonical(code: str) -> str:
+    """A code as the act prints it: "H361D" -> "H361d". Left as printed where
+    the act has it already, or where two of its codes differ only in case
+    (H360FD and H360Fd are not the same statement)."""
+    global _ACT
+    if _ACT is None:
+        _ACT = _act_codes()
+    if code in _ACT:
+        return code
+    same = [c for c in _ACT if c.casefold() == code.casefold()]
+    return same[0] if len(same) == 1 else code

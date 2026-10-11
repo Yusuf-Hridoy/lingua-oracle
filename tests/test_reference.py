@@ -121,13 +121,17 @@ def _rows(hcodes):
     return {r["code"]: r for r in hcodes.rows}
 
 
-def test_codes_the_ingredients_give_are_confirmed_and_a_physical_one_cannot_be(tmp_path, on_file):
+def test_codes_the_ingredients_give_are_confirmed_and_a_physical_one_from_section_9(
+        tmp_path, on_file):
     h = _sheet(tmp_path, "eu_clp", ["H225", "H304", "H315", "H336", "H373"],
                ["Synthetic solvent  CAS 108-88-3  100%"], bare=["H361d"])
     rows = _rows(h)
     for code in ("H315", "H336", "H361d", "H373"):
         assert rows[code]["status"] == "confirmed", code
-    assert rows["H225"]["status"] == "cant" and "physical hazard" in rows["H225"]["reason"]
+    # The sheet's Section 9 gives a flash point in category 2's band (C-17).
+    assert rows["H225"]["status"] == "confirmed" and rows["H225"]["reason"].startswith(
+        "from Section 9:")
+    assert rows["H304"]["status"] == "cant"
     assert rows["H361d"]["binding"]
 
 
@@ -182,7 +186,7 @@ def test_an_input_a_that_is_not_reproducible_gives_no_verdict_and_shows_the_fall
     h = _sheet(tmp_path, "eu_clp", ["H225", "H350"], ["Synthetic aromatic  CAS 71-43-2  50%"])
     assert h.runs["A"]["available"] is False and "AI selection" in h.runs["A"]["why"]
     assert h.runs["A5"]["label"] == "first 5 codes (the app's own fallback)"
-    assert all(not r["a"]["status"] for r in h.rows)
+    assert all(not r["a"]["status"] for r in h.rows if r.get("basis") != "section_9")
     assert any("a5" in r for r in h.rows)
 
 
@@ -209,3 +213,62 @@ def test_a_product_chosen_later_is_judged_from_the_sheets_kept_context(tmp_path,
     rows = _rows(again)
     assert again.printed == h.printed and rows["H319"]["status"] == "confirmed"
     assert rows["H335"]["a"]["status"] == "wrong" and rows["H335"]["status"] == "confirmed"
+
+
+
+# -- flammable liquids, from Section 9 (C-17) ---------------------------------------
+
+def _flam(tmp_path, codes, nine, regulation="us_osha"):
+    official = texts(regulation, "en", codes) if codes else {}
+    path = structured_sheet(tmp_path / "f.pdf", regulation=regulation, language="en", bodies={
+        "2": [f"{c} {official[c]}" for c in codes] or ["Not classified."],
+        "3": ["Synthetic solvent  CAS 67-64-1  90%"], "9": list(nine)})
+    return _rows(check_pdf(str(path), regulation, "en", ingredients=True).hcodes)
+
+
+def test_a_flash_point_in_the_codes_band_confirms_it(tmp_path, on_file):
+    row = _flam(tmp_path, ["H225"], ["Physical state: Liquid", "Flash point: 10 °C",
+                                     "Initial boiling point: 80 °C"])["H225"]
+    assert row["status"] == "confirmed" and row["binding"] and row["basis"] == "section_9"
+    assert "Category 2" in row["reason"]
+
+
+def test_a_flash_point_in_another_band_makes_the_code_wrong(tmp_path, on_file):
+    row = _flam(tmp_path, ["H226"], ["Physical state: Liquid", "Flash point: 10 °C",
+                                     "Initial boiling point: 80 °C"])["H226"]
+    assert row["status"] == "wrong" and row["expected"] == "H225"
+
+
+def test_a_flammable_liquid_section_2_does_not_state_is_wrong(tmp_path, on_file):
+    row = _flam(tmp_path, [], ["Physical state: Liquid", "Flash point: 10 °C",
+                               "Initial boiling point: 80 °C"])["H225"]
+    assert row["status"] == "wrong" and not row["printed"] and "lacks it" in row["reason"]
+
+
+def test_no_flash_point_is_one_to_check(tmp_path, on_file):
+    row = _flam(tmp_path, ["H225"], ["Physical state: Liquid",
+                                     "Flash point: Not available"])["H225"]
+    assert row["status"] == "check" and "no flash point" in row["reason"]
+
+
+def test_osha_category_4_is_h227(tmp_path, on_file):
+    row = _flam(tmp_path, ["H227"], ["Physical state: Liquid", "Flash point: 75 °C"])["H227"]
+    assert row["status"] == "confirmed"
+
+
+# -- codes as the act prints them ------------------------------------------------------
+
+def test_a_suffixed_code_is_shown_as_the_act_prints_it(tmp_path, on_file):
+    h = _sheet(tmp_path, "eu_clp", ["H225", "H304", "H315", "H336", "H373"],
+               ["Synthetic solvent  CAS 108-88-3  100%"], bare=["H361D"])
+    rows = _rows(h)
+    assert "H361d" in rows and "H361D" not in rows
+    assert rows["H361d"]["printed_as"] == "H361D" and rows["H361d"]["status"] == "confirmed"
+    assert any("H361d missing" in n for n in h.notes)
+    assert not any("H361D" in n for n in h.notes)
+
+
+def test_the_acts_spelling_is_kept_where_case_tells_two_codes_apart():
+    assert inputs.canonical("H361D") == "H361d"
+    assert inputs.canonical("H360FD") == "H360FD" and inputs.canonical("H360Fd") == "H360Fd"
+    assert inputs.canonical("h350I") == "H350i"

@@ -177,17 +177,19 @@ def _stated(lines, spans, codes: list[str]) -> list[str]:
 
 
 def context(lines, spans, section_two: list[str], *, sheet_text: str = "",
-            stated_as: dict[str, str] | None = None) -> HCodeSection:
+            stated_as: dict[str, str] | None = None, flash: dict | None = None) -> HCodeSection:
     """What the verdict needs from the sheet itself, kept so that a product
     chosen later can be judged without the file: the codes Section 2 prints
     and states in words, its classes, and whether it cites bridging."""
-    printed = ref.codes_in(" ".join(section_two))
+    as_printed = ref.codes_in(" ".join(section_two))
+    printed = list(dict.fromkeys(ref.canonical(c) for c in as_printed))
+    printed_as = {ref.canonical(c): c for c in as_printed if ref.canonical(c) != c}
     worded = {c: t for c, t in (stated_as or {}).items()
               if c.casefold() not in {p.casefold() for p in printed}}
     printed = printed + list(worded)
     return HCodeSection(state="nothing", printed=printed, stated_as=worded,
-                        stated=_stated(lines, spans, printed),
-                        bridged=bool(_BRIDGING.search(sheet_text)))
+                        stated=_stated(lines, spans, printed), printed_as=printed_as,
+                        bridged=bool(_BRIDGING.search(sheet_text)), flash=dict(flash or {}))
 
 
 def rebuild(held: HCodeSection, regulation: str, rows: list[dict], *,
@@ -200,14 +202,14 @@ def rebuild(held: HCodeSection, regulation: str, rows: list[dict], *,
 
 def build(document, spans, regulation: str, rows: list[dict], section_two: list[str],
           *, app_codes: dict[str, list[str]] | None = None, sheet_text: str = "",
-          stated_as: dict[str, str] | None = None) -> HCodeSection:
+          stated_as: dict[str, str] | None = None, flash: dict | None = None) -> HCodeSection:
     """`rows`: the composition (cas, name, concentration); `app_codes`: the
     app's stored codes by CAS where the product is one the app holds;
     `stated_as`: codes for the classes Section 2 states in words, with the
     words ("Reproductive Toxicity: Category 2" - an OSHA sheet prints no
     codes)."""
     held = context(document.lines, spans, section_two, sheet_text=sheet_text,
-                   stated_as=stated_as)
+                   stated_as=stated_as, flash=flash)
     return _judge(document.lines, spans, regulation, rows, held, app_codes=app_codes)
 
 
@@ -216,7 +218,8 @@ def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None
     from lingua_oracle.substances.load import for_check
 
     printed, worded, stated = list(held.printed), dict(held.stated_as), list(held.stated)
-    kept = {"printed": printed, "stated": stated, "stated_as": worded, "bridged": held.bridged}
+    kept = {"printed": printed, "stated": stated, "stated_as": worded, "bridged": held.bridged,
+            "printed_as": dict(held.printed_as), "flash": dict(held.flash)}
     rows = [r for r in rows if r.get("cas")]
     if not rows:
         return HCodeSection(state="nothing", **kept,
@@ -279,6 +282,7 @@ def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None
             status, reason = CANT, "needs the reference mixture: the sheet says its " \
                                    "classification rests on bridging."
         row = {"code": key, "printed": key in printed, "stated_as": worded.get(key, ""),
+               "printed_as": held.printed_as.get(key, ""),
                "status": status, "reason": reason,
                "expected": expected, "binding": binding_b,
                "b": {"status": b_row[0], "reason": b_row[1]},
@@ -303,6 +307,7 @@ def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None
             row["likely"] = ["Section 2 differs from what the app's own input gives: likely a "
                              "calculation issue."]
         out_rows.append(row)
+    _from_section_9(out_rows, held, printed)
     order = {WRONG: 0, CHECK: 1, CANT: 2, CONFIRMED: 3}
     out_rows.sort(key=lambda r: (order.get(r["status"], 9), r["code"]))
     if partial:
@@ -319,6 +324,48 @@ def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None
                         assumptions=assumptions, counts=counts,
                         runs={k: {kk: vv for kk, vv in v.items() if kk != "rows"}
                               for k, v in runs.items()})
+
+
+FLAMMABLE = {"1": "H224", "2": "H225", "3": "H226", "4": "H227"}
+
+
+def _from_section_9(rows: list[dict], held: HCodeSection, printed: list[str]) -> None:
+    """The flammable-liquid codes, from Section 9's flash point and boiling
+    point against the regulation's own criteria (C-17) - not from the
+    ingredients, and the same whatever the input."""
+    flash = held.flash or {}
+    status, category = flash.get("status"), flash.get("category") or ""
+    if status not in ("ok", "fix", "check"):
+        return
+    expected = FLAMMABLE.get(category, "")
+    shown = [c for c in printed if c in FLAMMABLE.values()]
+    reason = f"from Section 9: {flash.get('text', '')}"
+    if flash.get("citation"):
+        reason += f" ({flash['citation']})"
+    verdicts: dict[str, str] = {}
+    if status == "check":
+        verdicts = dict.fromkeys(shown, CHECK)
+    elif status == "ok":
+        verdicts = {c: CONFIRMED if c == expected or not expected else WRONG for c in shown}
+    else:
+        verdicts = {c: CONFIRMED if expected and c == expected else WRONG for c in shown}
+        if expected and expected not in shown:
+            verdicts[expected] = WRONG
+    if not verdicts:
+        return
+    by_code = {r["code"]: r for r in rows}
+    for code, verdict in verdicts.items():
+        row = by_code.get(code)
+        if row is None:
+            row = {"code": code, "printed": False, "stated_as": "", "printed_as": ""}
+            rows.append(row)
+        text = reason if code in shown else f"{reason} - Section 2 lacks it"
+        row.update({"status": verdict, "reason": text, "binding": True,
+                    "expected": expected if verdict == WRONG else "", "basis": "section_9",
+                    "a": {"status": verdict, "reason": text},
+                    "b": {"status": verdict, "reason": text}})
+        for key in ("differs", "likely", "a5"):
+            row.pop(key, None)
 
 
 def _word(status: str) -> str:

@@ -428,6 +428,12 @@ class HCodeSection(BaseModel):
     stated: list[str] = Field(default_factory=list)
     stated_as: dict[str, str] = Field(default_factory=dict)
     bridged: bool = False
+    #: A code the sheet prints otherwise than the act ("H361D"), by the act's
+    #: spelling ("H361d").
+    printed_as: dict[str, str] = Field(default_factory=dict)
+    #: Section 9's flash point against the flammable-liquid criteria (C-17):
+    #: status, text, category, citation.
+    flash: dict = Field(default_factory=dict)
 
 
 class SubstanceSection(BaseModel):

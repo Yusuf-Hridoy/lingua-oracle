@@ -290,6 +290,19 @@ def _composition(report, path, document, spans, regulation) -> None:
         name=name, concentration=(row.concentration or "") if row else "")
 
 
+def _flash_of(rows) -> dict:
+    """C-17's verdict on Section 9's flash point, for the H-code table."""
+    import re
+
+    row = next((r for r in rows if r.check == "C-17"), None)
+    if row is None:
+        return {}
+    found = re.search(r"Category (\d)", row.expected or "") or re.search(
+        r": Category (\d)", row.text or "")
+    return {"status": row.status, "text": row.text, "citation": row.citation,
+            "category": found.group(1) if found else ""}
+
+
 def _hcode_section(report, path, document, spans, regulation, language,
                    *, client_factory=None):
     """A verdict for every hazard statement code (reference.verdict), from
@@ -312,11 +325,12 @@ def _hcode_section(report, path, document, spans, regulation, language,
             for entry in found_class.entries:
                 for code in entry.get("h_codes", []):
                     stated_as.setdefault(code, found_class.text)
+        flash = _flash_of(report.consistency)
         section = report.ingredients
         if section is not None and section.match_state == "ambiguous":
             # A choice is pending, as for the mixture: judged once it is made.
             held = verdict.context(document.lines, spans, lines_of("2"),
-                                   sheet_text=" ".join(raw), stated_as=stated_as)
+                                   sheet_text=" ".join(raw), stated_as=stated_as, flash=flash)
             held.message = "Choose the product above to judge the hazard statement codes."
             return held
         app_codes = None
@@ -332,7 +346,7 @@ def _hcode_section(report, path, document, spans, regulation, language,
                      "concentration": "100"}]
         return verdict.build(document, spans, regulation, rows, lines_of("2"),
                              app_codes=app_codes, sheet_text=" ".join(raw),
-                             stated_as=stated_as)
+                             stated_as=stated_as, flash=flash)
     except Exception as exc:  # noqa: BLE001
         return HCodeSection(state="skipped", message=f"H-code verdict skipped: {exc}"[:200])
 
