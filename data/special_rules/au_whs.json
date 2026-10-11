@@ -28,7 +28,21 @@
   "status": "ok",
   "quote": "Aerosols are classified in one of the three categories of this hazard class, depending on their flammable properties and their heat of combustion.",
   "citation": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, 2.3.2.1",
-  "categories": 3
+  "categories": 3,
+  "adoption": [
+   {
+    "quote": "GHS means the Globally Harmonised System of Classification and Labelling of Chemicals, Seventh revised edition, published by the United Nations as modified under Schedule 6.",
+    "citation": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia), regulation 5(1), “GHS”"
+   },
+   {
+    "quote": "hazardous chemical means a substance, mixture or article that satisfies the criteria for any one or more hazard classes in the GHS (including a classification referred to in Schedule 6), unless the only hazard class or classes for which the substance, mixture or article satisfies the criteria are any one or more of the following: (a) acute toxicity—oral—category 5; (b) acute toxicity—dermal—category 5; (c) acute toxicity—inhalation—category 5; (d) skin corrosion/irritation—category 3; (e) aspiration hazard—category 2; (f) flammable gas—category 2; (g) acute hazard to the aquatic environment—category 1, 2 or 3; (h) chronic hazard to the aquatic environment—category 1, 2, 3 or 4; (i) hazardous to the ozone layer.",
+    "citation": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia), regulation 5(1), “hazardous chemical”"
+   },
+   {
+    "quote": "43 Aerosols Category 1, category 2, category 3 or any combination of categories 1, 2 and 3",
+    "citation": "Model Work Health and Safety Regulations as at 5 December 2025 (Safe Work Australia), Schedule 11, table 11.1, item 43"
+   }
+  ]
  },
  "gas_method": {
   "status": "ok",

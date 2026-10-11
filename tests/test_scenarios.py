@@ -389,3 +389,19 @@ def test_without_its_specific_limit_the_generic_summation_would_pass_it(tmp_path
     row = _rows(report)["H315"]
     assert row["status"] == "wrong" and "Skin Corr. 1B" in row["reason"]
 
+
+def test_australia_takes_in_the_aerosols_class_under_whs_itself(tmp_path, on_file):  # noqa: F811
+    from lingua_oracle.keys.builders import special_rules
+
+    adoption = special_rules.load("au_whs")["aerosol"]["adoption"]
+    places = [x["citation"].split(", ", 1)[-1] for x in adoption]
+    assert any(p.endswith("“GHS”") for p in places)
+    assert any(p.endswith("“hazardous chemical”") for p in places)
+    assert any(p.endswith("Schedule 11, table 11.1, item 43") for p in places)
+    excluded = next(x for x in adoption if "hazardous chemical" in x["citation"])["quote"]
+    assert "aerosol" not in excluded.lower()          # not among the classes WHS leaves out
+    report = _check(tmp_path, "au_whs", three=["Synthetic solvent  CAS 67-64-1  50%"],
+                    nine=["Physical state: Aerosol"])
+    row = _rows(report)["H222 / H223 / H229"]
+    assert row["status"] == "wrong" and row["binding"]
+    assert "Schedule 11, table 11.1, item 43" in row["reason"]

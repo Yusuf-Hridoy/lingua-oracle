@@ -131,10 +131,13 @@ def aerosol(rules, printed, is_aerosol: bool) -> dict:
     given = [c for c in _AEROSOL if c in printed]
     if rule.get("status") != "ok":
         return dict.fromkeys(given, (CANT, "the regulation's aerosol rule is not on file.", ""))
+    adopted = "".join(f" {x['citation']}: “{x['quote']}”" for x in rule.get("adoption", []))
+    if adopted:
+        adopted = f" The regulation takes the class in:{adopted}"
     if not given:
         key = " / ".join(_AEROSOL)
         return {key: (WRONG, f"the sheet is an aerosol, and every aerosol falls in one of the "
-                             f"categories; Section 2 gives none{_cite(rule)}.", key)}
+                             f"categories; Section 2 gives none{_cite(rule)}.{adopted}", key)}
     return {c: (CANT, "the category depends on the flammable components, the heat of "
                       f"combustion and test results the sheet does not give{_cite(rule)}.", "")
             for c in given}

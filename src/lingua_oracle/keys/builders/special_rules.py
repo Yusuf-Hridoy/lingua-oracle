@@ -206,6 +206,34 @@ def _notes(text: str, document: str) -> dict:
     return out
 
 
+def _whs_adoption() -> list[dict]:
+    """That the WHS Regulations themselves take in the GHS's hazard classes -
+    aerosols among them, not only under the transport rules: "GHS" is Rev.7,
+    "hazardous chemical" is any GHS class but the ones it lists, and Schedule
+    11 counts aerosols by category."""
+    import pymupdf
+
+    source = sources.BY_PATH["australia/model_whs_regulations_2025-12-05.pdf"]
+    with pymupdf.open(sources.require(source.path)) as pdf:
+        text = _flat(" ".join(page.get_text() for page in pdf))
+    act = source.version or "Model Work Health and Safety Regulations"
+    out = []
+    for pattern, place in (
+        (r"GHS means the Globally Harmonised System of Classification and Labelling of Chemicals, "
+         r"Seventh revised edition, published by the United Nations as modified under Schedule 6\.",
+         "regulation 5(1), “GHS”"),
+        (r"hazardous chemical means a substance, mixture or article that satisfies the criteria for "
+         r"any one or more hazard classes in the GHS.+?hazardous to the ozone layer\.",
+         "regulation 5(1), “hazardous chemical”"),
+        (r"43 Aerosols Category 1, category 2, category 3 or any combination of categories 1, 2 "
+         r"and 3", "Schedule 11, table 11.1, item 43"),
+    ):
+        found = _find(text, pattern, act, where=place)
+        if found["status"] == "ok":
+            out.append({"quote": found["quote"], "citation": found["citation"]})
+    return out
+
+
 def _text(regulation: str, use_cache: bool) -> tuple[str, dict[str, tuple[str, str]]]:
     """(document, {part: (name, text)}) - the parts each rule is read from."""
     from lingua_oracle.keys.builders.hazard_criteria import _clp_text, _ghs_text
@@ -259,6 +287,8 @@ def build(regulation: str, *, use_cache: bool = True) -> dict:
     if out["aerosol"]["status"] == "ok":
         counted = set(re.findall(r"Aerosols — Category (\d)", physical[1]))
         out["aerosol"]["categories"] = len(counted) if counted else 3
+    if regulation == "au_whs" and out["aerosol"]["status"] == "ok":
+        out["aerosol"]["adoption"] = _whs_adoption()
     out["gas_method"] = _gas_method(physical[1], physical[0])
     out["scl"] = _scl(health[1], health[0], listed=regulation in ("eu_clp", "uk_clp"))
     if regulation in ("eu_clp", "uk_clp"):
