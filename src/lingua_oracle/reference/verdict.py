@@ -242,6 +242,17 @@ def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None
     withheld = [r for r in rows if r.get("kind") == "withheld"]
     rows, found_inputs, identified = _resolve(rows, table, use)
     if not rows:
+        # No composition to calculate from - but what the text decides from
+        # the sheet alone (aerosol categories, extreme pH, Section 9's flash
+        # point) still stands.
+        alone = _without_composition(regulation, held, printed)
+        if alone:
+            counts = {s: sum(1 for r in alone if r["status"] == s)
+                      for s in (CONFIRMED, WRONG, CHECK, CANT)}
+            return HCodeSection(state="judged", **kept, rows=alone, counts=counts,
+                                message="No ingredient with a CAS number to calculate from; "
+                                        "only what Section 9 and the regulation's text decide "
+                                        "is judged.")
         return HCodeSection(state="nothing", **kept,
                             message="No ingredient with a CAS number to calculate from.")
     assumptions: list[str] = []
@@ -410,6 +421,22 @@ def _special(regulation, held, rows, codes, printed, table, *, partial, found) -
         merged = {**found, **out}
         out.update(special.notes(rules, ingredients, merged, family_of_code))
     return out
+
+
+def _without_composition(regulation, held, printed) -> list[dict]:
+    from lingua_oracle.keys.builders import special_rules
+    from lingua_oracle.reference import special
+
+    rules = special_rules.load(regulation) or {}
+    decided = {**special.extreme_ph(rules, (held.section9 or {}).get("ph") or {}, printed),
+               **special.aerosol(rules, printed, bool((held.product or {}).get("aerosol")))}
+    rows = [{"code": code, "printed": code in printed, "stated_as": "",
+             "printed_as": held.printed_as.get(code, ""), "status": status, "reason": reason,
+             "expected": expected, "binding": True,
+             "a": {"status": status, "reason": reason}, "b": {"status": status, "reason": reason}}
+            for code, (status, reason, expected) in decided.items()]
+    _from_section_9(rows, held, printed)
+    return rows
 
 
 def _entry_of(entries, codes):

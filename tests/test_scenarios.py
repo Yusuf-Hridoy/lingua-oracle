@@ -322,3 +322,11 @@ def test_euh210_on_a_classified_mixture_is_outside_2_10(tmp_path, on_file):  # n
                     three=["Synthetic solvent  CAS 67-64-1  90%"])
     row = _rows(report)["EUH210"]
     assert row["status"] == "cant" and "not classified as hazardous" in row["reason"]
+
+
+def test_without_a_composition_the_text_alone_still_judges(tmp_path, on_file):  # noqa: F811
+    report = _check(tmp_path, "eu_clp", three=["Synthetic ingredient  10%"],
+                    nine=["Physical state: Aerosol", "pH: 1"])
+    rows = _rows(report)
+    assert rows["H222 / H223 / H229"]["status"] == "wrong" and rows["H314"]["status"] == "check"
+    assert "only what Section 9" in report.hcodes.message
