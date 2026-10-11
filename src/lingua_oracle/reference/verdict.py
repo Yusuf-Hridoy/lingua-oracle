@@ -337,6 +337,19 @@ def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None
             row["likely"] = ["Section 2 differs from what the app's own input gives: likely a "
                              "calculation issue."]
         out_rows.append(row)
+    # What the text decides from the sheet alone - not from any ingredient's
+    # data - binds whatever the input: aerosol categories, extreme pH, gases.
+    from lingua_oracle.keys.builders import special_rules
+    from lingua_oracle.reference import special
+
+    rules = special_rules.load(regulation) or {}
+    by_text = {**special.extreme_ph(rules, (held.section9 or {}).get("ph") or {}, printed),
+               **special.aerosol(rules, printed, bool((held.product or {}).get("aerosol"))),
+               **special.gas_mixture(rules, printed, bool((held.product or {}).get("gas")),
+                                     len(rows) > 1)}
+    for row in out_rows:
+        if row["code"] in by_text:
+            row["binding"] = True
     _from_section_9(out_rows, held, printed)
     order = {WRONG: 0, CHECK: 1, CANT: 2, CONFIRMED: 3}
     out_rows.sort(key=lambda r: (order.get(r["status"], 9), r["code"]))

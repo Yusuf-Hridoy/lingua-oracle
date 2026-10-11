@@ -309,3 +309,16 @@ def _(tmp_path):
 @pytest.mark.parametrize("name", sorted(CASES))
 def test_scenario(name, tmp_path, on_file):  # noqa: F811
     CASES[name](tmp_path)
+
+
+def test_a_rule_the_text_decides_alone_binds_whatever_the_data(tmp_path, on_file):  # noqa: F811
+    report = _check(tmp_path, "au_whs", three=["Synthetic solvent  CAS 67-64-1  50%"],
+                    nine=["Physical state: Aerosol"])
+    assert _rows(report)["H222 / H223 / H229"]["binding"]
+
+
+def test_euh210_on_a_classified_mixture_is_outside_2_10(tmp_path, on_file):  # noqa: F811
+    report = _check(tmp_path, "eu_clp", two=["H319", "EUH210"],
+                    three=["Synthetic solvent  CAS 67-64-1  90%"])
+    row = _rows(report)["EUH210"]
+    assert row["status"] == "cant" and "not classified as hazardous" in row["reason"]

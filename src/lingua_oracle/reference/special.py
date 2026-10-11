@@ -207,6 +207,9 @@ def euh(rules, ingredients, printed, section_two: str, hazardous: bool) -> dict:
             out["EUH210"] = (CANT, "no ingredient meets a condition the sheet can show (a "
                                    f"workplace exposure limit is not on the sheet){_cite(rule)}.",
                              "")
+    elif rule.get("status") == "ok" and "EUH210" in printed:
+        out["EUH210"] = (CANT, "Annex II 2.10 sets EUH210 for mixtures not classified as "
+                               f"hazardous, and Section 2 classifies this one{_cite(rule)}.", "")
     for code, why in (("EUH066", "assigned on practical observations or evidence of skin "
                                  "dryness the sheet does not give"),
                       ("EUH401", "for plant protection products; whether this is one is not "
