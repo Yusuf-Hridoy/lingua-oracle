@@ -1,0 +1,76 @@
+{
+ "regulation": "uk_clp",
+ "document": "Regulation (EC) No 1272/2008 as retained in GB law",
+ "aspiration": {
+  "status": "ok",
+  "quote": "A mixture is classified as Category 1 when the sum of the concentrations of Category 1 ingredients is ≥ 10 % and the mixture has a kinematic viscosity ≤ 20,5 mm2/s, measured at 40 °C.",
+  "citation": "Regulation (EC) No 1272/2008 as retained in GB law, 3.10.3.3.1.2",
+  "share": 10.0,
+  "viscosity": 20.5,
+  "temperature": 40.0
+ },
+ "extreme_ph": {
+  "skin": {
+   "status": "ok",
+   "quote": "In the absence of any other information, a mixture is considered corrosive to skin (Skin Corrosion Category 1) if it has a pH ≤ 2 or a pH ≥ 11,5.",
+   "citation": "Regulation (EC) No 1272/2008 as retained in GB law, 3.2.3.1.2"
+  },
+  "eye": {
+   "status": "ok",
+   "quote": "In the absence of any other information, a mixture is considered to cause serious eye damage (Category 1) if it has a pH ≤ 2 or ≥ 11,5.",
+   "citation": "Regulation (EC) No 1272/2008 as retained in GB law, 3.3.3.1.2"
+  },
+  "low": 2.0,
+  "high": 11.5,
+  "status": "ok"
+ },
+ "aerosol": {
+  "status": "ok",
+  "quote": "Aerosols shall be classified in one of the three categories of this hazard class, depending on their flammable properties and their heat of combustion.",
+  "citation": "Regulation (EC) No 1272/2008 as retained in GB law, 2.3.2.1",
+  "categories": 3
+ },
+ "gas_method": {
+  "status": "ok",
+  "quote": "Flammability shall be determined by tests or, for mixtures where there are sufficient data available, by calculation in accordance with the methods adopted by ISO (see ISO 10156 as amended, ‘Gases and gas mixtures — Determination of fire potential and oxidising ability for the selection of cylinder valve outlets’ and, if using fundamental burning velocity for Category 1B, see ISO 817 as amended ‘Refrigerants-Designation and safety classification, Annex C:- Method of test for burning velocity measurement of flammable gases’).",
+  "citation": "Regulation (EC) No 1272/2008 as retained in GB law, 2.2.4.1",
+  "method": "ISO 10156"
+ },
+ "euh": {
+  "EUH208": {
+   "status": "ok",
+   "quote": "The label on the packaging of mixtures not classified as sensitising but containing at least one substance classified as sensitising and present in a concentration equal to or greater than that specified in Table 3.4.6 of Annex I shall bear the statement: EUH208 — ‘ Contains (name of sensitising substance). May produce an allergic reaction ’",
+   "citation": "Regulation (EC) No 1272/2008 as retained in GB law, Annex II, 2.8",
+   "limits": {},
+   "limits_citation": "Regulation (EC) No 1272/2008 as retained in GB law, Annex I, Table 3.4.6"
+  },
+  "EUH210": {
+   "status": "ok",
+   "quote": "2.10. Mixtures not intended for the general public For mixtures not classified as hazardous but which contain: — ≥ 0,1 % of a substance classified as skin sensitiser category 1, 1B, respiratory sensitiser category 1, 1B, or carcinogenic category 2, or — ≥ 0,01 % of a substance classified as skin sensitiser category 1A, respiratory sensitiser category 1A, or — ≥ one tenth of the specific concentration limit for a substance classified as skin sensitiser or respiratory sensitiser with a specific concentration limit, or — ≥ 0,1 % of a substance classified as toxic to reproduction categories 1A, 1B or 2, or with effects on or via lactation; or — at least one substance in an individual concentration of ≥ 1 % by weight for non- gaseous mixtures and ≥ 0,2 % by volume for gaseous mixtures either: — classified with other health or environmental hazards; or — for which there are workplace exposure limits Textual Amendments F155 Word in Annex 2 point 2.10 omitted (31.12.2020) by virtue of The Chemicals (Health and Safety) and Genetically Modified Organisms (Contained Use) (Amendment etc.) (EU Exit) Regulations 2019 (S.I. 2019/720), reg. 1(2), Sch. 2 para. 56(b); 2020 c. 1, Sch. 5 para. 1(1) the label on the packaging shall bear the statement: EUH210 — ‘Safety data sheet available on request’",
+   "citation": "Regulation (EC) No 1272/2008 as retained in GB law, Annex II, 2.10",
+   "conditions": [
+    "≥ 0,1 % of a substance classified as skin sensitiser category 1, 1B, respiratory sensitiser category 1, 1B, or carcinogenic category 2, or",
+    "≥ 0,01 % of a substance classified as skin sensitiser category 1A, respiratory sensitiser category 1A, or",
+    "≥ one tenth of the specific concentration limit for a substance classified as skin sensitiser or respiratory sensitiser with a specific concentration limit, or",
+    "≥ 0,1 % of a substance classified as toxic to reproduction categories 1A, 1B or 2, or with effects on or via lactation; or",
+    "at least one substance in an individual concentration of ≥ 1 % by weight for non- gaseous mixtures and ≥ 0,2 % by volume for gaseous mixtures either:"
+   ]
+  },
+  "EUH066": {
+   "status": "ok",
+   "quote": "EUH066 — ‘Repeated exposure may cause skin dryness or cracking’ For substances and mixtures which may cause concern as a result of skin dryness, flaking or cracking but which do not meet the criteria for skin irritancy in section 3.2 of Annex I, based on either: — practical observations; or — relevant evidence concerning their predicted effects on the skin.",
+   "citation": "Regulation (EC) No 1272/2008 as retained in GB law, Annex II, 1.2.4"
+  },
+  "EUH071": {
+   "status": "ok",
+   "quote": "EUH071 — ‘Corrosive to the respiratory tract’ For substances and mixtures in addition to classification for inhalation toxicity, if data are available that indicate that the mechanism of toxicity is corrosivity, in accordance with section 3.1.2.3.3 and Note 1 of Table 3.1.3 in Annex I. For substances and mixtures in addition to classification for skin corrosivity, if no acute inhalation test data are available and which may be inhaled.",
+   "citation": "Regulation (EC) No 1272/2008 as retained in GB law, Annex II, 1.2.6"
+  },
+  "EUH401": {
+   "status": "ok",
+   "quote": "PART 4: SPECIAL RULE FOR LABELLING OF PLANT PROTECTION PRODUCTS Without prejudice to the information required in accordance with Article 65 of Regulation (EC) No 1107/2009 and Regulation (EC) No 547/2011 as regards labelling requirements for plant protection products subject to Regulation (EC) No 1107/2009 shall also include the following wording: Textual Amendments F156 Words in Annex 2 Pt. 4 substituted (31.12.2020) by The Chemicals (Health and Safety) and Genetically Modified Organisms (Contained Use) (Amendment etc.) (EU Exit) Regulations 2019 (S.I. 2019/720), reg. 1(2), Sch. 2 para. 56(c); 2020 c. 1, Sch. 5 para. 1(1) EUH401 — ‘To avoid risks to human health and the environment, comply with the instructions for use’",
+   "citation": "Regulation (EC) No 1272/2008 as retained in GB law, Annex II, Part 4"
+  }
+ },
+ "annex_vi_notes": {}
+}

@@ -1,0 +1,39 @@
+{
+ "regulation": "ca_whmis",
+ "document": "Hazardous Products Regulations (SOR/2015-17)",
+ "aspiration": {
+  "status": "ok",
+  "quote": "A mixture that contains one or more ingredients that are classified as an aspiration toxicant is classified in the category “Aspiration Hazard — Category 1” if (a) the sum of the concentrations of the ingredients that are present individually at a concentration of 1.0% or more and that are classified in the category “Aspiration Hazard — Category 1” is equal to or greater than the concentration limit of 10.0% and the mixture has a kinematic viscosity less than or equal to 20.5 mm2/s, measured at 40°C",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), 8.10.5",
+  "share": 10.0,
+  "viscosity": 20.5,
+  "temperature": 40.0
+ },
+ "extreme_ph": {
+  "skin": {
+   "status": "ok",
+   "quote": "A substance for which the pH is less than or equal to two or equal to or greater than 11.5 is classified in the category “Skin Corrosion — Category 1”, unless an as- sessment of alkali or acid reserve performed in accor- dance with established scientific principles supports the conclusion that it need not be classified as a skin-corro- sive substance on the basis of its pH.",
+   "citation": "Hazardous Products Regulations (SOR/2015-17), 8.2.5"
+  },
+  "eye": {
+   "status": "ok",
+   "quote": "A substance for which the pH is less than or equal to two or equal to or greater than 11.5 is classified in the category “Serious Eye Damage — Category 1”, unless an assessment of alkali or acid reserve performed in accor- dance with established scientific principles supports the conclusion that it need not be classified as a substance that causes serious eye damage on the basis of its pH.",
+   "citation": "Hazardous Products Regulations (SOR/2015-17), 8.3.5"
+  },
+  "low": 2.0,
+  "high": 11.5,
+  "status": "ok"
+ },
+ "aerosol": {
+  "status": "ok",
+  "quote": "An aerosol is classified in a category of this hazard class in accordance with the following table",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), 7.3.1",
+  "categories": 3
+ },
+ "gas_method": {
+  "status": "ok",
+  "quote": "If a calculation method is used to es- tablish whether a gas is classified in this hazard class, the calculation method set out in the International Organiza- tion for Standardization standard ISO 10156:2017 enti- tled Gas cylinders — Gases and gas mixtures — Deter- mination of fire potential and oxidizing ability for the selection of cylinder valve outlets, as amended from time to time, or any other calculation method that is a scientif- ically validated method, must be used.",
+  "citation": "Hazardous Products Regulations (SOR/2015-17), 7.2.1",
+  "method": "ISO 10156"
+ }
+}

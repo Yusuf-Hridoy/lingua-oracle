@@ -1,0 +1,39 @@
+{
+ "regulation": "au_whs",
+ "document": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations",
+ "aspiration": {
+  "status": "ok",
+  "quote": "A mixture is classified as Category 1 when the sum of the concentrations of Category 1 ingredients is ≥ 10%, and the mixture has a kinematic viscosity ≤ 20.5 mm2/s, measured at 40 °C.",
+  "citation": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, 3.10.3.3.2.1",
+  "share": 10.0,
+  "viscosity": 20.5,
+  "temperature": 40.0
+ },
+ "extreme_ph": {
+  "skin": {
+   "status": "ok",
+   "quote": "In the absence of any other information, a mixture is considered corrosive (Skin Category 1) if it has a pH ≤ 2 or a pH ≥ 11.5.",
+   "citation": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, 3.2.3.1.2"
+  },
+  "eye": {
+   "status": "ok",
+   "quote": "In the absence of any other information, a mixture is considered to cause serious eye damage (Eye Category 1) if it has a pH ≤ 2 or ≥ 11.5.",
+   "citation": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, 3.3.3.1.2"
+  },
+  "low": 2.0,
+  "high": 11.5,
+  "status": "ok"
+ },
+ "aerosol": {
+  "status": "ok",
+  "quote": "Aerosols are classified in one of the three categories of this hazard class, depending on their flammable properties and their heat of combustion.",
+  "citation": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, 2.3.2.1",
+  "categories": 3
+ },
+ "gas_method": {
+  "status": "ok",
+  "quote": "1 Flammability should be determined by tests or by calculation in accordance with methods adopted by ISO (see ISO 10156:2010 “Gases and gas mixtures – Determination of fire potential and oxidizing ability for the selection of cylinder valve outlets” and, if using fundamental burning velocity for Category 1B, see ISO 817:2014 “Refrigerants-Designation and safety classification, Annex C: Method of test for burning velocity measurement of flammable gases”).",
+  "citation": "UN GHS Rev.7 (2017), as adopted by the WHS Regulations, 2.2.4.2",
+  "method": "ISO 10156"
+ }
+}

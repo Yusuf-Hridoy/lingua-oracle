@@ -1,0 +1,39 @@
+{
+ "regulation": "us_osha",
+ "document": "29 CFR 1910.1200",
+ "aspiration": {
+  "status": "ok",
+  "quote": "A mixture is classified as Category 1 when the sum of the concentrations of Category 1 ingredients is ≥10%, and the mixture has a kinematic viscosity of ≤20.5 mm 2 /s, measured at 40 °C.",
+  "citation": "29 CFR 1910.1200 Appendix A, A.10.3.3.2.1",
+  "share": 10.0,
+  "viscosity": 20.5,
+  "temperature": 40.0
+ },
+ "extreme_ph": {
+  "skin": {
+   "status": "ok",
+   "quote": "In the absence of any other information, a mixture is considered corrosive (Skin Category 1) if it has a pH ≤2 or a pH ≥11.5.",
+   "citation": "29 CFR 1910.1200 Appendix A, A.2.3.1.3"
+  },
+  "eye": {
+   "status": "ok",
+   "quote": "In the absence of any other information, a mixture is considered to cause serious eye damage (Category 1) if it has a pH ≤2 or ≥11.5.",
+   "citation": "29 CFR 1910.1200 Appendix A, A.3.3.1.2"
+  },
+  "low": 2.0,
+  "high": 11.5,
+  "status": "ok"
+ },
+ "aerosol": {
+  "status": "ok",
+  "quote": "Aerosols are classified in one of three categories, depending on their flammable properties and their heat of combustion.",
+  "citation": "29 CFR 1910.1200 Appendix B, B.3.1.2.1",
+  "categories": 3
+ },
+ "gas_method": {
+  "status": "ok",
+  "quote": "1 Flammability shall be determined by tests or by calculation in accordance with ISO 10156:1996 or ISO 10156:2017 (incorporated by reference; see § 1910.",
+  "citation": "29 CFR 1910.1200 Appendix B, B.2.3",
+  "method": "ISO 10156"
+ }
+}

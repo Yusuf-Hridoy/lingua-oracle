@@ -1,0 +1,167 @@
+{
+ "regulation": "eu_clp",
+ "document": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701",
+ "aspiration": {
+  "status": "ok",
+  "quote": "A mixture is classified as Category 1 when the sum of the concentrations of Category 1 ingredients is ≥ 10 % and the mixture has a kinematic viscosity ≤ 20,5 mm 2 /s, measured at 40 °C.",
+  "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, 3.10.3.3.1.2",
+  "share": 10.0,
+  "viscosity": 20.5,
+  "temperature": 40.0
+ },
+ "extreme_ph": {
+  "skin": {
+   "status": "ok",
+   "quote": "In the absence of any other information, a mixture is considered corrosive to skin (Skin Corrosion Category 1) if it has a pH ≤ 2 or a pH ≥ 11,5.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, 3.2.3.1.2"
+  },
+  "eye": {
+   "status": "ok",
+   "quote": "In the absence of any other information, a mixture is considered to cause serious eye damage (Category 1) if it has a pH ≤ 2 or ≥ 11,5.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, 3.3.3.1.2"
+  },
+  "low": 2.0,
+  "high": 11.5,
+  "status": "ok"
+ },
+ "aerosol": {
+  "status": "ok",
+  "quote": "Aerosols shall be classified in one of the three categories of this hazard class, depending on their flammable properties and their heat of combustion.",
+  "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, 2.3.2.1",
+  "categories": 3
+ },
+ "gas_method": {
+  "status": "ok",
+  "quote": "Flammability shall be determined by tests or, for mixtures where there are sufficient data available, by calculation in accordance with the methods adopted by ISO (see ISO 10156 as amended, ‘Gases and gas mixtures — Determination of fire potential and oxidising ability for the selection of cylinder valve outlets’ and, if using fundamental burning velocity for Category 1B, see ISO 817 as amended ‘Refrigerants-Designation and safety classification, Annex C:- Method of test for burning velocity measurement of flammable gases’).",
+  "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, 2.2.4.1",
+  "method": "ISO 10156"
+ },
+ "euh": {
+  "EUH208": {
+   "status": "ok",
+   "quote": "The label on the packaging of mixtures not classified as sensitising but containing at least one substance classified as sensitising and present in a concentration equal to or greater than that specified in Table 3.4.6 of Annex I shall bear the statement: EUH208 — ‘Contains (name of sensitising substance). May produce an allergic reaction’",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex II, 2.8",
+   "scl_rule": "",
+   "limits": {
+    "respiratory 1": 0.1,
+    "respiratory 1A": 0.01,
+    "respiratory 1B": 0.1,
+    "skin 1": 0.1,
+    "skin 1A": 0.01,
+    "skin 1B": 0.1
+   },
+   "limits_citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex I, Table 3.4.6"
+  },
+  "EUH210": {
+   "status": "ok",
+   "quote": "2.10. Mixtures not intended for the general public For mixtures not classified as hazardous but which contain: — ≥ 0,1 % of a substance classified as skin sensitiser category 1, 1B, respiratory sensitiser category 1, 1B, or carcinogenic category 2, or — ≥ 0,01 % of a substance classified as skin sensitiser category 1A, respiratory sensitiser category 1A, or — ≥ one tenth of the specific concentration limit for a substance classified as skin sensitiser or respiratory sensitiser with a specific concentration limit, or — ≥ 0,1 % of a substance classified as toxic to reproduction categories 1A, 1B or 2, or with effects on or via lactation; or — at least one substance in an individual concentration of ≥ 1 % by weight for non-gaseous mixtures and ≥ 0,2 % by volume for gaseous mixtures either: — classified with other health or environmental hazards; or — for which there are Community workplace exposure limits — ≥ 0,1 % of a substance classified as endocrine disruptor for human health category 2; or — ≥ 0,1 % of a substance classified as endocrine disruptor for the environment category 2. the label on the packaging shall bear the statement: EUH210 — ‘Safety data sheet available on request’",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex II, 2.10",
+   "conditions": [
+    "≥ 0,1 % of a substance classified as skin sensitiser category 1, 1B, respiratory sensitiser category 1, 1B, or carcinogenic category 2, or",
+    "≥ 0,01 % of a substance classified as skin sensitiser category 1A, respiratory sensitiser category 1A, or",
+    "≥ one tenth of the specific concentration limit for a substance classified as skin sensitiser or respiratory sensitiser with a specific concentration limit, or",
+    "≥ 0,1 % of a substance classified as toxic to reproduction categories 1A, 1B or 2, or with effects on or via lactation; or",
+    "at least one substance in an individual concentration of ≥ 1 % by weight for non-gaseous mixtures and ≥ 0,2 % by volume for gaseous mixtures either:",
+    "≥ 0,1 % of a substance classified as endocrine disruptor for human health category 2; or",
+    "≥ 0,1 % of a substance classified as endocrine disruptor for the environment category 2."
+   ]
+  },
+  "EUH066": {
+   "status": "ok",
+   "quote": "EUH066 — ‘Repeated exposure may cause skin dryness or cracking’ For substances and mixtures which may cause concern as a result of skin dryness, flaking or cracking but which do not meet the criteria for skin irritancy in section 3.2 of Annex I, based on either: — practical observations; or — relevant evidence concerning their predicted effects on the skin.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex II, 1.2.4"
+  },
+  "EUH071": {
+   "status": "ok",
+   "quote": "EUH071 — ‘Corrosive to the respiratory tract’ For substances and mixtures in addition to classification for inhalation toxicity, if data are available that indicate that the mechanism of toxicity is corrosivity, in accordance with section 3.1.2.3.3 and Note 1 of Table 3.1.3 in Annex I. For substances and mixtures in addition to classification for skin corrosivity, if no acute inhalation test data are available and which may be inhaled.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex II, 1.2.6"
+  },
+  "EUH401": {
+   "status": "ok",
+   "quote": "PART 4: SPECIAL RULE FOR LABELLING OF PLANT PROTECTION PRODUCTS Without prejudice to the information required in accordance with Article 16 of Directive 91/414/EEC and Annex V of that Directive, the labelling for plant protection products subject to Directive 91/414/EEC shall also include the following wording: EUH401 — ‘To avoid risks to human health and the environment, comply with the instructions for use’",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex II, Part 4"
+  }
+ },
+ "annex_vi_notes": {
+  "A": {
+   "quote": "Note A: Without prejudice to Article 17(2), the name of the substance must appear on the label in the form of one of the designations given in Part 3. In Part 3, use is sometimes made of a general description such as ‘... compounds’ or ‘... salts’. In this case, the supplier is required to state on the label the correct name, due account being taken of section 1.1.1.4.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "B": {
+   "quote": "Note B: Some substances (acids, bases, etc.) are placed on the market in aqueous solutions at various concentrations and, therefore, these solutions require different classification and labelling since the hazards vary at different concentrations. In Part 3 entries with Note B have a general designation of the following type: ‘nitric acid … %’. In this case the supplier must state the percentage concentration of the solution on the label. Unless otherwise stated, it is assumed that the percentage concentration is calculated on a weight/weight basis.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "C": {
+   "quote": "Note C: Some organic substances may be marketed either in a specific isomeric form or as a mixture of several isomers. In this case the supplier must state on the label whether the substance is a specific isomer or a mixture of isomers.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "D": {
+   "quote": "Note D: Certain substances which are susceptible to spontaneous polymerisation or decomposition are generally placed on the market in a stabilised form. It is in this form that they are listed in Part 3. However, such substances are sometimes placed on the market in a non-stabilised form. In this case, the supplier must state on the label the name of the substance followed by the words ‘non-stabilised’. —————",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "F": {
+   "quote": "Note F: This substance may contain a stabiliser. If the stabiliser changes the hazardous properties of the substance, as indicated by the classification in Part 3, classification and labelling should be provided in accordance with the rules for classification and labelling of hazardous mixtures.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "G": {
+   "quote": "Note G: This substance may be marketed in an explosive form in which case it must be evaluated using the appropriate test methods. The classification and labelling provided shall reflect the explosive properties. —————",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "J": {
+   "quote": "Note J: The harmonised classification as a carcinogen or mutagen applies unless it can be shown that the substance contains less than 0,1 % w/w benzene (Einecs No 200-753-7), in which case a classification in accordance with Title II of this Regulation shall be performed also for those hazard classes.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "K": {
+   "quote": "Note K: The harmonised classification as a carcinogen or mutagen applies unless it can be shown that the substance contains less than 0,1 % w/w 1,3- butadiene (Einecs No 203-450-8), in which case a classification in accordance with Title II of this Regulation shall be performed also for those hazard classes. Where the substance is not classified as a carcinogen or mutagen, at least the precautionary statements (P102-)P210-P403 shall apply.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "L": {
+   "quote": "Note L: The harmonised classification as a carcinogen applies unless it can be shown that the substance contains less than 3 % of dimethyl sulphoxide extract as measured by IP 346 (‘Determination of polycyclic aromatics in unused lubricating base oils and asphaltene free petroleum fractions – Dimethyl sulphoxide extraction refractive index method’ Institute of Petroleum, London), in which case a classification in accordance with Title II of this Regulation shall be performed also for that hazard class.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "M": {
+   "quote": "Note M: The harmonised classification as a carcinogen applies unless it can be shown that the substance contains less than 0,005 % w/w benzo[a]-pyrene (Einecs No 200-028-5), in which case a classification in accordance with Title II of this Regulation shall be performed also for that hazard class.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "N": {
+   "quote": "Note N: The harmonised classification as a carcinogen applies unless the full refining history is known and it can be shown that the substance from which it is produced is not a carcinogen, in which case a classification in accordance with Title II of this Regulation shall be performed also for that hazard class.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "P": {
+   "quote": "Note P: The harmonised classification as a carcinogen or mutagen applies unless it can be shown that the substance contains less than 0,1 % w/w benzene (Einecs No 200-753-7), in which case a classification in accordance with Title II of this Regulation shall be performed also for those hazard classes. Where the substance is not classified as a carcinogen or mutagen, at least the precautionary statements (P102-)P260-P262-P301 + P310-P331 shall apply.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "Q": {
+   "quote": "Note Q: The harmonised classification as a carcinogen applies unless one of the following conditions is fulfilled: — a short term biopersistence test by inhalation has shown that fibres longer than 20 μm have a weighted half-life less than 10 days; or — a short term biopersistence test by intratracheal instillation has shown that the fibres longer than 20 μm have a weighted half-life less than 40 days; or — an appropriate intra-peritoneal test has provided no evidence of excess carcinogenicity; or — no relevant pathogenicity or neoplastic changes are noted in a suitable long term inhalation test",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "R": {
+   "quote": "Note R: The harmonised classification as a carcinogen applies except in the case of fibres with a Length Weighted Geometric Mean Diameter (LWGMD) minus two geometric standard errors greater than 6 μm, as measured in accordance with Test method A.22 in the Annex to Commission Regulation (EC) No 440/2008 ( *4 ).",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "S": {
+   "quote": "Note S: This substance may not require a label according to Article 17 (see Section 1.3 of Annex I) (Table 3).",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "T": {
+   "quote": "Note T: This substance may be marketed in a form which does not have the physical hazards as indicated by the classification in the entry in Part 3. If the results of the relevant method or methods in accordance with",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "U": {
+   "quote": "Note U (Table 3): When put on the market gases have to be classified as ‘Gases under pressure’, in one of the groups compressed gas, liquefied gas, refrigerated liquefied gas or dissolved gas. The group depends on the physical state in which the gas is packaged and therefore has to be assigned case by case. The following codes are assigned: Press. Gas (Comp.) Press. Gas (Liq.) Press. Gas (Ref. Liq.) Press. Gas (Diss.) Aerosols shall not be classified as gases under pressure (See Annex I,",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "V": {
+   "quote": "Note V: If the substance is to be placed on the market as fibres (with diameter < 3 μm, length > 5 μm and aspect ratio ≥ 3:1) or particles of the substance fulfilling the WHO fibre criteria or as particles with modified surface chemistry, their hazardous properties must be evaluated in accordance with Title II of this Regulation, to assess whether a higher category (Carc. 1B or 1A) and/or additional routes of exposure (oral or dermal) should be applied.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "W": {
+   "quote": "Note W: It has been observed that the carcinogenic hazard of this substance arises when respirable dust is inhaled in quantities leading to significant impairment of particle clearance mechanisms in the lung. This note aims to describe the particular toxicity of the substance; it does not constitute a criterion for classification according to this Regulation.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  },
+  "X": {
+   "quote": "Note X: The classification for the hazard class(es) in this entry is based only on the hazardous properties of the part of the substance which is common to all substances in the entry. The hazardous properties of any substances in the entry also depend on the properties of the part of the substance which is not common to all substances in the group. The latter must be evaluated to assess whether more severe classification(s) (i.e. a higher category) or a broader scope of the same classification (additional differentiation, target organs and/or hazard statements) might apply for the hazard class(es) in the entry.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.3"
+  }
+ }
+}

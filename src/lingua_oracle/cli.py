@@ -218,6 +218,16 @@ def keys_build(
             typer.secho(f"  {name}: {held['status']}, {len(held['entries'])} entries -> {path}")
         return
 
+    if regulation == "special_rules":
+        # Not an answer key: aspiration, extreme pH, aerosols, gas mixtures,
+        # EUH statements and Annex VI's notes, each quoted from its text.
+        from lingua_oracle.keys.builders import special_rules
+
+        for reg_id in special_rules.REGULATIONS:
+            path = special_rules.write(reg_id, use_cache=not no_cache)
+            typer.secho(f"  {reg_id}: -> {path}")
+        return
+
     if regulation == "section9":
         # Not an answer key: what each regulation's text says Section 9 must
         # give for the physical state, quoted.
