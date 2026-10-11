@@ -35,5 +35,18 @@
   "quote": "1 Flammability shall be determined by tests or by calculation in accordance with ISO 10156:1996 or ISO 10156:2017 (incorporated by reference; see § 1910.",
   "citation": "29 CFR 1910.1200 Appendix B, B.2.3",
   "method": "ISO 10156"
+ },
+ "scl": {
+  "skin": {
+   "status": "ok",
+   "quote": "If there are data showing that (an) ingredient(s) may be corrosive or irritant to skin at a concentration of <1% (corrosive) or <3% (irritant), the mixture shall be classified accordingly (See Use of cut-off values/concentration limits , paragraph A.",
+   "citation": "29 CFR 1910.1200 Appendix A, A.2.3.3.6"
+  },
+  "eye": {
+   "status": "ok",
+   "quote": "If there are data showing that (an) ingredient(s) may be corrosive to the skin or seriously damaging to the eye/eye irritating at a concentration of ≤1% (corrosive to the skin or seriously damaging to the eye) or ≤3% (eye irritant), the mixture shall be classified accordingly (See also paragraph A.",
+   "citation": "29 CFR 1910.1200 Appendix A, A.3.3.3.6"
+  },
+  "status": "ok"
  }
 }

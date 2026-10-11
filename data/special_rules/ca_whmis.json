@@ -35,5 +35,18 @@
   "quote": "If a calculation method is used to es- tablish whether a gas is classified in this hazard class, the calculation method set out in the International Organiza- tion for Standardization standard ISO 10156:2017 enti- tled Gas cylinders — Gases and gas mixtures — Deter- mination of fire potential and oxidizing ability for the selection of cylinder valve outlets, as amended from time to time, or any other calculation method that is a scientif- ically validated method, must be used.",
   "citation": "Hazardous Products Regulations (SOR/2015-17), 7.2.1",
   "method": "ISO 10156"
+ },
+ "scl": {
+  "skin": {
+   "status": "not_on_file",
+   "quote": "",
+   "citation": "Hazardous Products Regulations (SOR/2015-17)"
+  },
+  "eye": {
+   "status": "not_on_file",
+   "quote": "",
+   "citation": "Hazardous Products Regulations (SOR/2015-17)"
+  },
+  "status": "not_on_file"
  }
 }

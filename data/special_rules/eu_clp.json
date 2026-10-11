@@ -36,6 +36,29 @@
   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, 2.2.4.1",
   "method": "ISO 10156"
  },
+ "scl": {
+  "skin": {
+   "status": "ok",
+   "quote": "If there are data showing that (an) ingredient(s) is/are corrosive or irritant to skin at a concentration of < 1 % (skin corrosive) or < 3 % (skin irritant), the mixture shall be classified accordingly.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, 3.2.3.3.6"
+  },
+  "eye": {
+   "status": "ok",
+   "quote": "If there are data showing that (an) ingredient(s) may be corrosive to the skin or seriously damaging to the eye/eye irritating at a concentration of < 1 % (corrosive to the skin or seriously damaging to the eye) or < 3 % (eye irritant), the mixture shall be classified accordingly.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, 3.3.3.3.6"
+  },
+  "list_use": {
+   "status": "ok",
+   "quote": "The SCLs and harmonised ATEs must be used by the manufacturer, importer or downstream user for the classification of a mixture containing this substance.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.2.3"
+  },
+  "list_generic": {
+   "status": "ok",
+   "quote": "Where no specific concentration limits are given in this Annex for a certain category, the generic concentration limits given in Annex I must be applied for the classification of substances containing impurities, additives or individual constituents or for mixtures.",
+   "citation": "Regulation (EC) No 1272/2008, consolidated 02008R1272-20260701, Annex VI, Part 1, 1.1.2.3"
+  },
+  "status": "ok"
+ },
  "euh": {
   "EUH208": {
    "status": "ok",

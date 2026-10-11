@@ -115,6 +115,37 @@ def _ph(text: str, document: str, skin: str = _PH_SKIN, eye: str = _PH_EYE) -> d
     return out
 
 
+_SCL_SKIN = (r"If there are data showing that \(an\) ingredient\(s\) (?:is/are|may be) corrosive or "
+             r"irritant to (?:the )?skin at a concentration of[^.]*?accordingly[^.]*\.")
+_SCL_EYE = (r"If there are data showing that \(an\) ingredient\(s\) may be corrosive to the skin or "
+            r"seriously damaging to the eye[^.]*?accordingly[^.]*\.")
+
+
+def _scl(text: str, document: str, *, listed: bool) -> dict:
+    """How the skin and eye summations take an ingredient with a specific
+    limit: classified accordingly; and, for a list, that its limits must be
+    used and the generic ones where it gives none for a category."""
+    out = {"skin": _find(text, _SCL_SKIN, document), "eye": _find(text, _SCL_EYE, document)}
+    if listed:
+        # Both under Annex VI Part 1's heading "1.1.2.3. Specific concentration
+        # limits, M-factors and Acute Toxicity Estimates (ATE)" - which the GB
+        # PDF prints as ".1.2.3.", so the place is named from the heading.
+        where = ("Annex VI, Part 1, 1.1.2.3" if re.search(
+            r"\.?1?\.1\.2\.3\.\s?Specific concentration limits, M-factors and Acute Toxicity "
+            r"Estimates", text) else "Annex VI, Part 1")
+        out["list_use"] = _find(text, r"The SCLs and harmonised ATEs must be used by the "
+                                      r"manufacturer, importer or downstream user for the "
+                                      r"classification of a mixture containing this substance\.",
+                                document, where=where)
+        out["list_generic"] = _find(text, r"Where no specific concentration limits are given in "
+                                          r"(?:this Annex|the list) for a certain category, the "
+                                          r"generic concentration limits given in Annex I must be "
+                                          r"applied[^.]*\.", document, where=where)
+    out["status"] = "ok" if out["skin"]["status"] == "ok" or out["eye"]["status"] == "ok" \
+        else "not_on_file"
+    return out
+
+
 def _gas_method(text: str, document: str) -> dict:
     flammable = _find(text, r"[^.]*(?:calculation|tests?)[^.]*ISO 10156[^.]*\.", document)
     return {**flammable, "method": "ISO 10156"} if flammable["status"] == "ok" else flammable
@@ -229,6 +260,7 @@ def build(regulation: str, *, use_cache: bool = True) -> dict:
         counted = set(re.findall(r"Aerosols — Category (\d)", physical[1]))
         out["aerosol"]["categories"] = len(counted) if counted else 3
     out["gas_method"] = _gas_method(physical[1], physical[0])
+    out["scl"] = _scl(health[1], health[0], listed=regulation in ("eu_clp", "uk_clp"))
     if regulation in ("eu_clp", "uk_clp"):
         out["euh"] = _euh(parts["all"][1], document)
         out["annex_vi_notes"] = _notes(parts["all"][1], document)

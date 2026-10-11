@@ -185,10 +185,10 @@ scenarios:
   group: special rule
   description: 'Annex VI specific concentration limits and M-factors.'
   regulations: [eu_clp, uk_clp]
-  expected: 'An ingredient with an entry is calculated with the entry''s specific limits and M-factors.'
-  source: 'data/annex_vi and data/gb_mcl (the "Specific Conc. Limits, M-factors and ATEs" column); mixture/limits.py, mixture/rules.py'
-  status: partial
-  reason: 'Specific limits are applied where a rule takes one ingredient at a time (sensitisation, CMR, STOT) and M-factors in the aquatic summation; the skin and eye summations do not apply specific limits yet.'
+  expected: 'An ingredient with an entry is calculated with its specific limits - in the skin and eye summations too, classified by the band its concentration falls in and left out of that category''s generic sum - and its M-factors in the aquatic summation; every verdict a specific limit decided quotes the text.'
+  source: 'CLP Annex I 3.2.3.3.6 and 3.3.3.3.6, Annex VI Part 1 1.1.2.3 (data/special_rules scl); data/annex_vi and data/gb_mcl; mixture/rules.py'
+  status: supported
+  reason: 'The texts on file do not carry a skin corrosion limit over to the eye: for the eye, an ingredient with only skin limits counts at the generic ones. No "sum of Ci/SCLi" form is used - none of the texts on file states one.'
 
 - id: annex_vi_notes
   group: special rule

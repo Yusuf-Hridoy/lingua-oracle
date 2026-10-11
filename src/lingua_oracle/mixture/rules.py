@@ -126,6 +126,67 @@ SKIN_KEYS = {
 }
 
 
+def _specific(ingredient, names: tuple[str, ...]) -> list:
+    """An ingredient's specific limits for these classes, as its list entry
+    gives them."""
+    held = getattr(ingredient, "limits", None)
+    return [x for x in (held.specific if held else []) if x.hazard_class.name in names]
+
+
+def _quote(table: RuleTable, part: str) -> str:
+    """How the regulation's text takes a specific limit in the summation,
+    quoted - and, for a list, that its limits must be used."""
+    from lingua_oracle.keys.builders import special_rules
+
+    held = (special_rules.load(table.regulation) or {}).get("scl") or {}
+    lines = [held.get(part, {}), held.get("list_use", {}), held.get("list_generic", {})]
+    return " ".join(f"{x['citation']}: “{x['quote']}”" for x in lines if x.get("quote"))
+
+
+def _by_specific(ingredients, names: tuple[str, ...], table: RuleTable, part: str) -> RuleResult:
+    """The class each ingredient with specific limits for these classes takes
+    alone, by the band its concentration falls in - the strictest of them."""
+    from lingua_oracle.mixture import families
+
+    result = RuleResult(hazard_class=None, citation=_quote(table, part))
+    for ingredient in ingredients:
+        for limit in _specific(ingredient, names):
+            inside = ((limit.low is None or ingredient.percentage >= limit.low)
+                      and (limit.high is None or ingredient.percentage < limit.high))
+            result.trace.append(f"{ingredient.label} {ingredient.percentage} % against its "
+                                f"specific limit {limit.source}: "
+                                f"{'within' if inside else 'outside'}")
+            if not inside:
+                continue
+            if result.hazard_class is None or families.stricter(limit.hazard_class,
+                                                                result.hazard_class):
+                result.hazard_class = limit.hazard_class
+                result.total, result.limit = ingredient.percentage, limit.low
+                result.contributions = [Contribution(
+                    cas=ingredient.cas, name=ingredient.name,
+                    percentage=ingredient.percentage, hazard_class=str(limit.hazard_class),
+                    note=f"specific limit: {limit.source}")]
+    if result.hazard_class is not None:
+        result.assumptions.append(
+            f"Classified by its specific limit ({result.contributions[0].note.split(': ', 1)[1]}), "
+            f"as the text says - {result.citation}")
+    return result
+
+
+def _stricter(generic: RuleResult, specific: RuleResult) -> RuleResult:
+    """The stricter of the generic summation and the specific limits."""
+    from lingua_oracle.mixture import families
+
+    generic.trace += specific.trace
+    if specific.hazard_class is None:
+        return generic
+    if generic.hazard_class is None or families.stricter(specific.hazard_class,
+                                                         generic.hazard_class):
+        specific.trace = generic.trace
+        return specific
+    return generic
+
+
 def skin(ingredients, table: RuleTable) -> RuleResult:
     """Skin corrosion and irritation by summation.
 
@@ -134,14 +195,28 @@ def skin(ingredients, table: RuleTable) -> RuleResult:
     ingredients; the sub-categories are summed together for the category-level
     result, and corrosives count towards irritation at the multiplier the
     regulation's own table gives.
+
+    An ingredient with specific limits for a category (Annex VI, the GB MCL)
+    is classified by them - "the mixture shall be classified accordingly"
+    (CLP 3.2.3.3.6) - and leaves that category's generic summation; for a
+    category it has none for, the generic limits apply to it (Annex VI Part
+    1, 1.1.2.3). The stricter of the two results stands.
     """
     limits, missing = _need(table, "skin", SKIN_KEYS)
     if missing:
         return _not_on_file("skin", missing)
+    corrosive_pool = [i for i in ingredients if not _specific(i, ("Skin Corr.",))]
+    irritant_pool = [i for i in ingredients if not _specific(i, ("Skin Irrit.",))]
+    generic = _skin_generic(corrosive_pool, irritant_pool, limits)
+    return _stricter(generic, _by_specific(ingredients, ("Skin Corr.", "Skin Irrit."), table,
+                                           "skin"))
+
+
+def _skin_generic(corrosive_pool, irritant_pool, limits) -> RuleResult:
     result = RuleResult(hazard_class=None, citation=limits["corrosive"].citation)
 
     for sub in ("A", "B", "C"):
-        total, contributions = _sum(ingredients, "Skin Corr.", "1", sub)
+        total, contributions = _sum(corrosive_pool, "Skin Corr.", "1", sub)
         if not contributions:
             continue
         result.trace.append(f"Skin Corr. 1{sub}: {total} %")
@@ -152,8 +227,11 @@ def skin(ingredients, table: RuleTable) -> RuleResult:
             result.contributions = contributions
             return result
 
-    corrosive_total, corrosive_contributions = _sum(ingredients, "Skin Corr.", "1")
-    irritant_total, irritant_contributions = _sum(ingredients, "Skin Irrit.", "2")
+    corrosive_total, corrosive_contributions = _sum(corrosive_pool, "Skin Corr.", "1")
+    # Towards irritation, corrosives count unless they have a specific limit
+    # for irritation of their own.
+    to_irritant, to_irritant_contributions = _sum(irritant_pool, "Skin Corr.", "1")
+    irritant_total, irritant_contributions = _sum(irritant_pool, "Skin Irrit.", "2")
     result.trace.append(f"Skin Corr. 1 (all sub-categories): {corrosive_total} %")
     result.trace.append(f"Skin Irrit. 2: {irritant_total} %")
 
@@ -163,11 +241,11 @@ def skin(ingredients, table: RuleTable) -> RuleResult:
         result.limit = limits["corrosive"].amount
         result.contributions = corrosive_contributions
         return result
-    if corrosive_total >= limits["corrosive_to_irritant"].amount:
+    if to_irritant >= limits["corrosive_to_irritant"].amount:
         result.hazard_class = HazardClass("Skin Irrit.", "2")
-        result.total = corrosive_total
+        result.total = to_irritant
         result.limit = limits["corrosive_to_irritant"].amount
-        result.contributions = corrosive_contributions
+        result.contributions = to_irritant_contributions
         result.trace.append(
             f"Skin Corr. 1 at or above {result.limit} % but below "
             f"{limits['corrosive'].amount} % classifies the mixture "
@@ -181,7 +259,7 @@ def skin(ingredients, table: RuleTable) -> RuleResult:
         return result
 
     multiplier = limits["multiplier"].amount
-    combined = corrosive_total * multiplier + irritant_total
+    combined = to_irritant * multiplier + irritant_total
     result.trace.append(
         f"({multiplier} x Skin Corr. 1) + Skin Irrit. 2 = {combined} %")
     # Recorded whether or not it triggers: a reader comparing 9 % against a
@@ -191,7 +269,7 @@ def skin(ingredients, table: RuleTable) -> RuleResult:
         result.hazard_class = HazardClass("Skin Irrit.", "2")
         result.contributions = [
             *[Contribution(c.cas, c.name, c.percentage, c.hazard_class,
-                           multiplier) for c in corrosive_contributions],
+                           multiplier) for c in to_irritant_contributions],
             *irritant_contributions]
     return result
 
@@ -213,18 +291,36 @@ def eye(ingredients, table: RuleTable) -> RuleResult:
     A skin corrosive is treated as seriously damaging to the eye for this
     calculation, as the published tables' own rows say, so Skin Corr. 1
     ingredients are counted with the Eye Dam. 1 ones.
+
+    An ingredient with specific limits for an eye category is classified by
+    them (CLP 3.3.3.3.6) and leaves that category's generic summation; the
+    texts on file do not carry a skin corrosion limit over to the eye, so for
+    the eye a corrosive with only skin limits counts at the generic ones.
     """
     limits, missing = _need(table, "eye", EYE_KEYS)
     if missing:
         return _not_on_file("eye", missing)
-    result = RuleResult(hazard_class=None, citation=limits["damage"].citation)
-    damage_total, damage_contributions = _sum(ingredients, "Eye Dam.", "1")
-    corrosive_total, corrosive_contributions = _sum(ingredients, "Skin Corr.", "1")
+    damage_pool = [i for i in ingredients if not _specific(i, ("Eye Dam.",))]
+    irritant_pool = [i for i in ingredients if not _specific(i, ("Eye Irrit.",))]
+    generic = _eye_generic(damage_pool, irritant_pool, limits)
+    return _stricter(generic, _by_specific(ingredients, ("Eye Dam.", "Eye Irrit."), table, "eye"))
+
+
+def _eye_damage(pool):
+    damage_total, damage_contributions = _sum(pool, "Eye Dam.", "1")
+    corrosive_total, corrosive_contributions = _sum(pool, "Skin Corr.", "1")
     for contribution in corrosive_contributions:
         contribution.note = "Skin Corr. 1 counts as Eye Dam. 1"
-    damage_total += corrosive_total
-    damage_contributions += corrosive_contributions
-    irritant_total, irritant_contributions = _sum(ingredients, "Eye Irrit.", "2")
+    return damage_total + corrosive_total, damage_contributions + corrosive_contributions
+
+
+def _eye_generic(damage_pool, irritant_pool, limits) -> RuleResult:
+    result = RuleResult(hazard_class=None, citation=limits["damage"].citation)
+    damage_total, damage_contributions = _eye_damage(damage_pool)
+    # Towards irritation, damaging ingredients count unless they have a
+    # specific limit for irritation of their own.
+    to_irritant, to_irritant_contributions = _eye_damage(irritant_pool)
+    irritant_total, irritant_contributions = _sum(irritant_pool, "Eye Irrit.", "2")
 
     result.trace.append(f"Eye Dam. 1 (with Skin Corr. 1): {damage_total} %")
     result.trace.append(f"Eye Irrit. 2: {irritant_total} %")
@@ -234,11 +330,11 @@ def eye(ingredients, table: RuleTable) -> RuleResult:
         result.total, result.limit = damage_total, limits["damage"].amount
         result.contributions = damage_contributions
         return result
-    if damage_total >= limits["damage_to_irritant"].amount:
+    if to_irritant >= limits["damage_to_irritant"].amount:
         result.hazard_class = HazardClass("Eye Irrit.", "2")
-        result.total = damage_total
+        result.total = to_irritant
         result.limit = limits["damage_to_irritant"].amount
-        result.contributions = damage_contributions
+        result.contributions = to_irritant_contributions
         result.trace.append(
             f"Eye Dam. 1 at or above {result.limit} % but below "
             f"{limits['damage'].amount} % classifies the mixture Eye Irrit. 2")
@@ -250,7 +346,7 @@ def eye(ingredients, table: RuleTable) -> RuleResult:
         return result
 
     multiplier = limits["multiplier"].amount
-    combined = damage_total * multiplier + irritant_total
+    combined = to_irritant * multiplier + irritant_total
     result.trace.append(
         f"({multiplier} x Eye Dam. 1) + Eye Irrit. 2 = {combined} %")
     result.total, result.limit = combined, limits["weighted"].amount
@@ -258,7 +354,7 @@ def eye(ingredients, table: RuleTable) -> RuleResult:
         result.hazard_class = HazardClass("Eye Irrit.", "2")
         result.contributions = [
             *[Contribution(c.cas, c.name, c.percentage, c.hazard_class,
-                           multiplier, c.note) for c in damage_contributions],
+                           multiplier, c.note) for c in to_irritant_contributions],
             *irritant_contributions]
     return result
 

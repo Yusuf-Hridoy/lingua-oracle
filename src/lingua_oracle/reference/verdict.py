@@ -98,6 +98,9 @@ def _rows_for(section, printed: list[str], complete: bool, missing: list[str],
         calculated = result.get("calculated_class") or ""
         expected = " / ".join(own(codes_of(calculated)))
         verdict = result["verdict"]
+        # A specific limit decided it: the text that says so, quoted.
+        scl = next((a for a in result.get("assumptions") or []
+                    if a.startswith("Classified by its specific limit")), "")
         if (calculated and verdict in ("consistent", "inconsistent")
                 and code.casefold() in {c.casefold() for c in own(codes_of(calculated))}):
             # The code is the calculated class's own ("H361D" for Repr. 2),
@@ -117,6 +120,9 @@ def _rows_for(section, printed: list[str], complete: bool, missing: list[str],
         else:
             out[code] = (CANT, (result.get("message") or "the calculation cannot decide it.")
                          + (gap if verdict == "cannot_tell" else ""), expected)
+        if scl and code in out and out[code][0] in (CONFIRMED, WRONG, CANT):
+            status, reason, wanted = out[code]
+            out[code] = (status, f"{reason} {scl}", wanted)
     # What the calculation gives that Section 2 does not print at all.
     for result in results:
         if result.get("stated") or result["verdict"] != "inconsistent":

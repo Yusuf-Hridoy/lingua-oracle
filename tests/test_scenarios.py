@@ -330,3 +330,62 @@ def test_without_a_composition_the_text_alone_still_judges(tmp_path, on_file):  
     rows = _rows(report)
     assert rows["H222 / H223 / H229"]["status"] == "wrong" and rows["H314"]["status"] == "check"
     assert "only what Section 9" in report.hcodes.message
+
+
+# -- specific limits inside the skin and eye summations ---------------------------------
+
+import pytest as _pytest  # noqa: E402
+
+
+@_pytest.mark.parametrize("share, skin, eye", [
+    ("0.5", "Skin Irrit. 2", "Eye Irrit. 2"),      # Skin Irrit. 2 / Eye Irrit. 2: 0,5 % ≤ C < 2 %
+    ("2", "Skin Corr. 1B", None),                   # Skin Corr. 1B: 2 % ≤ C < 5 %
+    ("3", "Skin Corr. 1B", "Eye Dam. 1"),           # eye: no specific limit, generic 3 %
+    ("5", "Skin Corr. 1A", "Eye Dam. 1"),           # Skin Corr. 1A: C ≥ 5 %
+])
+def test_sodium_hydroxide_by_its_annex_vi_limits(share, skin, eye):
+    from decimal import Decimal
+
+    from lingua_oracle.mixture.calculate import calculate
+    from lingua_oracle.mixture.limits import parse
+    from lingua_oracle.mixture.model import from_annex_vi
+    from lingua_oracle.substances.load import load_list
+
+    entry = load_list("annex_vi").by_cas()["1310-73-2"][0]
+    ingredient = from_annex_vi("1310-73-2", "sodium hydroxide", Decimal(share), Decimal(share),
+                               entry, parse(entry.limits))
+    results, _ = calculate([ingredient], [], "eu_clp")
+    found = {r.family: r for r in results}
+    assert found["Skin"].calculated_class == skin
+    assert any("3.2.3.3.6" in a and "1.1.2.3" in a for a in found["Skin"].assumptions)
+    if eye is None:
+        assert "Eye" not in found
+    else:
+        assert found["Eye"].calculated_class == eye
+
+
+def test_a_specific_limit_beside_an_ingredient_summed_generically(tmp_path, on_file):  # noqa: F811
+    # 0,5 % sodium hydroxide is Skin Irrit. 2 by its own limit; 8 % of a
+    # generic Skin Irrit. 2 ingredient (toluene) is not enough alone (10 %) -
+    # and the sodium hydroxide does not join that sum.
+    report = _check(tmp_path, "eu_clp", two=["H315"],
+                    three=["Synthetic alkali  CAS 1310-73-2  0.5%",
+                           "Synthetic aromatic  CAS 108-88-3  8%", "Water  CAS 7732-18-5  91.5%"])
+    row = _rows(report)["H315"]
+    assert row["status"] == "confirmed" and "3.2.3.3.6" in row["reason"]
+    assert "Annex VI, Part 1, 1.1.2.3" in row["reason"]
+
+
+def test_a_range_spanning_a_specific_limit_cannot_be_decided(tmp_path, on_file):  # noqa: F811
+    report = _check(tmp_path, "eu_clp", two=["H314"],
+                    three=["Synthetic alkali  CAS 1310-73-2  1 - 3 %", "Water  CAS 7732-18-5  97%"])
+    row = _rows(report)["H314"]
+    assert row["status"] == "cant" and "end" in row["reason"]
+
+
+def test_without_its_specific_limit_the_generic_summation_would_pass_it(tmp_path, on_file):  # noqa: F811
+    report = _check(tmp_path, "eu_clp", two=["H315"],
+                    three=["Synthetic alkali  CAS 1310-73-2  3%", "Water  CAS 7732-18-5  97%"])
+    row = _rows(report)["H315"]
+    assert row["status"] == "wrong" and "Skin Corr. 1B" in row["reason"]
+
