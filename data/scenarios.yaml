@@ -1,0 +1,261 @@
+# What Lingua can and cannot judge: one entry per scenario.
+#
+# Every rule comes from a regulation text on file, quoted with its location
+# in the key named under `source`; where a rule needs data a sheet cannot
+# give, the verdict is "Can't confirm" with the reason - never a guess.
+# status: supported / partial / not_supported, and `reason` says why where
+# it is not plain "supported". tests/test_scenarios.py holds one synthetic
+# fixture per id and fails if an id here has none.
+
+regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+
+scenarios:
+
+# -- product types -------------------------------------------------------------------
+
+- id: substance_on_list
+  group: product type
+  description: 'A substance with an entry on its regulation''s list.'
+  regulations: [eu_clp, uk_clp, au_whs, us_osha, ca_whmis, un_ghs]
+  expected: 'Section 2 is compared with the entry; codes the entry gives are Confirmed, ones Section 2 lacks are Wrong.'
+  source: 'CLP Article 4(3) (Annex VI binding, EU); GB CLP Article 4(3) (GB MCL binding); HCIS, a reference (AU); Annex VI shown as reference elsewhere - substances/lists.py, data/annex_vi, data/gb_mcl, data/au_hcis'
+  status: supported
+  reason: 'Wrong counts as a fault only where the list binds (EU, GB); elsewhere it is "Wrong (reference data)".'
+
+- id: substance_not_on_list
+  group: product type
+  description: 'A substance on no list - PubChem as reference.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'Input B is the classification most commonly notified to ECHA (PubChem); verdicts from it are reference data, never binding.'
+  source: 'data/reference_classifications (PubChem PUG-View "GHS Classification") - labelled "PubChem (ECHA C&L notifications) — reference, not legally binding"'
+  status: supported
+  reason: 'A CAS number not fetched with `lingua keys pubchem` is "Can''t confirm: no PubChem record on file".'
+
+- id: substance_no_cas
+  group: product type
+  description: 'A substance without a CAS number (UVCB, reaction mass) - matched by EC number or exact name.'
+  regulations: [eu_clp, uk_clp, au_whs, us_osha, ca_whmis, un_ghs]
+  expected: 'Found in the list by EC number (check digit verified) or exact name; the entry''s CAS is used where it has one. Input A says the app does not look such an ingredient up.'
+  source: 'reference/composition.py (EC check digit), reference/verdict.py (_resolve); the list entries'' own EC numbers and names'
+  status: partial
+  reason: 'PubChem is looked up by CAS only; a name the list does not know is left out and its share counts as undisclosed.'
+
+- id: mixture_exact_percent
+  group: product type
+  description: 'A mixture whose Section 3 gives exact concentrations.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'The mixture is calculated by the regulation''s own cut-off and additivity rules; each code Confirmed / Wrong / Can''t confirm.'
+  source: 'data/mixture_rules, data/acute_toxicity (each regulation''s Annex I / GHS chapters 3 and 4 / HPR Part 8 / OSHA Appendix A)'
+  status: supported
+
+- id: mixture_ranges
+  group: product type
+  description: 'A mixture whose Section 3 gives ranges.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'Both ends are calculated; a range that spans a limit is Can''t confirm, saying so.'
+  source: 'mixture/calculate.py (both ends of every range)'
+  status: supported
+
+- id: mixture_withheld
+  group: product type
+  description: 'A mixture with trade-secret or withheld ingredients.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'The withheld share counts as undisclosed, and the verdict says so; a hazard Section 2 states that the declared ingredients do not give is Can''t confirm.'
+  source: 'reference/composition.py (withheld rows), reference/verdict.py'
+  status: supported
+
+- id: mixture_no_percent
+  group: product type
+  description: 'A mixture whose Section 3 gives no concentrations.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'One ingredient is taken as the substance at 100 %, said; several get a partial check - a code no ingredient carries, or an ingredient hazard Section 2 lacks, is Check this - and nothing is fully confirmed.'
+  source: 'reference/verdict.py (_partial)'
+  status: partial
+  reason: 'Without concentrations no cut-off or additivity rule can be applied.'
+
+- id: mixture_in_mixture
+  group: product type
+  description: 'A mixture containing another mixture.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'The component is classified as the sheet classifies it, where Section 3 gives its codes; otherwise Can''t confirm.'
+  source: 'reference/verdict.py (_resolve, kind "mixture")'
+  status: partial
+  reason: 'Without the sub-mixture''s own classification it cannot be calculated.'
+
+- id: aerosol
+  group: product type
+  description: 'An aerosol.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'Every aerosol falls in one of the categories - Section 2 giving none is Wrong; which category needs the flammable components, heat of combustion and test results, so a printed category is Can''t confirm.'
+  source: 'data/special_rules aerosol - CLP Annex I 2.3.2.1; GB CLP 2.3.2.1; GHS Rev.11 2.3.1.2.1; GHS Rev.7 2.3.2.1; HPR 7.3.1; OSHA Appendix B B.3.1.2.1'
+  status: partial
+  reason: 'The category needs test data a safety data sheet does not carry.'
+
+- id: gas_mixture
+  group: product type
+  description: 'A gas or gas mixture.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'Flammable and oxidising gas codes of a mixture are "Can''t confirm: method not on file" - the text points at ISO 10156.'
+  source: 'data/special_rules gas_method - CLP Annex I 2.2.4.1; GHS Rev.11 2.2.4.2; GHS Rev.7 2.2.4.2; HPR 7.2.1; OSHA Appendix B B.2.3'
+  status: partial
+  reason: 'ISO 10156 is not on file.'
+
+- id: solid_powder
+  group: product type
+  description: 'A solid or powder - acute inhalation toxicity as a dust/mist; OSHA combustible dust.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'Section 9''s state chooses the dust/mist route for acute inhalation toxicity; a printed "combustible dust" is not judged.'
+  source: 'data/acute_toxicity (each regulation''s acute toxicity table, by physical form); mixture/state.py'
+  status: partial
+  reason: 'OSHA''s text gives no classification criteria for combustible dust.'
+
+- id: not_classified
+  group: product type
+  description: 'A product Section 2 does not classify (no H codes).'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'Where the ingredients give nothing either, the table says so; a hazard they give is Wrong.'
+  source: 'reference/verdict.py'
+  status: supported
+
+# -- special rules ---------------------------------------------------------------------
+
+- id: euh208
+  group: special rule
+  description: 'A sensitiser below the mixture''s classification limit - EUH208.'
+  regulations: [eu_clp, uk_clp]
+  expected: 'A mixture not classified as sensitising with a sensitiser at or above Table 3.4.6''s elicitation limit needs EUH208 - lacking it is Wrong.'
+  source: 'data/special_rules euh.EUH208 - CLP Annex II 2.8 and Annex I Table 3.4.6'
+  status: partial
+  reason: 'GB - Table 3.4.6''s limits are not read from the GB text on file; a sensitiser with its own specific limit is not judged.'
+
+- id: euh210
+  group: special rule
+  description: 'EUH210 - safety data sheet available on request.'
+  regulations: [eu_clp, uk_clp]
+  expected: 'A mixture not classified as hazardous with an ingredient meeting a condition of Annex II 2.10 needs EUH210.'
+  source: 'data/special_rules euh.EUH210 - CLP Annex II 2.10'
+  status: partial
+  reason: 'The workplace-exposure-limit condition needs data the sheet does not give.'
+
+- id: euh066
+  group: special rule
+  description: 'EUH066 - repeated exposure may cause skin dryness or cracking.'
+  regulations: [eu_clp, uk_clp]
+  expected: 'Can''t confirm - assigned on practical observations or evidence of skin dryness the sheet does not give.'
+  source: 'data/special_rules euh.EUH066 - CLP Annex II 1.2.4'
+  status: partial
+  reason: 'The criterion is observations, not a classification.'
+
+- id: euh071
+  group: special rule
+  description: 'EUH071 - corrosive to the respiratory tract.'
+  regulations: [eu_clp, uk_clp]
+  expected: 'Without an inhalation toxicity or skin corrosion classification beside it, Check this; with one, Can''t confirm (the data on the mechanism are not on the sheet).'
+  source: 'data/special_rules euh.EUH071 - CLP Annex II 1.2.6'
+  status: partial
+  reason: 'Whether the data show corrosivity is not on the sheet.'
+
+- id: euh401
+  group: special rule
+  description: 'EUH401 - comply with the instructions for use.'
+  regulations: [eu_clp, uk_clp]
+  expected: 'Can''t confirm - for plant protection products, and whether the product is one is not decided here.'
+  source: 'data/special_rules euh.EUH401 - CLP Annex II Part 4'
+  status: partial
+  reason: 'The product type is not decided from the sheet.'
+
+- id: aspiration_h304
+  group: special rule
+  description: 'Aspiration hazard H304 - viscosity from Section 9.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'Category 1 ingredients at or above the rule''s share and a kinematic viscosity at or below its limit at 40 °C give H304; no kinematic viscosity at 40 °C in Section 9 is Can''t confirm.'
+  source: 'data/special_rules aspiration - CLP Annex I 3.10.3.3.1.2; GB CLP 3.10.3.3.1.2; GHS Rev.11 3.10.3.3.2.1; GHS Rev.7 3.10.3.3.2.1; HPR 8.10.5; OSHA Appendix A A.10.3.3.2.1'
+  status: supported
+  reason: 'A dynamic viscosity is not converted.'
+
+- id: extreme_ph
+  group: special rule
+  description: 'Extreme pH - corrosion consideration.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'pH at or past the rule''s limits with no H314 (or H318) in Section 2 is Check this - corrosive in the absence of other information, unless the acid/alkaline reserve says otherwise; with H314 printed, Confirmed.'
+  source: 'data/special_rules extreme_ph - CLP Annex I 3.2.3.1.2 and 3.3.3.1.2; GHS Rev.11 3.2.3.1.3 and 3.3.3.1.3; GHS Rev.7 3.2.3.1.2 and 3.3.3.1.2; HPR 8.2.5 and 8.3.5; OSHA Appendix A A.2.3.1.3 and A.3.3.1.2'
+  status: supported
+
+- id: annex_vi_limits
+  group: special rule
+  description: 'Annex VI specific concentration limits and M-factors.'
+  regulations: [eu_clp, uk_clp]
+  expected: 'An ingredient with an entry is calculated with the entry''s specific limits and M-factors.'
+  source: 'data/annex_vi and data/gb_mcl (the "Specific Conc. Limits, M-factors and ATEs" column); mixture/limits.py, mixture/rules.py'
+  status: partial
+  reason: 'Specific limits are applied where a rule takes one ingredient at a time (sensitisation, CMR, STOT) and M-factors in the aquatic summation; the skin and eye summations do not apply specific limits yet.'
+
+- id: annex_vi_notes
+  group: special rule
+  description: 'Annex VI notes (B, P, U ... as the text defines them).'
+  regulations: [eu_clp]
+  expected: 'A note that lets the harmonised classification fall ("applies unless ...") turns a Wrong from that entry into Can''t confirm, quoting the note.'
+  source: 'data/special_rules annex_vi_notes - CLP Annex VI Part 1, 1.1.3'
+  status: partial
+  reason: 'GB - the notes'' meanings are not in the GB text on file; Notes E and H carried by some entries are not defined in the consolidated CLP text.'
+
+- id: cmr_edges
+  group: special rule
+  description: 'CMR edge values, H362 (lactation) included.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'An ingredient exactly at a generic limit classifies the mixture; just below it does not.'
+  source: 'data/mixture_rules (each regulation''s CMR and lactation cut-offs)'
+  status: supported
+
+- id: acute_routes
+  group: special rule
+  description: 'Acute toxicity, each route (oral, dermal, inhalation by state).'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'Additivity per route; inhalation in the form Section 9''s state gives (gas, vapour, dust/mist), both where it does not say.'
+  source: 'data/acute_toxicity'
+  status: supported
+
+# -- document situations ---------------------------------------------------------------
+
+- id: bilingual_canadian
+  group: document
+  description: 'A bilingual Canadian SDS (English and French).'
+  regulations: [ca_whmis]
+  expected: 'Both languages are checked; a code repeated in both is not a duplicate.'
+  source: 'HPR section 6.1 - both official languages (regulations.yaml required_languages)'
+  status: supported
+
+- id: label_only
+  group: document
+  description: 'A label-only PDF.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'The label''s statements are checked; nothing is said about SDS sections it does not have.'
+  source: 'checks (label mode)'
+  status: supported
+
+- id: several_products
+  group: document
+  description: 'Several products in one PDF.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: 'Detected and said in the technical notes (Section 1 starts more than once).'
+  source: 'pipeline.products_in'
+  status: partial
+  reason: 'The PDF is checked as one document; results may mix the products.'
+
+- id: scanned
+  group: document
+  description: 'A scanned, image-only PDF.'
+  regulations: [eu_clp, uk_clp, un_ghs, au_whs, ca_whmis, us_osha]
+  expected: '"This PDF has no readable text (scanned) — not checked" - no empty results.'
+  source: 'pipeline.scanned'
+  status: supported
+  reason: 'OCR is a later decision.'
+
+- id: eu_languages
+  group: document
+  description: 'Each EU language.'
+  regulations: [eu_clp]
+  expected: 'Wording is checked against the official text in all 24 languages; structure headings in all 24.'
+  source: 'data/answer_keys/eu_clp (24 languages); data/sds_structure/eu_clp'
+  status: partial
+  reason: 'Section 9''s physical state is read in 8 languages; elsewhere it is "not checked".'

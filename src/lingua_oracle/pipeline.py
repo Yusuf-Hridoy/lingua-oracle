@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
@@ -73,6 +74,13 @@ def check_pdf(
     one part of this that reads from the network, and the wording check must
     work without it.
     """
+    unreadable = scanned(path)
+    if unreadable:
+        return Report(id=uuid.uuid4().hex[:12], file_name=Path(path).name,
+                      regulation=regulation or "", language=language or "",
+                      detected_by="flag" if regulation else "auto",
+                      created_at=datetime.now(UTC), unreadable=unreadable,
+                      notes=[unreadable, "OCR is not used: an image is not read as text."])
     document, reg, lang, lang_by, spans, hits, detection = _prepare(
         path, regulation, language, backend
     )
@@ -198,6 +206,11 @@ def check_pdf(
         + (", ".join(sorted({span.name for span in spans})) or "none")
     )
     report.notes.append(f"PDF text read with {document.backend}.")
+    report.products = products_in(document)
+    if report.products > 1:
+        report.notes.append(
+            f"This PDF seems to hold {report.products} safety data sheets (Section 1 starts "
+            f"{report.products} times); it is checked as one document, so results may mix them.")
     if report.physical_state in ("", "solid/liquid"):
         said = (f"Section 9 says “{report.physical_state_printed}”, which is neither solid "
                 "nor liquid" if report.physical_state_printed else
@@ -290,6 +303,37 @@ def _composition(report, path, document, spans, regulation) -> None:
         name=name, concentration=(row.concentration or "") if row else "")
 
 
+SCANNED = "This PDF has no readable text (scanned) — not checked"
+
+
+def scanned(path: str) -> str:
+    """SCANNED, with its pages, where the PDF's pages carry images and no text
+    to speak of; "" otherwise."""
+    import pymupdf
+
+    try:
+        with pymupdf.open(path) as pdf:
+            text = sum(len(page.get_text().strip()) for page in pdf)
+            images = sum(len(page.get_images()) for page in pdf)
+            pages = pdf.page_count
+    except Exception:  # noqa: BLE001 - an unopenable file is the extractor's to report
+        return ""
+    if pages and text < 20 and images:
+        return f"{SCANNED} ({pages} page{'s' if pages != 1 else ''}, images only)."
+    return ""
+
+
+_SECTION_ONE = re.compile(
+    r"^\s*(?:SECTION|Section|SECCIÓN|Sección|ABSCHNITT|Abschnitt|RUBRIQUE|Rubrique|PUNKT|Punkt)?"
+    r"\s*1\s*[.:)]?\s*[-–—:]?\s*(?:Identification|Identifikation|Identificación|Identifica)",
+    re.IGNORECASE)
+
+
+def products_in(document) -> int:
+    """How many times Section 1 starts: more than once is several sheets."""
+    return sum(1 for line in document.lines if _SECTION_ONE.match(line.text or ""))
+
+
 def _flash_of(rows) -> dict:
     """C-17's verdict on Section 9's flash point, for the H-code table."""
     import re
@@ -330,7 +374,9 @@ def _hcode_section(report, path, document, spans, regulation, language,
         if section is not None and section.match_state == "ambiguous":
             # A choice is pending, as for the mixture: judged once it is made.
             held = verdict.context(document.lines, spans, lines_of("2"),
-                                   sheet_text=" ".join(raw), stated_as=stated_as, flash=flash)
+                                   sheet_text=" ".join(raw), stated_as=stated_as, flash=flash,
+                                   section_nine=lines_of("9"), state=report.physical_state,
+                                   state_printed=report.physical_state_printed)
             held.message = "Choose the product above to judge the hazard statement codes."
             return held
         app_codes = None
@@ -346,7 +392,9 @@ def _hcode_section(report, path, document, spans, regulation, language,
                      "concentration": "100"}]
         return verdict.build(document, spans, regulation, rows, lines_of("2"),
                              app_codes=app_codes, sheet_text=" ".join(raw),
-                             stated_as=stated_as, flash=flash)
+                             stated_as=stated_as, flash=flash, section_nine=lines_of("9"),
+                             state=report.physical_state,
+                             state_printed=report.physical_state_printed)
     except Exception as exc:  # noqa: BLE001
         return HCodeSection(state="skipped", message=f"H-code verdict skipped: {exc}"[:200])
 
