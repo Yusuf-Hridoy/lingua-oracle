@@ -29,7 +29,7 @@ def test_each_code_has_its_verdict_word(tmp_path, on_file):  # noqa: F811
                          ["Synthetic solvent  CAS 108-88-3  100%"], bare=["H361d"])
     rows = {r.key: r for r in _subs(page, "2.1 H-code verdict").rows}
     assert (rows["H315"].verdict, rows["H315"].status) == ("Confirmed", "ok")
-    assert (rows["H225"].verdict, rows["H225"].status) == ("Can't confirm", "na")
+    assert (rows["H304"].verdict, rows["H304"].status) == ("Can't confirm", "na")
     assert "With ExactSDS's own input" in rows["H361d"].note
     html = render_html(report)
     assert "2.1 H-code verdict" in html
@@ -64,3 +64,12 @@ def test_likely_causes_are_in_the_technical_details_only(tmp_path, on_file):  # 
                for c in caveats)
     shown = " ".join(r.text + r.note for s in page.sections for r in s.rows)
     assert "letter suffix" not in shown
+
+
+def test_a_code_printed_otherwise_than_the_act_says_how_it_was_printed(tmp_path, on_file):  # noqa: F811
+    _, page = _page(tmp_path, "eu_clp", ["H225", "H304", "H315", "H336", "H373"],
+                    ["Synthetic solvent  CAS 108-88-3  100%"], bare=["H361D"])
+    keys = [r.key for r in _subs(page, "2.1 H-code verdict").rows]
+    assert "H361d" in keys and "H361D" not in keys
+    row = next(r for r in _subs(page, "2.1 H-code verdict").rows if r.key == "H361d")
+    assert "Printed on the sheet as H361D." in row.text

@@ -422,6 +422,8 @@ def _hcode_subs(report: Report) -> list[Sub]:
         else:
             status, word = _VERDICT[row["status"]]
         said = f"Stated as “{row['stated_as']}”. " if row.get("stated_as") else ""
+        if row.get("printed_as"):
+            said += f"Printed on the sheet as {row['printed_as']}. "
         notes = [row.get("differs", "")]
         if row.get("a5"):
             notes.append(f"First 5 codes (the app's own fallback): "
