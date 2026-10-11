@@ -26,10 +26,10 @@ def _subs(page, title):
 
 def test_each_code_has_its_verdict_word(tmp_path, on_file):  # noqa: F811
     report, page = _page(tmp_path, "eu_clp", ["H225", "H304", "H315", "H336", "H373"],
-                         ["Synthetic solvent  CAS 108-88-3  100%"], bare=["H361d"])
+                         ["Synthetic solvent  CAS 108-88-3  100%"], bare=["H361d", "EUH066"])
     rows = {r.key: r for r in _subs(page, "2.1 H-code verdict").rows}
     assert (rows["H315"].verdict, rows["H315"].status) == ("Confirmed", "ok")
-    assert (rows["H304"].verdict, rows["H304"].status) == ("Can't confirm", "na")
+    assert (rows["EUH066"].verdict, rows["EUH066"].status) == ("Can't confirm", "na")
     assert "With ExactSDS's own input" in rows["H361d"].note
     html = render_html(report)
     assert "2.1 H-code verdict" in html

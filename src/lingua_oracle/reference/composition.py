@@ -42,11 +42,58 @@ def from_sheet(path: str, section_three: list[str]) -> list[dict]:
                 below = (section_three[k + 1] or "").strip()
                 if _SHARE.fullmatch(below) or re.fullmatch(r"\d+(?:[.,]\d+)?", below):
                     share = below
-            row = out.setdefault(cas, {"cas": cas, "name": (line or "").split(cas)[0].strip(" |,;:"),
-                                       "concentration": ""})
+            name = re.sub(r"\s*\bCAS(?:\s*(?:No\.?|number|#))?\s*:?\s*$", "",
+                          (line or "").split(cas)[0].strip(" |,;:"))
+            row = out.setdefault(cas, {"cas": cas, "name": name, "concentration": ""})
             if not row["concentration"] and share:
                 row["concentration"] = share
-    return list(out.values())
+    return list(out.values()) + without_cas(section_three)
+
+
+_EC = re.compile(r"(?<![\d-])(\d{3}-\d{3}-\d)(?![\d-])")
+_WITHHELD = re.compile(r"trade secret|proprietary|confidential|withheld|not disclosed|"
+                       r"undisclosed|\bCBI\b", re.IGNORECASE)
+_MIXTURE = re.compile(r"\b(?:mixture|preparation|blend|fragrance|perfume)\b", re.IGNORECASE)
+_CODE = re.compile(r"\b(?:EUH|H)\d{3}[A-Za-z]{0,2}\b")
+
+
+def ec_valid(ec: str) -> bool:
+    """The EC number's check digit: the first six digits weighted 1 to 6,
+    summed, modulo 11."""
+    digits = ec.replace("-", "")
+    if not re.fullmatch(r"\d{7}", digits):
+        return False
+    return sum((k + 1) * int(d) for k, d in enumerate(digits[:6])) % 11 % 10 == int(digits[6])
+
+
+def without_cas(section_three: list[str]) -> list[dict]:
+    """Section 3's rows that carry no CAS number but a share: withheld ones
+    (a trade secret), ones named as a mixture, and ones with an EC number or
+    only a name - each said for what it is."""
+    out = []
+    for line in section_three:
+        text = line or ""
+        if _CAS.search(text):
+            continue
+        ec = next((e for e in _EC.findall(text) if ec_valid(e)), "")
+        # An EC number is not a range: read the share without it.
+        rest = re.sub(r"\b(?:EC(?:\s*(?:No\.?|number))?:?\s*)?" + re.escape(ec), " ", text) if ec \
+            else text
+        found = _SHARE.search(rest)
+        if not found:
+            continue
+        share = found.group(0).strip()
+        name = " ".join(rest[:found.start()].split()).strip(" |,;:")
+        if _WITHHELD.search(text):
+            out.append({"cas": "", "kind": "withheld", "name": name, "concentration": share})
+        elif _MIXTURE.search(text):
+            out.append({"cas": "", "kind": "mixture", "name": name, "concentration": share,
+                        "codes": list(dict.fromkeys(_CODE.findall(text)))})
+        elif ec:
+            out.append({"cas": "", "kind": "ec", "ec": ec, "name": name, "concentration": share})
+        elif re.search(r"[A-Za-z]{4}", name):
+            out.append({"cas": "", "kind": "name", "name": name, "concentration": share})
+    return out
 
 
 def from_app(ingredients) -> tuple[list[dict], dict[str, list[str]]]:

@@ -434,6 +434,11 @@ class HCodeSection(BaseModel):
     #: Section 9's flash point against the flammable-liquid criteria (C-17):
     #: status, text, category, citation.
     flash: dict = Field(default_factory=dict)
+    #: Section 9's pH and viscosity as printed, for the special rules.
+    section9: dict = Field(default_factory=dict)
+    #: What the product is, for the special rules: aerosol, gas, and whether
+    #: Section 2 carries EUH208's words.
+    product: dict = Field(default_factory=dict)
 
 
 class SubstanceSection(BaseModel):
@@ -575,6 +580,11 @@ class Report(BaseModel):
     physical_state_printed: str = ""
     #: A verdict for every hazard statement code, from inputs A and B.
     hcodes: HCodeSection | None = None
+    #: Why nothing was checked, where the PDF gave no text to check
+    #: ("scanned"); empty otherwise.
+    unreadable: str = ""
+    #: How many safety data sheets the PDF seems to hold, where more than one.
+    products: int = 0
     #: The 16 sections, sub-sections and required items, against the
     #: regulation's own text on safety data sheets. None on an older report.
     structure: StructureReport | None = None

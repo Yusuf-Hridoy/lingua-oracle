@@ -125,6 +125,22 @@ def _join_wrapped(lines: list[str]) -> list[str]:
     return out
 
 
+#: One "class; code[:] limit" of a limit column, where several share a line:
+#: "Skin Corr. 1A; H314: C ≥ 5 % Skin Corr. 1B; H314 2 % ≤ C < 5 % ..." - the
+#: act sometimes leaves the colon out.
+_ONE_LIMIT = re.compile(
+    r"(?P<cls>[A-Z][A-Za-z]*\.?(?:\s?[A-Za-z]+\.?)*\s?\d[A-Fa-f]?)\s*;\s*(?P<code>H\d{3}\w*)"
+    r"\s*:?\s*(?P<limit>.*?)(?=\s[A-Z][A-Za-z]*\.?(?:\s?[A-Za-z]+\.?)*\s?\d[A-Fa-f]?\s*;\s*H\d{3}|$)")
+
+
+def _split(line: str) -> list[str]:
+    """A line carrying several class limits, one "class; code: limit" each."""
+    found = list(_ONE_LIMIT.finditer(line))
+    if len(found) < 2:
+        return [line]
+    return [f"{m.group('cls')}; {m.group('code')}: {m.group('limit').strip()}" for m in found]
+
+
 def parse(lines: list[str]) -> ParsedLimits:
     """Read Annex VI's limit column into numbers, keeping every source line."""
     specific: list[SpecificLimit] = []
@@ -132,7 +148,7 @@ def parse(lines: list[str]) -> ParsedLimits:
     ates: list[Ate] = []
     unparsed: list[str] = []
 
-    for line in _join_wrapped(lines):
+    for line in [part for whole in _join_wrapped(lines) for part in _split(whole)]:
         found = _ATE.search(line)
         if found:
             value = _decimal(found.group("value"))

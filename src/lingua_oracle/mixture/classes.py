@@ -148,4 +148,5 @@ def parse_class(raw: str) -> HazardClass | None:
     match = re.match(r"^(?P<name>.*?)\s*(?P<category>\d[A-Fa-f]?)$", text)
     if not match or not match.group("name"):
         return HazardClass(text, None)
-    return HazardClass(match.group("name").strip(), match.group("category"))
+    # The act writes "Carc. 1a" once or twice where it means 1A.
+    return HazardClass(match.group("name").strip(), match.group("category").upper())

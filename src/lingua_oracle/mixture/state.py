@@ -33,12 +33,12 @@ _LABEL_RE = re.compile(
 #: the sections the wording check needs, so this finds its own.
 #: The label before the number is any one word ("Section", "PUNKT", "ABSCHNITT").
 _SECTION_9 = re.compile(
-    r"^\s*(?:[^\W\d]+\s*)?9[.):]?\s*(physical and chemical|"
+    r"^\s*(?:[^\W\d]+\s*)?9[.):,]?\s*(physical and chemical|"
     r"physikalische und chemische|propriétés physiques|"
     r"propiedades físicas|proprietà fisiche|fysiske og kemiske|"
     r"fysische en chemische)", re.IGNORECASE)
 _SECTION_10 = re.compile(
-    r"^\s*(?:[^\W\d]+\s*)?10[.):]?\s*(stability|stabilität|stabilité|"
+    r"^\s*(?:[^\W\d]+\s*)?10[.):,]?\s*(stability|stabilität|stabilité|"
     r"estabilidad|stabilità|stabilitet|stabiliteit)", re.IGNORECASE)
 
 #: What the value has to say for each answer. "Gas" and "gaseous" only: an

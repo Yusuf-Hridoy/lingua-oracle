@@ -131,7 +131,8 @@ def test_codes_the_ingredients_give_are_confirmed_and_a_physical_one_from_sectio
     # The sheet's Section 9 gives a flash point in category 2's band (C-17).
     assert rows["H225"]["status"] == "confirmed" and rows["H225"]["reason"].startswith(
         "from Section 9:")
-    assert rows["H304"]["status"] == "cant"
+    # A substance: its own classification (Annex VI, Asp. Tox. 1) gives H304.
+    assert rows["H304"]["status"] == "confirmed" and "substance" in rows["H304"]["reason"]
     assert rows["H361d"]["binding"]
 
 

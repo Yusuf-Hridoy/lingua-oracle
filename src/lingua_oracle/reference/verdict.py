@@ -98,7 +98,8 @@ def _rows_for(section, printed: list[str], complete: bool, missing: list[str],
         calculated = result.get("calculated_class") or ""
         expected = " / ".join(own(codes_of(calculated)))
         verdict = result["verdict"]
-        if calculated and code.casefold() in {c.casefold() for c in own(codes_of(calculated))}:
+        if (calculated and verdict in ("consistent", "inconsistent")
+                and code.casefold() in {c.casefold() for c in own(codes_of(calculated))}):
             # The code is the calculated class's own ("H361D" for Repr. 2),
             # whatever the class reader made of Section 2.
             out[code] = (CONFIRMED, f"the ingredients give {calculated}.", "")
@@ -177,7 +178,9 @@ def _stated(lines, spans, codes: list[str]) -> list[str]:
 
 
 def context(lines, spans, section_two: list[str], *, sheet_text: str = "",
-            stated_as: dict[str, str] | None = None, flash: dict | None = None) -> HCodeSection:
+            stated_as: dict[str, str] | None = None, flash: dict | None = None,
+            section_nine: list[str] | None = None, state: str = "",
+            state_printed: str = "") -> HCodeSection:
     """What the verdict needs from the sheet itself, kept so that a product
     chosen later can be judged without the file: the codes Section 2 prints
     and states in words, its classes, and whether it cites bridging."""
@@ -187,9 +190,20 @@ def context(lines, spans, section_two: list[str], *, sheet_text: str = "",
     worded = {c: t for c, t in (stated_as or {}).items()
               if c.casefold() not in {p.casefold() for p in printed}}
     printed = printed + list(worded)
+    from lingua_oracle.reference import section9
+
+    nine = list(section_nine or [])
+    product = {"aerosol": bool(re.search(r"aerosol", state_printed or "", re.IGNORECASE))
+               or any(c in printed for c in ("H222", "H223", "H229")),
+               "gas": state == "gas",
+               "allergic_phrase": bool(re.search(r"may produce an allergic reaction",
+                                                 " ".join(section_two), re.IGNORECASE))}
     return HCodeSection(state="nothing", printed=printed, stated_as=worded,
                         stated=_stated(lines, spans, printed), printed_as=printed_as,
-                        bridged=bool(_BRIDGING.search(sheet_text)), flash=dict(flash or {}))
+                        bridged=bool(_BRIDGING.search(sheet_text)), flash=dict(flash or {}),
+                        section9={"ph": section9.read_ph(nine),
+                                  "viscosity": section9.read_viscosity(nine)},
+                        product=product)
 
 
 def rebuild(held: HCodeSection, regulation: str, rows: list[dict], *,
@@ -202,14 +216,17 @@ def rebuild(held: HCodeSection, regulation: str, rows: list[dict], *,
 
 def build(document, spans, regulation: str, rows: list[dict], section_two: list[str],
           *, app_codes: dict[str, list[str]] | None = None, sheet_text: str = "",
-          stated_as: dict[str, str] | None = None, flash: dict | None = None) -> HCodeSection:
+          stated_as: dict[str, str] | None = None, flash: dict | None = None,
+          section_nine: list[str] | None = None, state: str = "",
+          state_printed: str = "") -> HCodeSection:
     """`rows`: the composition (cas, name, concentration); `app_codes`: the
     app's stored codes by CAS where the product is one the app holds;
     `stated_as`: codes for the classes Section 2 states in words, with the
     words ("Reproductive Toxicity: Category 2" - an OSHA sheet prints no
     codes)."""
     held = context(document.lines, spans, section_two, sheet_text=sheet_text,
-                   stated_as=stated_as, flash=flash)
+                   stated_as=stated_as, flash=flash, section_nine=section_nine, state=state,
+                   state_printed=state_printed)
     return _judge(document.lines, spans, regulation, rows, held, app_codes=app_codes)
 
 
@@ -219,23 +236,32 @@ def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None
 
     printed, worded, stated = list(held.printed), dict(held.stated_as), list(held.stated)
     kept = {"printed": printed, "stated": stated, "stated_as": worded, "bridged": held.bridged,
-            "printed_as": dict(held.printed_as), "flash": dict(held.flash)}
-    rows = [r for r in rows if r.get("cas")]
+            "printed_as": dict(held.printed_as), "flash": dict(held.flash),
+            "section9": dict(held.section9), "product": dict(held.product)}
+    use, table = for_check(regulation)
+    withheld = [r for r in rows if r.get("kind") == "withheld"]
+    rows, found_inputs, identified = _resolve(rows, table, use)
     if not rows:
         return HCodeSection(state="nothing", **kept,
                             message="No ingredient with a CAS number to calculate from.")
     assumptions: list[str] = []
+    for row in withheld:
+        assumptions.append(f"{row.get('name') or 'An ingredient'} ({row.get('concentration')}) "
+                           "is withheld as a trade secret: counted as undisclosed - no rule "
+                           "can use it.")
     with_share = [r for r in rows if r.get("concentration")]
     if not with_share and len(rows) == 1:
         rows = [{**rows[0], "concentration": "100"}]
         assumptions.append("One ingredient and no concentration: taken as the substance, at "
                            "100 %.")
-    use, table = for_check(regulation)
-    a = {r["cas"]: ref.input_a(r["cas"], (app_codes or {}).get(r["cas"]) if app_codes else None)
+    a = {r["cas"]: found_inputs[r["cas"]][0] if r["cas"] in found_inputs else
+         ref.input_a(r["cas"], (app_codes or {}).get(r["cas"]) if app_codes else None)
          for r in rows}
-    b = {r["cas"]: ref.input_b(r["cas"], regulation) for r in rows}
+    b = {r["cas"]: found_inputs[r["cas"]][1] if r["cas"] in found_inputs else
+         ref.input_b(r["cas"], regulation) for r in rows}
     ingredients = [{"cas": r["cas"], "name": r.get("name") or "",
                     "concentration": r.get("concentration") or "",
+                    "identified": identified.get(r["cas"], ""),
                     "a": asdict(a[r["cas"]]), "b": asdict(b[r["cas"]])} for r in rows]
     notes = [n for r in rows for n in ref.likely_causes(r["cas"], a[r["cas"]], b[r["cas"]])]
 
@@ -249,13 +275,17 @@ def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None
     def judged(chosen, open_cas, use_list):
         codes = {cas: x.codes for cas, x in chosen.items()}
         if partial:
-            return _partial(printed, list(codes.values()))
-        section = _calculate(rows, codes, lines, spans, regulation, table, use_list=use_list,
-                             stated=stated, state=state)
-        carried = {c.casefold() for x in codes.values() for c in (x or [])}
-        if use_list:
-            carried |= {c.casefold() for x in chosen.values() for c in (x.codes or [])}
-        return _rows_for(section, printed, not open_cas, open_cas, carried)
+            found = _partial(printed, list(codes.values()))
+        else:
+            section = _calculate(rows, codes, lines, spans, regulation, table,
+                                 use_list=use_list, stated=stated, state=state)
+            carried = {c.casefold() for x in codes.values() for c in (x or [])}
+            if use_list:
+                carried |= {c.casefold() for x in chosen.values() for c in (x.codes or [])}
+            found = _rows_for(section, printed, not open_cas, open_cas, carried)
+        found.update(_special(regulation, held, rows, codes, printed, table if use_list else None,
+                              partial=partial, found=found))
+        return found
 
     if a_blocked:
         runs["A"] = {"available": False,
@@ -326,6 +356,59 @@ def _judge(lines, spans, regulation, rows, held: HCodeSection, *, app_codes=None
                               for k, v in runs.items()})
 
 
+def _special(regulation, held, rows, codes, printed, table, *, partial, found) -> dict:
+    """The special rules on one input (reference.special), over its rows."""
+    from lingua_oracle.keys.builders import special_rules
+    from lingua_oracle.mixture.concentration import parse
+    from lingua_oracle.reference import special
+
+    rules = special_rules.load(regulation) or {}
+    index = table.by_cas() if table is not None else {}
+    ingredients = []
+    for row in rows:
+        share = parse(row.get("concentration"))
+        entries = index.get(row["cas"], []) if index else []
+        ingredients.append(special.Ingredient(
+            row["cas"], row.get("name") or "",
+            float(share.low) if share else None, float(share.high) if share else None,
+            codes.get(row["cas"]), _entry_of(entries, codes.get(row["cas"]))))
+    product, nine = held.product or {}, held.section9 or {}
+    out: dict = {}
+    out.update(special.extreme_ph(rules, nine.get("ph") or {}, printed))
+    out.update(special.aerosol(rules, printed, bool(product.get("aerosol"))))
+    out.update(special.gas_mixture(rules, printed, bool(product.get("gas")), len(rows) > 1))
+    if not partial:
+        if len(rows) == 1 and (ingredients[0].high or 0) >= 100:
+            # A substance: its own classification decides H304, not the mixture rule.
+            carries = "H304" in (ingredients[0].codes or [])
+            if carries or "H304" in printed:
+                out["H304"] = ((CONFIRMED, "the substance's classification gives it.", "")
+                               if carries and "H304" in printed else
+                               (WRONG, "the substance's classification gives it; Section 2 "
+                                       "lacks it.", "H304") if carries else
+                               (CANT, "the substance's classification does not give it.", ""))
+        else:
+            out.update(special.aspiration(rules, ingredients, nine.get("viscosity") or {},
+                                          printed))
+        hazardous = any(re.fullmatch(r"H\d{3}\w*", c) for c in printed)
+        text = "may produce an allergic reaction" if product.get("allergic_phrase") else ""
+        out.update(special.euh(rules, ingredients, printed, text, hazardous))
+    if table is not None:
+        merged = {**found, **out}
+        out.update(special.notes(rules, ingredients, merged, family_of_code))
+    return out
+
+
+def _entry_of(entries, codes):
+    """The list entry an ingredient was classified by: the one entry, or of
+    several for one CAS number, the one whose codes are the input's."""
+    if len(entries) == 1:
+        return entries[0]
+    wanted = set(codes or [])
+    return next((e for e in entries if not e.covers_several_substances
+                 and set(e.h_codes) <= wanted), None)
+
+
 FLAMMABLE = {"1": "H224", "2": "H225", "3": "H226", "4": "H227"}
 
 
@@ -366,6 +449,64 @@ def _from_section_9(rows: list[dict], held: HCodeSection, printed: list[str]) ->
                     "b": {"status": verdict, "reason": text}})
         for key in ("differs", "likely", "a5"):
             row.pop(key, None)
+
+
+def _resolve(rows, table, use) -> tuple[list[dict], dict, dict]:
+    """The composition as the calculation takes it. An ingredient without a
+    CAS number is found by its EC number or its exact name in the list (and
+    takes the entry's CAS where it has one); a component named as a mixture
+    is classified as the sheet classifies it, or not at all; a withheld one
+    is left out, so its share is undisclosed. Returns (rows, {key: (A, B)}
+    for the rows decided here, {key: how it was identified})."""
+    out, inputs, identified = [], {}, {}
+    entries = list(getattr(table, "entries", []) or []) if table is not None else []
+    for row in rows:
+        kind = row.get("kind")
+        if row.get("cas") and not kind:
+            out.append(row)
+            continue
+        if kind == "withheld":
+            continue
+        if kind == "mixture":
+            key = row.get("name") or "mixture component"
+            codes = row.get("codes") or None
+            why = "" if codes else ("a mixture whose classification the sheet does not give - "
+                                    "can't be confirmed without it")
+            item = ref.Input(codes, "the sheet's own classification of this component (a mixture)",
+                             why=why)
+            inputs[key] = (item, item)
+            out.append({**row, "cas": key})
+            continue
+        ec, name = row.get("ec", ""), (row.get("name") or "").strip()
+        match = next((e for e in entries if ec and ec in [x.split("[")[0].strip() for x in e.ec]),
+                     None) if ec else next((e for e in entries
+                                            if name and e.name.casefold() == name.casefold()), None)
+        how = f"by EC {ec}" if ec else f"by name ({name})"
+        if match is None:
+            if kind == "ec":
+                key = f"EC {ec}"
+                none = ref.Input(None, ref.FIRST_LABEL, why=f"no CAS number, and no list entry "
+                                                            f"for EC {ec}")
+                inputs[key] = (none, none)
+                out.append({**row, "cas": key})
+            continue                       # a name the list does not know: undisclosed
+        cas = next((c.split("[")[0].strip() for c in match.cas if c.strip()), "")
+        if cas:
+            identified[cas] = how
+            out.append({**row, "cas": cas})
+            continue
+        key = f"EC {ec}" if ec else name
+        identified[key] = how
+        usable = use is not None and (use.binding or use.name == "au_hcis")
+        b = (ref.Input([*match.h_codes, *match.euh_codes], f"{use.title} "
+                       f"({'binding' if use.binding else 'reference only'})", binding=use.binding,
+                       detail={"from": "list", "list": use.name}) if usable else
+             ref.Input(None, ref.FIRST_LABEL, why="no CAS number to look it up by"))
+        a = ref.Input(None, ref.FIRST_LABEL,
+                      why="no CAS number: the app does not look it up on PubChem")
+        inputs[key] = (a, b)
+        out.append({**row, "cas": key})
+    return out, inputs, identified
 
 
 def _word(status: str) -> str:
