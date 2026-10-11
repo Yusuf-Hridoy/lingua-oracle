@@ -233,12 +233,17 @@ def ingredients_report(run_id: str) -> HTMLResponse:
 
 @app.get("/coverage", response_class=HTMLResponse)
 def coverage(request: Request) -> HTMLResponse:
-    """Placeholder: which official texts are on file."""
+    """Which official texts are on file, and what Lingua can and cannot
+    judge (data/scenarios.yaml)."""
+    from lingua_oracle.reference import scenarios
+
     return templates.TemplateResponse(
         request=request, name="list.html.j2",
         context={"title": "Coverage", "nav": "coverage",
-                 "lede": "The official texts this installation holds.",
-                 "recent": None, "coverage": key_coverage()},
+                 "lede": "The official texts this installation holds, and what Lingua can "
+                         "and cannot judge with them.",
+                 "recent": None, "coverage": key_coverage(),
+                 "scenarios": scenarios.load()},
     )
 
 

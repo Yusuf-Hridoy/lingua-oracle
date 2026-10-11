@@ -61,6 +61,30 @@
     </tbody>
   </table>
   {% endif %}
+  {% if scenarios %}
+  <h2 id="scenarios">What Lingua can and cannot judge</h2>
+  <p class="muted">Every rule comes from a regulation text on file, quoted with its location.
+    Where a rule needs data a sheet cannot give, the verdict is &ldquo;Can&rsquo;t confirm&rdquo;
+    with the reason &mdash; never a guess.</p>
+  {% set pills = {'supported': ('ok', 'Supported'), 'partial': ('check', 'Partial'),
+                  'not_supported': ('na', 'Not supported')} %}
+  {% for group in ['product type', 'special rule', 'document'] %}
+  <table class="recent scenarios" data-group="{{ group }}">
+    <thead><tr><th>{{ group|capitalize }}</th><th>Regulations</th><th>Status</th><th>What Lingua does</th></tr></thead>
+    <tbody>
+      {% for s in scenarios if s.group == group %}
+      <tr data-scenario="{{ s.id }}">
+        <td>{{ s.description }}</td>
+        <td class="muted">{{ s.regulations|join(', ') }}</td>
+        <td><span class="pill {{ pills[s.status][0] }}">{{ pills[s.status][1] }}</span></td>
+        <td>{{ s.expected }}{% if s.reason %}<br><span class="muted">{{ s.reason }}</span>{% endif %}
+          <br><span class="muted">Source: {{ s.source }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endfor %}
+  {% endif %}
 </div>
 </body>
 </html>

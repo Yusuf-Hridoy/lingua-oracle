@@ -689,3 +689,13 @@ def test_a_section_judged_only_by_its_structure_never_says_correct(page, server,
     text = details.inner_text()
     assert "Checked: the wording of each statement" in text, text[:400]
     assert "Pictograms, layout and Sections 4-8" not in text
+
+
+def test_the_coverage_page_shows_the_scenario_matrix(page, server, shots_dir):
+    from lingua_oracle.reference import scenarios
+
+    page.goto(f"{server}/coverage")
+    rows = page.locator("table.scenarios tbody tr")
+    assert rows.count() == len(scenarios.load())
+    assert page.locator('tr[data-scenario="scanned"] .pill').inner_text().strip() == "Supported"
+    assert page.locator('tr[data-scenario="aerosol"] .pill').inner_text().strip() == "Partial"

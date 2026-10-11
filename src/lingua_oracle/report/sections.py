@@ -449,9 +449,10 @@ def _hcode_subs(report: Report) -> list[Sub]:
             codes = part.get("codes")
             shown = ", ".join(codes) if codes else ("none" if codes == [] else "—")
             return f"{shown} ({part['source']}{'; ' + part['why'] if part.get('why') else ''})"
+        found_as = f" (identified {item['identified']})" if item.get("identified") else ""
         inputs.rows.append(Row(item["cas"], "plain", mono=True,
                                text=f"{item.get('name') or ''} {item.get('concentration') or ''}"
-                                    .strip(),
+                                    .strip() + found_as,
                                note=f"A - same input as ExactSDS: {said(item['a'])}. "
                                     f"B - best available: {said(item['b'])}."))
     return [table] + ([inputs] if inputs.rows else [])
@@ -770,7 +771,17 @@ class Page:
     nav: list[dict]
 
 
+NOT_CHECKED = "Not checked"
+
+
 def build(report: Report, display: str, set_by: str) -> Page:
+    if report.unreadable:
+        # Nothing was read, so nothing is said: no sections, no "ready".
+        stats = {"must_fix": 0, "to_check": 0, "correct": 0, "sections": 0,
+                 "structure_sections": 0, "deep_sections": 0, "codes_found": 0,
+                 "codes_checked": 0, "codes_percent": 0}
+        return Page(sections=[], actions=[], stats=stats, tone="check", release=NOT_CHECKED,
+                    detail=report.unreadable, nav=[])
     sections: dict[str, Section] = {}
     label_only = report.sections_found == ["label"] or (
         report.sections_found and set(report.sections_found) <= {"label"})
@@ -856,8 +867,12 @@ def build(report: Report, display: str, set_by: str) -> Page:
     pending = stats["to_check"] or any(r.blank for r in rows)
     tone = "fix" if holding else "check" if pending else "ok"
     release = {"fix": labels.FIX, "check": labels.REVIEW, "ok": labels.READY}[tone]
+    detail = _detail(shown)
+    if report.products > 1:
+        detail = (f"This PDF seems to hold {report.products} safety data sheets; it was checked "
+                  f"as one, so results may mix them. {detail}")
     return Page(sections=shown, actions=actions, stats=stats, tone=tone,
-                release=release, detail=_detail(shown), nav=_nav(shown))
+                release=release, detail=detail, nav=_nav(shown))
 
 
 def _actions(sections: list[Section]) -> list[str]:
